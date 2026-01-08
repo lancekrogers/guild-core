@@ -32,7 +32,7 @@ func NewIndicator() *Indicator {
 	s.Spinner = spinner.Dot
 	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 
-	p := progress.New(progress.WithDefaultGradient())
+	p := progress.New(progress.WithDefaultBlend())
 
 	return &Indicator{
 		spinner:  s,

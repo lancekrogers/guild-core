@@ -10,6 +10,7 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
+	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
 	"github.com/guild-framework/guild-core/pkg/observability"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -226,14 +227,14 @@ func TestSearchInterface_Rendering(t *testing.T) {
 	si.SetSize(100, 30)
 
 	// Test empty state
-	view := si.View()
+	view := viewutil.String(si.View())
 	assert.Contains(t, view, "Guild Corpus Search")
 	assert.Contains(t, view, "Welcome to Guild Corpus Search")
 	assert.Contains(t, view, "Getting Started")
 
 	// Test with query but no results
 	si.SetQuery("test query")
-	view = si.View()
+	view = viewutil.String(si.View())
 	assert.Contains(t, view, "test query")
 	assert.Contains(t, view, "No results found")
 	assert.Contains(t, view, "Suggestions")
@@ -255,7 +256,7 @@ func TestSearchInterface_Rendering(t *testing.T) {
 	}
 	si.SetResults(results)
 
-	view = si.View()
+	view = viewutil.String(si.View())
 	assert.Contains(t, view, "Found 1 results")
 	assert.Contains(t, view, "Test Result (95%)")
 	assert.Contains(t, view, "test result preview")
@@ -263,7 +264,7 @@ func TestSearchInterface_Rendering(t *testing.T) {
 
 	// Test with details expanded
 	si.showDetails = true
-	view = si.View()
+	view = viewutil.String(si.View())
 	assert.Contains(t, view, "Full Details")
 	assert.Contains(t, view, "Extended Preview")
 	assert.Contains(t, view, "Metadata")
@@ -285,7 +286,7 @@ func TestSearchInterface_ActiveFilters(t *testing.T) {
 	assert.True(t, si.hasActiveFilters())
 
 	// Test rendering active filters
-	view := si.View()
+	view := viewutil.String(si.View())
 	assert.Contains(t, view, "Active filters")
 	assert.Contains(t, view, "types:pattern")
 	assert.Contains(t, view, "tags:auth")
@@ -501,7 +502,7 @@ func TestSearchInterface_Integration(t *testing.T) {
 	assert.True(t, si.showDetails)
 
 	// 6. Test rendering with all features
-	view := si.View()
+	view := viewutil.String(si.View())
 
 	// Should contain query
 	assert.Contains(t, view, "authentication")

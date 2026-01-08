@@ -10,7 +10,7 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/charmbracelet/x/exp/teatest"
+	"github.com/guild-framework/guild-core/internal/teatest"
 	"github.com/guild-framework/guild-core/internal/testutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -47,11 +47,11 @@ func (m testThemeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m testThemeModel) View() string {
+func (m testThemeModel) View() tea.View {
 	if m.quitting {
-		return "Goodbye!\n"
+		return tea.NewView("Goodbye!\n")
 	}
-	return "Theme: " + m.theme + "\nPress 't' to toggle theme, 'q' to quit\n"
+	return tea.NewView("Theme: " + m.theme + "\nPress 't' to toggle theme, 'q' to quit\n")
 }
 
 // testProgressModel tests progress indicators
@@ -79,12 +79,12 @@ func (m testProgressModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m testProgressModel) View() string {
+func (m testProgressModel) View() tea.View {
 	if m.quitting {
-		return "Goodbye!\n"
+		return tea.NewView("Goodbye!\n")
 	}
 	bar := strings.Repeat("█", m.progress/10) + strings.Repeat("░", 10-m.progress/10)
-	return fmt.Sprintf("Progress: [%s] %d%%\n", bar, m.progress)
+	return tea.NewView(fmt.Sprintf("Progress: [%s] %d%%\n", bar, m.progress))
 }
 
 type tickMsg time.Time
@@ -134,9 +134,9 @@ func (m testListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m testListModel) View() string {
+func (m testListModel) View() tea.View {
 	if m.quitting {
-		return "Goodbye!\n"
+		return tea.NewView("Goodbye!\n")
 	}
 
 	var s strings.Builder
@@ -166,7 +166,7 @@ func (m testListModel) View() string {
 		s.WriteString("\n")
 	}
 
-	return s.String()
+	return tea.NewView(s.String())
 }
 
 // TestUIComponents validates all UI components, themes, animations, and responsiveness
@@ -194,7 +194,7 @@ func TestUIComponents(t *testing.T) {
 
 		// Test theme switching
 		start := time.Now()
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("t")})
+		tm.Send(tea.KeyPressMsg{Text: "t", Code: 't'})
 
 		// Wait for theme to change
 		teatest.WaitFor(
@@ -214,7 +214,7 @@ func TestUIComponents(t *testing.T) {
 		t.Logf("Theme switch took %v", switchDuration)
 
 		// Test quit
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+		tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 		testutil.SafeWaitFinished(t, tm, 2*time.Second)
 	})
 
@@ -240,7 +240,7 @@ func TestUIComponents(t *testing.T) {
 		output := string(tm.Output())
 		assert.Contains(t, output, "█", "Progress bar should show progress")
 
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+		tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 		testutil.SafeWaitFinished(t, tm, 2*time.Second)
 	})
 
@@ -260,15 +260,15 @@ func TestUIComponents(t *testing.T) {
 		)
 
 		// Navigate down
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")})
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")})
+		tm.Send(tea.KeyPressMsg{Text: "j", Code: 'j'})
+		tm.Send(tea.KeyPressMsg{Text: "j", Code: 'j'})
 
 		time.Sleep(50 * time.Millisecond)
 
 		output := string(tm.Output())
 		assert.Contains(t, output, "> Item 3", "Should select third item")
 
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+		tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 		testutil.SafeWaitFinished(t, tm, 2*time.Second)
 	})
 
@@ -317,7 +317,7 @@ func TestUIComponents(t *testing.T) {
 						"Line %d should fit within width %d", i, size.width)
 				}
 
-				tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+				tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 				testutil.SafeWaitFinished(t, tm, time.Second)
 			})
 		}
@@ -371,7 +371,7 @@ func TestUIPerformance(t *testing.T) {
 		t.Logf("Average frame time: %v (%.1f fps)",
 			avgFrameTime, 1000/float64(avgFrameTime.Milliseconds()))
 
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+		tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 		testutil.SafeWaitFinished(t, tm, time.Second)
 	})
 
@@ -395,7 +395,7 @@ func TestUIPerformance(t *testing.T) {
 
 		// Scroll down rapidly
 		for i := 0; i < 20; i++ {
-			tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("j")})
+			tm.Send(tea.KeyPressMsg{Text: "j", Code: 'j'})
 			time.Sleep(16 * time.Millisecond) // 60fps
 		}
 
@@ -407,7 +407,7 @@ func TestUIPerformance(t *testing.T) {
 
 		t.Logf("Rapid scroll test took %v", scrollDuration)
 
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+		tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 		testutil.SafeWaitFinished(t, tm, time.Second)
 	})
 
@@ -435,7 +435,7 @@ func TestUIPerformance(t *testing.T) {
 		}
 
 		// Should complete without issues
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+		tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 		testutil.SafeWaitFinished(t, tm, time.Second)
 	})
 }
@@ -464,20 +464,20 @@ func TestUIAccessibility(t *testing.T) {
 		)
 
 		// Test arrow keys
-		tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+		tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 		time.Sleep(50 * time.Millisecond)
 
 		output := string(tm.Output())
 		assert.Contains(t, output, "> Item 2", "Down arrow should work")
 
 		// Test vim keys
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("k")})
+		tm.Send(tea.KeyPressMsg{Text: "k", Code: 'k'})
 		time.Sleep(50 * time.Millisecond)
 
 		output = string(tm.Output())
 		assert.Contains(t, output, "> Item 1", "Vim key 'k' should work")
 
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+		tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 		testutil.SafeWaitFinished(t, tm, time.Second)
 	})
 
@@ -504,7 +504,7 @@ func TestUIAccessibility(t *testing.T) {
 		selectedCount := strings.Count(output, ">")
 		assert.Equal(t, 1, selectedCount, "Should have exactly one selected item")
 
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+		tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 		testutil.SafeWaitFinished(t, tm, time.Second)
 	})
 }

@@ -35,6 +35,7 @@ import (
 	"github.com/guild-framework/guild-core/internal/ui/chat/session"
 	"github.com/guild-framework/guild-core/internal/ui/formatting"
 	uitools "github.com/guild-framework/guild-core/internal/ui/tools"
+	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
 	"github.com/guild-framework/guild-core/internal/ui/vim"
 	"github.com/guild-framework/guild-core/internal/ui/visual"
 	"github.com/guild-framework/guild-core/pkg/agents/core"
@@ -159,6 +160,7 @@ type App struct {
 	initialized bool
 	ready       bool
 	shouldQuit  bool
+	useAltScreen bool
 	errorState  error
 }
 
@@ -266,12 +268,12 @@ func (app *App) Run() error {
 		}
 
 		opts = append(opts,
-			tea.WithAltScreen(),
-			tea.WithInputTTY(),
+			tea.WithInput(ttyOut),
 			tea.WithOutput(ttyOut),
 		)
+		app.useAltScreen = true
 	} else if term.IsTerminal(int(os.Stdout.Fd())) {
-		opts = append(opts, tea.WithAltScreen())
+		app.useAltScreen = true
 	} else {
 		// No usable terminal: fall back to simple output mode.
 		opts = append(opts, tea.WithoutRenderer())
@@ -1187,30 +1189,38 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View renders the application
-func (app *App) View() string {
+func (app *App) View() tea.View {
 	if !app.ready {
-		return "Initializing Guild Chat..."
+		view := tea.NewView("Initializing Guild Chat...")
+		view.AltScreen = app.useAltScreen
+		return view
 	}
 
 	if app.shouldQuit {
-		return "Goodbye! 🏰"
+		view := tea.NewView("Goodbye! 🏰")
+		view.AltScreen = app.useAltScreen
+		return view
 	}
 
 	if app.errorState != nil {
-		return fmt.Sprintf("Error: %v", app.errorState)
+		view := tea.NewView(fmt.Sprintf("Error: %v", app.errorState))
+		view.AltScreen = app.useAltScreen
+		return view
 	}
 
 	// Get pane views
-	outputView := app.outputPane.View()
-	inputView := app.inputPane.View()
-	statusView := app.statusPane.View()
+	outputView := viewutil.String(app.outputPane.View())
+	inputView := viewutil.String(app.inputPane.View())
+	statusView := viewutil.String(app.statusPane.View())
 
 	// Use layout manager to compose the final view
-	return app.layoutManager.Render(map[string]string{
+	view := tea.NewView(app.layoutManager.Render(map[string]string{
 		"output": outputView,
 		"input":  inputView,
 		"status": statusView,
-	})
+	}))
+	view.AltScreen = app.useAltScreen
+	return view
 }
 
 // generateWelcomeMessage creates the welcome message for new sessions

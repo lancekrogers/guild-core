@@ -1,0 +1,86 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        bgcolor="#e6ecfa";
+label="tests";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+        
+        "github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest" [ fillcolor="lightblue" label="runIntegrationTest" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest | defined in framework.go:240\nat framework.go:241: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]\nat framework.go:281: calling [github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest$1]\nat framework.go:262: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat framework.go:295: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat framework.go:263: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat framework.go:296: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat framework.go:264: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:265: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:297: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:298: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+        "github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest$1" [ fillcolor="lightblue" label="runIntegrationTest$1" style="dotted,filled" tooltip="github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest$1 | defined in framework.go:281" ]
+        "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StartService" [ fillcolor="lightblue" label="(*TestHarness).StartService" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StartService | defined in framework.go:85\nat framework.go:97: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat framework.go:98: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:96: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+        "github.com/guild-framework/guild-core/internal/integration/tests.RunSuite" [ tooltip="github.com/guild-framework/guild-core/internal/integration/tests.RunSuite | defined in framework.go:197\nat framework.go:211: calling [github.com/guild-framework/guild-core/internal/integration/tests.RunSuite$1]\nat framework.go:199: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]" fillcolor="lightblue" label="RunSuite" penwidth="1.5" ]
+        "github.com/guild-framework/guild-core/internal/integration/tests.RunSuite$1" [ label="RunSuite$1" style="dotted,filled" tooltip="github.com/guild-framework/guild-core/internal/integration/tests.RunSuite$1 | defined in framework.go:211" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).WaitForService" [ fillcolor="lightblue" label="(*TestHarness).WaitForService" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).WaitForService | defined in framework.go:149\nat framework.go:157: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat framework.go:162: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat framework.go:159: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:164: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:165: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:158: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat framework.go:163: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+        "github.com/guild-framework/guild-core/internal/integration/tests.NewTestHarness" [ fillcolor="lightblue" label="NewTestHarness" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/integration/tests.NewTestHarness | defined in framework.go:75\nat framework.go:78: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]" ]
+        "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StopService" [ fillcolor="lightblue" label="(*TestHarness).StopService" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StopService | defined in framework.go:115\nat framework.go:130: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat framework.go:121: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat framework.go:122: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat framework.go:131: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat framework.go:123: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:132: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        fillcolor="lightyellow";
+fontname="Tahoma bold";
+rank="sink";
+label="gerror";
+fontsize="16";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
+style="filled";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" fillcolor="moccasin" label="(*GuildError).WithDetails" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ fillcolor="moccasin" label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" ]
+        
+    }
+
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/observability" {
+        fontsize="16";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+rank="sink";
+label="observability";
+URL="/?f=github.com/guild-framework/guild-core/pkg/observability";
+tooltip="package: github.com/guild-framework/guild-core/pkg/observability";
+style="filled";
+penwidth="0.8";
+        
+        "github.com/guild-framework/guild-core/pkg/observability.GetLogger" [ fillcolor="moccasin" label="GetLogger" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/observability.GetLogger | defined in logger.go:206" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).WaitForService" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at framework.go:157: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).WaitForService" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at framework.go:162: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest" -> "github.com/guild-framework/guild-core/pkg/observability.GetLogger" [ color="saddlebrown" tooltip="at framework.go:241: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]" ]
+    "github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest" -> "github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest$1" [ arrowhead="normalnoneodiamond" tooltip="at framework.go:281: calling [github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest$1]" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StartService" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at framework.go:97: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).WaitForService" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at framework.go:159: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:164: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:165: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StopService" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at framework.go:130: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at framework.go:262: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat framework.go:295: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StartService" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ tooltip="at framework.go:98: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).WaitForService" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at framework.go:158: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat framework.go:163: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StopService" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at framework.go:121: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StopService" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at framework.go:122: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat framework.go:131: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at framework.go:263: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat framework.go:296: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "github.com/guild-framework/guild-core/internal/integration/tests.RunSuite" -> "github.com/guild-framework/guild-core/internal/integration/tests.RunSuite$1" [ arrowhead="normalnoneodiamond" tooltip="at framework.go:211: calling [github.com/guild-framework/guild-core/internal/integration/tests.RunSuite$1]" ]
+    "github.com/guild-framework/guild-core/internal/integration/tests.NewTestHarness" -> "github.com/guild-framework/guild-core/pkg/observability.GetLogger" [ color="saddlebrown" tooltip="at framework.go:78: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StopService" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at framework.go:123: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:132: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "github.com/guild-framework/guild-core/internal/integration/tests.runIntegrationTest" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ tooltip="at framework.go:264: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:265: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:297: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat framework.go:298: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/internal/integration/tests.TestHarness).StartService" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at framework.go:96: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "github.com/guild-framework/guild-core/internal/integration/tests.RunSuite" -> "github.com/guild-framework/guild-core/pkg/observability.GetLogger" [ color="saddlebrown" tooltip="at framework.go:199: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]" ]
+}

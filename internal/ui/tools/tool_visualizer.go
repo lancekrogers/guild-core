@@ -13,6 +13,7 @@ import (
 
 	"charm.land/lipgloss/v2"
 	"github.com/guild-framework/guild-core/internal/ui/progress"
+	"image/color"
 )
 
 // ToolVisualizer provides enhanced visualization for tool execution
@@ -578,8 +579,8 @@ func (v *ToolVisualizer) getFileOpIcon(op string) string {
 }
 
 // getFileOpColor returns the appropriate color for file operations
-func (v *ToolVisualizer) getFileOpColor(op string) lipgloss.Color {
-	colors := map[string]lipgloss.Color{
+func (v *ToolVisualizer) getFileOpColor(op string) color.Color {
+	colors := map[string]color.Color{
 		"create": lipgloss.Color("42"),  // Green
 		"edit":   lipgloss.Color("33"),  // Yellow
 		"modify": lipgloss.Color("33"),  // Yellow

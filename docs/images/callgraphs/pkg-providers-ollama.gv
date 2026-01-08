@@ -1,0 +1,80 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        bgcolor="#e6ecfa";
+label="ollama";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+        
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ListModels" [ label="(*Client).ListModels" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ListModels | defined in client.go:341\nat client.go:351: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ListModels$1]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ListModels$1" [ fillcolor="lightblue" label="(*Client).ListModels$1" style="dotted,filled" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ListModels$1 | defined in client.go:351" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest" [ fillcolor="lightblue" label="(*Client).makeRequest" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest | defined in client.go:377\nat client.go:404: calling [github.com/guild-framework/guild-core/pkg/gerror.Newf]\nat client.go:405: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:406: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:407: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:408: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:409: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion" [ fillcolor="lightblue" label="(*Client).ChatCompletion" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion | defined in client.go:109\nat client.go:168: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat client.go:169: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:171: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:145: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest]\nat client.go:170: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).PullModel" [ fillcolor="lightblue" label="(*Client).PullModel" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).PullModel | defined in client.go:303\nat client.go:318: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).PullModel$1]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).PullModel$1" [ fillcolor="lightblue" label="(*Client).PullModel$1" style="dotted,filled" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).PullModel$1 | defined in client.go:318" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).Complete" [ fillcolor="lightblue" label="(*Client).Complete" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).Complete | defined in client.go:476\nat client.go:484: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).StreamChatCompletion" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).StreamChatCompletion | defined in client.go:197\nat client.go:236: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:235: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:237: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:238: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:234: calling [github.com/guild-framework/guild-core/pkg/gerror.Newf]" fillcolor="lightblue" label="(*Client).StreamChatCompletion" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).CreateEmbedding" [ fillcolor="lightblue" label="(*Client).CreateEmbedding" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).CreateEmbedding | defined in client.go:248\nat client.go:251: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat client.go:265: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest]\nat client.go:252: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:276: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:253: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:277: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:275: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat client.go:254: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:278: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.ollamaStream).Next" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.ollamaStream).Next | defined in client.go:421\nat client.go:449: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.ollamaStream).Next$1]" fillcolor="lightblue" label="(*ollamaStream).Next" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ollama.ollamaStream).Next$1" [ label="(*ollamaStream).Next$1" style="dotted,filled" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ollama.ollamaStream).Next$1 | defined in client.go:444" fillcolor="lightblue" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        fontsize="16";
+fillcolor="lightyellow";
+rank="sink";
+label="gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
+style="filled";
+fontname="Tahoma bold";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.Newf" [ fillcolor="moccasin" label="Newf" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Newf | defined in errors.go:218" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" fillcolor="moccasin" label="(*GuildError).WithDetails" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" fillcolor="moccasin" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at client.go:168: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).PullModel" -> "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).PullModel$1" [ arrowhead="normalnoneodiamond" tooltip="at client.go:318: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).PullModel$1]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at client.go:236: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).CreateEmbedding" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at client.go:251: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest" [ tooltip="at client.go:265: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.ollamaStream).Next" -> "(*github.com/guild-framework/guild-core/pkg/providers/ollama.ollamaStream).Next$1" [ tooltip="at client.go:449: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.ollamaStream).Next$1]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest" -> "github.com/guild-framework/guild-core/pkg/gerror.Newf" [ color="saddlebrown" tooltip="at client.go:404: calling [github.com/guild-framework/guild-core/pkg/gerror.Newf]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:405: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ tooltip="at client.go:406: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:169: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:171: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:235: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:237: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:238: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:252: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:276: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ListModels" -> "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ListModels$1" [ arrowhead="normalnoneodiamond" tooltip="at client.go:351: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ListModels$1]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at client.go:253: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:277: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).CreateEmbedding" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at client.go:275: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:407: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:408: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:409: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest" [ tooltip="at client.go:145: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).makeRequest]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ tooltip="at client.go:170: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).Complete" -> "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion" [ tooltip="at client.go:484: calling [(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).ChatCompletion]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).StreamChatCompletion" -> "github.com/guild-framework/guild-core/pkg/gerror.Newf" [ tooltip="at client.go:234: calling [github.com/guild-framework/guild-core/pkg/gerror.Newf]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ollama.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:254: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:278: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+}

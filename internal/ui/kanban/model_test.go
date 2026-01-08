@@ -240,7 +240,7 @@ func TestScribeModel_ColumnNavigation(t *testing.T) {
 				model.viewportState.FocusedColumn = 1
 			}
 
-			updatedModel, _ := model.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(tt.key)})
+			updatedModel, _ := model.Update(tea.KeyPressMsg{Text: tt.key, Code: rune(tt.key[0])})
 			m := updatedModel.(*Model)
 			assert.Equal(t, tt.expected, m.viewportState.FocusedColumn)
 		})
@@ -254,7 +254,7 @@ func TestScribeModel_SearchMode(t *testing.T) {
 	model := New(context.Background(), mgr, board.ID)
 
 	// Enter search mode
-	updatedModel, _ := model.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("/")})
+	updatedModel, _ := model.Update(tea.KeyPressMsg{Text: "/", Code: '/'})
 	m := updatedModel.(*Model)
 	assert.True(t, m.viewportState.SearchMode)
 	assert.Equal(t, "", m.viewportState.SearchFilter)
@@ -262,13 +262,13 @@ func TestScribeModel_SearchMode(t *testing.T) {
 	// Type search term
 	searchTerm := "test"
 	for _, ch := range searchTerm {
-		updatedModel, _ = m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{ch}})
+		updatedModel, _ = m.Update(tea.KeyPressMsg{Text: string(ch), Code: ch})
 		m = updatedModel.(*Model)
 	}
 	assert.Equal(t, searchTerm, m.viewportState.SearchFilter)
 
 	// Exit search mode
-	updatedModel, _ = m.Update(tea.KeyMsg{Type: tea.KeyEscape})
+	updatedModel, _ = m.Update(tea.KeyPressMsg{Code: tea.KeyEscape})
 	m = updatedModel.(*Model)
 	assert.False(t, m.viewportState.SearchMode)
 	assert.Equal(t, "", m.viewportState.SearchFilter)

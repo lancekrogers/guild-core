@@ -11,6 +11,7 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
+	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
 	"github.com/guild-framework/guild-core/pkg/agents/core"
 	"github.com/guild-framework/guild-core/pkg/gerror"
 	"github.com/guild-framework/guild-core/pkg/observability"
@@ -219,9 +220,9 @@ func (ri *ReasoningIntegration) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View implements tea.Model
-func (ri *ReasoningIntegration) View() string {
+func (ri *ReasoningIntegration) View() tea.View {
 	// For now, return empty string as this is integrated into chat view
-	return ""
+	return tea.NewView("")
 }
 
 // ViewWithChat renders the reasoning integration with chat content
@@ -358,7 +359,7 @@ func (ri *ReasoningIntegration) renderBottomLayout(chatView string, width, heigh
 	if ri.minimized {
 		reasoningView = ri.renderMinimizedView(width)
 	} else {
-		reasoningView = ri.display.View()
+		reasoningView = viewutil.String(ri.display.View())
 	}
 
 	// Combine with separator
@@ -390,7 +391,7 @@ func (ri *ReasoningIntegration) renderRightLayout(chatView string, width, height
 	if ri.minimized {
 		reasoningView = ri.renderMinimizedView(displayWidth)
 	} else {
-		reasoningView = ri.display.View()
+		reasoningView = viewutil.String(ri.display.View())
 	}
 
 	// Combine with separator
@@ -420,7 +421,7 @@ func (ri *ReasoningIntegration) renderOverlayLayout(chatView string, width, heig
 	if ri.minimized {
 		reasoningView = ri.renderMinimizedView(overlayWidth)
 	} else {
-		reasoningView = ri.display.View()
+		reasoningView = viewutil.String(ri.display.View())
 	}
 
 	// Create overlay with shadow effect
@@ -456,7 +457,7 @@ func (ri *ReasoningIntegration) renderSplitLayout(chatView string, width, height
 	if ri.minimized {
 		reasoningView = ri.renderMinimizedView(width)
 	} else {
-		reasoningView = ri.display.View()
+		reasoningView = viewutil.String(ri.display.View())
 	}
 
 	// Combine with double border

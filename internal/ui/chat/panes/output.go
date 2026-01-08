@@ -86,7 +86,10 @@ func NewOutputPane(width, height int, richContentEnabled bool) (OutputPane, erro
 	basePane.ApplyDefaultStyling()
 
 	// Initialize viewport
-	vp := viewport.New(width-2, height-2) // Account for borders
+	vp := viewport.New(
+		viewport.WithWidth(width-2),
+		viewport.WithHeight(height-2),
+	) // Account for borders
 	vp.SetContent("")
 
 	pane := &outputPaneImpl{
@@ -217,16 +220,12 @@ func (op *outputPaneImpl) ScrollToTop() {
 
 // ScrollUp scrolls up by the specified number of lines
 func (op *outputPaneImpl) ScrollUp(lines int) {
-	for i := 0; i < lines; i++ {
-		op.viewport.LineUp(1)
-	}
+	op.viewport.ScrollUp(lines)
 }
 
 // ScrollDown scrolls down by the specified number of lines
 func (op *outputPaneImpl) ScrollDown(lines int) {
-	for i := 0; i < lines; i++ {
-		op.viewport.LineDown(1)
-	}
+	op.viewport.ScrollDown(lines)
 }
 
 // Resize updates the pane dimensions
@@ -235,8 +234,8 @@ func (op *outputPaneImpl) Resize(width, height int) {
 
 	// Update viewport dimensions
 	innerWidth, innerHeight := op.GetInnerDimensions()
-	op.viewport.Width = innerWidth
-	op.viewport.Height = innerHeight
+	op.viewport.SetWidth(innerWidth)
+	op.viewport.SetHeight(innerHeight)
 
 	// Regenerate content for new width
 	op.updateViewportContent()
@@ -281,9 +280,9 @@ func (op *outputPaneImpl) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	case "ctrl+d":
 		op.ScrollDown(10)
 	case "pgup":
-		op.viewport.ViewUp()
+		op.viewport.PageUp()
 	case "pgdown":
-		op.viewport.ViewDown()
+		op.viewport.PageDown()
 	case "home":
 		op.ScrollToTop()
 	case "end":
@@ -306,12 +305,12 @@ func (op *outputPaneImpl) handleKeyPress(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 }
 
 // View renders the output pane
-func (op *outputPaneImpl) View() string {
+func (op *outputPaneImpl) View() tea.View {
 	// Get viewport content
 	viewportContent := op.viewport.View()
 
 	// Apply border and styling
-	return op.RenderWithBorder(viewportContent)
+	return tea.NewView(op.RenderWithBorder(viewportContent))
 }
 
 // updateViewportContent regenerates the viewport content from messages
@@ -412,7 +411,7 @@ func (op *outputPaneImpl) formatMessage(msg common.ChatMessage, index int) strin
 			Border(lipgloss.RoundedBorder()).
 			BorderForeground(lipgloss.Color("8")).
 			Padding(0, 1).
-			Width(op.viewport.Width - 4)
+			Width(op.viewport.Width() - 4)
 
 		// Add confidence if available in metadata
 		if confidence, ok := msg.Metadata["confidence"]; ok {
@@ -509,9 +508,9 @@ func (op *outputPaneImpl) GetStats() map[string]interface{} {
 	stats := make(map[string]interface{})
 
 	stats["total_messages"] = len(op.messages)
-	stats["viewport_height"] = op.viewport.Height
-	stats["viewport_width"] = op.viewport.Width
-	stats["scroll_position"] = op.viewport.YOffset
+	stats["viewport_height"] = op.viewport.Height()
+	stats["viewport_width"] = op.viewport.Width()
+	stats["scroll_position"] = op.viewport.YOffset()
 	stats["total_lines"] = op.viewport.TotalLineCount()
 	stats["markdown_enabled"] = op.markdownEnabled
 	stats["rich_content_enabled"] = op.richContentEnabled

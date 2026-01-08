@@ -1,0 +1,85 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        labelloc="t";
+labeljust="c";
+fontsize="18";
+bgcolor="#e6ecfa";
+label="testing";
+        
+        "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent" [ fillcolor="lightblue" label="(*EventSimulator).createRandomEvent" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent | defined in simulator.go:168\nat simulator.go:180: calling [github.com/guild-framework/guild-core/pkg/events.NewTaskEvent]\nat simulator.go:193: calling [github.com/guild-framework/guild-core/pkg/events.NewSystemEvent]\nat simulator.go:187: calling [github.com/guild-framework/guild-core/pkg/events.NewAgentEvent]\nat simulator.go:178: calling [github.com/guild-framework/guild-core/pkg/eventbus/testing.getRandomTaskStatus]" ]
+        "github.com/guild-framework/guild-core/pkg/eventbus/testing.getRandomTaskStatus" [ label="getRandomTaskStatus" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/eventbus/testing.getRandomTaskStatus | defined in simulator.go:198" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateSingleEvent" [ tooltip="(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateSingleEvent | defined in simulator.go:142\nat simulator.go:143: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent]" fillcolor="lightblue" label="(*EventSimulator).generateSingleEvent" penwidth="0.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst$1" [ style="dotted,filled" tooltip="(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst$1 | defined in simulator.go:158\nat simulator.go:160: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateSingleEvent]" fillcolor="lightblue" label="(*EventSimulator).generateBurst$1" ]
+        "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst" [ fillcolor="lightblue" label="(*EventSimulator).generateBurst" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst | defined in simulator.go:153\nat simulator.go:158: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst$1]" ]
+        "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).Start" [ fillcolor="lightblue" label="(*EventSimulator).Start" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).Start | defined in simulator.go:91\nat simulator.go:97: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateEvents]\nat simulator.go:93: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+        "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateEvents" [ penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateEvents | defined in simulator.go:118\nat simulator.go:135: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateSingleEvent]\nat simulator.go:133: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst]" fillcolor="lightblue" label="(*EventSimulator).generateEvents" ]
+        "github.com/guild-framework/guild-core/pkg/eventbus/testing.NewEventSimulator" [ fillcolor="lightblue" label="NewEventSimulator" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/eventbus/testing.NewEventSimulator | defined in simulator.go:75\nat simulator.go:77: calling [github.com/guild-framework/guild-core/pkg/eventbus/testing.DefaultSimulatorConfig]" ]
+        "github.com/guild-framework/guild-core/pkg/eventbus/testing.DefaultSimulatorConfig" [ fillcolor="lightblue" label="DefaultSimulatorConfig" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/eventbus/testing.DefaultSimulatorConfig | defined in simulator.go:51" ]
+        "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).Run" [ fillcolor="lightblue" label="(*LoadTester).Run" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).Run | defined in simulator.go:232\nat simulator.go:234: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat simulator.go:245: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).runWorker]" ]
+        "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).runWorker" [ fillcolor="lightblue" label="(*LoadTester).runWorker" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).runWorker | defined in simulator.go:263\nat simulator.go:266: calling [github.com/guild-framework/guild-core/pkg/eventbus/testing.NewEventSimulator]\nat simulator.go:273: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent]" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/events" {
+        fontname="Tahoma bold";
+tooltip="package: github.com/guild-framework/guild-core/pkg/events";
+fontsize="16";
+fillcolor="lightyellow";
+rank="sink";
+label="events";
+URL="/?f=github.com/guild-framework/guild-core/pkg/events";
+penwidth="0.8";
+style="filled";
+        
+        "github.com/guild-framework/guild-core/pkg/events.NewTaskEvent" [ label="NewTaskEvent" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/events.NewTaskEvent | defined in specialized.go:22" fillcolor="moccasin" ]
+        "github.com/guild-framework/guild-core/pkg/events.NewAgentEvent" [ fillcolor="moccasin" label="NewAgentEvent" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/events.NewAgentEvent | defined in specialized.go:59" ]
+        "github.com/guild-framework/guild-core/pkg/events.NewSystemEvent" [ fillcolor="moccasin" label="NewSystemEvent" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/events.NewSystemEvent | defined in specialized.go:95" ]
+        
+    }
+
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        penwidth="0.8";
+fontsize="16";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+label="gerror";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+style="filled";
+rank="sink";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ fillcolor="moccasin" label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" ]
+        
+    }
+
+    }
+
+    "github.com/guild-framework/guild-core/pkg/eventbus/testing.NewEventSimulator" -> "github.com/guild-framework/guild-core/pkg/eventbus/testing.DefaultSimulatorConfig" [ tooltip="at simulator.go:77: calling [github.com/guild-framework/guild-core/pkg/eventbus/testing.DefaultSimulatorConfig]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).runWorker" -> "github.com/guild-framework/guild-core/pkg/eventbus/testing.NewEventSimulator" [ tooltip="at simulator.go:266: calling [github.com/guild-framework/guild-core/pkg/eventbus/testing.NewEventSimulator]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateEvents" -> "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateSingleEvent" [ tooltip="at simulator.go:135: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateSingleEvent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).Run" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at simulator.go:234: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent" -> "github.com/guild-framework/guild-core/pkg/events.NewTaskEvent" [ color="saddlebrown" tooltip="at simulator.go:180: calling [github.com/guild-framework/guild-core/pkg/events.NewTaskEvent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent" -> "github.com/guild-framework/guild-core/pkg/events.NewSystemEvent" [ color="saddlebrown" tooltip="at simulator.go:193: calling [github.com/guild-framework/guild-core/pkg/events.NewSystemEvent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst" -> "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst$1" [ arrowhead="normalnoneodot" tooltip="at simulator.go:158: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst$1]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).runWorker" -> "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent" [ tooltip="at simulator.go:273: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).Run" -> "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).runWorker" [ arrowhead="normalnoneodot" tooltip="at simulator.go:245: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.LoadTester).runWorker]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent" -> "github.com/guild-framework/guild-core/pkg/events.NewAgentEvent" [ color="saddlebrown" tooltip="at simulator.go:187: calling [github.com/guild-framework/guild-core/pkg/events.NewAgentEvent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateSingleEvent" -> "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent" [ tooltip="at simulator.go:143: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst$1" -> "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateSingleEvent" [ tooltip="at simulator.go:160: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateSingleEvent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).Start" -> "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateEvents" [ arrowhead="normalnoneodot" tooltip="at simulator.go:97: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateEvents]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).createRandomEvent" -> "github.com/guild-framework/guild-core/pkg/eventbus/testing.getRandomTaskStatus" [ tooltip="at simulator.go:178: calling [github.com/guild-framework/guild-core/pkg/eventbus/testing.getRandomTaskStatus]" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).Start" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ tooltip="at simulator.go:93: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateEvents" -> "(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst" [ tooltip="at simulator.go:133: calling [(*github.com/guild-framework/guild-core/pkg/eventbus/testing.EventSimulator).generateBurst]" ]
+}

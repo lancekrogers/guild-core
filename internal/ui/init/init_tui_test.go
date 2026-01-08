@@ -12,7 +12,7 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/charmbracelet/x/exp/teatest"
+	"github.com/guild-framework/guild-core/internal/teatest"
 
 	"github.com/guild-framework/guild-core/internal/setup"
 	uiinit "github.com/guild-framework/guild-core/internal/ui/init"
@@ -256,7 +256,7 @@ func TestInitTUIModelV2_ContextCancellation(t *testing.T) {
 	cancel()
 
 	// Update should detect cancellation
-	_, _ = model.Update(tea.KeyMsg{Type: tea.KeyEnter})
+	_, _ = model.Update(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 	if model.GetError() == nil {
 		t.Error("expected error for cancelled context")
@@ -477,7 +477,7 @@ func TestInitTUIModel_Integration_QuickMode(t *testing.T) {
 	)
 
 	// Send quit to exit the program since it doesn't auto-quit
-	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEscape})
 
 	// Now it should finish
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
@@ -552,7 +552,7 @@ func TestInitTUIModel_Integration_QuickModeFullFlow(t *testing.T) {
 	)
 
 	// Send quit to exit the program
-	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 	// Should finish quickly now
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
@@ -627,9 +627,9 @@ func TestInitTUIModel_Integration_InteractiveCancel(t *testing.T) {
 	)
 
 	// Send quit key
-	tm.Send(tea.KeyMsg{
-		Type:  tea.KeyRunes,
-		Runes: []rune("q"),
+	tm.Send(tea.KeyPressMsg{
+		Text: "q",
+		Code: 'q',
 	})
 
 	// Program should exit

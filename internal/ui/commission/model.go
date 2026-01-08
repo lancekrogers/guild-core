@@ -170,7 +170,10 @@ func NewModel(ctx context.Context, commissionPath string, manager CommissionMana
 	parchment.CharLimit = 250
 
 	// Initialize viewport for displaying content
-	viewport := viewport.New(80, 20)
+	viewport := viewport.New(
+		viewport.WithWidth(80),
+		viewport.WithHeight(20),
+	)
 	viewport.SetContent("Welcome to the Guild Hall Commission Chamber")
 
 	// Initialize commissions list

@@ -126,7 +126,7 @@ func runSetup(cmd *cobra.Command, args []string) error {
 	} else {
 		// Run interactive TUI
 		model := uisetup.NewWizardTUIModel(ctx, wizard)
-		program := tea.NewProgram(model, tea.WithAltScreen())
+		program := tea.NewProgram(model)
 
 		if _, err := program.Run(); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "setup wizard failed").

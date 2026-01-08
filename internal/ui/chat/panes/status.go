@@ -398,14 +398,14 @@ func (sp *statusPaneImpl) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View renders the status pane
-func (sp *statusPaneImpl) View() string {
+func (sp *statusPaneImpl) View() tea.View {
 	rect := sp.GetRect()
 
 	if sp.compactMode {
-		return sp.renderCompactStatus(rect.Width)
+		return tea.NewView(sp.renderCompactStatus(rect.Width))
 	}
 
-	return sp.renderDetailedStatus(rect.Width)
+	return tea.NewView(sp.renderDetailedStatus(rect.Width))
 }
 
 // renderCompactStatus renders a single-line status bar

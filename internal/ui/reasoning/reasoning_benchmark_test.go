@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/guild-framework/guild-core/pkg/agents/core"
+	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
 	"github.com/stretchr/testify/require"
 )
 
@@ -68,7 +69,7 @@ func BenchmarkRenderTime(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				// Measure render time
 				start := time.Now()
-				rendered := display.View()
+				rendered := viewutil.String(display.View())
 				elapsed := time.Since(start)
 
 				// Ensure render time is under 10ms

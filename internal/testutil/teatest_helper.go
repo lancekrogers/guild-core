@@ -11,7 +11,7 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/charmbracelet/x/exp/teatest"
+	"github.com/guild-framework/guild-core/internal/teatest"
 )
 
 // TeaTestHelper provides safe teatest execution with proper cleanup

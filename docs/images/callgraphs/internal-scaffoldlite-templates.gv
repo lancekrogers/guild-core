@@ -1,0 +1,43 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        labeljust="c";
+fontsize="18";
+bgcolor="#e6ecfa";
+label="templates";
+labelloc="t";
+        
+        "github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS | defined in embed.go:16\nat embed.go:19: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" fillcolor="lightblue" label="GetEmbeddedTemplatesFS" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        fontsize="16";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
+style="filled";
+rank="sink";
+label="gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        
+    }
+
+    }
+
+    "github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at embed.go:19: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+}

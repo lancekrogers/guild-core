@@ -23,6 +23,9 @@ mod docker '.justfiles/docker.just'
 [doc('Release packaging')]
 mod release '.justfiles/release.just'
 
+[doc('Callgraph visualization')]
+mod callgraph '.justfiles/callgraph.just'
+
 [private]
 default:
     #!/usr/bin/env bash

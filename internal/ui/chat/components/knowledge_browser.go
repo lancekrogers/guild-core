@@ -148,25 +148,25 @@ func (kb *KnowledgeBrowser) SetGraph(graph *KnowledgeGraph) {
 }
 
 // View renders the knowledge browser
-func (kb *KnowledgeBrowser) View() string {
+func (kb *KnowledgeBrowser) View() tea.View {
 	_ = observability.WithOperation(kb.ctx, "View")
 
 	if kb.graph == nil {
-		return kb.renderEmptyState()
+		return tea.NewView(kb.renderEmptyState())
 	}
 
 	switch kb.viewMode {
 	case ViewModeGraph:
-		return kb.renderGraphView()
+		return tea.NewView(kb.renderGraphView())
 	case ViewModeList:
-		return kb.renderListView()
+		return tea.NewView(kb.renderListView())
 	case ViewModeDetail:
-		return kb.renderDetailView()
+		return tea.NewView(kb.renderDetailView())
 	case ViewModeSearch:
-		return kb.renderSearchView()
+		return tea.NewView(kb.renderSearchView())
 	}
 
-	return ""
+	return tea.NewView("")
 }
 
 // Update handles input events

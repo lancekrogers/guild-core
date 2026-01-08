@@ -1,0 +1,85 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        bgcolor="#e6ecfa";
+label="mock";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+        
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion" [ fillcolor="lightblue" label="(*Provider).ChatCompletion" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion | defined in provider.go:154\nat provider.go:157: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat provider.go:203: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).findYAMLResponse]\nat provider.go:158: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat provider.go:156: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).findYAMLResponse" [ fillcolor="lightblue" label="(*Provider).findYAMLResponse" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).findYAMLResponse | defined in provider.go:263" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).StreamChatCompletion" [ fillcolor="lightblue" label="(*Provider).StreamChatCompletion" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).StreamChatCompletion | defined in provider.go:292\nat provider.go:294: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion]\nat provider.go:302: calling [github.com/guild-framework/guild-core/pkg/providers/mock.splitIntoChunks]" ]
+        "github.com/guild-framework/guild-core/pkg/providers/mock.splitIntoChunks" [ fillcolor="lightblue" label="splitIntoChunks" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/providers/mock.splitIntoChunks | defined in provider.go:410" ]
+        "github.com/guild-framework/guild-core/pkg/providers/mock.NewProvider" [ fillcolor="lightblue" label="NewProvider" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/providers/mock.NewProvider | defined in provider.go:42\nat provider.go:94: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat provider.go:90: calling [github.com/guild-framework/guild-core/pkg/providers/mock.loadResponses]\nat provider.go:93: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat provider.go:92: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+        "github.com/guild-framework/guild-core/pkg/providers/mock.loadResponses" [ fillcolor="lightblue" label="loadResponses" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/providers/mock.loadResponses | defined in loader.go:32" ]
+        "github.com/guild-framework/guild-core/pkg/providers/mock.NewBuilder" [ tooltip="github.com/guild-framework/guild-core/pkg/providers/mock.NewBuilder | defined in provider.go:428\nat provider.go:434: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Enable]\nat provider.go:429: calling [github.com/guild-framework/guild-core/pkg/providers/mock.NewProvider]" fillcolor="lightblue" label="NewBuilder" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Enable" [ fillcolor="lightblue" label="(*Provider).Enable" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Enable | defined in provider.go:145" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Complete" [ tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Complete | defined in provider.go:353\nat provider.go:371: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat provider.go:369: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat provider.go:372: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat provider.go:363: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion]\nat provider.go:370: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" fillcolor="lightblue" label="(*Provider).Complete" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithDelay" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithDelay | defined in provider.go:459\nat provider.go:460: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDelay]" fillcolor="lightblue" label="(*Builder).WithDelay" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDelay" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDelay | defined in provider.go:124" fillcolor="lightblue" label="(*Provider).SetDelay" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithDefaultResponse" [ label="(*Builder).WithDefaultResponse" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithDefaultResponse | defined in provider.go:453\nat provider.go:454: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDefaultResponse]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDefaultResponse" [ fillcolor="lightblue" label="(*Provider).SetDefaultResponse" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDefaultResponse | defined in provider.go:117" ]
+        "github.com/guild-framework/guild-core/pkg/providers/mock.NewProviderForTesting" [ fillcolor="lightblue" label="NewProviderForTesting" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/providers/mock.NewProviderForTesting | defined in provider.go:470\nat provider.go:499: calling [github.com/guild-framework/guild-core/pkg/providers/mock.loadResponses]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithResponse" [ tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithResponse | defined in provider.go:441\nat provider.go:442: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetResponse]" fillcolor="lightblue" label="(*Builder).WithResponse" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetResponse" [ fillcolor="lightblue" label="(*Provider).SetResponse" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetResponse | defined in provider.go:103" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithError" [ fillcolor="lightblue" label="(*Builder).WithError" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithError | defined in provider.go:447\nat provider.go:448: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetError]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetError" [ fillcolor="lightblue" label="(*Provider).SetError" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetError | defined in provider.go:110" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        rank="sink";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+fontsize="16";
+style="filled";
+fontname="Tahoma bold";
+label="gerror";
+penwidth="0.8";
+fillcolor="lightyellow";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" fillcolor="moccasin" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at provider.go:157: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion" [ tooltip="at provider.go:294: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).StreamChatCompletion" -> "github.com/guild-framework/guild-core/pkg/providers/mock.splitIntoChunks" [ tooltip="at provider.go:302: calling [github.com/guild-framework/guild-core/pkg/providers/mock.splitIntoChunks]" ]
+    "github.com/guild-framework/guild-core/pkg/providers/mock.NewProvider" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at provider.go:94: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "github.com/guild-framework/guild-core/pkg/providers/mock.NewBuilder" -> "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Enable" [ tooltip="at provider.go:434: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Enable]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Complete" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at provider.go:371: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).findYAMLResponse" [ tooltip="at provider.go:203: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).findYAMLResponse]" ]
+    "github.com/guild-framework/guild-core/pkg/providers/mock.NewBuilder" -> "github.com/guild-framework/guild-core/pkg/providers/mock.NewProvider" [ tooltip="at provider.go:429: calling [github.com/guild-framework/guild-core/pkg/providers/mock.NewProvider]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Complete" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at provider.go:369: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Complete" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at provider.go:372: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithError" -> "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetError" [ tooltip="at provider.go:448: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetError]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at provider.go:158: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "github.com/guild-framework/guild-core/pkg/providers/mock.NewProvider" -> "github.com/guild-framework/guild-core/pkg/providers/mock.loadResponses" [ tooltip="at provider.go:90: calling [github.com/guild-framework/guild-core/pkg/providers/mock.loadResponses]" ]
+    "github.com/guild-framework/guild-core/pkg/providers/mock.NewProvider" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at provider.go:93: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Complete" -> "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion" [ tooltip="at provider.go:363: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithDelay" -> "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDelay" [ tooltip="at provider.go:460: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDelay]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithDefaultResponse" -> "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDefaultResponse" [ tooltip="at provider.go:454: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetDefaultResponse]" ]
+    "github.com/guild-framework/guild-core/pkg/providers/mock.NewProviderForTesting" -> "github.com/guild-framework/guild-core/pkg/providers/mock.loadResponses" [ tooltip="at provider.go:499: calling [github.com/guild-framework/guild-core/pkg/providers/mock.loadResponses]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Builder).WithResponse" -> "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetResponse" [ tooltip="at provider.go:442: calling [(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).SetResponse]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).ChatCompletion" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at provider.go:156: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "github.com/guild-framework/guild-core/pkg/providers/mock.NewProvider" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at provider.go:92: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/mock.Provider).Complete" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ tooltip="at provider.go:370: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" color="saddlebrown" ]
+}

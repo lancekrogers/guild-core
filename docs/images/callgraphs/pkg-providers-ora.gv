@@ -1,0 +1,66 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        bgcolor="#e6ecfa";
+label="ora";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+        
+        "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).StreamChatCompletion" [ fillcolor="lightblue" label="(*Client).StreamChatCompletion" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).StreamChatCompletion | defined in client.go:158\nat client.go:160: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat client.go:162: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:163: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:161: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).makeRequest" [ fillcolor="lightblue" label="(*Client).makeRequest" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).makeRequest | defined in client.go:182\nat client.go:211: calling [(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).parseError]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).parseError" [ label="(*Client).parseError" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).parseError | defined in client.go:218" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion" [ fillcolor="lightblue" label="(*Client).ChatCompletion" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion | defined in client.go:79\nat client.go:101: calling [(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).makeRequest]\nat client.go:129: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:126: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat client.go:128: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:127: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).CreateEmbedding" [ label="(*Client).CreateEmbedding" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).CreateEmbedding | defined in client.go:167\nat client.go:169: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat client.go:171: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:170: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:172: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:173: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).Complete" [ fillcolor="lightblue" label="(*Client).Complete" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).Complete | defined in client.go:273\nat client.go:281: calling [(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion]" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        fontsize="16";
+style="filled";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+rank="sink";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
+label="gerror";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ fillcolor="moccasin" label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" fillcolor="moccasin" label="(*GuildError).WithComponent" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" fillcolor="moccasin" label="(*GuildError).WithOperation" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).StreamChatCompletion" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at client.go:160: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at client.go:162: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ tooltip="at client.go:163: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).makeRequest" -> "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).parseError" [ tooltip="at client.go:211: calling [(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).parseError]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).makeRequest" [ tooltip="at client.go:101: calling [(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).makeRequest]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:129: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at client.go:126: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at client.go:128: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).CreateEmbedding" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at client.go:169: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at client.go:171: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).Complete" -> "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion" [ tooltip="at client.go:281: calling [(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:170: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:172: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:173: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:161: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/ora.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ tooltip="at client.go:127: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" color="saddlebrown" ]
+}

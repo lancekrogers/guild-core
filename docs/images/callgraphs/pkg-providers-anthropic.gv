@@ -1,0 +1,119 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        fontsize="18";
+bgcolor="#e6ecfa";
+label="anthropic";
+labelloc="t";
+labeljust="c";
+        
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).handleError" [ label="(*Client).handleError" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).handleError | defined in client.go:297\nat client.go:301: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:303: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).parseError]\nat client.go:300: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).parseError" [ label="(*Client).parseError" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).parseError | defined in client.go:307" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion" [ tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion | defined in client.go:87\nat client.go:181: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:92: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:180: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:150: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest]\nat client.go:90: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat client.go:178: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat client.go:91: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:179: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:95: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]" fillcolor="lightblue" label="(*Client).ChatCompletion" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest" [ fillcolor="lightblue" label="(*Client).makeRequest" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest | defined in client.go:251\nat client.go:256: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:257: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:254: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat client.go:290: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).parseError]\nat client.go:255: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).Complete" [ fillcolor="lightblue" label="(*Client).Complete" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).Complete | defined in client.go:366\nat client.go:374: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion]" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletionWithTools" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletionWithTools | defined in tools.go:238\nat tools.go:242: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat tools.go:243: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat tools.go:241: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" fillcolor="lightblue" label="(*Client).StreamChatCompletionWithTools" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletionWithTools" [ label="(*Client).ChatCompletionWithTools" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletionWithTools | defined in tools.go:21\nat tools.go:29: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]\nat tools.go:79: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).convertToolsToAnthropicFormat]\nat tools.go:25: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat tools.go:134: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat tools.go:103: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest]\nat tools.go:24: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat tools.go:133: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat tools.go:26: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat tools.go:135: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).convertToolsToAnthropicFormat" [ fillcolor="lightblue" label="(*Client).convertToolsToAnthropicFormat" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).convertToolsToAnthropicFormat | defined in tools.go:214" ]
+        "github.com/guild-framework/guild-core/pkg/providers/anthropic.init" [ penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/providers/anthropic.init | defined in .:0\nat tools.go:18: calling [github.com/guild-framework/guild-core/pkg/tools/parser.NewResponseParser]" fillcolor="lightblue" label="init" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).CreateEmbedding" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).CreateEmbedding | defined in client.go:235\nat client.go:240: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:239: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:238: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat client.go:241: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:242: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" fillcolor="lightblue" label="(*Client).CreateEmbedding" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletion" [ fillcolor="lightblue" label="(*Client).StreamChatCompletion" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletion | defined in client.go:226\nat client.go:230: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:229: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:231: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:228: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        label="gerror";
+fontsize="16";
+style="filled";
+fillcolor="lightyellow";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
+fontname="Tahoma bold";
+rank="sink";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ label="(*GuildError).WithOperation" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" fillcolor="moccasin" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ fillcolor="moccasin" label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" ]
+        
+    }
+
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/observability" {
+        penwidth="0.8";
+fontsize="16";
+rank="sink";
+label="observability";
+style="filled";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+URL="/?f=github.com/guild-framework/guild-core/pkg/observability";
+tooltip="package: github.com/guild-framework/guild-core/pkg/observability";
+        
+        "github.com/guild-framework/guild-core/pkg/observability.GetLogger" [ fillcolor="moccasin" label="GetLogger" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/observability.GetLogger | defined in logger.go:206" ]
+        
+    }
+
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/tools/parser" {
+        URL="/?f=github.com/guild-framework/guild-core/pkg/tools/parser";
+fontsize="16";
+fillcolor="lightyellow";
+rank="sink";
+tooltip="package: github.com/guild-framework/guild-core/pkg/tools/parser";
+penwidth="0.8";
+style="filled";
+fontname="Tahoma bold";
+label="parser";
+        
+        "github.com/guild-framework/guild-core/pkg/tools/parser.NewResponseParser" [ fillcolor="moccasin" label="NewResponseParser" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/tools/parser.NewResponseParser | defined in parser.go:36" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at client.go:256: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletionWithTools" -> "github.com/guild-framework/guild-core/pkg/observability.GetLogger" [ color="saddlebrown" tooltip="at tools.go:29: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletionWithTools" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at tools.go:242: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletionWithTools" -> "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).convertToolsToAnthropicFormat" [ tooltip="at tools.go:79: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).convertToolsToAnthropicFormat]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at client.go:230: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:181: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).Complete" -> "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion" [ tooltip="at client.go:374: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletionWithTools" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at tools.go:25: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat tools.go:134: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletionWithTools" -> "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest" [ tooltip="at tools.go:103: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:229: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:231: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at client.go:240: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).handleError" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:301: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ tooltip="at client.go:92: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat client.go:180: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:257: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletionWithTools" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at tools.go:24: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat tools.go:133: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "github.com/guild-framework/guild-core/pkg/providers/anthropic.init" -> "github.com/guild-framework/guild-core/pkg/tools/parser.NewResponseParser" [ color="saddlebrown" tooltip="at tools.go:18: calling [github.com/guild-framework/guild-core/pkg/tools/parser.NewResponseParser]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:239: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletion" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at client.go:228: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).handleError" -> "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).parseError" [ tooltip="at client.go:303: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).parseError]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).CreateEmbedding" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at client.go:238: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at client.go:254: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletionWithTools" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ tooltip="at tools.go:243: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).CreateEmbedding" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at client.go:241: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat client.go:242: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest" -> "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).parseError" [ tooltip="at client.go:290: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).parseError]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest" [ tooltip="at client.go:150: calling [(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).StreamChatCompletionWithTools" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at tools.go:241: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at client.go:90: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat client.go:178: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletionWithTools" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at tools.go:26: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat tools.go:135: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).handleError" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at client.go:300: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:91: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat client.go:179: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).ChatCompletion" -> "github.com/guild-framework/guild-core/pkg/observability.GetLogger" [ color="saddlebrown" tooltip="at client.go:95: calling [github.com/guild-framework/guild-core/pkg/observability.GetLogger]" ]
+    "(*github.com/guild-framework/guild-core/pkg/providers/anthropic.Client).makeRequest" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at client.go:255: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+}

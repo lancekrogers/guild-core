@@ -108,9 +108,11 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 
 	// Check TTY availability before creating model
 	ttyAvailable := false
-	if ttyFile, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
-		ttyFile.Close() // Just testing availability
+	var ttyFile *os.File
+	if file, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
+		ttyFile = file
 		ttyAvailable = true
+		defer ttyFile.Close()
 	}
 
 	// Create the improved TUI model with TTY awareness
@@ -129,12 +131,7 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 
 	// Configure program based on TTY availability
 	if ttyAvailable {
-		opts = append(opts, tea.WithInputTTY())
-		// Use alt screen for interactive mode
-		if !initQuickMode {
-			opts = append(opts, tea.WithAltScreen())
-			opts = append(opts, tea.WithMouseCellMotion()) // Enable mouse support
-		}
+		opts = append(opts, tea.WithInput(ttyFile))
 	} else {
 		// If no TTY available, use no-renderer mode for simple output
 		opts = append(opts, tea.WithoutRenderer())

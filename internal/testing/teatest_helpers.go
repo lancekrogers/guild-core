@@ -13,7 +13,7 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/charmbracelet/x/exp/teatest"
+	"github.com/guild-framework/guild-core/internal/teatest"
 )
 
 // TeaTestHelper provides utilities for testing with teatest
@@ -171,7 +171,7 @@ func (m *TestModelWithCleanup) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
-func (m *TestModelWithCleanup) View() string {
+func (m *TestModelWithCleanup) View() tea.View {
 	return m.inner.View()
 }
 

@@ -291,7 +291,7 @@ func (m *GuildSelectorModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
-		m.help.Width = msg.Width
+		m.help.SetWidth(msg.Width)
 
 	case tea.KeyMsg:
 		switch {
@@ -353,9 +353,11 @@ func (m *GuildSelectorModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View renders the guild selector
-func (m *GuildSelectorModel) View() string {
+func (m *GuildSelectorModel) View() tea.View {
 	if m.err != nil {
-		return errorStyle.Render(fmt.Sprintf("Error: %v\n\nPress 'q' to quit.", m.err))
+		view := tea.NewView(errorStyle.Render(fmt.Sprintf("Error: %v\n\nPress 'q' to quit.", m.err)))
+		view.AltScreen = true
+		return view
 	}
 
 	var b strings.Builder
@@ -433,7 +435,9 @@ func (m *GuildSelectorModel) View() string {
 		}
 	}
 
-	return content
+	view := tea.NewView(content)
+	view.AltScreen = true
+	return view
 }
 
 // Selected returns the selected guild name
@@ -529,7 +533,7 @@ func RunGuildSelector(ctx context.Context) (string, error) {
 		return "", err
 	}
 
-	p := tea.NewProgram(model, tea.WithAltScreen())
+	p := tea.NewProgram(model)
 	if _, err := p.Run(); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run guild selector").
 			WithComponent("GuildSelector").

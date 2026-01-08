@@ -34,7 +34,7 @@ High-level package view for the Great Hall CLI calling into daemon orchestration
 
 ```bash
 go-callvis -nostd -nointer -group pkg -graphviz -format svg \
-  -file docs/images/callgraphs/cli-daemon.svg \
+  -file docs/images/callgraphs/cli-daemon \
   -focus github.com/guild-framework/guild-core/cmd/guild \
   -limit github.com/guild-framework/guild-core/cmd/guild,github.com/guild-framework/guild-core/internal/daemon,github.com/guild-framework/guild-core/internal/daemonconn,github.com/guild-framework/guild-core/internal/integration \
   ./cmd/guild
@@ -46,7 +46,7 @@ Focus the daemon package to see lifecycle wiring and core dependencies.
 
 ```bash
 go-callvis -nostd -group pkg -graphviz -format svg \
-  -file docs/images/callgraphs/daemon-lifecycle.svg \
+  -file docs/images/callgraphs/daemon-lifecycle \
   -focus github.com/guild-framework/guild-core/internal/daemon \
   -limit github.com/guild-framework/guild-core/internal/daemon,github.com/guild-framework/guild-core/internal/integration,github.com/guild-framework/guild-core/pkg \
   ./internal/daemon
@@ -58,7 +58,7 @@ Map the service layer and its bridges into the broader system.
 
 ```bash
 go-callvis -nostd -group pkg -graphviz -format svg \
-  -file docs/images/callgraphs/integration-services.svg \
+  -file docs/images/callgraphs/integration-services \
   -focus github.com/guild-framework/guild-core/internal/integration/services \
   -limit github.com/guild-framework/guild-core/internal/integration,github.com/guild-framework/guild-core/pkg \
   ./internal/integration/services
@@ -70,6 +70,7 @@ go-callvis -nostd -group pkg -graphviz -format svg \
 - Try `-group pkg,type` to cluster by package and type for deeper inspection.
 - Add `-rankdir TB` for a top-down layout when graphs are wide.
 - Use `-include` or `-limit` to keep graphs focused and readable.
+- go-callvis writes both a `.gv` dot file and a rendered `.svg` when `-graphviz` is set.
 
 ## Troubleshooting
 

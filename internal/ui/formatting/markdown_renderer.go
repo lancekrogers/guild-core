@@ -79,7 +79,7 @@ func NewMarkdownRenderer(width int) (*MarkdownRenderer, error) {
 		func() (*glamour.TermRenderer, error) {
 			// Fallback 1: Auto style
 			return glamour.NewTermRenderer(
-				glamour.WithAutoStyle(),
+				glamour.WithEnvironmentConfig(),
 				glamour.WithWordWrap(width-8),
 				glamour.WithEmoji(),
 			)

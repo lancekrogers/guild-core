@@ -1,0 +1,75 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        bgcolor="#e6ecfa";
+label="local";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+        
+        "github.com/guild-framework/guild-core/pkg/project/local.LocalWorkspacesPath" [ fillcolor="lightblue" label="LocalWorkspacesPath" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.LocalWorkspacesPath | defined in local.go:202\nat local.go:203: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir" [ label="LocalGuildDir" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir | defined in local.go:29" fillcolor="lightblue" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.LocalCommissionsPath" [ tooltip="github.com/guild-framework/guild-core/pkg/project/local.LocalCommissionsPath | defined in local.go:192\nat local.go:193: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" fillcolor="lightblue" label="LocalCommissionsPath" penwidth="1.5" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.LocalCorpusPath" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.LocalCorpusPath | defined in local.go:187\nat local.go:188: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" fillcolor="lightblue" label="LocalCorpusPath" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.LocalDatabasePath" [ label="LocalDatabasePath" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.LocalDatabasePath | defined in local.go:182\nat local.go:183: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" fillcolor="lightblue" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.createDefaultLocalConfig" [ fillcolor="lightblue" label="createDefaultLocalConfig" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.createDefaultLocalConfig | defined in local.go:88\nat local.go:92: calling [github.com/guild-framework/guild-core/pkg/project/local.detectProjectType]\nat local.go:94: calling [github.com/guild-framework/guild-core/pkg/project/local.generateLocalConfig]" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.detectProjectType" [ fillcolor="lightblue" label="detectProjectType" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.detectProjectType | defined in local.go:100" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.generateLocalConfig" [ label="generateLocalConfig" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.generateLocalConfig | defined in local.go:131" fillcolor="lightblue" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.LocalConfigPath" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.LocalConfigPath | defined in local.go:177\nat local.go:178: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" fillcolor="lightblue" label="LocalConfigPath" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.EnsureLocalInitialized" [ fillcolor="lightblue" label="EnsureLocalInitialized" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.EnsureLocalInitialized | defined in local.go:207\nat local.go:217: calling [github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal]\nat local.go:208: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal" [ fillcolor="lightblue" label="InitializeLocal" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal | defined in local.go:34\nat local.go:49: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat local.go:68: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat local.go:79: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat local.go:50: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat local.go:60: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat local.go:69: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat local.go:80: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat local.go:52: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat local.go:78: calling [github.com/guild-framework/guild-core/pkg/project/local.createGitIgnore]\nat local.go:35: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]\nat local.go:51: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat local.go:61: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat local.go:70: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat local.go:81: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat local.go:59: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrapf]" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.createGitIgnore" [ fillcolor="lightblue" label="createGitIgnore" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.createGitIgnore | defined in local.go:147" ]
+        "github.com/guild-framework/guild-core/pkg/project/local.LocalToolsPath" [ fillcolor="lightblue" label="LocalToolsPath" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/project/local.LocalToolsPath | defined in local.go:197\nat local.go:198: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        label="gerror";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
+fontsize="16";
+rank="sink";
+style="filled";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" fillcolor="moccasin" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ label="(*GuildError).WithDetails" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" fillcolor="moccasin" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrapf" [ fillcolor="moccasin" label="Wrapf" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrapf | defined in errors.go:245" ]
+        
+    }
+
+    }
+
+    "github.com/guild-framework/guild-core/pkg/project/local.LocalWorkspacesPath" -> "github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir" [ tooltip="at local.go:203: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.LocalDatabasePath" -> "github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir" [ tooltip="at local.go:183: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.createDefaultLocalConfig" -> "github.com/guild-framework/guild-core/pkg/project/local.detectProjectType" [ tooltip="at local.go:92: calling [github.com/guild-framework/guild-core/pkg/project/local.detectProjectType]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.LocalConfigPath" -> "github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir" [ tooltip="at local.go:178: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at local.go:49: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat local.go:68: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat local.go:79: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at local.go:50: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat local.go:60: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat local.go:69: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat local.go:80: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at local.go:52: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal" -> "github.com/guild-framework/guild-core/pkg/project/local.createGitIgnore" [ tooltip="at local.go:78: calling [github.com/guild-framework/guild-core/pkg/project/local.createGitIgnore]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal" -> "github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir" [ tooltip="at local.go:35: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.EnsureLocalInitialized" -> "github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal" [ tooltip="at local.go:217: calling [github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.LocalToolsPath" -> "github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir" [ tooltip="at local.go:198: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.LocalCorpusPath" -> "github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir" [ tooltip="at local.go:188: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at local.go:51: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat local.go:61: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat local.go:70: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat local.go:81: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.InitializeLocal" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrapf" [ color="saddlebrown" tooltip="at local.go:59: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrapf]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.LocalCommissionsPath" -> "github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir" [ tooltip="at local.go:193: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.createDefaultLocalConfig" -> "github.com/guild-framework/guild-core/pkg/project/local.generateLocalConfig" [ tooltip="at local.go:94: calling [github.com/guild-framework/guild-core/pkg/project/local.generateLocalConfig]" ]
+    "github.com/guild-framework/guild-core/pkg/project/local.EnsureLocalInitialized" -> "github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir" [ tooltip="at local.go:208: calling [github.com/guild-framework/guild-core/pkg/project/local.LocalGuildDir]" ]
+}

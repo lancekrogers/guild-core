@@ -11,24 +11,25 @@ import (
 	"charm.land/lipgloss/v2"
 	"github.com/muesli/termenv"
 
+	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
 	"github.com/guild-framework/guild-core/pkg/config"
 )
 
 func escVisible(s string) string {
-    b := strings.Builder{}
-    for i := 0; i < len(s); i++ {
-        switch s[i] {
-        case '\x1b':
-            b.WriteString("<ESC>")
-        case '\n':
-            b.WriteString("<NL>\n")
-        case '\r':
-            b.WriteString("<CR>")
-        default:
-            b.WriteByte(s[i])
-        }
-    }
-    return b.String()
+	b := strings.Builder{}
+	for i := 0; i < len(s); i++ {
+		switch s[i] {
+		case '\x1b':
+			b.WriteString("<ESC>")
+		case '\n':
+			b.WriteString("<NL>\n")
+		case '\r':
+			b.WriteString("<CR>")
+		default:
+			b.WriteByte(s[i])
+		}
+	}
+	return b.String()
 }
 
 // Temporary debug helper to inspect the initial View() output without the renderer.
@@ -39,9 +40,9 @@ func TestDebugInitialView(t *testing.T) {
 
 	lipgloss.SetColorProfile(termenv.TrueColor)
 
-    // isolate state
-    _ = os.MkdirAll(".home", 0o755)
-    os.Setenv("HOME", ".home")
+	// isolate state
+	_ = os.MkdirAll(".home", 0o755)
+	os.Setenv("HOME", ".home")
 
 	cfg := config.DefaultGuildTemplate()
 	app := NewApp(context.Background(), cfg, nil)
@@ -68,15 +69,15 @@ func TestDebugInitialView(t *testing.T) {
 	}
 
 	app.Init()
-	view := app.View()
+	rendered := viewutil.String(app.View())
 
-	fmt.Println("RAW:\n" + view)
-	fmt.Println("VISIBLE:\n" + escVisible(view))
+	fmt.Println("RAW:\n" + rendered)
+	fmt.Println("VISIBLE:\n" + escVisible(rendered))
 
 	// Also dump individual panes for debugging so we can see where corruption originates.
-	outputView := app.outputPane.View()
-	inputView := app.inputPane.View()
-	statusView := app.statusPane.View()
+	outputView := viewutil.String(app.outputPane.View())
+	inputView := viewutil.String(app.inputPane.View())
+	statusView := viewutil.String(app.statusPane.View())
 
 	fmt.Println("OUTPUT PANE:\n" + escVisible(outputView))
 	fmt.Println("INPUT PANE:\n" + escVisible(inputView))

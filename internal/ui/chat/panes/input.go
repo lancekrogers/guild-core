@@ -538,7 +538,7 @@ func (ip *inputPaneImpl) cycleNextCompletion() {
 }
 
 // View renders the input pane
-func (ip *inputPaneImpl) View() string {
+func (ip *inputPaneImpl) View() tea.View {
 	// Choose style based on current mode
 	var style lipgloss.Style
 	var modeIndicator string
@@ -573,7 +573,7 @@ func (ip *inputPaneImpl) View() string {
 
 	// Apply final styling
 	rect := ip.GetRect()
-	return style.Width(rect.Width).Height(rect.Height).Render(textareaView)
+	return tea.NewView(style.Width(rect.Width).Height(rect.Height).Render(textareaView))
 }
 
 // renderCompletions renders the completion popup

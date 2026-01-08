@@ -1,0 +1,70 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        labelloc="t";
+labeljust="c";
+fontsize="18";
+bgcolor="#e6ecfa";
+label="search";
+        
+        "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).createFileResult" [ fillcolor="lightblue" label="(*FuzzyFinder).createFileResult" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).createFileResult | defined in fuzzy_finder.go:377\nat fuzzy_finder.go:395: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).isRecentFile]" ]
+        "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).isRecentFile" [ penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).isRecentFile | defined in fuzzy_finder.go:403" fillcolor="lightblue" label="(*FuzzyFinder).isRecentFile" ]
+        "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).getRecentFiles" [ penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).getRecentFiles | defined in fuzzy_finder.go:409\nat fuzzy_finder.go:413: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).createFileResult]" fillcolor="lightblue" label="(*FuzzyFinder).getRecentFiles" ]
+        "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).GetRecentFiles" [ fillcolor="lightblue" label="(*FuzzyFinder).GetRecentFiles" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).GetRecentFiles | defined in fuzzy_finder.go:208\nat fuzzy_finder.go:209: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).getRecentFiles]" ]
+        "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzyScore" [ fillcolor="lightblue" label="(*FuzzyFinder).fuzzyScore" penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzyScore | defined in fuzzy_finder.go:296\nat fuzzy_finder.go:331: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzySequenceScore]\nat fuzzy_finder.go:337: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzySequenceScore]" ]
+        "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzySequenceScore" [ penwidth="0.5" tooltip="(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzySequenceScore | defined in fuzzy_finder.go:346" fillcolor="lightblue" label="(*FuzzyFinder).fuzzySequenceScore" ]
+        "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded" [ tooltip="(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded | defined in fuzzy_finder.go:213\nat fuzzy_finder.go:255: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat fuzzy_finder.go:256: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat fuzzy_finder.go:257: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" fillcolor="lightblue" label="(*FuzzyFinder).rebuildIndexIfNeeded" penwidth="0.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).Search" [ label="(*FuzzyFinder).Search" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).Search | defined in fuzzy_finder.go:126\nat fuzzy_finder.go:128: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]\nat fuzzy_finder.go:131: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat fuzzy_finder.go:130: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat fuzzy_finder.go:144: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzyScore]\nat fuzzy_finder.go:129: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat fuzzy_finder.go:136: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).getRecentFiles]\nat fuzzy_finder.go:146: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).createFileResult]" fillcolor="lightblue" ]
+        "github.com/guild-framework/guild-core/pkg/search.NewFuzzyFinder" [ fillcolor="lightblue" label="NewFuzzyFinder" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/search.NewFuzzyFinder | defined in fuzzy_finder.go:102\nat fuzzy_finder.go:113: calling [github.com/guild-framework/guild-core/pkg/search.DefaultExcludePatterns]" ]
+        "github.com/guild-framework/guild-core/pkg/search.DefaultExcludePatterns" [ label="DefaultExcludePatterns" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/search.DefaultExcludePatterns | defined in fuzzy_finder.go:50" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).RefreshIndex" [ fillcolor="lightblue" label="(*FuzzyFinder).RefreshIndex" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).RefreshIndex | defined in fuzzy_finder.go:431\nat fuzzy_finder.go:433: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        penwidth="0.8";
+fontsize="16";
+rank="sink";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+style="filled";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+label="gerror";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).createFileResult" -> "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).isRecentFile" [ tooltip="at fuzzy_finder.go:395: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).isRecentFile]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).getRecentFiles" -> "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).createFileResult" [ tooltip="at fuzzy_finder.go:413: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).createFileResult]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).GetRecentFiles" -> "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).getRecentFiles" [ tooltip="at fuzzy_finder.go:209: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).getRecentFiles]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzyScore" -> "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzySequenceScore" [ tooltip="at fuzzy_finder.go:331: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzySequenceScore]\nat fuzzy_finder.go:337: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzySequenceScore]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at fuzzy_finder.go:255: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at fuzzy_finder.go:256: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).Search" -> "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded" [ tooltip="at fuzzy_finder.go:128: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).Search" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at fuzzy_finder.go:131: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).RefreshIndex" -> "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded" [ tooltip="at fuzzy_finder.go:433: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at fuzzy_finder.go:257: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).Search" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at fuzzy_finder.go:130: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).Search" -> "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzyScore" [ tooltip="at fuzzy_finder.go:144: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).fuzzyScore]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).Search" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at fuzzy_finder.go:129: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).Search" -> "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).getRecentFiles" [ tooltip="at fuzzy_finder.go:136: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).getRecentFiles]" ]
+    "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).Search" -> "(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).createFileResult" [ tooltip="at fuzzy_finder.go:146: calling [(*github.com/guild-framework/guild-core/pkg/search.FuzzyFinder).createFileResult]" ]
+    "github.com/guild-framework/guild-core/pkg/search.NewFuzzyFinder" -> "github.com/guild-framework/guild-core/pkg/search.DefaultExcludePatterns" [ tooltip="at fuzzy_finder.go:113: calling [github.com/guild-framework/guild-core/pkg/search.DefaultExcludePatterns]" ]
+}

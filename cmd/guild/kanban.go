@@ -223,7 +223,7 @@ func viewKanbanBoard(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	p := tea.NewProgram(model, tea.WithAltScreen())
+	p := tea.NewProgram(model)
 
 	if _, err := p.Run(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run kanban UI").

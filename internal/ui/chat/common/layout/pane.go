@@ -156,9 +156,9 @@ func (bp *BasePane) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return bp, nil
 }
 
-func (bp *BasePane) View() string {
+func (bp *BasePane) View() tea.View {
 	if !bp.visible {
-		return ""
+		return tea.NewView("")
 	}
 
 	// Apply styling based on focus state
@@ -168,7 +168,7 @@ func (bp *BasePane) View() string {
 	style = style.Width(bp.rect.Width).Height(bp.rect.Height)
 
 	// Render content
-	return style.Render(bp.content)
+	return tea.NewView(style.Render(bp.content))
 }
 
 // Additional utility methods

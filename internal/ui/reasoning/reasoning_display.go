@@ -221,7 +221,10 @@ func NewReasoningDisplay(width, height int) *ReasoningDisplay {
 	}
 
 	// Initialize viewport
-	rd.viewport = viewport.New(width-4, height-8) // Account for borders and status
+	rd.viewport = viewport.New(
+		viewport.WithWidth(width-4),
+		viewport.WithHeight(height-8),
+	) // Account for borders and status
 	rd.viewport.SetContent("")
 
 	// Initialize spinner
@@ -285,8 +288,8 @@ func (rd *ReasoningDisplay) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		rd.width = msg.Width
 		rd.height = msg.Height
-		rd.viewport.Width = msg.Width - 4
-		rd.viewport.Height = msg.Height - 8
+		rd.viewport.SetWidth(msg.Width - 4)
+		rd.viewport.SetHeight(msg.Height - 8)
 		rd.updateViewport()
 
 	case spinner.TickMsg:
@@ -315,7 +318,7 @@ func (rd *ReasoningDisplay) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View implements tea.Model
-func (rd *ReasoningDisplay) View() string {
+func (rd *ReasoningDisplay) View() tea.View {
 	rd.mu.RLock()
 	defer rd.mu.RUnlock()
 
@@ -338,7 +341,7 @@ func (rd *ReasoningDisplay) View() string {
 	// Status bar
 	builder.WriteString(rd.renderStatusBar())
 
-	return builder.String()
+	return tea.NewView(builder.String())
 }
 
 // Focus sets the focus state

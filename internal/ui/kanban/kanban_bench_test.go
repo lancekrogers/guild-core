@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
 	"github.com/guild-framework/guild-core/pkg/kanban"
 )
 
@@ -559,7 +560,7 @@ func BenchmarkDemo200Plus(b *testing.B) {
 
 			for i := 0; i < b.N; i++ {
 				start := time.Now()
-				view := model.View()
+				view := viewutil.String(model.View())
 				renderTime := time.Since(start)
 				totalRenderTime += renderTime
 				renderCount++

@@ -5,6 +5,7 @@ package visual
 
 import (
 	"fmt"
+	"image/color"
 	"regexp"
 	"strings"
 
@@ -28,9 +29,9 @@ type CodeRenderer struct {
 	foldedStyle      lipgloss.Style
 
 	// Language-specific highlighting
-	keywordColors map[string]lipgloss.Color
-	stringColors  map[string]lipgloss.Color
-	commentColors map[string]lipgloss.Color
+	keywordColors map[string]color.Color
+	stringColors  map[string]color.Color
+	commentColors map[string]color.Color
 }
 
 // CodeBlock represents a processed code block
@@ -95,7 +96,7 @@ func NewCodeRenderer() *CodeRenderer {
 			Foreground(lipgloss.Color("240")).
 			Italic(true),
 
-		keywordColors: map[string]lipgloss.Color{
+		keywordColors: map[string]color.Color{
 			"go":         lipgloss.Color("33"),  // Yellow
 			"python":     lipgloss.Color("34"),  // Green
 			"javascript": lipgloss.Color("226"), // Bright yellow
@@ -114,13 +115,13 @@ func NewCodeRenderer() *CodeRenderer {
 			"json":       lipgloss.Color("39"),  // Blue
 		},
 
-		stringColors: map[string]lipgloss.Color{
+		stringColors: map[string]color.Color{
 			"default": lipgloss.Color("82"),  // Bright green
 			"sql":     lipgloss.Color("196"), // Red for SQL strings
 			"regex":   lipgloss.Color("214"), // Orange for regex
 		},
 
-		commentColors: map[string]lipgloss.Color{
+		commentColors: map[string]color.Color{
 			"default": lipgloss.Color("240"), // Dark gray
 			"doc":     lipgloss.Color("244"), // Lighter gray for doc comments
 		},
@@ -526,7 +527,7 @@ func (cr *CodeRenderer) applySyntaxHighlighting(line, language string) string {
 	// Apply keywords
 	if keywords, exists := keywordPatterns[language]; exists {
 		keywordColor := cr.keywordColors[language]
-		if keywordColor == "" {
+		if keywordColor == nil {
 			keywordColor = lipgloss.Color("33") // Default yellow
 		}
 		keywordStyle := lipgloss.NewStyle().Foreground(keywordColor).Bold(true)
@@ -770,33 +771,33 @@ func (cr *CodeRenderer) RenderWithTheme(code, language, theme string) string {
 	// Apply theme
 	switch theme {
 	case "monokai":
-		cr.keywordColors = map[string]lipgloss.Color{
+		cr.keywordColors = map[string]color.Color{
 			"default": lipgloss.Color("197"), // Pink
 		}
-		cr.stringColors = map[string]lipgloss.Color{
+		cr.stringColors = map[string]color.Color{
 			"default": lipgloss.Color("226"), // Yellow
 		}
-		cr.commentColors = map[string]lipgloss.Color{
+		cr.commentColors = map[string]color.Color{
 			"default": lipgloss.Color("242"), // Gray
 		}
 	case "solarized":
-		cr.keywordColors = map[string]lipgloss.Color{
+		cr.keywordColors = map[string]color.Color{
 			"default": lipgloss.Color("33"), // Yellow
 		}
-		cr.stringColors = map[string]lipgloss.Color{
+		cr.stringColors = map[string]color.Color{
 			"default": lipgloss.Color("37"), // Cyan
 		}
-		cr.commentColors = map[string]lipgloss.Color{
+		cr.commentColors = map[string]color.Color{
 			"default": lipgloss.Color("244"), // Gray
 		}
 	case "dracula":
-		cr.keywordColors = map[string]lipgloss.Color{
+		cr.keywordColors = map[string]color.Color{
 			"default": lipgloss.Color("212"), // Pink
 		}
-		cr.stringColors = map[string]lipgloss.Color{
+		cr.stringColors = map[string]color.Color{
 			"default": lipgloss.Color("226"), // Yellow
 		}
-		cr.commentColors = map[string]lipgloss.Color{
+		cr.commentColors = map[string]color.Color{
 			"default": lipgloss.Color("103"), // Purple gray
 		}
 	}

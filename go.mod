@@ -12,7 +12,6 @@ require (
 	github.com/alecthomas/chroma/v2 v2.21.1
 	github.com/charmbracelet/glamour/v2 v2.0.0-20251106195642-800eb8175930
 	github.com/charmbracelet/x/ansi v0.11.3
-	github.com/charmbracelet/x/exp/teatest v0.0.0-20251215102626-e0db08df7383
 	github.com/disintegration/imaging v1.6.2
 	github.com/fatih/color v1.18.0
 	github.com/go-git/go-git/v5 v5.16.4

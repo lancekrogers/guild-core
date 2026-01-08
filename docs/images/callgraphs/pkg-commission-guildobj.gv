@@ -1,0 +1,46 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        bgcolor="#e6ecfa";
+label="guildobj";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+        
+        "(*github.com/guild-framework/guild-core/pkg/commission/guildobj.GuildParser).Parse" [ fillcolor="lightblue" label="(*GuildParser).Parse" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/commission/guildobj.GuildParser).Parse | defined in parser.go:23\nat parser.go:25: calling [(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse]" ]
+        "github.com/guild-framework/guild-core/pkg/commission/guildobj.NewGuildParser" [ fillcolor="lightblue" label="NewGuildParser" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/commission/guildobj.NewGuildParser | defined in parser.go:16\nat parser.go:18: calling [github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser]" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/commission" {
+        fontname="Tahoma bold";
+rank="sink";
+label="commission";
+URL="/?f=github.com/guild-framework/guild-core/pkg/commission";
+tooltip="package: github.com/guild-framework/guild-core/pkg/commission";
+penwidth="0.8";
+fontsize="16";
+fillcolor="lightyellow";
+style="filled";
+        
+        "(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse | defined in parser.go:68" fillcolor="moccasin" label="(*MarkdownParser).Parse" ]
+        "github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser" [ fillcolor="moccasin" label="NewMarkdownParser" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser | defined in parser.go:58" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/commission/guildobj.GuildParser).Parse" -> "(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse" [ color="saddlebrown" tooltip="at parser.go:25: calling [(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse]" ]
+    "github.com/guild-framework/guild-core/pkg/commission/guildobj.NewGuildParser" -> "github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser" [ color="saddlebrown" tooltip="at parser.go:18: calling [github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser]" ]
+}

@@ -34,7 +34,7 @@ func TestGetAgentColor(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			color := styles.GetAgentColor(tt.agent)
-			hasColor := color != ""
+			hasColor := color != nil
 
 			if hasColor != tt.wantColor {
 				t.Errorf("GetAgentColor(%s) = %v, want color present: %v",

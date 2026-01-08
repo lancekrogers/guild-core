@@ -205,23 +205,15 @@ func (m *InitTUIModelV2) updateValidating(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *InitTUIModelV2) updateComplete(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if k, ok := msg.(tea.KeyMsg); ok {
-		switch k.Type {
-		case tea.KeyEnter:
-			return m, tea.Quit
-		case tea.KeyCtrlC, tea.KeyEsc:
-			return m, tea.Quit
-		default:
-			// For any other key, also quit to make it easier to exit
-			return m, tea.Quit
-		}
+	if _, ok := msg.(tea.KeyMsg); ok {
+		return m, tea.Quit
 	}
 	return m, nil
 }
 
 func (m *InitTUIModelV2) updateError(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if k, ok := msg.(tea.KeyMsg); ok {
-		if k.Type == tea.KeyEnter || key.Matches(k, keys.Quit) {
+		if k.Key().Code == tea.KeyEnter || key.Matches(k, keys.Quit) {
 			return m, tea.Quit
 		}
 	}
