@@ -17,69 +17,51 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/events</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/events" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/events">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="445.29,-218 445.29,-298 587.83,-298 587.83,-218 445.29,-218"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-278.8" font-family="Tahoma bold" font-size="16.00">events</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="445.29,-629 445.29,-709 587.83,-709 587.83,-629 445.29,-629"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-689.8" font-family="Tahoma bold" font-size="16.00">events</text>
 </a>
 </g>
 </g>
 <g id="clust3" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust3"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="798.58,-470 798.58,-733 1046.87,-733 1046.87,-470 798.58,-470"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-713.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="798.58,-258 798.58,-521 1046.87,-521 1046.87,-258 798.58,-258"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-501.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
 <g id="clust4" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/observability</title>
 <g id="a_clust4"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/observability" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/observability">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="864.23,-313 864.23,-393 982.23,-393 982.23,-313 864.23,-313"/>
-<text xml:space="preserve" text-anchor="middle" x="923.23" y="-373.8" font-family="Tahoma bold" font-size="16.00">observability</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="864.23,-534 864.23,-614 982.23,-614 982.23,-534 864.23,-534"/>
+<text xml:space="preserve" text-anchor="middle" x="923.23" y="-594.8" font-family="Tahoma bold" font-size="16.00">observability</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve | defined in strategies.go:39&#10;at strategies.go:51: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery]&#10;at strategies.go:45: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:46: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:47: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M634.58,-494C634.58,-494 398.54,-494 398.54,-494 392.54,-494 386.54,-488 386.54,-482 386.54,-482 386.54,-470 386.54,-470 386.54,-464 392.54,-458 398.54,-458 398.54,-458 634.58,-458 634.58,-458 640.58,-458 646.58,-464 646.58,-470 646.58,-470 646.58,-482 646.58,-482 646.58,-488 640.58,-494 634.58,-494"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-471.32" font-family="Verdana" font-size="14.00">(*VectorSearchStrategy).Retrieve</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer | defined in ranker.go:44&#10;at ranker.go:46: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at ranker.go:52: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at ranker.go:47: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at ranker.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at ranker.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at ranker.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M612.46,-333C612.46,-333 420.67,-333 420.67,-333 414.67,-333 408.67,-327 408.67,-321 408.67,-321 408.67,-309 408.67,-309 408.67,-303 414.67,-297 420.67,-297 420.67,-297 612.46,-297 612.46,-297 618.46,-297 624.46,-303 624.46,-309 624.46,-309 624.46,-321 624.46,-321 624.46,-327 618.46,-333 612.46,-333"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-310.32" font-family="Verdana" font-size="14.00">(*ResultRanker).AddScorer</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery -->
-<g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery | defined in strategies.go:91">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1062.87,-826C1062.87,-826 782.58,-826 782.58,-826 776.58,-826 770.58,-820 770.58,-814 770.58,-814 770.58,-802 770.58,-802 770.58,-796 776.58,-790 782.58,-790 782.58,-790 1062.87,-790 1062.87,-790 1068.87,-790 1074.87,-796 1074.87,-802 1074.87,-802 1074.87,-814 1074.87,-814 1074.87,-820 1068.87,-826 1062.87,-826"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-803.33" font-family="Verdana" font-size="14.00">(*VectorSearchStrategy).enhanceQuery</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery</title>
-<g id="a_edge1"><a xlink:title="at strategies.go:51: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery]">
-<path fill="none" stroke="black" d="M549.35,-494.73C584.8,-517.24 641.38,-558.26 673.58,-608 705,-656.53 669.93,-690.92 709.58,-733 733.57,-758.46 766.74,-775.29 799.73,-786.4"/>
-<polygon fill="black" stroke="black" points="798.39,-789.65 808.98,-789.36 800.52,-782.98 798.39,-789.65"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
 <g id="node26" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_node26"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M940.62,-514C940.62,-514 904.83,-514 904.83,-514 898.83,-514 892.83,-508 892.83,-502 892.83,-502 892.83,-490 892.83,-490 892.83,-484 898.83,-478 904.83,-478 904.83,-478 940.62,-478 940.62,-478 946.62,-478 952.62,-484 952.62,-490 952.62,-490 952.62,-502 952.62,-502 952.62,-508 946.62,-514 940.62,-514"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-491.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_node26"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M937.73,-485C937.73,-485 907.73,-485 907.73,-485 901.73,-485 895.73,-479 895.73,-473 895.73,-473 895.73,-461 895.73,-461 895.73,-455 901.73,-449 907.73,-449 907.73,-449 937.73,-449 937.73,-449 943.73,-449 949.73,-455 949.73,-461 949.73,-461 949.73,-473 949.73,-473 949.73,-479 943.73,-485 937.73,-485"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-462.32" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge8" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge8"><a xlink:title="at strategies.go:45: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M647.17,-470.63C668.04,-469.95 689.4,-469.37 709.58,-469 769.64,-467.91 838.52,-478.98 881.08,-487.28"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="880.38,-490.71 890.87,-489.23 881.75,-483.84 880.38,-490.71"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge4"><a xlink:title="at ranker.go:46: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at ranker.go:52: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M625.08,-320.01C643,-325.15 660.1,-333.32 673.58,-346 719.43,-389.14 659.73,-444.55 709.58,-483 759.94,-521.84 838.54,-501.19 884.6,-483.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="885.62,-486.87 893.61,-479.91 883.03,-480.37 885.62,-486.87"/>
 </a>
 </g>
 </g>
@@ -87,17 +69,17 @@
 <g id="node27" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node27"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1026.87,-575C1026.87,-575 818.58,-575 818.58,-575 812.58,-575 806.58,-569 806.58,-563 806.58,-563 806.58,-551 806.58,-551 806.58,-545 812.58,-539 818.58,-539 818.58,-539 1026.87,-539 1026.87,-539 1032.87,-539 1038.87,-545 1038.87,-551 1038.87,-551 1038.87,-563 1038.87,-563 1038.87,-569 1032.87,-575 1026.87,-575"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-552.33" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1026.87,-302C1026.87,-302 818.58,-302 818.58,-302 812.58,-302 806.58,-296 806.58,-290 806.58,-290 806.58,-278 806.58,-278 806.58,-272 812.58,-266 818.58,-266 818.58,-266 1026.87,-266 1026.87,-266 1032.87,-266 1038.87,-272 1038.87,-278 1038.87,-278 1038.87,-290 1038.87,-290 1038.87,-296 1032.87,-302 1026.87,-302"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-279.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge18" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge18"><a xlink:title="at strategies.go:46: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M597.11,-494.73C641.07,-504.82 696.72,-517.18 746.58,-527 762.72,-530.18 779.73,-533.33 796.56,-536.34"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="795.63,-539.73 806.09,-538.02 796.85,-532.83 795.63,-539.73"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge26" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge26"><a xlink:title="at ranker.go:47: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at ranker.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M625.1,-310.79C643.01,-305.75 660.12,-297.66 673.58,-285 720.39,-240.99 658.81,-184.37 709.58,-145 752.68,-111.58 704.82,-226.92 746.58,-262 760.47,-273.67 777.31,-281.12 794.99,-285.68"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="794.08,-289.06 804.6,-287.82 795.61,-282.23 794.08,-289.06"/>
 </a>
 </g>
 </g>
@@ -105,17 +87,98 @@
 <g id="node28" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node28"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1021.25,-636C1021.25,-636 824.21,-636 824.21,-636 818.21,-636 812.21,-630 812.21,-624 812.21,-624 812.21,-612 812.21,-612 812.21,-606 818.21,-600 824.21,-600 824.21,-600 1021.25,-600 1021.25,-600 1027.25,-600 1033.25,-606 1033.25,-612 1033.25,-612 1033.25,-624 1033.25,-624 1033.25,-630 1027.25,-636 1021.25,-636"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-613.33" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1021.25,-363C1021.25,-363 824.21,-363 824.21,-363 818.21,-363 812.21,-357 812.21,-351 812.21,-351 812.21,-339 812.21,-339 812.21,-333 818.21,-327 824.21,-327 824.21,-327 1021.25,-327 1021.25,-327 1027.25,-327 1033.25,-333 1033.25,-339 1033.25,-339 1033.25,-351 1033.25,-351 1033.25,-357 1027.25,-363 1021.25,-363"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-340.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge38" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge38"><a xlink:title="at strategies.go:47: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M541.09,-494.56C575.78,-520.83 643.66,-568.19 709.58,-591 738.25,-600.92 770.23,-607.26 800.49,-611.29"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="799.69,-614.72 810.05,-612.49 800.56,-607.77 799.69,-614.72"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge39" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge39"><a xlink:title="at ranker.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at ranker.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M625.07,-322.98C679,-326.98 744.53,-331.85 800.27,-335.99"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="799.91,-339.47 810.14,-336.72 800.42,-332.49 799.91,-339.47"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker -->
+<g id="node2" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker</title>
+<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker | defined in ranker.go:28&#10;at ranker.go:35: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M212.29,-333C212.29,-333 90.25,-333 90.25,-333 84.25,-333 78.25,-327 78.25,-321 78.25,-321 78.25,-309 78.25,-309 78.25,-303 84.25,-297 90.25,-297 90.25,-297 212.29,-297 212.29,-297 218.29,-297 224.29,-303 224.29,-309 224.29,-309 224.29,-321 224.29,-321 224.29,-327 218.29,-333 212.29,-333"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-310.32" font-family="Verdana" font-size="14.00">NewResultRanker</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer -->
+<g id="edge40" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer</title>
+<g id="a_edge40"><a xlink:title="at ranker.go:35: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]">
+<path fill="none" stroke="black" d="M224.91,-315C274.12,-315 340.27,-315 397.03,-315"/>
+<polygon fill="black" stroke="black" points="396.74,-318.5 406.74,-315 396.74,-311.5 396.74,-318.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve -->
+<g id="node3" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve</title>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve | defined in strategies.go:242&#10;at strategies.go:243: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at strategies.go:275: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments]&#10;at strategies.go:249: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:257: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:270: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:250: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:258: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:271: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:248: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:256: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:269: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M641.33,-521C641.33,-521 391.79,-521 391.79,-521 385.79,-521 379.79,-515 379.79,-509 379.79,-509 379.79,-497 379.79,-497 379.79,-491 385.79,-485 391.79,-485 391.79,-485 641.33,-485 641.33,-485 647.33,-485 653.33,-491 653.33,-497 653.33,-497 653.33,-509 653.33,-509 653.33,-515 647.33,-521 641.33,-521"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-498.32" font-family="Verdana" font-size="14.00">(*GraphTraversalStrategy).Retrieve</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments -->
+<g id="node4" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments</title>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments | defined in strategies.go:293">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1086.87,-658C1086.87,-658 758.58,-658 758.58,-658 752.58,-658 746.58,-652 746.58,-646 746.58,-646 746.58,-634 746.58,-634 746.58,-628 752.58,-622 758.58,-622 758.58,-622 1086.87,-622 1086.87,-622 1092.87,-622 1098.87,-628 1098.87,-634 1098.87,-634 1098.87,-646 1098.87,-646 1098.87,-652 1092.87,-658 1086.87,-658"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-635.33" font-family="Verdana" font-size="14.00">(*GraphTraversalStrategy).nodesToDocuments</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments -->
+<g id="edge6" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments</title>
+<g id="a_edge6"><a xlink:title="at strategies.go:275: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments]">
+<path fill="none" stroke="black" d="M552.61,-521.57C587.95,-541.98 641.71,-577.95 673.58,-623 703.29,-664.99 667.93,-702.81 709.58,-733 735.56,-751.83 720.28,-689.38 746.58,-671 750.57,-668.21 754.73,-665.65 759.02,-663.3"/>
+<polygon fill="black" stroke="black" points="760.53,-666.46 767.92,-658.86 757.41,-660.19 760.53,-666.46"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge19" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge19"><a xlink:title="at strategies.go:249: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:257: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:270: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M654,-485.62C661.18,-481.31 667.8,-476.15 673.58,-470 748.65,-390.12 626.6,-297.63 709.58,-226 726.95,-211.01 725.97,-251.91 746.58,-262 761.6,-269.35 778.16,-274.57 794.94,-278.22"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="794.01,-281.61 804.5,-280.12 795.37,-274.74 794.01,-281.61"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge27" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge27"><a xlink:title="at strategies.go:250: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:258: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:271: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M646.57,-484.4C656.1,-480.45 665.24,-475.7 673.58,-470 697.7,-453.51 691.45,-437.91 709.58,-415 724.4,-396.26 725.54,-387.32 746.58,-376 763.18,-367.07 781.81,-360.64 800.57,-356.02"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="801.17,-359.48 810.14,-353.84 799.61,-352.65 801.17,-359.48"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="node29" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_node29"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M940.62,-424C940.62,-424 904.83,-424 904.83,-424 898.83,-424 892.83,-418 892.83,-412 892.83,-412 892.83,-400 892.83,-400 892.83,-394 898.83,-388 904.83,-388 904.83,-388 940.62,-388 940.62,-388 946.62,-388 952.62,-394 952.62,-400 952.62,-400 952.62,-412 952.62,-412 952.62,-418 946.62,-424 940.62,-424"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-401.32" font-family="Verdana" font-size="14.00">Wrap</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge32" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge32"><a xlink:title="at strategies.go:248: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:256: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:269: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M653.9,-502.73C673.72,-498.81 693.26,-492.58 710.58,-483 733.3,-470.44 724.33,-450.37 746.58,-437 787.66,-412.32 843.31,-406.17 880.76,-405.15"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="880.77,-408.65 890.72,-405.01 880.67,-401.66 880.77,-408.65"/>
 </a>
 </g>
 </g>
@@ -123,143 +186,152 @@
 <g id="node30" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
 <g id="a_node30"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger | defined in logger.go:206">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M958.25,-357C958.25,-357 887.21,-357 887.21,-357 881.21,-357 875.21,-351 875.21,-345 875.21,-345 875.21,-333 875.21,-333 875.21,-327 881.21,-321 887.21,-321 887.21,-321 958.25,-321 958.25,-321 964.25,-321 970.25,-327 970.25,-333 970.25,-333 970.25,-345 970.25,-345 970.25,-351 964.25,-357 958.25,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-334.32" font-family="Verdana" font-size="14.00">GetLogger</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M958.25,-578C958.25,-578 887.21,-578 887.21,-578 881.21,-578 875.21,-572 875.21,-566 875.21,-566 875.21,-554 875.21,-554 875.21,-548 881.21,-542 887.21,-542 887.21,-542 958.25,-542 958.25,-542 964.25,-542 970.25,-548 970.25,-554 970.25,-554 970.25,-566 970.25,-566 970.25,-572 964.25,-578 958.25,-578"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-555.33" font-family="Verdana" font-size="14.00">GetLogger</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
+<g id="edge5" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
+<g id="a_edge5"><a xlink:title="at strategies.go:243: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M552.43,-521.7C587.62,-542.22 641.26,-578.27 673.58,-623 701.98,-662.31 670.04,-697.93 709.58,-726 763.46,-764.25 697.14,-625.84 746.58,-582 777.86,-554.27 825.52,-549.84 863.23,-551.76"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="862.86,-555.24 873.08,-552.44 863.34,-548.26 862.86,-555.24"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve -->
+<g id="node5" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve</title>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve | defined in strategies.go:39&#10;at strategies.go:45: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:47: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at strategies.go:46: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:51: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M634.58,-272C634.58,-272 398.54,-272 398.54,-272 392.54,-272 386.54,-266 386.54,-260 386.54,-260 386.54,-248 386.54,-248 386.54,-242 392.54,-236 398.54,-236 398.54,-236 634.58,-236 634.58,-236 640.58,-236 646.58,-242 646.58,-248 646.58,-248 646.58,-260 646.58,-260 646.58,-266 640.58,-272 634.58,-272"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-249.32" font-family="Verdana" font-size="14.00">(*VectorSearchStrategy).Retrieve</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery -->
+<g id="node6" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery</title>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery | defined in strategies.go:91">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1062.87,-113C1062.87,-113 782.58,-113 782.58,-113 776.58,-113 770.58,-107 770.58,-101 770.58,-101 770.58,-89 770.58,-89 770.58,-83 776.58,-77 782.58,-77 782.58,-77 1062.87,-77 1062.87,-77 1068.87,-77 1074.87,-83 1074.87,-89 1074.87,-89 1074.87,-101 1074.87,-101 1074.87,-107 1068.87,-113 1062.87,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-90.33" font-family="Verdana" font-size="14.00">(*VectorSearchStrategy).enhanceQuery</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery -->
+<g id="edge33" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery</title>
+<g id="a_edge33"><a xlink:title="at strategies.go:51: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).enhanceQuery]">
+<path fill="none" stroke="black" d="M647.22,-240.91C656.78,-236.5 665.73,-230.95 673.58,-224 712.72,-189.33 668.59,-144.46 709.58,-112 724.22,-100.4 741.35,-92.72 759.41,-87.87"/>
+<polygon fill="black" stroke="black" points="760.05,-91.31 768.98,-85.61 758.45,-84.5 760.05,-91.31"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge16" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge16"><a xlink:title="at strategies.go:46: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M647.09,-240.77C656.68,-236.39 665.68,-230.89 673.58,-224 711.2,-191.22 671.25,-87.29 710.58,-118 762.58,-158.6 697.22,-218.23 746.58,-262 760.25,-274.12 777.06,-281.79 794.79,-286.42"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="793.94,-289.82 804.46,-288.6 795.47,-282.99 793.94,-289.82"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge8"><a xlink:title="at strategies.go:47: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M626.08,-272.74C642.13,-276.32 658.38,-280.41 673.58,-285 707.16,-295.13 712.87,-305.31 746.58,-315 763.77,-319.94 782.15,-324.18 800.31,-327.78"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="799.61,-331.21 810.09,-329.66 800.93,-324.34 799.61,-331.21"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge7"><a xlink:title="at strategies.go:45: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M647.31,-266.74C656.97,-271.44 665.92,-277.43 673.58,-285 728.81,-339.61 649.27,-407.06 709.58,-456 723.93,-467.65 729.09,-443 746.58,-437 791.26,-421.68 845.07,-413.6 881.15,-409.58"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="881.12,-413.1 890.7,-408.57 880.39,-406.14 881.12,-413.1"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge44" class="edge">
+<g id="edge15" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.VectorSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge44"><a xlink:title="at strategies.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M598.27,-457.3C622.65,-451.12 649.36,-443.81 673.58,-436 741.87,-413.99 818.51,-383.04 868.31,-362.06"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="869.58,-365.32 877.43,-358.2 866.85,-358.88 869.58,-365.32"/>
+<g id="a_edge15"><a xlink:title="at strategies.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M647.18,-265.26C657.07,-270.24 666.09,-276.69 673.58,-285 731.42,-349.15 645.74,-613.82 709.58,-672 741.55,-701.13 712.35,-608.44 746.58,-582 779.44,-556.62 826.58,-551.94 863.67,-553.16"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="863.16,-556.64 873.32,-553.64 863.51,-549.65 863.16,-556.64"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer | defined in ranker.go:44&#10;at ranker.go:47: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at ranker.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at ranker.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at ranker.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at ranker.go:46: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at ranker.go:52: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M612.46,-902C612.46,-902 420.67,-902 420.67,-902 414.67,-902 408.67,-896 408.67,-890 408.67,-890 408.67,-878 408.67,-878 408.67,-872 414.67,-866 420.67,-866 420.67,-866 612.46,-866 612.46,-866 618.46,-866 624.46,-872 624.46,-878 624.46,-878 624.46,-890 624.46,-890 624.46,-896 618.46,-902 612.46,-902"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-879.33" font-family="Verdana" font-size="14.00">(*ResultRanker).AddScorer</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge12" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge12"><a xlink:title="at ranker.go:47: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at ranker.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M618.54,-865.32C638.89,-857.55 658.6,-846.56 673.58,-831 751.78,-749.75 662.23,-662.84 746.58,-588 760.42,-575.72 777.37,-567.49 795.22,-562.09"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="795.92,-565.53 804.66,-559.55 794.1,-558.77 795.92,-565.53"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge13"><a xlink:title="at ranker.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at ranker.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M614.65,-865.32C636.04,-857.54 657.17,-846.54 673.58,-831 736.85,-771.06 678.94,-703.95 746.58,-649 762.15,-636.35 781.1,-628.12 800.71,-622.89"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="801.26,-626.36 810.18,-620.63 799.64,-619.55 801.26,-626.36"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="node29" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_node29"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M937.73,-697C937.73,-697 907.73,-697 907.73,-697 901.73,-697 895.73,-691 895.73,-685 895.73,-685 895.73,-673 895.73,-673 895.73,-667 901.73,-661 907.73,-661 907.73,-661 937.73,-661 937.73,-661 943.73,-661 949.73,-667 949.73,-673 949.73,-673 949.73,-685 949.73,-685 949.73,-691 943.73,-697 937.73,-697"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-674.33" font-family="Verdana" font-size="14.00">New</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge24" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge24"><a xlink:title="at ranker.go:46: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at ranker.go:52: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M614.28,-902.74C660.42,-911.11 706.53,-918.42 710.58,-915 784.22,-852.71 676.97,-767.76 746.58,-701 782.74,-666.32 844.14,-666.96 883.8,-671.95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="883.21,-675.41 893.61,-673.36 884.2,-668.48 883.21,-675.41"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score -->
-<g id="node4" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score | defined in ranker.go:219&#10;at ranker.go:252: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType]&#10;at ranker.go:231: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M244.17,-74C244.17,-74 58.38,-74 58.38,-74 52.38,-74 46.38,-68 46.38,-62 46.38,-62 46.38,-50 46.38,-50 46.38,-44 52.38,-38 58.38,-38 58.38,-38 244.17,-38 244.17,-38 250.17,-38 256.17,-44 256.17,-50 256.17,-50 256.17,-62 256.17,-62 256.17,-68 250.17,-74 244.17,-74"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-51.33" font-family="Verdana" font-size="14.00">(*ContextualScorer).Score</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice | defined in ranker.go:263">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M661.58,-52C661.58,-52 371.54,-52 371.54,-52 365.54,-52 359.54,-46 359.54,-40 359.54,-40 359.54,-28 359.54,-28 359.54,-22 365.54,-16 371.54,-16 371.54,-16 661.58,-16 661.58,-16 667.58,-16 673.58,-22 673.58,-28 673.58,-28 673.58,-40 673.58,-40 673.58,-46 667.58,-52 661.58,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-29.32" font-family="Verdana" font-size="14.00">(*ContextualScorer).convertToStringSlice</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice -->
-<g id="edge33" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice</title>
-<g id="a_edge33"><a xlink:title="at ranker.go:231: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice]">
-<path fill="none" stroke="black" d="M256.86,-49.67C285.33,-47.94 316.9,-46.03 347.92,-44.15"/>
-<polygon fill="black" stroke="black" points="348.04,-47.65 357.81,-43.55 347.62,-40.66 348.04,-47.65"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType | defined in ranker.go:283">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M637.58,-113C637.58,-113 395.54,-113 395.54,-113 389.54,-113 383.54,-107 383.54,-101 383.54,-101 383.54,-89 383.54,-89 383.54,-83 389.54,-77 395.54,-77 395.54,-77 637.58,-77 637.58,-77 643.58,-77 649.58,-83 649.58,-89 649.58,-89 649.58,-101 649.58,-101 649.58,-107 643.58,-113 637.58,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-90.33" font-family="Verdana" font-size="14.00">(*ContextualScorer).inferTaskType</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType</title>
-<g id="a_edge14"><a xlink:title="at ranker.go:252: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType]">
-<path fill="none" stroke="black" d="M256.86,-67.23C292.82,-71.09 333.73,-75.48 372.23,-79.61"/>
-<polygon fill="black" stroke="black" points="371.74,-83.08 382.05,-80.67 372.49,-76.12 371.74,-83.08"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever -->
 <g id="node7" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap | defined in ranker.go:165&#10;at ranker.go:166: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords]&#10;at ranker.go:167: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M644.71,-963C644.71,-963 388.42,-963 388.42,-963 382.42,-963 376.42,-957 376.42,-951 376.42,-951 376.42,-939 376.42,-939 376.42,-933 382.42,-927 388.42,-927 388.42,-927 644.71,-927 644.71,-927 650.71,-927 656.71,-933 656.71,-939 656.71,-939 656.71,-951 656.71,-951 656.71,-957 650.71,-963 644.71,-963"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-940.33" font-family="Verdana" font-size="14.00">(*RelevanceScorer).keywordOverlap</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever</title>
+<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever | defined in retriever.go:24&#10;at retriever.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:36: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:42: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at retriever.go:32: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:43: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M562.96,-457C562.96,-457 470.17,-457 470.17,-457 464.17,-457 458.17,-451 458.17,-445 458.17,-445 458.17,-433 458.17,-433 458.17,-427 464.17,-421 470.17,-421 470.17,-421 562.96,-421 562.96,-421 568.96,-421 574.96,-427 574.96,-433 574.96,-433 574.96,-445 574.96,-445 574.96,-451 568.96,-457 562.96,-457"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-434.32" font-family="Verdana" font-size="14.00">NewRetriever</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords -->
-<g id="node8" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords | defined in ranker.go:189">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1040.37,-963C1040.37,-963 805.08,-963 805.08,-963 799.08,-963 793.08,-957 793.08,-951 793.08,-951 793.08,-939 793.08,-939 793.08,-933 799.08,-927 805.08,-927 805.08,-927 1040.37,-927 1040.37,-927 1046.37,-927 1052.37,-933 1052.37,-939 1052.37,-939 1052.37,-951 1052.37,-951 1052.37,-957 1046.37,-963 1040.37,-963"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-940.33" font-family="Verdana" font-size="14.00">(*RelevanceScorer).extractWords</text>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge9" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge9"><a xlink:title="at retriever.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:36: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:42: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M575.62,-437.94C608.18,-440.39 647.38,-448.86 673.58,-473 713.9,-510.16 665.51,-558.37 709.58,-591 735.68,-610.32 721.61,-548.75 746.58,-528 786.53,-494.8 845.67,-479.22 883.96,-472.24"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="884.37,-475.72 893.64,-470.59 883.19,-468.82 884.37,-475.72"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
 <g id="edge34" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords</title>
-<g id="a_edge34"><a xlink:title="at ranker.go:166: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords]&#10;at ranker.go:167: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords]">
-<path fill="none" stroke="black" d="M656.93,-945C697.31,-945 741.38,-945 781.79,-945"/>
-<polygon fill="black" stroke="black" points="781.57,-948.5 791.57,-945 781.57,-941.5 781.57,-948.5"/>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge34"><a xlink:title="at retriever.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:43: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M575.56,-442.13C608.72,-440.66 648.56,-432.81 673.58,-407 738.89,-339.64 637.81,-259.42 709.58,-199 734.42,-178.09 719.57,-243.98 746.58,-262 761.15,-271.72 777.94,-278.19 795.23,-282.39"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="794.06,-285.72 804.57,-284.4 795.53,-278.87 794.06,-285.72"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge28" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge28"><a xlink:title="at retriever.go:32: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M575.69,-431.1C605.5,-426.05 642.08,-418.28 673.58,-407 690.61,-400.9 692.91,-395.04 709.58,-388 738.02,-375.99 770.06,-367.26 800.45,-360.94"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="800.96,-364.41 810.08,-359.01 799.59,-357.54 800.96,-364.41"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
+<g id="edge20" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
+<g id="a_edge20"><a xlink:title="at retriever.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M575.37,-436.54C608.67,-438.38 648.73,-446.7 673.58,-473 743.44,-546.93 632.21,-632.98 709.58,-699 751.07,-734.4 704.82,-617.08 746.58,-582 778.48,-555.21 825.89,-550.66 863.34,-552.3"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="862.91,-555.78 873.1,-552.89 863.33,-548.79 862.91,-555.78"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever -->
+<g id="node8" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever</title>
+<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever | defined in retriever_unified.go:22&#10;at retriever_unified.go:24: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M222.42,-457C222.42,-457 80.13,-457 80.13,-457 74.13,-457 68.13,-451 68.13,-445 68.13,-445 68.13,-433 68.13,-433 68.13,-427 74.13,-421 80.13,-421 80.13,-421 222.42,-421 222.42,-421 228.42,-421 234.42,-427 234.42,-433 234.42,-433 234.42,-445 234.42,-445 234.42,-451 228.42,-457 222.42,-457"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-434.32" font-family="Verdana" font-size="14.00">NewUnifiedRetriever</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever -->
+<g id="edge43" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever</title>
+<g id="a_edge43"><a xlink:title="at retriever_unified.go:24: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever]">
+<path fill="none" stroke="black" d="M235.16,-439C299,-439 386.23,-439 446.36,-439"/>
+<polygon fill="black" stroke="black" points="446.12,-442.5 456.12,-439 446.12,-435.5 446.12,-442.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve -->
 <g id="node9" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve | defined in retriever.go:76&#10;at retriever.go:77: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at retriever.go:82: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at retriever.go:89: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:95: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:110: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve$1]&#10;at retriever.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).mergeResults]&#10;at retriever.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).Rank]&#10;at retriever.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).filterByScore]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M606.08,-174C606.08,-174 427.04,-174 427.04,-174 421.04,-174 415.04,-168 415.04,-162 415.04,-162 415.04,-150 415.04,-150 415.04,-144 421.04,-138 427.04,-138 427.04,-138 606.08,-138 606.08,-138 612.08,-138 618.08,-144 618.08,-150 618.08,-150 618.08,-162 618.08,-162 618.08,-168 612.08,-174 606.08,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-151.32" font-family="Verdana" font-size="14.00">(*RetrieverImpl).Retrieve</text>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve | defined in retriever.go:76&#10;at retriever.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).filterByScore]&#10;at retriever.go:82: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at retriever.go:110: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve$1]&#10;at retriever.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).Rank]&#10;at retriever.go:77: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at retriever.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).mergeResults]&#10;at retriever.go:89: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:95: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M606.08,-780C606.08,-780 427.04,-780 427.04,-780 421.04,-780 415.04,-774 415.04,-768 415.04,-768 415.04,-756 415.04,-756 415.04,-750 421.04,-744 427.04,-744 427.04,-744 606.08,-744 606.08,-744 612.08,-744 618.08,-750 618.08,-756 618.08,-756 618.08,-768 618.08,-768 618.08,-774 612.08,-780 606.08,-780"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-757.33" font-family="Verdana" font-size="14.00">(*RetrieverImpl).Retrieve</text>
 </a>
 </g>
 </g>
@@ -267,19 +339,19 @@
 <g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve$1</title>
 <g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve$1 | defined in retriever.go:110">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1033.25,-174 812.21,-174 812.21,-138 1033.25,-138 1033.25,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-151.32" font-family="Verdana" font-size="14.00">(*RetrieverImpl).Retrieve$1</text>
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1033.25,-780 812.21,-780 812.21,-744 1033.25,-744 1033.25,-780"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-757.33" font-family="Verdana" font-size="14.00">(*RetrieverImpl).Retrieve$1</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve$1 -->
-<g id="edge29" class="edge">
+<g id="edge21" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve$1</title>
-<g id="a_edge29"><a xlink:title="at retriever.go:110: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve$1]">
-<path fill="none" stroke="black" d="M618.67,-145.45C637.59,-141.03 656.7,-134.8 673.58,-126 693.37,-115.68 688.9,-99.39 709.58,-91 730.55,-82.49 726.4,-115.74 746.58,-126 759.28,-132.46 773.1,-137.57 787.23,-141.6"/>
-<polygon fill="black" stroke="black" points="799.94,-148.27 810.48,-147.22 801.59,-141.47 799.94,-148.27"/>
-<polyline fill="none" stroke="black" points="800.28,-144.75 795.42,-143.58"/>
-<ellipse fill="none" stroke="black" cx="791.05" cy="-142.52" rx="4" ry="4"/>
+<g id="a_edge21"><a xlink:title="at retriever.go:110: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve$1]">
+<path fill="none" stroke="black" d="M618.78,-768.62C638.31,-773.48 657.63,-781.13 673.58,-793 701.01,-813.42 680.28,-843.36 709.58,-861 739.06,-878.75 718.77,-813.26 746.58,-793 758.81,-784.09 772.77,-777.46 787.35,-772.56"/>
+<polygon fill="black" stroke="black" points="801.66,-772.32 810.4,-766.33 799.83,-765.56 801.66,-772.32"/>
+<polyline fill="none" stroke="black" points="800.26,-769.07 795.43,-770.37"/>
+<ellipse fill="none" stroke="black" cx="791.09" cy="-771.55" rx="4" ry="4"/>
 </a>
 </g>
 </g>
@@ -287,17 +359,17 @@
 <g id="node11" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).mergeResults</title>
 <g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).mergeResults | defined in retriever.go:194">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1031.37,-235C1031.37,-235 814.08,-235 814.08,-235 808.08,-235 802.08,-229 802.08,-223 802.08,-223 802.08,-211 802.08,-211 802.08,-205 808.08,-199 814.08,-199 814.08,-199 1031.37,-199 1031.37,-199 1037.37,-199 1043.37,-205 1043.37,-211 1043.37,-211 1043.37,-223 1043.37,-223 1043.37,-229 1037.37,-235 1031.37,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-212.32" font-family="Verdana" font-size="14.00">(*RetrieverImpl).mergeResults</text>
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1031.37,-841C1031.37,-841 814.08,-841 814.08,-841 808.08,-841 802.08,-835 802.08,-829 802.08,-829 802.08,-817 802.08,-817 802.08,-811 808.08,-805 814.08,-805 814.08,-805 1031.37,-805 1031.37,-805 1037.37,-805 1043.37,-811 1043.37,-817 1043.37,-817 1043.37,-829 1043.37,-829 1043.37,-835 1037.37,-841 1031.37,-841"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-818.33" font-family="Verdana" font-size="14.00">(*RetrieverImpl).mergeResults</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).mergeResults -->
-<g id="edge30" class="edge">
+<g id="edge36" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).mergeResults</title>
-<g id="a_edge30"><a xlink:title="at retriever.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).mergeResults]">
-<path fill="none" stroke="black" d="M618.77,-171.27C670.94,-179.15 735.17,-188.84 791.05,-197.28"/>
-<polygon fill="black" stroke="black" points="790.2,-200.69 800.61,-198.72 791.25,-193.77 790.2,-200.69"/>
+<g id="a_edge36"><a xlink:title="at retriever.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).mergeResults]">
+<path fill="none" stroke="black" d="M618.74,-768.03C638.39,-772.92 657.76,-780.73 673.58,-793 702.8,-815.66 678.29,-848.31 709.58,-868 724.46,-877.36 729.65,-858.74 746.58,-854 760.82,-850.01 775.86,-846.43 790.9,-843.25"/>
+<polygon fill="black" stroke="black" points="791.27,-846.74 800.36,-841.3 789.86,-839.89 791.27,-846.74"/>
 </a>
 </g>
 </g>
@@ -305,17 +377,17 @@
 <g id="node12" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).Rank</title>
 <g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).Rank | defined in ranker.go:64">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M999.5,-52C999.5,-52 845.96,-52 845.96,-52 839.96,-52 833.96,-46 833.96,-40 833.96,-40 833.96,-28 833.96,-28 833.96,-22 839.96,-16 845.96,-16 845.96,-16 999.5,-16 999.5,-16 1005.5,-16 1011.5,-22 1011.5,-28 1011.5,-28 1011.5,-40 1011.5,-40 1011.5,-46 1005.5,-52 999.5,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-29.32" font-family="Verdana" font-size="14.00">(*ResultRanker).Rank</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M999.5,-902C999.5,-902 845.96,-902 845.96,-902 839.96,-902 833.96,-896 833.96,-890 833.96,-890 833.96,-878 833.96,-878 833.96,-872 839.96,-866 845.96,-866 845.96,-866 999.5,-866 999.5,-866 1005.5,-866 1011.5,-872 1011.5,-878 1011.5,-878 1011.5,-890 1011.5,-890 1011.5,-896 1005.5,-902 999.5,-902"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-879.33" font-family="Verdana" font-size="14.00">(*ResultRanker).Rank</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).Rank -->
-<g id="edge41" class="edge">
+<g id="edge22" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).Rank</title>
-<g id="a_edge41"><a xlink:title="at retriever.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).Rank]">
-<path fill="none" stroke="black" d="M618.54,-147.68C637.77,-143.09 657.04,-136.22 673.58,-126 695.96,-112.17 688.47,-94.7 709.58,-79 741.75,-55.07 783.87,-43.27 822.08,-37.64"/>
-<polygon fill="black" stroke="black" points="822.33,-41.14 831.78,-36.34 821.4,-34.2 822.33,-41.14"/>
+<g id="a_edge22"><a xlink:title="at retriever.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).Rank]">
+<path fill="none" stroke="black" d="M618.66,-767.52C638.42,-772.43 657.86,-780.38 673.58,-793 704.61,-817.92 676.72,-852.53 709.58,-875 741.92,-897.11 783.96,-902.42 822.08,-901.06"/>
+<polygon fill="black" stroke="black" points="821.93,-904.57 831.73,-900.55 821.56,-897.58 821.93,-904.57"/>
 </a>
 </g>
 </g>
@@ -323,80 +395,143 @@
 <g id="node13" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).filterByScore</title>
 <g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).filterByScore | defined in retriever.go:233">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1028.37,-113C1028.37,-113 817.08,-113 817.08,-113 811.08,-113 805.08,-107 805.08,-101 805.08,-101 805.08,-89 805.08,-89 805.08,-83 811.08,-77 817.08,-77 817.08,-77 1028.37,-77 1028.37,-77 1034.37,-77 1040.37,-83 1040.37,-89 1040.37,-89 1040.37,-101 1040.37,-101 1040.37,-107 1034.37,-113 1028.37,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-90.33" font-family="Verdana" font-size="14.00">(*RetrieverImpl).filterByScore</text>
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1028.37,-719C1028.37,-719 817.08,-719 817.08,-719 811.08,-719 805.08,-713 805.08,-707 805.08,-707 805.08,-695 805.08,-695 805.08,-689 811.08,-683 817.08,-683 817.08,-683 1028.37,-683 1028.37,-683 1034.37,-683 1040.37,-689 1040.37,-695 1040.37,-695 1040.37,-707 1040.37,-707 1040.37,-713 1034.37,-719 1028.37,-719"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-696.33" font-family="Verdana" font-size="14.00">(*RetrieverImpl).filterByScore</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).filterByScore -->
-<g id="edge42" class="edge">
+<g id="edge12" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).filterByScore</title>
-<g id="a_edge42"><a xlink:title="at retriever.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).filterByScore]">
-<path fill="none" stroke="black" d="M618.43,-146.7C637.57,-142.19 656.83,-135.6 673.58,-126 694.62,-113.95 687.49,-95 709.58,-85 751.43,-66.06 802.78,-67.92 844.48,-74.82"/>
-<polygon fill="black" stroke="black" points="843.75,-78.24 854.21,-76.57 844.98,-71.35 843.75,-78.24"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge25" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge25"><a xlink:title="at retriever.go:82: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M609.93,-174.75C632.96,-183.04 656.05,-194.94 673.58,-212 737.53,-274.21 687.84,-331.84 746.58,-399 783.11,-440.76 842.17,-468.16 881.47,-482.86"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="880.23,-486.14 890.82,-486.25 882.61,-479.55 880.23,-486.14"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge39" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge39"><a xlink:title="at retriever.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M615.7,-174.62C637.3,-182.88 658.28,-194.8 673.58,-212 721.33,-265.69 694.32,-477.69 746.58,-527 760.12,-539.77 777,-548.19 794.9,-553.6"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="793.81,-556.93 804.38,-556.13 795.62,-550.17 793.81,-556.93"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge40" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge40"><a xlink:title="at retriever.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M617.36,-174.7C638.52,-182.95 658.88,-194.85 673.58,-212 728.98,-276.62 685.72,-528.5 746.58,-588 761.45,-602.53 780.62,-611.49 800.81,-616.81"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="799.77,-620.16 810.3,-618.99 801.34,-613.34 799.77,-620.16"/>
+<g id="a_edge12"><a xlink:title="at retriever.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).filterByScore]">
+<path fill="none" stroke="black" d="M618.44,-772.02C637.58,-776.65 656.83,-783.34 673.58,-793 694.84,-805.26 690.54,-848.18 710.58,-834 749.82,-806.23 709.91,-763.09 746.58,-732 760.33,-720.34 776.92,-712.39 794.33,-707.05"/>
+<polygon fill="black" stroke="black" points="795.08,-710.48 803.81,-704.46 793.24,-703.72 795.08,-710.48"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge28" class="edge">
+<g id="edge41" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge28"><a xlink:title="at retriever.go:89: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:95: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M618.69,-174.58C639.53,-182.84 659.42,-194.77 673.58,-212 736.09,-288.07 676.44,-579.91 746.58,-649 782.51,-684.39 843.97,-686.82 883.71,-683.95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="883.88,-687.44 893.53,-683.07 883.26,-680.47 883.88,-687.44"/>
+<g id="a_edge41"><a xlink:title="at retriever.go:89: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:95: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M618.69,-746.05C638.68,-739.12 658.2,-729.2 673.58,-715 739.13,-654.47 682.33,-589.91 746.58,-528 784.27,-491.68 844.72,-476.89 883.83,-470.93"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="884.06,-474.43 893.49,-469.59 883.1,-467.5 884.06,-474.43"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge44" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge44"><a xlink:title="at retriever.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M618.44,-749.02C639.17,-741.96 659.06,-731.24 673.58,-715 733.79,-647.63 682.52,-378.72 746.58,-315 759.97,-301.68 776.96,-292.96 795.06,-287.39"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="795.94,-290.78 804.68,-284.79 794.11,-284.02 795.94,-290.78"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge35" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge35"><a xlink:title="at retriever.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M618.47,-748.54C639.07,-741.5 658.91,-730.91 673.58,-715 725.83,-658.36 691.09,-429.47 746.58,-376 761.4,-361.72 780.38,-352.77 800.34,-347.35"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="801.12,-350.76 810.04,-345.04 799.5,-343.95 801.12,-350.76"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge17"><a xlink:title="at retriever.go:82: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M618.76,-747.78C639.1,-740.76 658.75,-730.37 673.58,-715 717.93,-669.03 699.61,-480.28 746.58,-437 782.67,-403.74 841.46,-399.83 880.85,-401.65"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="880.44,-405.13 890.64,-402.25 880.88,-398.14 880.44,-405.13"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge2" class="edge">
+<g id="edge29" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge2"><a xlink:title="at retriever.go:77: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M618.7,-142.36C651.32,-143.29 685.48,-150.64 710.58,-172 761.15,-215.03 696.93,-272.91 746.58,-317 777.83,-344.76 825.5,-349.18 863.22,-347.26"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="863.33,-350.76 873.07,-346.58 862.85,-343.77 863.33,-350.76"/>
+<g id="a_edge29"><a xlink:title="at retriever.go:77: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M598.31,-780.74C643.32,-789.06 693.62,-794.15 710.58,-780 779.25,-722.69 681.62,-643.49 746.58,-582 777.04,-553.17 824.98,-548.88 863.01,-551.12"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="862.71,-554.61 872.95,-551.9 863.25,-547.63 862.71,-554.61"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve -->
+<g id="node14" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve</title>
+<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve | defined in strategies.go:146&#10;at strategies.go:152: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:167: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:169: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords]&#10;at strategies.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:168: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:147: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M642.83,-211C642.83,-211 390.29,-211 390.29,-211 384.29,-211 378.29,-205 378.29,-199 378.29,-199 378.29,-187 378.29,-187 378.29,-181 384.29,-175 390.29,-175 390.29,-175 642.83,-175 642.83,-175 648.83,-175 654.83,-181 654.83,-187 654.83,-187 654.83,-199 654.83,-199 654.83,-205 648.83,-211 642.83,-211"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-188.32" font-family="Verdana" font-size="14.00">(*KeywordSearchStrategy).Retrieve</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords -->
+<g id="node15" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords</title>
+<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords | defined in strategies.go:187">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1078.62,-52C1078.62,-52 766.83,-52 766.83,-52 760.83,-52 754.83,-46 754.83,-40 754.83,-40 754.83,-28 754.83,-28 754.83,-22 760.83,-16 766.83,-16 766.83,-16 1078.62,-16 1078.62,-16 1084.62,-16 1090.62,-22 1090.62,-28 1090.62,-28 1090.62,-40 1090.62,-40 1090.62,-46 1084.62,-52 1078.62,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-29.32" font-family="Verdana" font-size="14.00">(*KeywordSearchStrategy).extractKeywords</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords -->
+<g id="edge24" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords</title>
+<g id="a_edge24"><a xlink:title="at strategies.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords]">
+<path fill="none" stroke="black" d="M532.57,-174.45C562.09,-139.59 631.66,-65.29 709.58,-37 720.47,-33.05 731.88,-30.02 743.53,-27.75"/>
+<polygon fill="black" stroke="black" points="744.02,-31.22 753.27,-26.06 742.82,-24.32 744.02,-31.22"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge30" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge30"><a xlink:title="at strategies.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:168: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M535.18,-174.47C571.22,-138.81 654.64,-67.9 710.58,-112 764.42,-154.45 695.5,-216.27 746.58,-262 760.29,-274.27 777.2,-282 795.06,-286.63"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="794.28,-290.05 804.81,-288.81 795.81,-283.21 794.28,-290.05"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge23" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge23"><a xlink:title="at strategies.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:169: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M648.34,-211.67C657.16,-215.13 665.67,-219.2 673.58,-224 717.91,-250.9 701.9,-288.69 746.58,-315 763.02,-324.68 781.75,-331.44 800.69,-336.12"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="799.85,-339.51 810.38,-338.3 801.39,-332.69 799.85,-339.51"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge1"><a xlink:title="at strategies.go:152: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:167: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M653.85,-211.69C660.83,-215.19 667.47,-219.26 673.58,-224 732.8,-269.92 686.75,-330.86 746.58,-376 785.3,-405.21 842.53,-409.86 880.92,-409.09"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="880.81,-412.6 890.68,-408.76 880.56,-405.61 880.81,-412.6"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
+<g id="edge37" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
+<g id="a_edge37"><a xlink:title="at strategies.go:147: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M655.47,-210.43C662,-214.25 668.1,-218.74 673.58,-224 723.53,-271.98 696.39,-479.27 746.58,-527 777.26,-556.18 825.19,-563.59 863.16,-564.17"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="863.08,-567.67 873.08,-564.15 863.07,-560.67 863.08,-567.67"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve -->
-<g id="node14" class="node">
+<g id="node16" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve | defined in retriever_unified.go:43&#10;at retriever_unified.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]&#10;at retriever_unified.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at retriever_unified.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M249.42,-217C249.42,-217 53.13,-217 53.13,-217 47.13,-217 41.13,-211 41.13,-205 41.13,-205 41.13,-193 41.13,-193 41.13,-187 47.13,-181 53.13,-181 53.13,-181 249.42,-181 249.42,-181 255.42,-181 261.42,-187 261.42,-193 261.42,-193 261.42,-205 261.42,-205 261.42,-211 255.42,-217 249.42,-217"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-194.32" font-family="Verdana" font-size="14.00">(*UnifiedRetriever).Retrieve</text>
+<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve | defined in retriever_unified.go:43&#10;at retriever_unified.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]&#10;at retriever_unified.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at retriever_unified.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M249.42,-736C249.42,-736 53.13,-736 53.13,-736 47.13,-736 41.13,-730 41.13,-724 41.13,-724 41.13,-712 41.13,-712 41.13,-706 47.13,-700 53.13,-700 53.13,-700 249.42,-700 249.42,-700 255.42,-700 261.42,-706 261.42,-712 261.42,-712 261.42,-724 261.42,-724 261.42,-730 255.42,-736 249.42,-736"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-713.33" font-family="Verdana" font-size="14.00">(*UnifiedRetriever).Retrieve</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve -->
-<g id="edge43" class="edge">
+<g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve</title>
-<g id="a_edge43"><a xlink:title="at retriever_unified.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve]">
-<path fill="none" stroke="black" d="M261.76,-186.04C306.44,-180.75 358.08,-174.64 403.07,-169.31"/>
-<polygon fill="black" stroke="black" points="403.33,-172.81 412.85,-168.16 402.51,-165.86 403.33,-172.81"/>
+<g id="a_edge18"><a xlink:title="at retriever_unified.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).Retrieve]">
+<path fill="none" stroke="black" d="M261.76,-731.26C306.44,-736.67 358.08,-742.93 403.07,-748.38"/>
+<polygon fill="black" stroke="black" points="402.51,-751.83 412.85,-749.56 403.35,-744.88 402.51,-751.83"/>
 </a>
 </g>
 </g>
@@ -404,305 +539,170 @@
 <g id="node25" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
 <g id="a_node25"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent | defined in core.go:77">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M567.83,-262C567.83,-262 465.29,-262 465.29,-262 459.29,-262 453.29,-256 453.29,-250 453.29,-250 453.29,-238 453.29,-238 453.29,-232 459.29,-226 465.29,-226 465.29,-226 567.83,-226 567.83,-226 573.83,-226 579.83,-232 579.83,-238 579.83,-238 579.83,-250 579.83,-250 579.83,-256 573.83,-262 567.83,-262"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-239.32" font-family="Verdana" font-size="14.00">NewBaseEvent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M567.83,-673C567.83,-673 465.29,-673 465.29,-673 459.29,-673 453.29,-667 453.29,-661 453.29,-661 453.29,-649 453.29,-649 453.29,-643 459.29,-637 465.29,-637 465.29,-637 567.83,-637 567.83,-637 573.83,-637 579.83,-643 579.83,-649 579.83,-649 579.83,-661 579.83,-661 579.83,-667 573.83,-673 567.83,-673"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-650.33" font-family="Verdana" font-size="14.00">NewBaseEvent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge26" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge26"><a xlink:title="at retriever_unified.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M261.76,-212.56C319.84,-219.76 389.66,-228.41 441.36,-234.81"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="440.91,-238.28 451.26,-236.04 441.77,-231.33 440.91,-238.28"/>
+<g id="a_edge10"><a xlink:title="at retriever_unified.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M241.34,-699.26C277.88,-691.87 320.66,-683.58 359.54,-677 386.21,-672.49 415.55,-668.18 441.52,-664.59"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="441.87,-668.07 451.31,-663.25 440.92,-661.14 441.87,-668.07"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge31" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedRetriever).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge31"><a xlink:title="at retriever_unified.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M262,-192.62C392.55,-186.61 601.87,-182.41 673.58,-212 694.51,-220.63 696.99,-228.9 710.58,-247 731.59,-274.98 717.91,-296.95 746.58,-317 780.23,-340.54 826.64,-345.46 863.23,-344.81"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="863.35,-348.31 873.23,-344.47 863.11,-341.31 863.35,-348.31"/>
+<g id="a_edge11"><a xlink:title="at retriever_unified.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M262.11,-720.92C367.61,-723.73 531.49,-728.12 673.58,-732 690.02,-732.45 697.67,-743.19 710.58,-733 764.73,-690.24 695.21,-628.05 746.58,-582 777.7,-554.1 825.38,-549.68 863.13,-551.65"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="862.77,-555.13 872.99,-552.34 863.26,-548.15 862.77,-555.13"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedEventBusAdapter).Publish -->
-<g id="node15" class="node">
+<g id="node17" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedEventBusAdapter).Publish</title>
-<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedEventBusAdapter).Publish | defined in retriever_unified.go:121&#10;at retriever_unified.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M274.54,-278C274.54,-278 28,-278 28,-278 22,-278 16,-272 16,-266 16,-266 16,-254 16,-254 16,-248 22,-242 28,-242 28,-242 274.54,-242 274.54,-242 280.54,-242 286.54,-248 286.54,-254 286.54,-254 286.54,-266 286.54,-266 286.54,-272 280.54,-278 274.54,-278"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-255.32" font-family="Verdana" font-size="14.00">(*UnifiedEventBusAdapter).Publish</text>
+<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedEventBusAdapter).Publish | defined in retriever_unified.go:121&#10;at retriever_unified.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M274.54,-673C274.54,-673 28,-673 28,-673 22,-673 16,-667 16,-661 16,-661 16,-649 16,-649 16,-643 22,-637 28,-637 28,-637 274.54,-637 274.54,-637 280.54,-637 286.54,-643 286.54,-649 286.54,-649 286.54,-661 286.54,-661 286.54,-667 280.54,-673 274.54,-673"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-650.33" font-family="Verdana" font-size="14.00">(*UnifiedEventBusAdapter).Publish</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedEventBusAdapter).Publish&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge32" class="edge">
+<g id="edge13" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.UnifiedEventBusAdapter).Publish&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge32"><a xlink:title="at retriever_unified.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M287.29,-254.05C339.46,-251.76 397.14,-249.22 441.46,-247.26"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="441.38,-250.77 451.21,-246.83 441.07,-243.78 441.38,-250.77"/>
+<g id="a_edge13"><a xlink:title="at retriever_unified.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M287.29,-655C339.46,-655 397.14,-655 441.46,-655"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="441.21,-658.5 451.21,-655 441.21,-651.5 441.21,-658.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve -->
-<g id="node16" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve</title>
-<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve | defined in strategies.go:146&#10;at strategies.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:168: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:169: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:147: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at strategies.go:152: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:167: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M642.83,-342C642.83,-342 390.29,-342 390.29,-342 384.29,-342 378.29,-336 378.29,-330 378.29,-330 378.29,-318 378.29,-318 378.29,-312 384.29,-306 390.29,-306 390.29,-306 642.83,-306 642.83,-306 648.83,-306 654.83,-312 654.83,-318 654.83,-318 654.83,-330 654.83,-330 654.83,-336 648.83,-342 642.83,-342"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-319.32" font-family="Verdana" font-size="14.00">(*KeywordSearchStrategy).Retrieve</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords -->
-<g id="node17" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords</title>
-<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords | defined in strategies.go:187">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1078.62,-296C1078.62,-296 766.83,-296 766.83,-296 760.83,-296 754.83,-290 754.83,-284 754.83,-284 754.83,-272 754.83,-272 754.83,-266 760.83,-260 766.83,-260 766.83,-260 1078.62,-260 1078.62,-260 1084.62,-260 1090.62,-266 1090.62,-272 1090.62,-272 1090.62,-284 1090.62,-284 1090.62,-290 1084.62,-296 1078.62,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-273.32" font-family="Verdana" font-size="14.00">(*KeywordSearchStrategy).extractKeywords</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords -->
-<g id="edge36" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords</title>
-<g id="a_edge36"><a xlink:title="at strategies.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).extractKeywords]">
-<path fill="none" stroke="black" d="M655.3,-311.54C661.67,-308.82 667.81,-305.67 673.58,-302 698.24,-286.34 683.88,-260.89 709.58,-247 714.32,-244.44 758.12,-250.53 804.7,-257.97"/>
-<polygon fill="black" stroke="black" points="804.02,-261.4 814.45,-259.54 805.13,-254.49 804.02,-261.4"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge35" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge35"><a xlink:title="at strategies.go:152: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:167: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M655.46,-339.45C674.66,-344.71 693.6,-351.7 710.58,-361 730.99,-372.17 728.19,-384.75 746.58,-399 789.35,-432.13 844.85,-460.83 881.79,-478.24"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="880.25,-481.38 890.79,-482.42 883.2,-475.03 880.25,-481.38"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge3"><a xlink:title="at strategies.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:168: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M615.52,-342.72C636.39,-350.16 657.08,-360.54 673.58,-375 729.95,-424.39 686.75,-481.86 746.58,-527 760.86,-537.77 777.65,-545.2 795.08,-550.25"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="793.98,-553.58 804.54,-552.72 795.75,-546.81 793.98,-553.58"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge17"><a xlink:title="at strategies.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:169: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M624.94,-342.73C643.2,-350.17 660.46,-360.54 673.58,-375 740.82,-449.12 661.6,-535.15 746.58,-588 762.89,-598.15 781.64,-605.13 800.66,-609.89"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="799.87,-613.3 810.4,-612.11 801.43,-606.48 799.87,-613.3"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge19" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.KeywordSearchStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge19"><a xlink:title="at strategies.go:147: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M655.45,-311C661.75,-308.42 667.83,-305.44 673.58,-302 697.01,-288 687.02,-239.22 710.58,-253 738.75,-269.48 719.49,-298.8 746.58,-317 780.55,-339.83 826.74,-344.83 863.16,-344.38"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="863.2,-347.88 873.1,-344.11 863,-340.89 863.2,-347.88"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap -->
 <g id="node18" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever</title>
-<g id="a_node18"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever | defined in retriever.go:24&#10;at retriever.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:43: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:32: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:36: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:42: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M562.96,-423C562.96,-423 470.17,-423 470.17,-423 464.17,-423 458.17,-417 458.17,-411 458.17,-411 458.17,-399 458.17,-399 458.17,-393 464.17,-387 470.17,-387 470.17,-387 562.96,-387 562.96,-387 568.96,-387 574.96,-393 574.96,-399 574.96,-399 574.96,-411 574.96,-411 574.96,-417 568.96,-423 562.96,-423"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-400.32" font-family="Verdana" font-size="14.00">NewRetriever</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap</title>
+<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap | defined in ranker.go:165&#10;at ranker.go:166: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords]&#10;at ranker.go:167: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M644.71,-963C644.71,-963 388.42,-963 388.42,-963 382.42,-963 376.42,-957 376.42,-951 376.42,-951 376.42,-939 376.42,-939 376.42,-933 382.42,-927 388.42,-927 388.42,-927 644.71,-927 644.71,-927 650.71,-927 656.71,-933 656.71,-939 656.71,-939 656.71,-951 656.71,-951 656.71,-957 650.71,-963 644.71,-963"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-940.33" font-family="Verdana" font-size="14.00">(*RelevanceScorer).keywordOverlap</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge4" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge4"><a xlink:title="at retriever.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at retriever.go:43: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M575.57,-412.05C606.39,-417.75 643.92,-427.93 673.58,-446 714.97,-471.21 704.13,-503.62 746.58,-527 761.43,-535.18 777.98,-541.23 794.81,-545.69"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="793.88,-549.07 804.42,-548.04 795.54,-542.27 793.88,-549.07"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge15" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge15"><a xlink:title="at retriever.go:32: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M575.43,-406.77C608.13,-410.74 647.54,-420.96 673.58,-446 713.1,-484.01 676.58,-520.21 709.58,-564 721.38,-579.65 728.32,-580.87 746.58,-588 763.55,-594.63 782.02,-599.8 800.39,-603.83"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="799.5,-607.22 810,-605.83 800.92,-600.37 799.5,-607.22"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge27" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge27"><a xlink:title="at retriever.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:36: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:42: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M575.51,-405.07C609.08,-408.35 649.36,-418.44 673.58,-446 756.39,-540.26 615.37,-643.13 709.58,-726 724.48,-739.11 728.05,-708.1 746.58,-701 791.77,-683.68 847.85,-679.36 884.19,-678.59"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="883.79,-682.09 893.75,-678.47 883.7,-675.09 883.79,-682.09"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge37" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge37"><a xlink:title="at retriever.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M575.56,-395.32C606.74,-388.03 644.62,-375.62 673.58,-355 695.3,-339.53 685.73,-318.93 709.58,-307 724.82,-299.38 729.88,-313.65 746.58,-317 785.18,-324.74 829.15,-330.26 863.38,-333.83"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="862.78,-337.28 873.09,-334.81 863.49,-330.32 862.78,-337.28"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords -->
 <g id="node19" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever</title>
-<g id="a_node19"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever | defined in retriever_unified.go:22&#10;at retriever_unified.go:24: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M222.42,-423C222.42,-423 80.13,-423 80.13,-423 74.13,-423 68.13,-417 68.13,-411 68.13,-411 68.13,-399 68.13,-399 68.13,-393 74.13,-387 80.13,-387 80.13,-387 222.42,-387 222.42,-387 228.42,-387 234.42,-393 234.42,-399 234.42,-399 234.42,-411 234.42,-411 234.42,-417 228.42,-423 222.42,-423"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-400.32" font-family="Verdana" font-size="14.00">NewUnifiedRetriever</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords</title>
+<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords | defined in ranker.go:189">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1040.37,-963C1040.37,-963 805.08,-963 805.08,-963 799.08,-963 793.08,-957 793.08,-951 793.08,-951 793.08,-939 793.08,-939 793.08,-933 799.08,-927 805.08,-927 805.08,-927 1040.37,-927 1040.37,-927 1046.37,-927 1052.37,-933 1052.37,-939 1052.37,-939 1052.37,-951 1052.37,-951 1052.37,-957 1046.37,-963 1040.37,-963"/>
+<text xml:space="preserve" text-anchor="middle" x="922.73" y="-940.33" font-family="Verdana" font-size="14.00">(*RelevanceScorer).extractWords</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever -->
-<g id="edge20" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewUnifiedRetriever&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever</title>
-<g id="a_edge20"><a xlink:title="at retriever_unified.go:24: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewRetriever]">
-<path fill="none" stroke="black" d="M235.16,-405C299,-405 386.23,-405 446.36,-405"/>
-<polygon fill="black" stroke="black" points="446.12,-408.5 456.12,-405 446.12,-401.5 446.12,-408.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve -->
-<g id="node20" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve</title>
-<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve | defined in strategies.go:242&#10;at strategies.go:249: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:257: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:270: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:250: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:258: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:271: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:243: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at strategies.go:248: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:256: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:269: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:275: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M641.33,-656C641.33,-656 391.79,-656 391.79,-656 385.79,-656 379.79,-650 379.79,-644 379.79,-644 379.79,-632 379.79,-632 379.79,-626 385.79,-620 391.79,-620 391.79,-620 641.33,-620 641.33,-620 647.33,-620 653.33,-626 653.33,-632 653.33,-632 653.33,-644 653.33,-644 653.33,-650 647.33,-656 641.33,-656"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-633.33" font-family="Verdana" font-size="14.00">(*GraphTraversalStrategy).Retrieve</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments -->
-<g id="node21" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments</title>
-<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments | defined in strategies.go:293">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1086.87,-887C1086.87,-887 758.58,-887 758.58,-887 752.58,-887 746.58,-881 746.58,-875 746.58,-875 746.58,-863 746.58,-863 746.58,-857 752.58,-851 758.58,-851 758.58,-851 1086.87,-851 1086.87,-851 1092.87,-851 1098.87,-857 1098.87,-863 1098.87,-863 1098.87,-875 1098.87,-875 1098.87,-881 1092.87,-887 1086.87,-887"/>
-<text xml:space="preserve" text-anchor="middle" x="922.73" y="-864.33" font-family="Verdana" font-size="14.00">(*GraphTraversalStrategy).nodesToDocuments</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments</title>
-<g id="a_edge23"><a xlink:title="at strategies.go:275: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).nodesToDocuments]">
-<path fill="none" stroke="black" d="M545.25,-656.73C578.64,-680.3 635.05,-723.36 673.58,-770 694.37,-795.16 682.85,-815.28 709.58,-834 717.8,-839.76 726.63,-844.69 735.86,-848.91"/>
-<polygon fill="black" stroke="black" points="734.46,-852.12 745.04,-852.79 737.19,-845.67 734.46,-852.12"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge22"><a xlink:title="at strategies.go:248: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:256: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at strategies.go:269: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M549,-619.28C592.09,-594.44 672.6,-550.96 746.58,-527 791.51,-512.45 845.27,-504.22 881.27,-499.95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="881.26,-503.48 890.8,-498.87 880.47,-496.52 881.26,-503.48"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge5"><a xlink:title="at strategies.go:249: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:257: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at strategies.go:270: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M599.54,-619.27C643.13,-609.53 697.67,-597.66 746.58,-588 764.14,-584.53 782.73,-581.04 800.98,-577.72"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="801.58,-581.17 810.8,-575.95 800.34,-574.28 801.58,-581.17"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge9" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge9"><a xlink:title="at strategies.go:250: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:258: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at strategies.go:271: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M653.91,-643.58C672.61,-644.17 691.57,-644.67 709.58,-645 742.54,-645.6 778.15,-642.54 810.61,-638.28"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="811.02,-641.76 820.46,-636.93 810.07,-634.82 811.02,-641.76"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge21" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.GraphTraversalStrategy).Retrieve&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge21"><a xlink:title="at strategies.go:243: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M541.45,-619.48C582.91,-587.41 670.99,-519.67 746.58,-464 794.49,-428.72 850.58,-388.95 886.12,-363.94"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="887.73,-367.09 893.9,-358.47 883.71,-361.36 887.73,-367.09"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords -->
+<g id="edge31" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords</title>
+<g id="a_edge31"><a xlink:title="at ranker.go:166: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords]&#10;at ranker.go:167: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).extractWords]">
+<path fill="none" stroke="black" d="M656.93,-945C697.31,-945 741.38,-945 781.79,-945"/>
+<polygon fill="black" stroke="black" points="781.57,-948.5 791.57,-945 781.57,-941.5 781.57,-948.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).Score -->
-<g id="node22" class="node">
+<g id="node20" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).Score</title>
-<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).Score | defined in ranker.go:154&#10;at ranker.go:161: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap]">
+<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).Score | defined in ranker.go:154&#10;at ranker.go:161: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M242.29,-963C242.29,-963 60.25,-963 60.25,-963 54.25,-963 48.25,-957 48.25,-951 48.25,-951 48.25,-939 48.25,-939 48.25,-933 54.25,-927 60.25,-927 60.25,-927 242.29,-927 242.29,-927 248.29,-927 254.29,-933 254.29,-939 254.29,-939 254.29,-951 254.29,-951 254.29,-957 248.29,-963 242.29,-963"/>
 <text xml:space="preserve" text-anchor="middle" x="151.27" y="-940.33" font-family="Verdana" font-size="14.00">(*RelevanceScorer).Score</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap -->
-<g id="edge6" class="edge">
+<g id="edge38" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap</title>
-<g id="a_edge6"><a xlink:title="at ranker.go:161: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap]">
+<g id="a_edge38"><a xlink:title="at ranker.go:161: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RelevanceScorer).keywordOverlap]">
 <path fill="none" stroke="black" d="M254.92,-945C289.05,-945 327.8,-945 364.8,-945"/>
 <polygon fill="black" stroke="black" points="364.7,-948.5 374.7,-945 364.7,-941.5 364.7,-948.5"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker -->
-<g id="node23" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker</title>
-<g id="a_node23"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker | defined in ranker.go:28&#10;at ranker.go:35: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M212.29,-902C212.29,-902 90.25,-902 90.25,-902 84.25,-902 78.25,-896 78.25,-890 78.25,-890 78.25,-878 78.25,-878 78.25,-872 84.25,-866 90.25,-866 90.25,-866 212.29,-866 212.29,-866 218.29,-866 224.29,-872 224.29,-878 224.29,-878 224.29,-890 224.29,-890 224.29,-896 218.29,-902 212.29,-902"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-879.33" font-family="Verdana" font-size="14.00">NewResultRanker</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score -->
+<g id="node21" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score</title>
+<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score | defined in ranker.go:219&#10;at ranker.go:252: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType]&#10;at ranker.go:231: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M244.17,-871C244.17,-871 58.38,-871 58.38,-871 52.38,-871 46.38,-865 46.38,-859 46.38,-859 46.38,-847 46.38,-847 46.38,-841 52.38,-835 58.38,-835 58.38,-835 244.17,-835 244.17,-835 250.17,-835 256.17,-841 256.17,-847 256.17,-847 256.17,-859 256.17,-859 256.17,-865 250.17,-871 244.17,-871"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-848.33" font-family="Verdana" font-size="14.00">(*ContextualScorer).Score</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer -->
-<g id="edge7" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.NewResultRanker&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer</title>
-<g id="a_edge7"><a xlink:title="at ranker.go:35: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]&#10;at ranker.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ResultRanker).AddScorer]">
-<path fill="none" stroke="black" d="M224.91,-884C274.12,-884 340.27,-884 397.03,-884"/>
-<polygon fill="black" stroke="black" points="396.74,-887.5 406.74,-884 396.74,-880.5 396.74,-887.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice -->
+<g id="node22" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice</title>
+<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice | defined in ranker.go:263">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M661.58,-841C661.58,-841 371.54,-841 371.54,-841 365.54,-841 359.54,-835 359.54,-829 359.54,-829 359.54,-817 359.54,-817 359.54,-811 365.54,-805 371.54,-805 371.54,-805 661.58,-805 661.58,-805 667.58,-805 673.58,-811 673.58,-817 673.58,-817 673.58,-829 673.58,-829 673.58,-835 667.58,-841 661.58,-841"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-818.33" font-family="Verdana" font-size="14.00">(*ContextualScorer).convertToStringSlice</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice -->
+<g id="edge14" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice</title>
+<g id="a_edge14"><a xlink:title="at ranker.go:231: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).convertToStringSlice]">
+<path fill="none" stroke="black" d="M256.86,-844.36C285.33,-842.01 316.9,-839.4 347.92,-836.84"/>
+<polygon fill="black" stroke="black" points="348.13,-840.34 357.81,-836.03 347.56,-833.36 348.13,-840.34"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType -->
+<g id="node23" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType</title>
+<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType | defined in ranker.go:283">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M637.58,-902C637.58,-902 395.54,-902 395.54,-902 389.54,-902 383.54,-896 383.54,-890 383.54,-890 383.54,-878 383.54,-878 383.54,-872 389.54,-866 395.54,-866 395.54,-866 637.58,-866 637.58,-866 643.58,-866 649.58,-872 649.58,-878 649.58,-878 649.58,-890 649.58,-890 649.58,-896 643.58,-902 637.58,-902"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-879.33" font-family="Verdana" font-size="14.00">(*ContextualScorer).inferTaskType</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).Score&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType</title>
+<g id="a_edge2"><a xlink:title="at ranker.go:252: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.ContextualScorer).inferTaskType]">
+<path fill="none" stroke="black" d="M256.86,-861.92C292.82,-864.99 333.73,-868.48 372.23,-871.77"/>
+<polygon fill="black" stroke="black" points="371.79,-875.24 382.05,-872.61 372.39,-868.27 371.79,-875.24"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy -->
 <g id="node24" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy</title>
-<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy | defined in retriever.go:59&#10;at retriever.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M621.08,-818C621.08,-818 412.04,-818 412.04,-818 406.04,-818 400.04,-812 400.04,-806 400.04,-806 400.04,-794 400.04,-794 400.04,-788 406.04,-782 412.04,-782 412.04,-782 621.08,-782 621.08,-782 627.08,-782 633.08,-788 633.08,-794 633.08,-794 633.08,-806 633.08,-806 633.08,-812 627.08,-818 621.08,-818"/>
-<text xml:space="preserve" text-anchor="middle" x="516.56" y="-795.33" font-family="Verdana" font-size="14.00">(*RetrieverImpl).AddStrategy</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge16" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge16"><a xlink:title="at retriever.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M541.7,-781.45C573.14,-756.9 629.31,-711.75 673.58,-669 708.44,-635.34 704.2,-611.5 746.58,-588 761.42,-579.77 777.97,-573.65 794.79,-569.1"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="795.55,-572.52 804.41,-566.7 793.86,-565.73 795.55,-572.52"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge11" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge11"><a xlink:title="at retriever.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M538.92,-781.49C577.53,-749.09 662.74,-682.4 746.58,-649 763.65,-642.2 782.24,-636.89 800.73,-632.74"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="801.36,-636.18 810.42,-630.68 799.91,-629.34 801.36,-636.18"/>
+<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy | defined in retriever.go:59&#10;at retriever.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at retriever.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at retriever.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M621.08,-394C621.08,-394 412.04,-394 412.04,-394 406.04,-394 400.04,-388 400.04,-382 400.04,-382 400.04,-370 400.04,-370 400.04,-364 406.04,-358 412.04,-358 412.04,-358 621.08,-358 621.08,-358 627.08,-358 633.08,-364 633.08,-370 633.08,-370 633.08,-382 633.08,-382 633.08,-388 627.08,-394 621.08,-394"/>
+<text xml:space="preserve" text-anchor="middle" x="516.56" y="-371.32" font-family="Verdana" font-size="14.00">(*RetrieverImpl).AddStrategy</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge10" class="edge">
+<g id="edge25" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge10"><a xlink:title="at retriever.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M572.23,-818.67C613.99,-829.27 670.92,-835.42 710.58,-807 751.02,-778.02 708.02,-732.45 746.58,-701 785.11,-669.58 845.13,-669.15 883.94,-673.04"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="883.42,-676.51 893.76,-674.19 884.23,-669.55 883.42,-676.51"/>
+<g id="a_edge25"><a xlink:title="at retriever.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M633.79,-384.94C648.57,-390.32 662.41,-398.05 673.58,-409 724.08,-458.51 654.2,-520.01 709.58,-564 727.55,-578.27 727.14,-540.19 746.58,-528 790.08,-500.71 847.37,-483.75 884.37,-474.83"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="884.74,-478.34 893.69,-472.67 883.16,-471.52 884.74,-478.34"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge42" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge42"><a xlink:title="at retriever.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M633.53,-369.81C648.44,-364.65 662.38,-357.04 673.58,-346 729.81,-290.55 648.34,-221.86 709.58,-172 743.12,-144.69 712.35,-235.56 746.58,-262 760.74,-272.94 777.55,-280.03 795.07,-284.46"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="794.05,-287.82 804.57,-286.56 795.56,-280.99 794.05,-287.82"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge3" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/retrieval.RetrieverImpl).AddStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge3"><a xlink:title="at retriever.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M633.82,-366.87C658.81,-364.92 685.07,-362.88 709.58,-361 738.97,-358.74 770.65,-356.34 800.34,-354.1"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="800.4,-357.6 810.1,-353.36 799.87,-350.62 800.4,-357.6"/>
 </a>
 </g>
 </g>

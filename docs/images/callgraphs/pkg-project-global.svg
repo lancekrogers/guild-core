@@ -17,17 +17,17 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="537.58,-130 537.58,-454 785.87,-454 785.87,-130 537.58,-130"/>
-<text xml:space="preserve" text-anchor="middle" x="661.72" y="-434.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="537.58,-69 537.58,-393 785.87,-393 785.87,-69 537.58,-69"/>
+<text xml:space="preserve" text-anchor="middle" x="661.72" y="-373.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal -->
 <g id="node1" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath</title>
-<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath | defined in global.go:369&#10;at global.go:370: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M431.7,-201C431.7,-201 313.41,-201 313.41,-201 307.41,-201 301.41,-195 301.41,-189 301.41,-189 301.41,-177 301.41,-177 301.41,-171 307.41,-165 313.41,-165 313.41,-165 431.7,-165 431.7,-165 437.7,-165 443.7,-171 443.7,-177 443.7,-177 443.7,-189 443.7,-189 443.7,-195 437.7,-201 431.7,-201"/>
-<text xml:space="preserve" text-anchor="middle" x="372.56" y="-178.32" font-family="Verdana" font-size="14.00">GlobalConfigPath</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal</title>
+<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal | defined in global.go:36&#10;at global.go:82: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates]&#10;at global.go:68: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig]&#10;at global.go:37: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]&#10;at global.go:75: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs]&#10;at global.go:51: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:69: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:76: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:83: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:71: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:78: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at global.go:52: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:70: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M423.45,-339C423.45,-339 321.66,-339 321.66,-339 315.66,-339 309.66,-333 309.66,-327 309.66,-327 309.66,-315 309.66,-315 309.66,-309 315.66,-303 321.66,-303 321.66,-303 423.45,-303 423.45,-303 429.45,-303 435.45,-309 435.45,-315 435.45,-315 435.45,-327 435.45,-327 435.45,-333 429.45,-339 423.45,-339"/>
+<text xml:space="preserve" text-anchor="middle" x="372.56" y="-316.32" font-family="Verdana" font-size="14.00">InitializeGlobal</text>
 </a>
 </g>
 </g>
@@ -35,89 +35,71 @@
 <g id="node2" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
 <g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir | defined in global.go:26">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M711.12,-52C711.12,-52 612.33,-52 612.33,-52 606.33,-52 600.33,-46 600.33,-40 600.33,-40 600.33,-28 600.33,-28 600.33,-22 606.33,-16 612.33,-16 612.33,-16 711.12,-16 711.12,-16 717.12,-16 723.12,-22 723.12,-28 723.12,-28 723.12,-40 723.12,-40 723.12,-46 717.12,-52 711.12,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="661.72" y="-29.32" font-family="Verdana" font-size="14.00">GlobalGuildDir</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir -->
-<g id="edge2" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
-<g id="a_edge2"><a xlink:title="at global.go:370: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="none" stroke="black" d="M433.1,-164.32C446.47,-159.16 460.31,-153.01 472.58,-146 490.96,-135.49 496.01,-132.25 509.58,-116 526.15,-96.15 517.12,-80.81 537.58,-65 552.25,-53.67 570.56,-46.44 588.54,-41.84"/>
-<polygon fill="black" stroke="black" points="589.21,-45.27 598.18,-39.64 587.65,-38.45 589.21,-45.27"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal -->
-<g id="node3" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal | defined in global.go:36&#10;at global.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:71: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:78: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at global.go:51: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:69: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:76: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:83: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:52: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:70: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf]&#10;at global.go:82: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates]&#10;at global.go:37: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]&#10;at global.go:68: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig]&#10;at global.go:75: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M423.45,-383C423.45,-383 321.66,-383 321.66,-383 315.66,-383 309.66,-377 309.66,-371 309.66,-371 309.66,-359 309.66,-359 309.66,-353 315.66,-347 321.66,-347 321.66,-347 423.45,-347 423.45,-347 429.45,-347 435.45,-353 435.45,-359 435.45,-359 435.45,-371 435.45,-371 435.45,-377 429.45,-383 423.45,-383"/>
-<text xml:space="preserve" text-anchor="middle" x="372.56" y="-360.32" font-family="Verdana" font-size="14.00">InitializeGlobal</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M711.12,-559C711.12,-559 612.33,-559 612.33,-559 606.33,-559 600.33,-553 600.33,-547 600.33,-547 600.33,-535 600.33,-535 600.33,-529 606.33,-523 612.33,-523 612.33,-523 711.12,-523 711.12,-523 717.12,-523 723.12,-529 723.12,-535 723.12,-535 723.12,-547 723.12,-547 723.12,-553 717.12,-559 711.12,-559"/>
+<text xml:space="preserve" text-anchor="middle" x="661.72" y="-536.33" font-family="Verdana" font-size="14.00">GlobalGuildDir</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir -->
-<g id="edge13" class="edge">
+<g id="edge8" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
-<g id="a_edge13"><a xlink:title="at global.go:37: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="none" stroke="black" d="M401.26,-346.28C423.5,-329.9 454,-304.2 472.58,-275 485.69,-254.39 519.85,-81.8 537.58,-65 551.43,-51.88 569.98,-44.08 588.48,-39.52"/>
-<polygon fill="black" stroke="black" points="589.11,-42.96 598.16,-37.44 587.65,-36.11 589.11,-42.96"/>
+<g id="a_edge8"><a xlink:title="at global.go:37: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
+<path fill="none" stroke="black" d="M436.1,-338.39C449.32,-344.26 462.35,-351.96 472.58,-362 524.15,-412.61 482.28,-464.5 537.58,-511 551.88,-523.02 570.23,-530.37 588.38,-534.82"/>
+<polygon fill="black" stroke="black" points="587.62,-538.24 598.14,-536.92 589.09,-531.39 587.62,-538.24"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig -->
-<g id="node4" class="node">
+<g id="node3" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig</title>
-<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig | defined in global.go:92">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M752.37,-559C752.37,-559 571.08,-559 571.08,-559 565.08,-559 559.08,-553 559.08,-547 559.08,-547 559.08,-535 559.08,-535 559.08,-529 565.08,-523 571.08,-523 571.08,-523 752.37,-523 752.37,-523 758.37,-523 764.37,-529 764.37,-535 764.37,-535 764.37,-547 764.37,-547 764.37,-553 758.37,-559 752.37,-559"/>
-<text xml:space="preserve" text-anchor="middle" x="661.72" y="-536.33" font-family="Verdana" font-size="14.00">createDefaultGlobalConfig</text>
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig | defined in global.go:92">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M752.37,-52C752.37,-52 571.08,-52 571.08,-52 565.08,-52 559.08,-46 559.08,-40 559.08,-40 559.08,-28 559.08,-28 559.08,-22 565.08,-16 571.08,-16 571.08,-16 752.37,-16 752.37,-16 758.37,-16 764.37,-22 764.37,-28 764.37,-28 764.37,-40 764.37,-40 764.37,-46 758.37,-52 752.37,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="661.72" y="-29.32" font-family="Verdana" font-size="14.00">createDefaultGlobalConfig</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig -->
-<g id="edge14" class="edge">
+<g id="edge6" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig</title>
-<g id="a_edge14"><a xlink:title="at global.go:68: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig]">
-<path fill="none" stroke="black" d="M388.91,-383.63C415.72,-414.91 474.28,-477.79 537.58,-511 543.06,-513.88 548.82,-516.48 554.74,-518.84"/>
-<polygon fill="black" stroke="black" points="553.52,-522.12 564.11,-522.31 555.94,-515.55 553.52,-522.12"/>
+<g id="a_edge6"><a xlink:title="at global.go:68: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createDefaultGlobalConfig]">
+<path fill="none" stroke="black" d="M385.48,-302.41C404.12,-273.34 441.26,-215.33 472.58,-166 501.6,-120.3 493.51,-94.43 537.58,-63 541.2,-60.42 545.01,-58.07 548.97,-55.92"/>
+<polygon fill="black" stroke="black" points="550.26,-59.18 557.72,-51.66 547.2,-52.89 550.26,-59.18"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs -->
-<g id="node5" class="node">
+<g id="node4" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs</title>
-<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs | defined in global.go:143">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M738.12,-498C738.12,-498 585.33,-498 585.33,-498 579.33,-498 573.33,-492 573.33,-486 573.33,-486 573.33,-474 573.33,-474 573.33,-468 579.33,-462 585.33,-462 585.33,-462 738.12,-462 738.12,-462 744.12,-462 750.12,-468 750.12,-474 750.12,-474 750.12,-486 750.12,-486 750.12,-492 744.12,-498 738.12,-498"/>
-<text xml:space="preserve" text-anchor="middle" x="661.72" y="-475.32" font-family="Verdana" font-size="14.00">createProviderConfigs</text>
+<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs | defined in global.go:143">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M738.12,-437C738.12,-437 585.33,-437 585.33,-437 579.33,-437 573.33,-431 573.33,-425 573.33,-425 573.33,-413 573.33,-413 573.33,-407 579.33,-401 585.33,-401 585.33,-401 738.12,-401 738.12,-401 744.12,-401 750.12,-407 750.12,-413 750.12,-413 750.12,-425 750.12,-425 750.12,-431 744.12,-437 738.12,-437"/>
+<text xml:space="preserve" text-anchor="middle" x="661.72" y="-414.32" font-family="Verdana" font-size="14.00">createProviderConfigs</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs -->
-<g id="edge15" class="edge">
+<g id="edge9" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs</title>
-<g id="a_edge15"><a xlink:title="at global.go:75: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs]">
-<path fill="none" stroke="black" d="M399.76,-383.61C431.05,-404.91 485.7,-439.28 537.58,-458 545.46,-460.84 553.77,-463.33 562.19,-465.5"/>
-<polygon fill="black" stroke="black" points="561.29,-468.89 571.83,-467.83 562.93,-462.08 561.29,-468.89"/>
+<g id="a_edge9"><a xlink:title="at global.go:75: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createProviderConfigs]">
+<path fill="none" stroke="black" d="M421.58,-339.74C437.92,-346.42 456.19,-354.22 472.58,-362 502.22,-376.07 506.6,-386.2 537.58,-397 545.49,-399.76 553.82,-402.18 562.25,-404.32"/>
+<polygon fill="black" stroke="black" points="561.37,-407.7 571.91,-406.6 562.98,-400.89 561.37,-407.7"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates -->
-<g id="node6" class="node">
+<g id="node5" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates</title>
-<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates | defined in global.go:219">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M717.87,-113C717.87,-113 605.58,-113 605.58,-113 599.58,-113 593.58,-107 593.58,-101 593.58,-101 593.58,-89 593.58,-89 593.58,-83 599.58,-77 605.58,-77 605.58,-77 717.87,-77 717.87,-77 723.87,-77 729.87,-83 729.87,-89 729.87,-89 729.87,-101 729.87,-101 729.87,-107 723.87,-113 717.87,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="661.72" y="-90.33" font-family="Verdana" font-size="14.00">createTemplates</text>
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates | defined in global.go:219">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M717.87,-498C717.87,-498 605.58,-498 605.58,-498 599.58,-498 593.58,-492 593.58,-486 593.58,-486 593.58,-474 593.58,-474 593.58,-468 599.58,-462 605.58,-462 605.58,-462 717.87,-462 717.87,-462 723.87,-462 729.87,-468 729.87,-474 729.87,-474 729.87,-486 729.87,-486 729.87,-492 723.87,-498 717.87,-498"/>
+<text xml:space="preserve" text-anchor="middle" x="661.72" y="-475.32" font-family="Verdana" font-size="14.00">createTemplates</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates -->
-<g id="edge11" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates</title>
-<g id="a_edge11"><a xlink:title="at global.go:82: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates]">
-<path fill="none" stroke="black" d="M421.54,-346.29C451.56,-332.07 488.42,-309.54 509.58,-278 548.33,-220.23 489.67,-174.44 537.58,-124 549.49,-111.46 565.73,-103.89 582.5,-99.42"/>
-<polygon fill="black" stroke="black" points="583.11,-102.87 592.09,-97.24 581.56,-96.04 583.11,-102.87"/>
+<g id="a_edge1"><a xlink:title="at global.go:82: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.createTemplates]">
+<path fill="none" stroke="black" d="M433.5,-339.72C447.13,-345.58 461,-352.95 472.58,-362 494.37,-379.02 493.16,-389.76 509.58,-412 522.04,-428.88 520.12,-438.37 537.58,-450 550.97,-458.92 566.76,-465.19 582.49,-469.6"/>
+<polygon fill="black" stroke="black" points="581.31,-472.91 591.87,-471.99 583.04,-466.13 581.31,-472.91"/>
 </a>
 </g>
 </g>
@@ -125,17 +107,17 @@
 <g id="node11" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M679.62,-174C679.62,-174 643.83,-174 643.83,-174 637.83,-174 631.83,-168 631.83,-162 631.83,-162 631.83,-150 631.83,-150 631.83,-144 637.83,-138 643.83,-138 643.83,-138 679.62,-138 679.62,-138 685.62,-138 691.62,-144 691.62,-150 691.62,-150 691.62,-162 691.62,-162 691.62,-168 685.62,-174 679.62,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="661.72" y="-151.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M679.62,-113C679.62,-113 643.83,-113 643.83,-113 637.83,-113 631.83,-107 631.83,-101 631.83,-101 631.83,-89 631.83,-89 631.83,-83 637.83,-77 643.83,-77 643.83,-77 679.62,-77 679.62,-77 685.62,-77 691.62,-83 691.62,-89 691.62,-89 691.62,-101 691.62,-101 691.62,-107 685.62,-113 679.62,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="661.72" y="-90.33" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge8" class="edge">
+<g id="edge11" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge8"><a xlink:title="at global.go:51: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:69: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:76: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:83: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M436,-350.73C462.23,-341.73 490.92,-327.42 509.58,-305 544.06,-263.57 499.73,-225.37 537.58,-187 558.89,-165.4 592.88,-158.06 619.76,-155.9"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="619.86,-159.4 629.65,-155.33 619.46,-152.41 619.86,-159.4"/>
+<g id="a_edge11"><a xlink:title="at global.go:51: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:69: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:76: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:83: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M405.78,-302.26C436.54,-282.84 482.14,-249.76 509.58,-210 531.93,-177.61 508.73,-152.76 537.58,-126 559.69,-105.5 593.32,-98.05 619.85,-95.57"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="619.87,-99.07 629.6,-94.87 619.37,-92.09 619.87,-99.07"/>
 </a>
 </g>
 </g>
@@ -149,11 +131,11 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge9" class="edge">
+<g id="edge17" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge9"><a xlink:title="at global.go:52: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:70: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M435.93,-362.8C461.52,-358.89 489.73,-350.26 509.58,-332 538.55,-305.36 508.73,-274.76 537.58,-248 540,-245.75 542.57,-243.66 545.25,-241.71"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="546.93,-244.79 553.48,-236.46 543.16,-238.89 546.93,-244.79"/>
+<g id="a_edge17"><a xlink:title="at global.go:52: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:70: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M422.04,-302.36C448.3,-291.85 481.1,-278.04 509.58,-264 522.44,-257.66 524.28,-253.35 537.58,-248 545.79,-244.69 554.46,-241.66 563.24,-238.9"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="563.96,-242.33 572.53,-236.1 561.94,-235.63 563.96,-242.33"/>
 </a>
 </g>
 </g>
@@ -161,17 +143,17 @@
 <g id="node13" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M760.24,-296C760.24,-296 563.2,-296 563.2,-296 557.2,-296 551.2,-290 551.2,-284 551.2,-284 551.2,-272 551.2,-272 551.2,-266 557.2,-260 563.2,-260 563.2,-260 760.24,-260 760.24,-260 766.24,-260 772.24,-266 772.24,-272 772.24,-272 772.24,-284 772.24,-284 772.24,-290 766.24,-296 760.24,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="661.72" y="-273.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M760.24,-174C760.24,-174 563.2,-174 563.2,-174 557.2,-174 551.2,-168 551.2,-162 551.2,-162 551.2,-150 551.2,-150 551.2,-144 557.2,-138 563.2,-138 563.2,-138 760.24,-138 760.24,-138 766.24,-138 772.24,-144 772.24,-150 772.24,-150 772.24,-162 772.24,-162 772.24,-168 766.24,-174 760.24,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="661.72" y="-151.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge3" class="edge">
+<g id="edge12" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge3"><a xlink:title="at global.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:71: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:78: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M435.93,-374.74C460.5,-375.52 487.95,-372.33 509.58,-359 531.26,-345.64 517.36,-324.48 537.58,-309 540.93,-306.44 544.46,-304.08 548.14,-301.92"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="549.61,-305.11 556.82,-297.35 546.34,-298.91 549.61,-305.11"/>
+<g id="a_edge12"><a xlink:title="at global.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:71: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:78: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M415.16,-302.33C444.27,-287.71 482.6,-265.16 509.58,-237 527.2,-218.61 517.36,-202.48 537.58,-187 540.93,-184.44 544.46,-182.08 548.14,-179.92"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="549.61,-183.11 556.82,-175.35 546.34,-176.91 549.61,-183.11"/>
 </a>
 </g>
 </g>
@@ -179,17 +161,17 @@
 <g id="node14" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M749.37,-357C749.37,-357 574.08,-357 574.08,-357 568.08,-357 562.08,-351 562.08,-345 562.08,-345 562.08,-333 562.08,-333 562.08,-327 568.08,-321 574.08,-321 574.08,-321 749.37,-321 749.37,-321 755.37,-321 761.37,-327 761.37,-333 761.37,-333 761.37,-345 761.37,-345 761.37,-351 755.37,-357 749.37,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="661.72" y="-334.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M749.37,-296C749.37,-296 574.08,-296 574.08,-296 568.08,-296 562.08,-290 562.08,-284 562.08,-284 562.08,-272 562.08,-272 562.08,-266 568.08,-260 574.08,-260 574.08,-260 749.37,-260 749.37,-260 755.37,-260 761.37,-266 761.37,-272 761.37,-272 761.37,-284 761.37,-284 761.37,-290 755.37,-296 749.37,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="661.72" y="-273.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge4" class="edge">
+<g id="edge13" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge4"><a xlink:title="at global.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M428.71,-383.75C453.66,-389.62 483.37,-392.96 509.58,-386 523.43,-382.32 524.28,-375.35 537.58,-370 545.79,-366.69 554.46,-363.66 563.24,-360.9"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="563.96,-364.33 572.53,-358.1 561.94,-357.63 563.96,-364.33"/>
+<g id="a_edge13"><a xlink:title="at global.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M435.87,-311.67C469.28,-306.67 511.43,-300.36 550.19,-294.55"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="550.69,-298.02 560.06,-293.07 549.65,-291.09 550.69,-298.02"/>
 </a>
 </g>
 </g>
@@ -197,125 +179,143 @@
 <g id="node15" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf</title>
 <g id="a_node15"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf | defined in errors.go:245">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M682.24,-418C682.24,-418 641.2,-418 641.2,-418 635.2,-418 629.2,-412 629.2,-406 629.2,-406 629.2,-394 629.2,-394 629.2,-388 635.2,-382 641.2,-382 641.2,-382 682.24,-382 682.24,-382 688.24,-382 694.24,-388 694.24,-394 694.24,-394 694.24,-406 694.24,-406 694.24,-412 688.24,-418 682.24,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="661.72" y="-395.32" font-family="Verdana" font-size="14.00">Wrapf</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M682.24,-357C682.24,-357 641.2,-357 641.2,-357 635.2,-357 629.2,-351 629.2,-345 629.2,-345 629.2,-333 629.2,-333 629.2,-327 635.2,-321 641.2,-321 641.2,-321 682.24,-321 682.24,-321 688.24,-321 694.24,-327 694.24,-333 694.24,-333 694.24,-345 694.24,-345 694.24,-351 688.24,-357 682.24,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="661.72" y="-334.32" font-family="Verdana" font-size="14.00">Wrapf</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf -->
-<g id="edge10" class="edge">
+<g id="edge18" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf</title>
-<g id="a_edge10"><a xlink:title="at global.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf]">
-<path fill="none" stroke="saddlebrown" d="M436.07,-380.12C458.77,-385.03 484.71,-389.99 508.58,-393 545.1,-397.6 586.9,-399.26 617.43,-399.83"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="616.98,-403.32 627.03,-399.97 617.08,-396.32 616.98,-403.32"/>
+<g id="a_edge18"><a xlink:title="at global.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf]">
+<path fill="none" stroke="saddlebrown" d="M435.87,-324.91C490.73,-328.34 569.2,-333.26 617.45,-336.29"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="617.03,-339.77 627.23,-336.9 617.47,-332.78 617.03,-339.77"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalTemplatePath -->
-<g id="node7" class="node">
+<g id="node6" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalTemplatePath</title>
-<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalTemplatePath | defined in global.go:379&#10;at global.go:380: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M441.08,-52C441.08,-52 304.04,-52 304.04,-52 298.04,-52 292.04,-46 292.04,-40 292.04,-40 292.04,-28 292.04,-28 292.04,-22 298.04,-16 304.04,-16 304.04,-16 441.08,-16 441.08,-16 447.08,-16 453.08,-22 453.08,-28 453.08,-28 453.08,-40 453.08,-40 453.08,-46 447.08,-52 441.08,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="372.56" y="-29.32" font-family="Verdana" font-size="14.00">GlobalTemplatePath</text>
+<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalTemplatePath | defined in global.go:379&#10;at global.go:380: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M441.08,-471C441.08,-471 304.04,-471 304.04,-471 298.04,-471 292.04,-465 292.04,-459 292.04,-459 292.04,-447 292.04,-447 292.04,-441 298.04,-435 304.04,-435 304.04,-435 441.08,-435 441.08,-435 447.08,-435 453.08,-441 453.08,-447 453.08,-447 453.08,-459 453.08,-459 453.08,-465 447.08,-471 441.08,-471"/>
+<text xml:space="preserve" text-anchor="middle" x="372.56" y="-448.32" font-family="Verdana" font-size="14.00">GlobalTemplatePath</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalTemplatePath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir -->
-<g id="edge16" class="edge">
+<g id="edge2" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalTemplatePath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
-<g id="a_edge16"><a xlink:title="at global.go:380: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="none" stroke="black" d="M453.55,-34C495.87,-34 547.43,-34 588.53,-34"/>
-<polygon fill="black" stroke="black" points="588.31,-37.5 598.31,-34 588.31,-30.5 588.31,-37.5"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath -->
-<g id="node8" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath</title>
-<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath | defined in global.go:374&#10;at global.go:375: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M460.58,-113C460.58,-113 284.54,-113 284.54,-113 278.54,-113 272.54,-107 272.54,-101 272.54,-101 272.54,-89 272.54,-89 272.54,-83 278.54,-77 284.54,-77 284.54,-77 460.58,-77 460.58,-77 466.58,-77 472.58,-83 472.58,-89 472.58,-89 472.58,-101 472.58,-101 472.58,-107 466.58,-113 460.58,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="372.56" y="-90.33" font-family="Verdana" font-size="14.00">GlobalProviderConfigPath</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir -->
-<g id="edge17" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
-<g id="a_edge17"><a xlink:title="at global.go:375: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="none" stroke="black" d="M461.67,-76.28C502.34,-67.65 550.02,-57.52 588.52,-49.34"/>
-<polygon fill="black" stroke="black" points="589.1,-52.79 598.15,-47.29 587.64,-45.95 589.1,-52.79"/>
+<g id="a_edge2"><a xlink:title="at global.go:380: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
+<path fill="none" stroke="black" d="M451.21,-471.69C470.67,-477.49 491.22,-484.61 509.58,-493 523.04,-499.15 523.98,-505.17 537.58,-511 553.59,-517.87 571.47,-523.35 588.54,-527.66"/>
+<polygon fill="black" stroke="black" points="587.6,-531.03 598.14,-529.97 589.23,-524.23 587.6,-531.03"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates -->
-<g id="node9" class="node">
+<g id="node7" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates</title>
-<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates | defined in global.go:384&#10;at global.go:385: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]&#10;at global.go:394: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:392: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at global.go:393: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M419.7,-262C419.7,-262 325.41,-262 325.41,-262 319.41,-262 313.41,-256 313.41,-250 313.41,-250 313.41,-238 313.41,-238 313.41,-232 319.41,-226 325.41,-226 325.41,-226 419.7,-226 419.7,-226 425.7,-226 431.7,-232 431.7,-238 431.7,-238 431.7,-250 431.7,-250 431.7,-256 425.7,-262 419.7,-262"/>
-<text xml:space="preserve" text-anchor="middle" x="372.56" y="-239.32" font-family="Verdana" font-size="14.00">ListTemplates</text>
+<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates | defined in global.go:384&#10;at global.go:385: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]&#10;at global.go:394: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at global.go:393: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at global.go:392: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M419.7,-153C419.7,-153 325.41,-153 325.41,-153 319.41,-153 313.41,-147 313.41,-141 313.41,-141 313.41,-129 313.41,-129 313.41,-123 319.41,-117 325.41,-117 325.41,-117 419.7,-117 419.7,-117 425.7,-117 431.7,-123 431.7,-129 431.7,-129 431.7,-141 431.7,-141 431.7,-147 425.7,-153 419.7,-153"/>
+<text xml:space="preserve" text-anchor="middle" x="372.56" y="-130.32" font-family="Verdana" font-size="14.00">ListTemplates</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir -->
-<g id="edge5" class="edge">
+<g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
-<g id="a_edge5"><a xlink:title="at global.go:385: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="none" stroke="black" d="M432.32,-235.15C446.77,-230.7 461.3,-224.03 472.58,-214 499.58,-190 510.02,-88.36 537.58,-65 551.86,-52.9 570.2,-45.42 588.35,-40.82"/>
-<polygon fill="black" stroke="black" points="589.12,-44.23 598.11,-38.64 587.59,-37.4 589.12,-44.23"/>
+<g id="a_edge3"><a xlink:title="at global.go:385: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
+<path fill="none" stroke="black" d="M387.89,-153.71C409.01,-182.04 448.56,-238.14 472.58,-291 493.67,-337.41 500.67,-475.83 537.58,-511 551.43,-524.2 570.08,-531.89 588.67,-536.3"/>
+<polygon fill="black" stroke="black" points="587.9,-539.71 598.39,-538.28 589.3,-532.85 587.9,-539.71"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge7" class="edge">
+<g id="edge14" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge7"><a xlink:title="at global.go:392: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M432.26,-227.27C445.6,-223.18 459.64,-218.63 472.58,-214 502.03,-203.45 507.89,-196.84 537.58,-187 564.77,-177.99 596.08,-170.14 620.32,-164.59"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="620.8,-168.07 629.79,-162.47 619.27,-161.24 620.8,-168.07"/>
+<g id="a_edge14"><a xlink:title="at global.go:392: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M432.37,-126.81C488.42,-119 571.33,-107.45 620.31,-100.63"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="620.48,-104.14 629.91,-99.29 619.52,-97.21 620.48,-104.14"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge18" class="edge">
+<g id="edge10" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge18"><a xlink:title="at global.go:393: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M432.37,-238.47C461.68,-235.71 498.35,-232.27 533.66,-228.95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="533.93,-232.44 543.56,-228.02 533.27,-225.47 533.93,-232.44"/>
+<g id="a_edge10"><a xlink:title="at global.go:393: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M432.18,-145.27C456.69,-150.67 485.12,-158.42 509.58,-169 523.16,-174.87 523.98,-181.17 537.58,-187 544.23,-189.85 551.2,-192.46 558.3,-194.85"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="557.12,-198.15 567.71,-197.85 559.24,-191.48 557.12,-198.15"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge6" class="edge">
+<g id="edge7" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.ListTemplates&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge6"><a xlink:title="at global.go:394: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M432.37,-250.96C463.22,-254.62 502.22,-259.23 539.21,-263.61"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="538.77,-267.08 549.11,-264.79 539.59,-260.13 538.77,-267.08"/>
+<g id="a_edge7"><a xlink:title="at global.go:394: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M432.17,-137.49C456.18,-138.65 484.23,-140.17 509.58,-142 519.22,-142.69 529.21,-143.48 539.24,-144.31"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="538.8,-147.78 549.06,-145.14 539.39,-140.81 538.8,-147.78"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized -->
-<g id="node10" class="node">
+<g id="node8" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized</title>
-<g id="a_node10"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized | defined in global.go:355&#10;at global.go:365: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal]&#10;at global.go:356: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M187.54,-170C187.54,-170 28,-170 28,-170 22,-170 16,-164 16,-158 16,-158 16,-146 16,-146 16,-140 22,-134 28,-134 28,-134 187.54,-134 187.54,-134 193.54,-134 199.54,-140 199.54,-146 199.54,-146 199.54,-158 199.54,-158 199.54,-164 193.54,-170 187.54,-170"/>
-<text xml:space="preserve" text-anchor="middle" x="107.77" y="-147.32" font-family="Verdana" font-size="14.00">EnsureGlobalInitialized</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir -->
-<g id="edge12" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
-<g id="a_edge12"><a xlink:title="at global.go:356: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
-<path fill="none" stroke="black" d="M200.05,-152.38C291.56,-151.54 425.45,-146.63 472.58,-126 508.87,-110.12 502.81,-84 537.58,-65 553.36,-56.38 571.59,-50.1 589.1,-45.55"/>
-<polygon fill="black" stroke="black" points="589.52,-49.05 598.41,-43.3 587.87,-42.25 589.52,-49.05"/>
+<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized | defined in global.go:355&#10;at global.go:356: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]&#10;at global.go:365: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M187.54,-468C187.54,-468 28,-468 28,-468 22,-468 16,-462 16,-456 16,-456 16,-444 16,-444 16,-438 22,-432 28,-432 28,-432 187.54,-432 187.54,-432 193.54,-432 199.54,-438 199.54,-444 199.54,-444 199.54,-456 199.54,-456 199.54,-462 193.54,-468 187.54,-468"/>
+<text xml:space="preserve" text-anchor="middle" x="107.77" y="-445.32" font-family="Verdana" font-size="14.00">EnsureGlobalInitialized</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal -->
-<g id="edge1" class="edge">
+<g id="edge15" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal</title>
-<g id="a_edge1"><a xlink:title="at global.go:365: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal]">
-<path fill="none" stroke="black" d="M131.63,-170.53C178.61,-208.61 286.1,-295.73 339.81,-339.26"/>
-<polygon fill="black" stroke="black" points="337.42,-341.83 347.39,-345.41 341.82,-336.39 337.42,-341.83"/>
+<g id="a_edge15"><a xlink:title="at global.go:365: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.InitializeGlobal]">
+<path fill="none" stroke="black" d="M141.21,-431.32C173.9,-412.79 226.02,-384.06 272.54,-362 285.47,-355.87 299.58,-349.72 312.98,-344.11"/>
+<polygon fill="black" stroke="black" points="314.24,-347.38 322.14,-340.33 311.56,-340.91 314.24,-347.38"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir -->
+<g id="edge4" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.EnsureGlobalInitialized&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
+<g id="a_edge4"><a xlink:title="at global.go:356: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
+<path fill="none" stroke="black" d="M193.13,-468.7C218.58,-474.02 246.64,-479.57 272.54,-484 360.97,-499.13 383.82,-497.94 472.58,-511 510.97,-516.65 553.68,-523.42 588.69,-529.1"/>
+<polygon fill="black" stroke="black" points="587.85,-532.51 598.28,-530.66 588.97,-525.6 587.85,-532.51"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath -->
+<g id="node9" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath</title>
+<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath | defined in global.go:369&#10;at global.go:370: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M431.7,-559C431.7,-559 313.41,-559 313.41,-559 307.41,-559 301.41,-553 301.41,-547 301.41,-547 301.41,-535 301.41,-535 301.41,-529 307.41,-523 313.41,-523 313.41,-523 431.7,-523 431.7,-523 437.7,-523 443.7,-529 443.7,-535 443.7,-535 443.7,-547 443.7,-547 443.7,-553 437.7,-559 431.7,-559"/>
+<text xml:space="preserve" text-anchor="middle" x="372.56" y="-536.33" font-family="Verdana" font-size="14.00">GlobalConfigPath</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir -->
+<g id="edge5" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalConfigPath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
+<g id="a_edge5"><a xlink:title="at global.go:370: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
+<path fill="none" stroke="black" d="M444.18,-541C488.02,-541 544.23,-541 588.39,-541"/>
+<polygon fill="black" stroke="black" points="588.12,-544.5 598.12,-541 588.12,-537.5 588.12,-544.5"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath -->
+<g id="node10" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath</title>
+<g id="a_node10"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath | defined in global.go:374&#10;at global.go:375: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M460.58,-410C460.58,-410 284.54,-410 284.54,-410 278.54,-410 272.54,-404 272.54,-398 272.54,-398 272.54,-386 272.54,-386 272.54,-380 278.54,-374 284.54,-374 284.54,-374 460.58,-374 460.58,-374 466.58,-374 472.58,-380 472.58,-386 472.58,-386 472.58,-398 472.58,-398 472.58,-404 466.58,-410 460.58,-410"/>
+<text xml:space="preserve" text-anchor="middle" x="372.56" y="-387.32" font-family="Verdana" font-size="14.00">GlobalProviderConfigPath</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir -->
+<g id="edge16" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalProviderConfigPath&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir</title>
+<g id="a_edge16"><a xlink:title="at global.go:375: calling [github.com/guild&#45;framework/guild&#45;core/pkg/project/global.GlobalGuildDir]">
+<path fill="none" stroke="black" d="M450.51,-410.65C458.31,-414.11 465.83,-418.19 472.58,-423 512.18,-451.21 497.09,-484.08 537.58,-511 552.68,-521.04 570.83,-527.73 588.49,-532.18"/>
+<polygon fill="black" stroke="black" points="587.68,-535.58 598.21,-534.39 589.24,-528.76 587.68,-535.58"/>
 </a>
 </g>
 </g>

@@ -17,17 +17,17 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="680.83,-361 680.83,-685 929.12,-685 929.12,-361 680.83,-361"/>
-<text xml:space="preserve" text-anchor="middle" x="804.97" y="-665.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="680.83,-348 680.83,-672 929.12,-672 929.12,-348 680.83,-348"/>
+<text xml:space="preserve" text-anchor="middle" x="804.97" y="-652.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions | defined in client.go:221&#10;at client.go:230: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:229: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:231: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:228: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M578.7,-399C578.7,-399 362.16,-399 362.16,-399 356.16,-399 350.16,-393 350.16,-387 350.16,-387 350.16,-375 350.16,-375 350.16,-369 356.16,-363 362.16,-363 362.16,-363 578.7,-363 578.7,-363 584.7,-363 590.7,-369 590.7,-375 590.7,-375 590.7,-387 590.7,-387 590.7,-393 584.7,-399 578.7,-399"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-376.32" font-family="Verdana" font-size="14.00">(*Client).CompleteWithOptions</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions | defined in client.go:384&#10;at client.go:389: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:388: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:386: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:387: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M557.7,-186C557.7,-186 383.16,-186 383.16,-186 377.16,-186 371.16,-180 371.16,-174 371.16,-174 371.16,-162 371.16,-162 371.16,-156 377.16,-150 383.16,-150 383.16,-150 557.7,-150 557.7,-150 563.7,-150 569.7,-156 569.7,-162 569.7,-162 569.7,-174 569.7,-174 569.7,-180 563.7,-186 557.7,-186"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-163.32" font-family="Verdana" font-size="14.00">(*Client).ValidateOptions</text>
 </a>
 </g>
 </g>
@@ -35,17 +35,17 @@
 <g id="node13" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M822.87,-405C822.87,-405 787.08,-405 787.08,-405 781.08,-405 775.08,-399 775.08,-393 775.08,-393 775.08,-381 775.08,-381 775.08,-375 781.08,-369 787.08,-369 787.08,-369 822.87,-369 822.87,-369 828.87,-369 834.87,-375 834.87,-381 834.87,-381 834.87,-393 834.87,-393 834.87,-399 828.87,-405 822.87,-405"/>
-<text xml:space="preserve" text-anchor="middle" x="804.97" y="-382.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M822.87,-392C822.87,-392 787.08,-392 787.08,-392 781.08,-392 775.08,-386 775.08,-380 775.08,-380 775.08,-368 775.08,-368 775.08,-362 781.08,-356 787.08,-356 787.08,-356 822.87,-356 822.87,-356 828.87,-356 834.87,-362 834.87,-368 834.87,-368 834.87,-380 834.87,-380 834.87,-386 828.87,-392 822.87,-392"/>
+<text xml:space="preserve" text-anchor="middle" x="804.97" y="-369.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge26" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge26"><a xlink:title="at client.go:228: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M577.82,-362.3C602.43,-359.91 628.52,-358.92 652.83,-361 690.59,-364.22 733.08,-371.9 763.37,-378.08"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="762.36,-381.44 772.86,-380.05 763.78,-374.59 762.36,-381.44"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge27" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge27"><a xlink:title="at client.go:386: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M491.51,-149.35C526.08,-119.59 598.38,-67.85 652.83,-100 744.3,-154.01 784.22,-285.36 797.97,-344.4"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="794.53,-345.04 800.12,-354.04 801.36,-343.52 794.53,-345.04"/>
 </a>
 </g>
 </g>
@@ -53,17 +53,17 @@
 <g id="node14" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M909.12,-466C909.12,-466 700.83,-466 700.83,-466 694.83,-466 688.83,-460 688.83,-454 688.83,-454 688.83,-442 688.83,-442 688.83,-436 694.83,-430 700.83,-430 700.83,-430 909.12,-430 909.12,-430 915.12,-430 921.12,-436 921.12,-442 921.12,-442 921.12,-454 921.12,-454 921.12,-460 915.12,-466 909.12,-466"/>
-<text xml:space="preserve" text-anchor="middle" x="804.97" y="-443.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M909.12,-514C909.12,-514 700.83,-514 700.83,-514 694.83,-514 688.83,-508 688.83,-502 688.83,-502 688.83,-490 688.83,-490 688.83,-484 694.83,-478 700.83,-478 700.83,-478 909.12,-478 909.12,-478 915.12,-478 921.12,-484 921.12,-490 921.12,-490 921.12,-502 921.12,-502 921.12,-508 915.12,-514 909.12,-514"/>
+<text xml:space="preserve" text-anchor="middle" x="804.97" y="-491.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge20" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge20"><a xlink:title="at client.go:229: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M591.14,-372.49C612.38,-374.62 633.77,-379.28 652.83,-388 669.41,-395.59 665.09,-408.79 680.83,-418 685.17,-420.54 689.71,-422.86 694.39,-424.99"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="692.84,-428.14 703.42,-428.76 695.54,-421.68 692.84,-428.14"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge28" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge28"><a xlink:title="at client.go:387: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M570.09,-173.82C587.05,-178.84 603.24,-186.75 615.83,-199 659.6,-241.59 637.65,-422.82 680.83,-466 682.46,-467.63 684.17,-469.18 685.94,-470.66"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="683.9,-473.5 694.06,-476.48 687.98,-467.81 683.9,-473.5"/>
 </a>
 </g>
 </g>
@@ -71,17 +71,17 @@
 <g id="node15" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M903.49,-527C903.49,-527 706.45,-527 706.45,-527 700.45,-527 694.45,-521 694.45,-515 694.45,-515 694.45,-503 694.45,-503 694.45,-497 700.45,-491 706.45,-491 706.45,-491 903.49,-491 903.49,-491 909.49,-491 915.49,-497 915.49,-503 915.49,-503 915.49,-515 915.49,-515 915.49,-521 909.49,-527 903.49,-527"/>
-<text xml:space="preserve" text-anchor="middle" x="804.97" y="-504.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M903.49,-575C903.49,-575 706.45,-575 706.45,-575 700.45,-575 694.45,-569 694.45,-563 694.45,-563 694.45,-551 694.45,-551 694.45,-545 700.45,-539 706.45,-539 706.45,-539 903.49,-539 903.49,-539 909.49,-539 915.49,-545 915.49,-551 915.49,-551 915.49,-563 915.49,-563 915.49,-569 909.49,-575 903.49,-575"/>
+<text xml:space="preserve" text-anchor="middle" x="804.97" y="-552.33" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge13"><a xlink:title="at client.go:230: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M591.29,-386.54C613.45,-392.05 635.15,-400.94 652.83,-415 677.13,-434.32 657.06,-459.03 680.83,-479 683.2,-480.99 685.67,-482.85 688.24,-484.59"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="686.24,-487.47 696.62,-489.6 689.84,-481.46 686.24,-487.47"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge16" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge16"><a xlink:title="at client.go:388: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M570.15,-173.27C587.21,-178.33 603.42,-186.39 615.83,-199 667.95,-251.96 629.44,-473.33 680.83,-527 682.4,-528.64 684.04,-530.19 685.75,-531.67"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="683.47,-534.34 693.58,-537.51 687.65,-528.72 683.47,-534.34"/>
 </a>
 </g>
 </g>
@@ -89,53 +89,53 @@
 <g id="node16" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M892.62,-588C892.62,-588 717.33,-588 717.33,-588 711.33,-588 705.33,-582 705.33,-576 705.33,-576 705.33,-564 705.33,-564 705.33,-558 711.33,-552 717.33,-552 717.33,-552 892.62,-552 892.62,-552 898.62,-552 904.62,-558 904.62,-564 904.62,-564 904.62,-576 904.62,-576 904.62,-582 898.62,-588 892.62,-588"/>
-<text xml:space="preserve" text-anchor="middle" x="804.97" y="-565.33" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M892.62,-453C892.62,-453 717.33,-453 717.33,-453 711.33,-453 705.33,-447 705.33,-441 705.33,-441 705.33,-429 705.33,-429 705.33,-423 711.33,-417 717.33,-417 717.33,-417 892.62,-417 892.62,-417 898.62,-417 904.62,-423 904.62,-429 904.62,-429 904.62,-441 904.62,-441 904.62,-447 898.62,-453 892.62,-453"/>
+<text xml:space="preserve" text-anchor="middle" x="804.97" y="-430.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge21" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge21"><a xlink:title="at client.go:231: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M516.59,-399.69C546.6,-413.42 585.85,-434.01 615.83,-459 651.28,-488.56 641.89,-515.22 680.83,-540 685.12,-542.73 689.65,-545.22 694.32,-547.47"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="692.82,-550.64 703.38,-551.45 695.63,-544.23 692.82,-550.64"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge8"><a xlink:title="at client.go:389: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M570.23,-176.31C586.69,-181.16 602.66,-188.37 615.83,-199 646.94,-224.12 640.14,-243.08 652.83,-281 670.76,-334.58 641.22,-364.71 680.83,-405 685.01,-409.25 689.69,-412.94 694.72,-416.14"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="692.99,-419.19 703.43,-420.97 696.38,-413.06 692.99,-419.19"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings -->
 <g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding | defined in client.go:505&#10;at client.go:509: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:510: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:506: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at client.go:507: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:508: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M565.58,-615C565.58,-615 375.29,-615 375.29,-615 369.29,-615 363.29,-609 363.29,-603 363.29,-603 363.29,-591 363.29,-591 363.29,-585 369.29,-579 375.29,-579 375.29,-579 565.58,-579 565.58,-579 571.58,-579 577.58,-585 577.58,-591 577.58,-591 577.58,-603 577.58,-603 577.58,-609 571.58,-615 565.58,-615"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-592.33" font-family="Verdana" font-size="14.00">(*Client).CreateEmbedding</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings | defined in client.go:514&#10;at client.go:518: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:519: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:516: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:517: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:515: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M569.33,-491C569.33,-491 371.54,-491 371.54,-491 365.54,-491 359.54,-485 359.54,-479 359.54,-479 359.54,-467 359.54,-467 359.54,-461 365.54,-455 371.54,-455 371.54,-455 569.33,-455 569.33,-455 575.33,-455 581.33,-461 581.33,-467 581.33,-467 581.33,-479 581.33,-479 581.33,-485 575.33,-491 569.33,-491"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-468.32" font-family="Verdana" font-size="14.00">(*Client).CreateEmbeddings</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge15" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge15"><a xlink:title="at client.go:507: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M508.34,-578.26C537.76,-563.1 579.84,-540.91 615.83,-520 645.36,-502.84 649.43,-492.45 680.83,-479 688.44,-475.74 696.47,-472.77 704.62,-470.08"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="705.46,-473.48 713.95,-467.14 703.36,-466.8 705.46,-473.48"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge24" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge24"><a xlink:title="at client.go:516: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M581.99,-490.31C593.73,-494.02 605.24,-498.53 615.83,-504 635.41,-514.11 631.12,-540.76 652.83,-537 665.85,-534.74 668.19,-530.84 680.83,-527 691.43,-523.78 702.61,-520.63 713.74,-517.65"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="714.59,-521.04 723.37,-515.11 712.81,-514.28 714.59,-521.04"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge27" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge27"><a xlink:title="at client.go:508: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M577.97,-587.26C603.32,-582.36 629.71,-575.01 652.83,-564 667.63,-556.96 666.27,-547.53 680.83,-540 686.87,-536.87 693.24,-534.05 699.78,-531.5"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="700.54,-534.95 708.74,-528.24 698.14,-528.37 700.54,-534.95"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge29" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge29"><a xlink:title="at client.go:517: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M581.74,-481.42C594.6,-486.55 606.45,-493.82 615.83,-504 699.65,-594.98 558.87,-698.38 651.83,-780 716.68,-836.94 622.99,-652.05 680.83,-588 682.57,-586.07 684.41,-584.26 686.34,-582.55"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="688.28,-585.47 694.12,-576.62 684.04,-579.9 688.28,-585.47"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge4"><a xlink:title="at client.go:509: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:510: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M578.01,-595.34C602.61,-594.44 628.66,-593.07 652.83,-591 666.16,-589.86 680.11,-588.35 693.92,-586.66"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="693.97,-590.18 703.45,-585.46 693.09,-583.24 693.97,-590.18"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge1"><a xlink:title="at client.go:518: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:519: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M581.81,-462.96C594.26,-458.24 605.99,-451.78 615.83,-443 653.9,-409.04 610.48,-363.89 651.83,-334 679.45,-314.03 655.14,-382.6 680.83,-405 685.02,-408.65 689.57,-411.87 694.39,-414.71"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="692.77,-417.81 703.25,-419.33 696,-411.61 692.77,-417.81"/>
 </a>
 </g>
 </g>
@@ -143,206 +143,26 @@
 <g id="node17" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
 <g id="a_node17"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M819.97,-649C819.97,-649 789.97,-649 789.97,-649 783.97,-649 777.97,-643 777.97,-637 777.97,-637 777.97,-625 777.97,-625 777.97,-619 783.97,-613 789.97,-613 789.97,-613 819.97,-613 819.97,-613 825.97,-613 831.97,-619 831.97,-625 831.97,-625 831.97,-637 831.97,-637 831.97,-643 825.97,-649 819.97,-649"/>
-<text xml:space="preserve" text-anchor="middle" x="804.97" y="-626.33" font-family="Verdana" font-size="14.00">New</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M819.97,-636C819.97,-636 789.97,-636 789.97,-636 783.97,-636 777.97,-630 777.97,-624 777.97,-624 777.97,-612 777.97,-612 777.97,-606 783.97,-600 789.97,-600 789.97,-600 819.97,-600 819.97,-600 825.97,-600 831.97,-606 831.97,-612 831.97,-612 831.97,-624 831.97,-624 831.97,-630 825.97,-636 819.97,-636"/>
+<text xml:space="preserve" text-anchor="middle" x="804.97" y="-613.33" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge14"><a xlink:title="at client.go:506: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M578.02,-607.9C642.37,-614.48 720.48,-622.46 765.97,-627.11"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="765.54,-630.59 775.84,-628.12 766.25,-623.62 765.54,-630.59"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion | defined in client.go:466&#10;at client.go:473: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:480: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:475: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:476: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:477: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:482: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:474: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:481: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:472: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:479: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M565.2,-183C565.2,-183 375.66,-183 375.66,-183 369.66,-183 363.66,-177 363.66,-171 363.66,-171 363.66,-159 363.66,-159 363.66,-153 369.66,-147 375.66,-147 375.66,-147 565.2,-147 565.2,-147 571.2,-147 577.2,-153 577.2,-159 577.2,-159 577.2,-171 577.2,-171 577.2,-177 571.2,-183 565.2,-183"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-160.32" font-family="Verdana" font-size="14.00">(*Client).CreateCompletion</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge28" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge28"><a xlink:title="at client.go:472: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:479: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M515.69,-146.35C554.29,-133.15 610.57,-121.57 652.83,-145 735.97,-191.1 779.4,-304.09 795.93,-357.77"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="792.51,-358.53 798.71,-367.12 799.22,-356.54 792.51,-358.53"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge5"><a xlink:title="at client.go:473: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:480: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M555.88,-146.26C590.02,-143.77 627.3,-148.31 652.83,-172 693.16,-209.42 644.44,-376.73 680.83,-418 682.13,-419.48 683.49,-420.88 684.9,-422.23"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="682.4,-424.71 692.37,-428.3 686.82,-419.28 682.4,-424.71"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge8" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge8"><a xlink:title="at client.go:474: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:481: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M577.68,-162.71C605.75,-167.48 633.55,-177.99 652.83,-199 695.11,-245.07 639.8,-431.81 680.83,-479 682.15,-480.51 683.52,-481.96 684.96,-483.33"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="682.61,-485.93 692.57,-489.55 687.04,-480.51 682.61,-485.93"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge6" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge6"><a xlink:title="at client.go:475: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:476: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:477: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:482: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M530.79,-183.62C560.59,-195.91 594.75,-215.01 615.83,-243 656.47,-296.97 633.62,-491.67 680.83,-540 685,-544.27 689.67,-547.97 694.68,-551.18"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="692.95,-554.21 703.39,-556.01 696.35,-548.1 692.95,-554.21"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced -->
-<g id="node4" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced | defined in client.go:355&#10;at client.go:361: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:360: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:359: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M593.7,-75C593.7,-75 347.16,-75 347.16,-75 341.16,-75 335.16,-69 335.16,-63 335.16,-63 335.16,-51 335.16,-51 335.16,-45 341.16,-39 347.16,-39 347.16,-39 593.7,-39 593.7,-39 599.7,-39 605.7,-45 605.7,-51 605.7,-51 605.7,-63 605.7,-63 605.7,-69 599.7,-75 593.7,-75"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-52.33" font-family="Verdana" font-size="14.00">(*Client).SetAllowedToolsEnhanced</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge29" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge29"><a xlink:title="at client.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M512.44,-38.36C551.71,-23.56 611,-9.5 652.83,-37 764.97,-110.73 794.29,-287.24 801.63,-357.46"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="798.11,-357.41 802.55,-367.03 805.08,-356.74 798.11,-357.41"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge22"><a xlink:title="at client.go:359: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M606.37,-40.56C623.69,-44.31 639.87,-51.56 652.83,-64 709.74,-118.66 629.67,-357.92 680.83,-418 682.11,-419.5 683.44,-420.93 684.83,-422.29"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="682.28,-424.72 692.2,-428.44 686.77,-419.35 682.28,-424.72"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge9" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge9"><a xlink:title="at client.go:360: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M606.45,-61.52C624.1,-67.65 640.35,-77.02 652.83,-91 710.4,-155.49 625.01,-412.99 680.83,-479 682.27,-480.7 683.79,-482.31 685.37,-483.85"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="682.74,-486.21 692.69,-489.86 687.19,-480.81 682.74,-486.21"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge1"><a xlink:title="at client.go:361: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M532.9,-75.74C562.52,-87.92 595.87,-106.89 615.83,-135 642.21,-172.16 649.91,-506.51 680.83,-540 685.03,-544.55 689.79,-548.46 694.94,-551.82"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="692.85,-554.66 703.28,-556.54 696.3,-548.56 692.85,-554.66"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions | defined in client.go:384&#10;at client.go:388: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:389: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:386: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:387: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M557.7,-939C557.7,-939 383.16,-939 383.16,-939 377.16,-939 371.16,-933 371.16,-927 371.16,-927 371.16,-915 371.16,-915 371.16,-909 377.16,-903 383.16,-903 383.16,-903 557.7,-903 557.7,-903 563.7,-903 569.7,-909 569.7,-915 569.7,-915 569.7,-927 569.7,-927 569.7,-933 563.7,-939 557.7,-939"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-916.33" font-family="Verdana" font-size="14.00">(*Client).ValidateOptions</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
 <g id="edge33" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge33"><a xlink:title="at client.go:386: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M545.07,-902.3C570.92,-892.27 597.95,-877.23 615.83,-855 664.58,-794.42 640.52,-760.78 652.83,-684 662.24,-625.31 641.88,-462.9 680.83,-418 700.99,-394.76 735.77,-387.64 763.24,-385.98"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="763.12,-389.49 772.98,-385.63 762.86,-382.49 763.12,-389.49"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge37" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge37"><a xlink:title="at client.go:387: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M570.01,-925.47C600.76,-921.59 632.03,-911.26 652.83,-888 713.56,-820.09 622.4,-548.9 680.83,-479 682.31,-477.22 683.88,-475.54 685.53,-473.95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="687.68,-476.71 693.18,-467.66 683.23,-471.31 687.68,-476.71"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge7" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge7"><a xlink:title="at client.go:388: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M546.16,-939.72C582.94,-944.2 625.2,-941.5 652.83,-915 713.13,-857.15 627.04,-603.95 680.83,-540 682.32,-538.23 683.9,-536.55 685.55,-534.96"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="687.69,-537.73 693.21,-528.69 683.26,-532.31 687.69,-537.73"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge30" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge30"><a xlink:title="at client.go:389: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M507.48,-939.69C548.17,-957.89 613.78,-977.98 652.83,-942 708.75,-890.48 631.67,-659 680.83,-601 684.97,-596.11 689.76,-591.93 695,-588.37"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="696.69,-591.43 703.55,-583.36 693.16,-585.39 696.69,-591.43"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced | defined in client.go:369&#10;at client.go:372: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:373: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:375: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:374: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M603.83,-507C603.83,-507 337.04,-507 337.04,-507 331.04,-507 325.04,-501 325.04,-495 325.04,-495 325.04,-483 325.04,-483 325.04,-477 331.04,-471 337.04,-471 337.04,-471 603.83,-471 603.83,-471 609.83,-471 615.83,-477 615.83,-483 615.83,-483 615.83,-495 615.83,-495 615.83,-501 609.83,-507 603.83,-507"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-484.32" font-family="Verdana" font-size="14.00">(*Client).SetDisallowedToolsEnhanced</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge10" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge10"><a xlink:title="at client.go:372: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M522.7,-470.33C564.87,-455.29 626.34,-434.07 680.83,-418 708.21,-409.93 739.4,-402.09 763.54,-396.31"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="764.04,-399.79 772.96,-394.08 762.42,-392.98 764.04,-399.79"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge11" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge11"><a xlink:title="at client.go:373: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M616.32,-471.14C636.54,-468.64 657.18,-466.1 677.02,-463.65"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="677.28,-467.15 686.78,-462.45 676.43,-460.2 677.28,-467.15"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge38" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge38"><a xlink:title="at client.go:374: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M616.32,-497.71C638.36,-499.04 660.9,-500.39 682.36,-501.69"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="682.12,-505.18 692.32,-502.28 682.54,-498.19 682.12,-505.18"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge23"><a xlink:title="at client.go:375: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M548.14,-507.68C598.28,-519.9 663.91,-535.88 716.14,-548.61"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="715.06,-551.94 725.61,-550.91 716.72,-545.14 715.06,-551.94"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge33"><a xlink:title="at client.go:515: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M581.77,-481.4C594.62,-486.53 606.46,-493.8 615.83,-504 701.6,-597.38 556.69,-703.19 651.83,-787 710.81,-838.96 770.08,-707.86 793.51,-647.03"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="796.68,-648.56 796.93,-637.96 790.13,-646.09 796.68,-648.56"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete -->
-<g id="node7" class="node">
+<g id="node3" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete | defined in client.go:198&#10;at client.go:204: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:211: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:207: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:214: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:205: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M535.95,-291C535.95,-291 404.91,-291 404.91,-291 398.91,-291 392.91,-285 392.91,-279 392.91,-279 392.91,-267 392.91,-267 392.91,-261 398.91,-255 404.91,-255 404.91,-255 535.95,-255 535.95,-255 541.95,-255 547.95,-261 547.95,-267 547.95,-267 547.95,-279 547.95,-279 547.95,-285 541.95,-291 535.95,-291"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-268.32" font-family="Verdana" font-size="14.00">(*Client).Complete</text>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete | defined in client.go:198&#10;at client.go:204: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:211: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:205: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:207: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:214: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M535.95,-369C535.95,-369 404.91,-369 404.91,-369 398.91,-369 392.91,-363 392.91,-357 392.91,-357 392.91,-345 392.91,-345 392.91,-339 398.91,-333 404.91,-333 404.91,-333 535.95,-333 535.95,-333 541.95,-333 547.95,-339 547.95,-345 547.95,-345 547.95,-357 547.95,-357 547.95,-363 541.95,-369 535.95,-369"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-346.32" font-family="Verdana" font-size="14.00">(*Client).Complete</text>
 </a>
 </g>
 </g>
@@ -350,172 +170,352 @@
 <g id="edge2" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_edge2"><a xlink:title="at client.go:204: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:211: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M525.47,-254.28C562.43,-244.51 611.95,-237.49 652.83,-253 708.78,-274.23 757.3,-326.7 783.44,-359.33"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="780.65,-361.45 789.57,-367.17 786.17,-357.14 780.65,-361.45"/>
+<path fill="none" stroke="saddlebrown" d="M548.57,-351.39C573.09,-347.62 598.35,-339 615.83,-321 679.72,-255.21 573.19,-72.53 652.83,-118 739.45,-167.45 781.43,-288.13 796.8,-344.31"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="793.37,-345.03 799.3,-353.81 800.14,-343.25 793.37,-345.03"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge34" class="edge">
+<g id="edge3" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge34"><a xlink:title="at client.go:205: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M548.49,-255.87C584.09,-252.57 624.62,-256.01 652.83,-280 700.51,-320.54 637.44,-372.9 680.83,-418 682.4,-419.64 684.05,-421.19 685.76,-422.66"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="683.49,-425.33 693.6,-428.48 687.66,-419.71 683.49,-425.33"/>
+<g id="a_edge3"><a xlink:title="at client.go:205: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M548.46,-353.17C572.39,-357.35 597.32,-365.77 615.83,-382 651.66,-413.42 614.09,-453.9 651.83,-483 659.53,-488.93 668.14,-493.43 677.24,-496.79"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="676.1,-500.1 686.69,-499.77 678.21,-493.43 676.1,-500.1"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge16" class="edge">
+<g id="edge12" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge16"><a xlink:title="at client.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M548.34,-268.32C584.78,-270.38 626.08,-279.6 652.83,-307 706.94,-362.42 628.23,-422.15 680.83,-479 682.34,-480.64 683.93,-482.19 685.58,-483.66"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="683.08,-486.15 693.14,-489.48 687.35,-480.6 683.08,-486.15"/>
+<g id="a_edge12"><a xlink:title="at client.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M548.61,-350.37C573.43,-354.2 598.87,-363.12 615.83,-382 667.19,-439.18 594.72,-674.56 651.83,-726 698.4,-767.95 637.55,-633.33 680.83,-588 682.83,-585.91 684.94,-583.95 687.16,-582.11"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="688.87,-585.19 694.96,-576.52 684.79,-579.51 688.87,-585.19"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge24" class="edge">
+<g id="edge13" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge24"><a xlink:title="at client.go:207: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:214: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M527.36,-291.73C557.27,-304.3 592.61,-323.62 615.83,-351 673.28,-418.75 615.19,-480.15 680.83,-540 685.09,-543.88 689.77,-547.29 694.74,-550.27"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="692.79,-553.2 703.27,-554.79 696.07,-547.01 692.79,-553.2"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings -->
-<g id="node8" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings | defined in client.go:514&#10;at client.go:515: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at client.go:517: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:516: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:518: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:519: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M569.33,-712C569.33,-712 371.54,-712 371.54,-712 365.54,-712 359.54,-706 359.54,-700 359.54,-700 359.54,-688 359.54,-688 359.54,-682 365.54,-676 371.54,-676 371.54,-676 569.33,-676 569.33,-676 575.33,-676 581.33,-682 581.33,-688 581.33,-688 581.33,-700 581.33,-700 581.33,-706 575.33,-712 569.33,-712"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-689.33" font-family="Verdana" font-size="14.00">(*Client).CreateEmbeddings</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge25" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge25"><a xlink:title="at client.go:516: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M537.66,-675.33C564.66,-664.99 594.48,-649.72 615.83,-628 666.47,-576.47 625.71,-525.71 680.83,-479 683.65,-476.61 686.62,-474.4 689.72,-472.36"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="691.2,-475.56 698.07,-467.49 687.67,-469.51 691.2,-475.56"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge18" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge18"><a xlink:title="at client.go:517: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M581.85,-701.73C607.82,-698.24 633.52,-689.67 652.83,-672 697.07,-631.51 639.23,-583.2 680.83,-540 682.84,-537.92 684.96,-535.96 687.19,-534.14"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="688.89,-537.22 695,-528.56 684.83,-531.52 688.89,-537.22"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge31" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge31"><a xlink:title="at client.go:518: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:519: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M528.56,-712.7C567.4,-721.63 617.87,-725.37 652.83,-699 688.99,-671.72 648.3,-632.52 680.83,-601 685.08,-596.89 689.78,-593.3 694.81,-590.16"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="696.41,-593.28 703.5,-585.41 693.05,-587.14 696.41,-593.28"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbeddings&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge17"><a xlink:title="at client.go:515: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M540.8,-712.69C582.78,-722.75 632.09,-731.98 652.83,-726 699.59,-712.53 745.85,-679.84 774.63,-656.59"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="776.68,-659.43 782.17,-650.36 772.23,-654.03 776.68,-659.43"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete -->
-<g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete | defined in client.go:239&#10;at client.go:244: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M225.04,-779C225.04,-779 43,-779 43,-779 37,-779 31,-773 31,-767 31,-767 31,-755 31,-755 31,-749 37,-743 43,-743 43,-743 225.04,-743 225.04,-743 231.04,-743 237.04,-749 237.04,-755 237.04,-755 237.04,-767 237.04,-767 237.04,-773 231.04,-779 225.04,-779"/>
-<text xml:space="preserve" text-anchor="middle" x="134.02" y="-756.33" font-family="Verdana" font-size="14.00">(*Client).StreamComplete</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1 -->
-<g id="node10" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1 | defined in client.go:244">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="582.45,-779 358.41,-779 358.41,-743 582.45,-743 582.45,-779"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-756.33" font-family="Verdana" font-size="14.00">(*Client).StreamComplete$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1 -->
-<g id="edge35" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1</title>
-<g id="a_edge35"><a xlink:title="at client.go:244: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1]">
-<path fill="none" stroke="black" d="M237.63,-761C267.7,-761 301.07,-761 332.9,-761"/>
-<polygon fill="black" stroke="black" points="346.49,-764.5 356.49,-761 346.49,-757.5 346.49,-764.5"/>
-<polyline fill="none" stroke="black" points="345.99,-761 340.99,-761"/>
-<ellipse fill="none" stroke="black" cx="336.49" cy="-761" rx="4" ry="4"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry -->
-<g id="node11" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry</title>
-<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry | defined in client.go:322&#10;at client.go:331: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:338: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:333: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:340: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:332: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:339: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:334: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:335: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:336: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M570.45,-842C570.45,-842 370.41,-842 370.41,-842 364.41,-842 358.41,-836 358.41,-830 358.41,-830 358.41,-818 358.41,-818 358.41,-812 364.41,-806 370.41,-806 370.41,-806 570.45,-806 570.45,-806 576.45,-806 582.45,-812 582.45,-818 582.45,-818 582.45,-830 582.45,-830 582.45,-836 576.45,-842 570.45,-842"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-819.33" font-family="Verdana" font-size="14.00">(*Client).CompleteWithRetry</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge3"><a xlink:title="at client.go:331: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:338: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M583.17,-813.67C595.4,-808.57 606.7,-801.56 615.83,-792 732.35,-669.99 566.06,-541.66 680.83,-418 701.63,-395.59 736.03,-388.36 763.2,-386.44"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="763,-389.96 772.83,-385.99 762.67,-382.97 763,-389.96"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge32" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge32"><a xlink:title="at client.go:332: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:339: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M583.08,-820.12C609.84,-813.58 635.62,-801.5 652.83,-780 694.81,-727.55 637.12,-530.01 680.83,-479 682.49,-477.06 684.25,-475.24 686.11,-473.51"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="687.93,-476.54 693.57,-467.57 683.57,-471.06 687.93,-476.54"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge19" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge19"><a xlink:title="at client.go:333: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:340: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M582.89,-836.44C608.84,-833.64 634.28,-825.35 652.83,-807 695.25,-765.05 641.75,-585.07 680.83,-540 682.5,-538.07 684.28,-536.25 686.14,-534.54"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="687.95,-537.57 693.63,-528.62 683.62,-532.07 687.95,-537.57"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge36" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge36"><a xlink:title="at client.go:334: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:335: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:336: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M517.18,-842.72C557.85,-856 616.38,-866.34 652.83,-834 730.86,-764.79 611.91,-679.28 680.83,-601 685.02,-596.24 689.82,-592.16 695.04,-588.67"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="696.64,-591.79 703.55,-583.75 693.14,-585.73 696.64,-591.79"/>
+<g id="a_edge13"><a xlink:title="at client.go:207: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:214: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M548.34,-339.5C570.51,-334.99 594.47,-328.94 615.83,-321 633.35,-314.49 637.99,-289.63 652.83,-301 690.82,-330.12 646.58,-371.56 680.83,-405 685.05,-409.12 689.74,-412.71 694.75,-415.83"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="692.96,-418.84 703.42,-420.55 696.31,-412.69 692.96,-418.84"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).RunPromptEnhanced -->
-<g id="node12" class="node">
+<g id="node4" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).RunPromptEnhanced</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).RunPromptEnhanced | defined in client.go:396&#10;at client.go:401: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M240.04,-939C240.04,-939 28,-939 28,-939 22,-939 16,-933 16,-927 16,-927 16,-915 16,-915 16,-909 22,-903 28,-903 28,-903 240.04,-903 240.04,-903 246.04,-903 252.04,-909 252.04,-915 252.04,-915 252.04,-927 252.04,-927 252.04,-933 246.04,-939 240.04,-939"/>
-<text xml:space="preserve" text-anchor="middle" x="134.02" y="-916.33" font-family="Verdana" font-size="14.00">(*Client).RunPromptEnhanced</text>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).RunPromptEnhanced | defined in client.go:396&#10;at client.go:401: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M240.04,-186C240.04,-186 28,-186 28,-186 22,-186 16,-180 16,-174 16,-174 16,-162 16,-162 16,-156 22,-150 28,-150 28,-150 240.04,-150 240.04,-150 246.04,-150 252.04,-156 252.04,-162 252.04,-162 252.04,-174 252.04,-174 252.04,-180 246.04,-186 240.04,-186"/>
+<text xml:space="preserve" text-anchor="middle" x="134.02" y="-163.32" font-family="Verdana" font-size="14.00">(*Client).RunPromptEnhanced</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).RunPromptEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions -->
-<g id="edge12" class="edge">
+<g id="edge38" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).RunPromptEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions</title>
-<g id="a_edge12"><a xlink:title="at client.go:401: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions]">
-<path fill="none" stroke="black" d="M252.45,-921C287.11,-921 324.92,-921 359.12,-921"/>
-<polygon fill="black" stroke="black" points="359.05,-924.5 369.05,-921 359.05,-917.5 359.05,-924.5"/>
+<g id="a_edge38"><a xlink:title="at client.go:401: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).ValidateOptions]">
+<path fill="none" stroke="black" d="M252.45,-168C287.11,-168 324.92,-168 359.12,-168"/>
+<polygon fill="black" stroke="black" points="359.05,-171.5 369.05,-168 359.05,-164.5 359.05,-171.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced -->
+<g id="node5" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced</title>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced | defined in client.go:369&#10;at client.go:375: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:373: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:374: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:372: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M603.83,-247C603.83,-247 337.04,-247 337.04,-247 331.04,-247 325.04,-241 325.04,-235 325.04,-235 325.04,-223 325.04,-223 325.04,-217 331.04,-211 337.04,-211 337.04,-211 603.83,-211 603.83,-211 609.83,-211 615.83,-217 615.83,-223 615.83,-223 615.83,-235 615.83,-235 615.83,-241 609.83,-247 603.83,-247"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-224.32" font-family="Verdana" font-size="14.00">(*Client).SetDisallowedToolsEnhanced</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge34" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge34"><a xlink:title="at client.go:372: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M599.37,-210.29C605.22,-207.04 610.75,-203.3 615.83,-199 649.76,-170.24 614.42,-83.56 652.83,-106 742.8,-158.55 783.42,-286.62 797.65,-344.61"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="794.18,-345.14 799.88,-354.07 801,-343.54 794.18,-345.14"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge17"><a xlink:title="at client.go:373: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M600.26,-247.68C605.88,-251.2 611.12,-255.28 615.83,-260 683.66,-327.94 600.13,-413.99 680.83,-466 684.52,-468.38 688.39,-470.57 692.38,-472.59"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="690.59,-475.62 701.14,-476.62 693.52,-469.26 690.59,-475.62"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge30" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge30"><a xlink:title="at client.go:374: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M601.92,-247.65C606.99,-251.2 611.67,-255.29 615.83,-260 676.65,-328.9 584.07,-609.91 651.83,-672 680.95,-698.68 651.87,-614.86 680.83,-588 683.25,-585.75 685.82,-583.66 688.5,-581.71"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="690.18,-584.79 696.73,-576.46 686.41,-578.89 690.18,-584.79"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge14" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetDisallowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge14"><a xlink:title="at client.go:375: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M582.64,-247.67C594.08,-251.12 605.34,-255.19 615.83,-260 634.58,-268.59 641.55,-270.74 652.83,-288 682.08,-332.76 643.1,-367.12 680.83,-405 685.04,-409.23 689.74,-412.9 694.78,-416.08"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="693.07,-419.13 703.52,-420.88 696.44,-413 693.07,-419.13"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry -->
+<g id="node6" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry</title>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry | defined in client.go:322&#10;at client.go:334: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:335: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:336: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:333: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:340: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:331: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:338: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:332: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:339: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M570.45,-308C570.45,-308 370.41,-308 370.41,-308 364.41,-308 358.41,-302 358.41,-296 358.41,-296 358.41,-284 358.41,-284 358.41,-278 364.41,-272 370.41,-272 370.41,-272 570.45,-272 570.45,-272 576.45,-272 582.45,-278 582.45,-284 582.45,-284 582.45,-296 582.45,-296 582.45,-302 576.45,-308 570.45,-308"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-285.32" font-family="Verdana" font-size="14.00">(*Client).CompleteWithRetry</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge22" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge22"><a xlink:title="at client.go:331: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:338: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M582.86,-280.56C595.06,-275.73 606.44,-269.08 615.83,-260 664.58,-212.87 594.12,-78.09 652.83,-112 741.13,-163 782.44,-287.38 797.24,-344.47"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="793.83,-345.25 799.64,-354.11 800.62,-343.57 793.83,-345.25"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge35" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge35"><a xlink:title="at client.go:332: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:339: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M583.06,-300.6C595.16,-305.46 606.45,-312.07 615.83,-321 660.8,-363.82 609.52,-410.55 651.83,-456 659.44,-464.17 668.49,-470.75 678.34,-476.04"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="676.54,-479.06 687.07,-480.26 679.59,-472.76 676.54,-479.06"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge18" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge18"><a xlink:title="at client.go:333: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:340: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M583.14,-298.56C595.53,-303.71 606.88,-310.94 615.83,-321 671.92,-384.04 589.4,-642.23 651.83,-699 689.56,-733.3 644.77,-624.05 680.83,-588 682.91,-585.92 685.11,-583.97 687.41,-582.15"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="689.24,-585.14 695.48,-576.58 685.26,-579.38 689.24,-585.14"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithRetry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge9"><a xlink:title="at client.go:334: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:335: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:336: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M555.62,-271.27C589.11,-268.7 625.98,-272.6 652.83,-294 692.62,-325.71 644.71,-369.17 680.83,-405 685.02,-409.15 689.68,-412.77 694.67,-415.91"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="692.86,-418.91 703.31,-420.65 696.23,-412.77 692.86,-418.91"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions -->
+<g id="node7" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions</title>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions | defined in client.go:221&#10;at client.go:231: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:230: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:228: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:229: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M578.7,-430C578.7,-430 362.16,-430 362.16,-430 356.16,-430 350.16,-424 350.16,-418 350.16,-418 350.16,-406 350.16,-406 350.16,-400 356.16,-394 362.16,-394 362.16,-394 578.7,-394 578.7,-394 584.7,-394 590.7,-400 590.7,-406 590.7,-406 590.7,-418 590.7,-418 590.7,-424 584.7,-430 578.7,-430"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-407.32" font-family="Verdana" font-size="14.00">(*Client).CompleteWithOptions</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge23" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge23"><a xlink:title="at client.go:228: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M591.31,-399.85C600.42,-395.28 608.79,-389.44 615.83,-382 689.1,-304.65 571.03,-214.45 651.83,-145 726.56,-80.76 779.71,-269.07 797.48,-344.37"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="794.03,-344.99 799.69,-353.95 800.86,-343.42 794.03,-344.99"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge25" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge25"><a xlink:title="at client.go:229: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M591.36,-428.89C600.07,-432.73 608.35,-437.38 615.83,-443 642.85,-463.31 622.82,-492.65 651.83,-510 679.08,-526.29 714.12,-524.29 743.69,-517.54"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="744.43,-520.96 753.27,-515.11 742.72,-514.17 744.43,-520.96"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge19" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge19"><a xlink:title="at client.go:230: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M591.29,-424.58C600.46,-429.28 608.85,-435.31 615.83,-443 662.46,-494.33 600.04,-706.88 651.83,-753 707.43,-802.52 630.29,-642.68 680.83,-588 682.62,-586.06 684.52,-584.23 686.5,-582.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="688.58,-585.33 694.51,-576.55 684.4,-579.71 688.58,-585.33"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge10" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CompleteWithOptions&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge10"><a xlink:title="at client.go:231: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M591.27,-396.52C600.05,-392.62 608.37,-387.84 615.83,-382 645.1,-359.09 623.16,-284.62 652.83,-307 688.99,-334.28 648.18,-373.61 680.83,-405 685.08,-409.09 689.8,-412.65 694.83,-415.75"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="693.06,-418.77 703.52,-420.44 696.38,-412.61 693.06,-418.77"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete -->
+<g id="node8" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete</title>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete | defined in client.go:239&#10;at client.go:244: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M225.04,-552C225.04,-552 43,-552 43,-552 37,-552 31,-546 31,-540 31,-540 31,-528 31,-528 31,-522 37,-516 43,-516 43,-516 225.04,-516 225.04,-516 231.04,-516 237.04,-522 237.04,-528 237.04,-528 237.04,-540 237.04,-540 237.04,-546 231.04,-552 225.04,-552"/>
+<text xml:space="preserve" text-anchor="middle" x="134.02" y="-529.33" font-family="Verdana" font-size="14.00">(*Client).StreamComplete</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1 -->
+<g id="node9" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1</title>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1 | defined in client.go:244">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="582.45,-552 358.41,-552 358.41,-516 582.45,-516 582.45,-552"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-529.33" font-family="Verdana" font-size="14.00">(*Client).StreamComplete$1</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1 -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1</title>
+<g id="a_edge15"><a xlink:title="at client.go:244: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).StreamComplete$1]">
+<path fill="none" stroke="black" d="M237.63,-534C267.7,-534 301.07,-534 332.9,-534"/>
+<polygon fill="black" stroke="black" points="346.49,-537.5 356.49,-534 346.49,-530.5 346.49,-537.5"/>
+<polyline fill="none" stroke="black" points="345.99,-534 340.99,-534"/>
+<ellipse fill="none" stroke="black" cx="336.49" cy="-534" rx="4" ry="4"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion -->
+<g id="node10" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion</title>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion | defined in client.go:466&#10;at client.go:474: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:481: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:475: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:476: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:477: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:482: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:472: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:479: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:473: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:480: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M565.2,-613C565.2,-613 375.66,-613 375.66,-613 369.66,-613 363.66,-607 363.66,-601 363.66,-601 363.66,-589 363.66,-589 363.66,-583 369.66,-577 375.66,-577 375.66,-577 565.2,-577 565.2,-577 571.2,-577 577.2,-583 577.2,-589 577.2,-589 577.2,-601 577.2,-601 577.2,-607 571.2,-613 565.2,-613"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-590.33" font-family="Verdana" font-size="14.00">(*Client).CreateCompletion</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge26" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge26"><a xlink:title="at client.go:472: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:479: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M577.85,-588C592.04,-583 605.3,-575.65 615.83,-565 674.41,-505.74 588.73,-435.43 651.83,-381 682.14,-354.85 729.81,-357.18 763.7,-363.45"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="762.64,-366.81 773.14,-365.39 764.05,-359.95 762.64,-366.81"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge36" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge36"><a xlink:title="at client.go:473: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:480: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M577.8,-576.86C590.79,-573.49 603.73,-569.56 615.83,-565 633.52,-558.33 636.52,-553.57 652.83,-544 665.38,-536.63 667.4,-532.62 680.83,-527 688.61,-523.75 696.81,-520.77 705.14,-518.07"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="706.16,-521.42 714.68,-515.12 704.09,-514.73 706.16,-521.42"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge4"><a xlink:title="at client.go:474: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:481: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M577.86,-602.8C592.05,-607.89 605.3,-615.31 615.83,-626 673.45,-684.5 591.2,-861.25 652.83,-807 726.48,-742.16 615.71,-661.4 680.83,-588 682.55,-586.06 684.38,-584.23 686.29,-582.5"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="688.24,-585.42 694.02,-576.54 683.97,-579.88 688.24,-585.42"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge5" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge5"><a xlink:title="at client.go:475: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:476: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:477: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:482: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M577.78,-587.93C591.98,-582.94 605.26,-575.61 615.83,-565 672.48,-508.12 589.67,-438.79 651.83,-388 663.4,-378.55 667.02,-399.29 680.83,-405 687.73,-407.85 694.96,-410.48 702.32,-412.89"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="701.13,-416.18 711.72,-415.81 703.21,-409.5 701.13,-416.18"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding -->
+<g id="node11" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding</title>
+<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding | defined in client.go:505&#10;at client.go:506: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at client.go:507: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:508: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:509: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:510: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M565.58,-926C565.58,-926 375.29,-926 375.29,-926 369.29,-926 363.29,-920 363.29,-914 363.29,-914 363.29,-902 363.29,-902 363.29,-896 369.29,-890 375.29,-890 375.29,-890 565.58,-890 565.58,-890 571.58,-890 577.58,-896 577.58,-902 577.58,-902 577.58,-914 577.58,-914 577.58,-920 571.58,-926 565.58,-926"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-903.33" font-family="Verdana" font-size="14.00">(*Client).CreateEmbedding</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge21" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge21"><a xlink:title="at client.go:507: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M488.01,-889.38C523.68,-848.32 608.1,-745.6 652.83,-645 674.73,-595.75 642.98,-565.37 680.83,-527 682.9,-524.91 685.08,-522.95 687.37,-521.11"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="689.2,-524.1 695.41,-515.51 685.2,-518.35 689.2,-524.1"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge31" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge31"><a xlink:title="at client.go:508: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M578.01,-919.15C605.74,-916.45 633.28,-907.88 652.83,-888 699.78,-840.26 637.26,-638.84 680.83,-588 682.49,-586.06 684.25,-584.24 686.11,-582.52"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="687.93,-585.54 693.57,-576.57 683.57,-580.06 687.93,-585.54"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge37" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge37"><a xlink:title="at client.go:509: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:510: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M486.41,-889.31C515.19,-852.58 578.67,-767.52 615.83,-687 637.28,-640.52 643.93,-501.48 680.83,-466 685.09,-461.9 689.81,-458.32 694.85,-455.2"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="696.44,-458.32 703.55,-450.46 693.1,-452.17 696.44,-458.32"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge20" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).CreateEmbedding&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge20"><a xlink:title="at client.go:506: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M503.2,-926.67C541.59,-946.52 606.75,-971.35 652.83,-942 757.56,-875.29 790.91,-714.99 800.48,-648.11"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="803.94,-648.62 801.8,-638.25 797,-647.69 803.94,-648.62"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced -->
+<g id="node12" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced</title>
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced | defined in client.go:355&#10;at client.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:359: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:361: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:360: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M593.7,-674C593.7,-674 347.16,-674 347.16,-674 341.16,-674 335.16,-668 335.16,-662 335.16,-662 335.16,-650 335.16,-650 335.16,-644 341.16,-638 347.16,-638 347.16,-638 593.7,-638 593.7,-638 599.7,-638 605.7,-644 605.7,-650 605.7,-650 605.7,-662 605.7,-662 605.7,-668 599.7,-674 593.7,-674"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-651.33" font-family="Verdana" font-size="14.00">(*Client).SetAllowedToolsEnhanced</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge6" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge6"><a xlink:title="at client.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M600.47,-637.4C605.96,-634.12 611.12,-630.34 615.83,-626 691.1,-556.6 607.02,-475.95 680.83,-405 702.64,-384.04 736.44,-376.64 763.12,-374.29"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="763.17,-377.79 772.92,-373.65 762.71,-370.81 763.17,-377.79"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge7"><a xlink:title="at client.go:359: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M595.14,-637.4C602.41,-634.16 609.37,-630.39 615.83,-626 659.35,-596.4 637.94,-557.51 680.83,-527 684.51,-524.38 688.4,-521.98 692.43,-519.78"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="693.92,-522.95 701.35,-515.4 690.83,-516.67 693.92,-522.95"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge32" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge32"><a xlink:title="at client.go:360: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M480.35,-674.72C506.77,-727.87 586.96,-872.22 652.83,-814 728.67,-746.98 613.81,-663.84 680.83,-588 682.55,-586.05 684.37,-584.22 686.28,-582.5"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="688.24,-585.41 694,-576.52 683.95,-579.87 688.24,-585.41"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge11" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/claudecode.Client).SetAllowedToolsEnhanced&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge11"><a xlink:title="at client.go:361: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M598.94,-637.37C604.94,-634.11 610.62,-630.34 615.83,-626 674.79,-576.85 622.91,-516.37 680.83,-466 685.14,-462.25 689.84,-458.95 694.8,-456.03"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="696.05,-459.32 703.3,-451.59 692.81,-453.12 696.05,-459.32"/>
 </a>
 </g>
 </g>

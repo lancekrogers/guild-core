@@ -38,12 +38,12 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1 -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1 | defined in generator.go:79&#10;at generator.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:81: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="642.08,-398 356.54,-398 356.54,-362 642.08,-362 642.08,-398"/>
-<text xml:space="preserve" text-anchor="middle" x="499.31" y="-375.32" font-family="Verdana" font-size="14.00">(*Generator).GenerateCommission$1</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator</title>
+<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator | defined in generator.go:25&#10;at generator.go:27: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager]&#10;at generator.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:30: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M547.95,-536C547.95,-536 450.66,-536 450.66,-536 444.66,-536 438.66,-530 438.66,-524 438.66,-524 438.66,-512 438.66,-512 438.66,-506 444.66,-500 450.66,-500 450.66,-500 547.95,-500 547.95,-500 553.95,-500 559.95,-506 559.95,-512 559.95,-512 559.95,-524 559.95,-524 559.95,-530 553.95,-536 547.95,-536"/>
+<text xml:space="preserve" text-anchor="middle" x="499.31" y="-513.33" font-family="Verdana" font-size="14.00">newGenerator</text>
 </a>
 </g>
 </g>
@@ -51,17 +51,17 @@
 <g id="node9" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M863.37,-445C863.37,-445 827.58,-445 827.58,-445 821.58,-445 815.58,-439 815.58,-433 815.58,-433 815.58,-421 815.58,-421 815.58,-415 821.58,-409 827.58,-409 827.58,-409 863.37,-409 863.37,-409 869.37,-409 875.37,-415 875.37,-421 875.37,-421 875.37,-433 875.37,-433 875.37,-439 869.37,-445 863.37,-445"/>
-<text xml:space="preserve" text-anchor="middle" x="845.48" y="-422.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M863.37,-384C863.37,-384 827.58,-384 827.58,-384 821.58,-384 815.58,-378 815.58,-372 815.58,-372 815.58,-360 815.58,-360 815.58,-354 821.58,-348 827.58,-348 827.58,-348 863.37,-348 863.37,-348 869.37,-348 875.37,-354 875.37,-360 875.37,-360 875.37,-372 875.37,-372 875.37,-378 869.37,-384 863.37,-384"/>
+<text xml:space="preserve" text-anchor="middle" x="845.48" y="-361.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
 <g id="edge15" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge15"><a xlink:title="at generator.go:81: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M560.55,-398.49C594.67,-408.05 638.36,-418.79 678.08,-424 720.62,-429.58 769.79,-429.69 803.59,-428.81"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="803.47,-432.31 813.36,-428.51 803.25,-425.32 803.47,-432.31"/>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge15"><a xlink:title="at generator.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M525.43,-499.82C563.09,-473.4 637.24,-424.55 707.08,-397 738.43,-384.64 775.84,-376.6 803.71,-371.82"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="804.22,-375.28 813.52,-370.21 803.09,-368.37 804.22,-375.28"/>
 </a>
 </g>
 </g>
@@ -69,17 +69,17 @@
 <g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M949.62,-323C949.62,-323 741.33,-323 741.33,-323 735.33,-323 729.33,-317 729.33,-311 729.33,-311 729.33,-299 729.33,-299 729.33,-293 735.33,-287 741.33,-287 741.33,-287 949.62,-287 949.62,-287 955.62,-287 961.62,-293 961.62,-299 961.62,-299 961.62,-311 961.62,-311 961.62,-317 955.62,-323 949.62,-323"/>
-<text xml:space="preserve" text-anchor="middle" x="845.48" y="-300.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M949.62,-445C949.62,-445 741.33,-445 741.33,-445 735.33,-445 729.33,-439 729.33,-433 729.33,-433 729.33,-421 729.33,-421 729.33,-415 735.33,-409 741.33,-409 741.33,-409 949.62,-409 949.62,-409 955.62,-409 961.62,-415 961.62,-421 961.62,-421 961.62,-433 961.62,-433 961.62,-439 955.62,-445 949.62,-445"/>
+<text xml:space="preserve" text-anchor="middle" x="845.48" y="-422.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge19" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge19"><a xlink:title="at generator.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M584.94,-361.56C634.17,-350.83 696.41,-337.27 747.59,-326.11"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="748.17,-329.57 757.2,-324.02 746.68,-322.73 748.17,-329.57"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge7" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge7"><a xlink:title="at generator.go:30: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M560.09,-510.82C595.11,-505.91 640,-498.39 679.08,-488 716.95,-477.93 758.31,-462.68 790.19,-449.94"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="791.26,-453.29 799.22,-446.3 788.64,-446.8 791.26,-453.29"/>
 </a>
 </g>
 </g>
@@ -87,53 +87,17 @@
 <g id="node11" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M944,-384C944,-384 746.96,-384 746.96,-384 740.96,-384 734.96,-378 734.96,-372 734.96,-372 734.96,-360 734.96,-360 734.96,-354 740.96,-348 746.96,-348 746.96,-348 944,-348 944,-348 950,-348 956,-354 956,-360 956,-360 956,-372 956,-372 956,-378 950,-384 944,-384"/>
-<text xml:space="preserve" text-anchor="middle" x="845.48" y="-361.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge9" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge9"><a xlink:title="at generator.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M642.28,-374.22C669.06,-373.14 696.84,-372.01 722.92,-370.94"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="723.01,-374.44 732.86,-370.54 722.73,-367.45 723.01,-374.44"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator -->
-<g id="node2" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator</title>
-<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator | defined in generator.go:25&#10;at generator.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:27: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager]&#10;at generator.go:30: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M547.95,-516C547.95,-516 450.66,-516 450.66,-516 444.66,-516 438.66,-510 438.66,-504 438.66,-504 438.66,-492 438.66,-492 438.66,-486 444.66,-480 450.66,-480 450.66,-480 547.95,-480 547.95,-480 553.95,-480 559.95,-486 559.95,-492 559.95,-492 559.95,-504 559.95,-504 559.95,-510 553.95,-516 547.95,-516"/>
-<text xml:space="preserve" text-anchor="middle" x="499.31" y="-493.32" font-family="Verdana" font-size="14.00">newGenerator</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge10" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge10"><a xlink:title="at generator.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M559.93,-494.15C594.9,-491.19 639.79,-486.18 679.08,-478 722.69,-468.92 771.25,-453.26 804.41,-441.68"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="805.35,-445.06 813.61,-438.42 803.01,-438.46 805.35,-445.06"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge20" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge20"><a xlink:title="at generator.go:30: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M536.41,-479.86C566.34,-463.91 609.16,-438.93 642.08,-411 675.72,-382.46 669.23,-358.65 707.08,-336 712,-333.05 717.18,-330.39 722.52,-327.97"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="723.67,-331.28 731.56,-324.22 720.99,-324.82 723.67,-331.28"/>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M944,-323C944,-323 746.96,-323 746.96,-323 740.96,-323 734.96,-317 734.96,-311 734.96,-311 734.96,-299 734.96,-299 734.96,-293 740.96,-287 746.96,-287 746.96,-287 944,-287 944,-287 950,-287 956,-293 956,-299 956,-299 956,-311 956,-311 956,-317 950,-323 944,-323"/>
+<text xml:space="preserve" text-anchor="middle" x="845.48" y="-300.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge21" class="edge">
+<g id="edge2" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge21"><a xlink:title="at generator.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M531.55,-479.88C571.2,-457.55 642.26,-419.8 707.08,-397 716.84,-393.57 727.12,-390.42 737.5,-387.57"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="738.09,-391.03 746.85,-385.08 736.29,-384.27 738.09,-391.03"/>
+<g id="a_edge2"><a xlink:title="at generator.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M532.86,-499.82C563.07,-482.03 608.33,-453.02 642.08,-421 676.58,-388.27 667.04,-361.66 707.08,-336 712.49,-332.53 718.23,-329.45 724.19,-326.72"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="725.13,-330.12 732.99,-323.01 722.42,-323.66 725.13,-330.12"/>
 </a>
 </g>
 </g>
@@ -141,62 +105,44 @@
 <g id="node13" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager</title>
 <g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager | defined in manager.go:22">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M915.5,-533C915.5,-533 775.46,-533 775.46,-533 769.46,-533 763.46,-527 763.46,-521 763.46,-521 763.46,-509 763.46,-509 763.46,-503 769.46,-497 775.46,-497 775.46,-497 915.5,-497 915.5,-497 921.5,-497 927.5,-503 927.5,-509 927.5,-509 927.5,-521 927.5,-521 927.5,-527 921.5,-533 915.5,-533"/>
-<text xml:space="preserve" text-anchor="middle" x="845.48" y="-510.32" font-family="Verdana" font-size="14.00">NewPromptManager</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M915.5,-594C915.5,-594 775.46,-594 775.46,-594 769.46,-594 763.46,-588 763.46,-582 763.46,-582 763.46,-570 763.46,-570 763.46,-564 769.46,-558 775.46,-558 775.46,-558 915.5,-558 915.5,-558 921.5,-558 927.5,-564 927.5,-570 927.5,-570 927.5,-582 927.5,-582 927.5,-588 921.5,-594 915.5,-594"/>
+<text xml:space="preserve" text-anchor="middle" x="845.48" y="-571.33" font-family="Verdana" font-size="14.00">NewPromptManager</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager -->
-<g id="edge16" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager</title>
-<g id="a_edge16"><a xlink:title="at generator.go:27: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager]">
-<path fill="none" stroke="saddlebrown" d="M559.87,-500.94C612.66,-503.55 690.62,-507.4 751.61,-510.41"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="751.11,-513.89 761.27,-510.89 751.46,-506.9 751.11,-513.89"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory -->
-<g id="node3" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory | defined in generator.go:41&#10;at generator.go:42: calling [github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M234.79,-630C234.79,-630 64.75,-630 64.75,-630 58.75,-630 52.75,-624 52.75,-618 52.75,-618 52.75,-606 52.75,-606 52.75,-600 58.75,-594 64.75,-594 64.75,-594 234.79,-594 234.79,-594 240.79,-594 246.79,-600 246.79,-606 246.79,-606 246.79,-618 246.79,-618 246.79,-624 240.79,-630 234.79,-630"/>
-<text xml:space="preserve" text-anchor="middle" x="149.77" y="-607.33" font-family="Verdana" font-size="14.00">DefaultGeneratorFactory</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator -->
-<g id="edge22" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator</title>
-<g id="a_edge22"><a xlink:title="at generator.go:42: calling [github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator]">
-<path fill="none" stroke="black" d="M207.77,-593.3C269.21,-573.15 366.89,-541.11 431.8,-519.82"/>
-<polygon fill="black" stroke="black" points="432.87,-523.15 441.28,-516.71 430.69,-516.5 432.87,-523.15"/>
+<g id="a_edge1"><a xlink:title="at generator.go:27: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager]">
+<path fill="none" stroke="saddlebrown" d="M559.87,-528.04C612.66,-536.93 690.62,-550.07 751.61,-560.35"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="750.85,-563.77 761.29,-561.98 752.01,-556.87 750.85,-563.77"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs -->
-<g id="node4" class="node">
+<g id="node2" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs | defined in generator.go:101&#10;at generator.go:111: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:120: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs]&#10;at generator.go:109: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt]&#10;at generator.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:121: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:114: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.Commission).Format]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M603.45,-229C603.45,-229 395.16,-229 395.16,-229 389.16,-229 383.16,-223 383.16,-217 383.16,-217 383.16,-205 383.16,-205 383.16,-199 389.16,-193 395.16,-193 395.16,-193 603.45,-193 603.45,-193 609.45,-193 615.45,-199 615.45,-205 615.45,-205 615.45,-217 615.45,-217 615.45,-223 609.45,-229 603.45,-229"/>
-<text xml:space="preserve" text-anchor="middle" x="499.31" y="-206.32" font-family="Verdana" font-size="14.00">(*Generator).GenerateAIDocs</text>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs | defined in generator.go:101&#10;at generator.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.Commission).Format]&#10;at generator.go:109: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt]&#10;at generator.go:114: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs]&#10;at generator.go:111: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:120: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:121: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M603.45,-219C603.45,-219 395.16,-219 395.16,-219 389.16,-219 383.16,-213 383.16,-207 383.16,-207 383.16,-195 383.16,-195 383.16,-189 389.16,-183 395.16,-183 395.16,-183 603.45,-183 603.45,-183 609.45,-183 615.45,-189 615.45,-195 615.45,-195 615.45,-207 615.45,-207 615.45,-213 609.45,-219 603.45,-219"/>
+<text xml:space="preserve" text-anchor="middle" x="499.31" y="-196.32" font-family="Verdana" font-size="14.00">(*Generator).GenerateAIDocs</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs -->
-<g id="node5" class="node">
+<g id="node3" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs</title>
-<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs | defined in generator.go:148">
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs | defined in generator.go:148">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M944.75,-201C944.75,-201 746.21,-201 746.21,-201 740.21,-201 734.21,-195 734.21,-189 734.21,-189 734.21,-177 734.21,-177 734.21,-171 740.21,-165 746.21,-165 746.21,-165 944.75,-165 944.75,-165 950.75,-165 956.75,-171 956.75,-177 956.75,-177 956.75,-189 956.75,-189 956.75,-195 950.75,-201 944.75,-201"/>
 <text xml:space="preserve" text-anchor="middle" x="845.48" y="-178.32" font-family="Verdana" font-size="14.00">parseMultipleMarkdownDocs</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs -->
-<g id="edge3" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs</title>
-<g id="a_edge3"><a xlink:title="at generator.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs]">
-<path fill="none" stroke="black" d="M615.97,-199.44C636.65,-197.52 657.99,-195.62 678.08,-194 692.71,-192.82 708.07,-191.67 723.3,-190.59"/>
-<polygon fill="black" stroke="black" points="723.11,-194.12 732.84,-189.93 722.62,-187.13 723.11,-194.12"/>
+<g id="a_edge11"><a xlink:title="at generator.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.parseMultipleMarkdownDocs]">
+<path fill="none" stroke="black" d="M599.29,-182.29C625.16,-178.89 653.09,-176.53 679.08,-177 693.27,-177.26 708.15,-177.64 722.91,-178.09"/>
+<polygon fill="black" stroke="black" points="722.55,-181.58 732.66,-178.39 722.77,-174.58 722.55,-181.58"/>
 </a>
 </g>
 </g>
@@ -210,38 +156,38 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.Commission).Format -->
-<g id="edge17" class="edge">
+<g id="edge8" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.Commission).Format</title>
-<g id="a_edge17"><a xlink:title="at generator.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.Commission).Format]">
-<path fill="none" stroke="saddlebrown" d="M537.46,-192.41C578.13,-172.8 645.74,-142.4 707.08,-125 718.38,-121.79 730.34,-119.01 742.31,-116.61"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="742.63,-120.11 751.79,-114.79 741.31,-113.24 742.63,-120.11"/>
+<g id="a_edge8"><a xlink:title="at generator.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.Commission).Format]">
+<path fill="none" stroke="saddlebrown" d="M543.49,-182.34C584.79,-165.16 649.17,-140.13 707.08,-125 718.24,-122.09 730.01,-119.49 741.79,-117.2"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="742.38,-120.65 751.57,-115.38 741.09,-113.77 742.38,-120.65"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge1" class="edge">
+<g id="edge16" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge1"><a xlink:title="at generator.go:111: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:120: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M518.55,-229.68C560.55,-272.32 663.79,-374.81 707.08,-397 737.35,-412.52 775.36,-420.03 803.72,-423.66"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="803.01,-427.1 813.35,-424.77 803.82,-420.14 803.01,-427.1"/>
+<g id="a_edge16"><a xlink:title="at generator.go:111: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:120: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M522.62,-219.56C558.93,-248.81 634.12,-305.44 707.08,-336 738.11,-349 775.55,-356.7 803.51,-361.03"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="802.96,-364.49 813.36,-362.47 803.97,-357.56 802.96,-364.49"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge6" class="edge">
+<g id="edge17" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge6"><a xlink:title="at generator.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:121: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M616.16,-225.04C637.84,-230.4 659.74,-237.79 679.08,-248 694.37,-256.07 691.84,-266.85 707.08,-275 712.07,-277.67 717.27,-280.1 722.62,-282.31"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="721.06,-285.46 731.65,-285.76 723.56,-278.92 721.06,-285.46"/>
+<g id="a_edge17"><a xlink:title="at generator.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:121: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M514.01,-219.57C544.17,-258.99 620.52,-351.18 707.08,-397 712.14,-399.68 717.43,-402.12 722.86,-404.34"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="721.45,-407.55 732.04,-407.82 723.93,-401 721.45,-407.55"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge2" class="edge">
+<g id="edge3" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge2"><a xlink:title="at generator.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M524.99,-229.66C562.39,-257.04 636.55,-307.88 707.08,-336 714.49,-338.95 722.24,-341.64 730.13,-344.08"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="728.92,-347.37 739.5,-346.84 730.89,-340.66 728.92,-347.37"/>
+<g id="a_edge3"><a xlink:title="at generator.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M615.81,-205.92C638.1,-210.75 660.32,-218.57 679.08,-231 698.4,-243.8 688.07,-261.73 707.08,-275 712.4,-278.72 718.1,-281.98 724.04,-284.86"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="722.29,-287.91 732.85,-288.72 725.1,-281.5 722.29,-287.91"/>
 </a>
 </g>
 </g>
@@ -255,11 +201,11 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge7" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge7"><a xlink:title="at generator.go:114: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M615.82,-216.06C636.89,-217.39 658.66,-219.01 679.08,-221 696.88,-222.73 715.71,-224.97 734.03,-227.36"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="733.49,-230.82 743.87,-228.67 734.41,-223.88 733.49,-230.82"/>
+<g id="a_edge10"><a xlink:title="at generator.go:114: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M615.73,-193.61C637.12,-194.85 659.03,-197.93 679.08,-204 693.24,-208.29 693.26,-216.72 707.08,-222 715.76,-225.32 724.93,-228.13 734.25,-230.52"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="733.22,-233.88 743.76,-232.79 734.85,-227.07 733.22,-233.88"/>
 </a>
 </g>
 </g>
@@ -267,26 +213,80 @@
 <g id="node14" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt</title>
 <g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt | defined in manager.go:47">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M963.87,-594C963.87,-594 727.08,-594 727.08,-594 721.08,-594 715.08,-588 715.08,-582 715.08,-582 715.08,-570 715.08,-570 715.08,-564 721.08,-558 727.08,-558 727.08,-558 963.87,-558 963.87,-558 969.87,-558 975.87,-564 975.87,-570 975.87,-570 975.87,-582 975.87,-582 975.87,-588 969.87,-594 963.87,-594"/>
-<text xml:space="preserve" text-anchor="middle" x="845.48" y="-571.33" font-family="Verdana" font-size="14.00">(*PromptManager).RenderPrompt</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M963.87,-533C963.87,-533 727.08,-533 727.08,-533 721.08,-533 715.08,-527 715.08,-521 715.08,-521 715.08,-509 715.08,-509 715.08,-503 721.08,-497 727.08,-497 727.08,-497 963.87,-497 963.87,-497 969.87,-497 975.87,-503 975.87,-509 975.87,-509 975.87,-521 975.87,-521 975.87,-527 969.87,-533 963.87,-533"/>
+<text xml:space="preserve" text-anchor="middle" x="845.48" y="-510.32" font-family="Verdana" font-size="14.00">(*PromptManager).RenderPrompt</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt -->
-<g id="edge5" class="edge">
+<g id="edge9" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateAIDocs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt</title>
-<g id="a_edge5"><a xlink:title="at generator.go:109: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt]">
-<path fill="none" stroke="saddlebrown" d="M525.67,-229.62C557.18,-253.98 610.61,-299.55 642.08,-350 690.65,-427.87 638.86,-484.61 707.08,-546 709.18,-547.89 711.38,-549.68 713.65,-551.36"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="711.24,-553.96 721.52,-556.5 715.07,-548.1 711.24,-553.96"/>
+<g id="a_edge9"><a xlink:title="at generator.go:109: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt]">
+<path fill="none" stroke="saddlebrown" d="M519.94,-219.72C549.04,-248.16 604.25,-304.78 642.08,-360 677.91,-412.31 656.58,-448.66 707.08,-487 708.82,-488.32 710.62,-489.59 712.45,-490.8"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="710.25,-493.56 720.64,-495.63 713.8,-487.53 710.25,-493.56"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory -->
+<g id="node4" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory</title>
+<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory | defined in generator.go:41&#10;at generator.go:42: calling [github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M234.79,-536C234.79,-536 64.75,-536 64.75,-536 58.75,-536 52.75,-530 52.75,-524 52.75,-524 52.75,-512 52.75,-512 52.75,-506 58.75,-500 64.75,-500 64.75,-500 234.79,-500 234.79,-500 240.79,-500 246.79,-506 246.79,-512 246.79,-512 246.79,-524 246.79,-524 246.79,-530 240.79,-536 234.79,-536"/>
+<text xml:space="preserve" text-anchor="middle" x="149.77" y="-513.33" font-family="Verdana" font-size="14.00">DefaultGeneratorFactory</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator -->
+<g id="edge18" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.DefaultGeneratorFactory&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator</title>
+<g id="a_edge18"><a xlink:title="at generator.go:42: calling [github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.newGenerator]">
+<path fill="none" stroke="black" d="M247.12,-518C304.17,-518 375.23,-518 427.19,-518"/>
+<polygon fill="black" stroke="black" points="427.12,-521.5 437.12,-518 427.12,-514.5 427.12,-521.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1 -->
+<g id="node5" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1</title>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1 | defined in generator.go:79&#10;at generator.go:81: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="642.08,-408 356.54,-408 356.54,-372 642.08,-372 642.08,-408"/>
+<text xml:space="preserve" text-anchor="middle" x="499.31" y="-385.32" font-family="Verdana" font-size="14.00">(*Generator).GenerateCommission$1</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge12" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge12"><a xlink:title="at generator.go:81: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M642.28,-380.1C700.64,-376.03 763.76,-371.63 803.67,-368.85"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="803.79,-372.35 813.52,-368.16 803.3,-365.36 803.79,-372.35"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge21" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge21"><a xlink:title="at generator.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M559.3,-408.42C593.59,-418.16 637.84,-429.09 678.08,-434 690.86,-435.56 704.23,-436.36 717.6,-436.63"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="717.27,-440.13 727.3,-436.72 717.33,-433.13 717.27,-440.13"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge19" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge19"><a xlink:title="at generator.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M522.35,-371.59C554.28,-346.26 616.36,-301.87 678.08,-285 707.94,-276.84 741.73,-278.92 771.02,-284.13"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="770.03,-287.51 780.52,-285.98 771.37,-280.64 770.03,-287.51"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission -->
 <g id="node6" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission | defined in generator.go:46&#10;at generator.go:55: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:73: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:88: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.ParseFile]&#10;at generator.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt]&#10;at generator.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1]&#10;at generator.go:57: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M271.54,-354C271.54,-354 28,-354 28,-354 22,-354 16,-348 16,-342 16,-342 16,-330 16,-330 16,-324 22,-318 28,-318 28,-318 271.54,-318 271.54,-318 277.54,-318 283.54,-324 283.54,-330 283.54,-330 283.54,-342 283.54,-342 283.54,-348 277.54,-354 271.54,-354"/>
-<text xml:space="preserve" text-anchor="middle" x="149.77" y="-331.32" font-family="Verdana" font-size="14.00">(*Generator).GenerateCommission</text>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission | defined in generator.go:46&#10;at generator.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt]&#10;at generator.go:55: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:73: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:57: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1]&#10;at generator.go:88: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.ParseFile]&#10;at generator.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M271.54,-364C271.54,-364 28,-364 28,-364 22,-364 16,-358 16,-352 16,-352 16,-340 16,-340 16,-334 22,-328 28,-328 28,-328 271.54,-328 271.54,-328 277.54,-328 283.54,-334 283.54,-340 283.54,-340 283.54,-352 283.54,-352 283.54,-358 277.54,-364 271.54,-364"/>
+<text xml:space="preserve" text-anchor="middle" x="149.77" y="-341.32" font-family="Verdana" font-size="14.00">(*Generator).GenerateCommission</text>
 </a>
 </g>
 </g>
@@ -294,10 +294,10 @@
 <g id="edge14" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1</title>
 <g id="a_edge14"><a xlink:title="at generator.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission$1]">
-<path fill="none" stroke="black" d="M284.14,-352.89C298.12,-354.66 312.47,-356.47 326.8,-358.29"/>
-<polygon fill="black" stroke="black" points="344.2,-364.02 354.56,-361.8 345.08,-357.07 344.2,-364.02"/>
-<polyline fill="none" stroke="black" points="344.14,-360.48 339.18,-359.85"/>
-<polygon fill="none" stroke="black" points="326.38,-358.23 332.84,-355.02 338.29,-359.74 331.83,-362.95 326.38,-358.23"/>
+<path fill="none" stroke="black" d="M284.14,-362.89C298.12,-364.66 312.47,-366.47 326.8,-368.29"/>
+<polygon fill="black" stroke="black" points="344.2,-374.02 354.56,-371.8 345.08,-367.07 344.2,-374.02"/>
+<polyline fill="none" stroke="black" points="344.14,-370.48 339.18,-369.85"/>
+<polygon fill="none" stroke="black" points="326.38,-368.23 332.84,-365.02 338.29,-369.74 331.83,-372.95 326.38,-368.23"/>
 </a>
 </g>
 </g>
@@ -311,38 +311,38 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/commission.ParseFile -->
-<g id="edge8" class="edge">
+<g id="edge20" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/commission.ParseFile</title>
-<g id="a_edge8"><a xlink:title="at generator.go:88: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.ParseFile]">
-<path fill="none" stroke="saddlebrown" d="M165,-317.51C195.57,-279.16 271.67,-190.91 356.54,-147 501.56,-71.97 697.47,-50.5 790.76,-44.4"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="790.88,-47.9 800.65,-43.79 790.45,-40.91 790.88,-47.9"/>
+<g id="a_edge20"><a xlink:title="at generator.go:88: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.ParseFile]">
+<path fill="none" stroke="saddlebrown" d="M162.82,-327.29C191.05,-285.16 265.96,-182.7 356.54,-134 499.79,-56.97 696.94,-43.51 790.71,-41.76"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="790.71,-45.26 800.65,-41.62 790.61,-38.26 790.71,-45.26"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge4" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge4"><a xlink:title="at generator.go:55: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:73: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M162.93,-354.49C191.1,-395.44 265.45,-492.97 356.54,-529 474.55,-575.68 521.14,-567.46 642.08,-529 675.81,-518.27 676.05,-500.01 707.08,-483 738.49,-465.78 776.31,-450.75 804.31,-440.61"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="805.23,-443.99 813.48,-437.34 802.89,-437.4 805.23,-443.99"/>
+<g id="a_edge5"><a xlink:title="at generator.go:55: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:73: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at generator.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M284.23,-349.76C383.04,-352.56 520.96,-356.48 642.08,-360 698.05,-361.63 762.72,-363.55 803.6,-364.77"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="803.37,-368.27 813.47,-365.07 803.58,-361.27 803.37,-368.27"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge12" class="edge">
+<g id="edge22" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge12"><a xlink:title="at generator.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M284.11,-330.04C409.1,-324.46 594.64,-316.16 717.51,-310.67"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="717.49,-314.18 727.32,-310.24 717.18,-307.19 717.49,-314.18"/>
+<g id="a_edge22"><a xlink:title="at generator.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at generator.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M191.14,-364.65C231.91,-382.54 297.17,-408.61 356.54,-421 497.14,-450.35 535.58,-447.06 679.08,-441 691.55,-440.47 704.54,-439.72 717.5,-438.84"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="717.65,-442.34 727.37,-438.14 717.15,-435.36 717.65,-442.34"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge18" class="edge">
+<g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge18"><a xlink:title="at generator.go:57: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M284.04,-337.98C382.91,-339.9 520.98,-343.49 642.08,-350 668.26,-351.41 696.31,-353.35 722.93,-355.39"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="722.5,-358.87 732.74,-356.15 723.04,-351.89 722.5,-358.87"/>
+<g id="a_edge6"><a xlink:title="at generator.go:57: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at generator.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M223.61,-327.26C325.3,-303.27 515.7,-266.24 679.08,-279 695.72,-280.3 713.22,-282.32 730.35,-284.68"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="729.65,-288.12 740.04,-286.06 730.64,-281.19 729.65,-288.12"/>
 </a>
 </g>
 </g>
@@ -350,17 +350,17 @@
 <g id="edge13" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_edge13"><a xlink:title="at generator.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at generator.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M167.15,-317.43C199.29,-282.58 274.68,-208.38 356.54,-181 476.89,-140.74 520.16,-145.76 642.08,-181 674.89,-190.48 675.12,-209.94 707.08,-222 715.77,-225.28 724.95,-228.07 734.28,-230.44"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="733.26,-233.8 743.8,-232.7 734.87,-226.99 733.26,-233.8"/>
+<path fill="none" stroke="saddlebrown" d="M164.7,-327.48C194.72,-289.33 269.83,-202.89 356.54,-171 475.65,-127.2 521.43,-131.66 642.08,-171 661.43,-177.31 663.12,-185.37 679.08,-198 691.93,-208.17 692.21,-215.11 707.08,-222 715.67,-225.98 724.84,-229.25 734.23,-231.95"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="733.29,-235.32 743.85,-234.47 735.06,-228.55 733.29,-235.32"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt -->
-<g id="edge11" class="edge">
+<g id="edge4" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/generator/commission.Generator).GenerateCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt</title>
-<g id="a_edge11"><a xlink:title="at generator.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt]">
-<path fill="none" stroke="saddlebrown" d="M161.1,-354.72C186.99,-399.38 259.54,-511.43 356.54,-552 466.35,-597.93 602.4,-600.71 702.92,-593.86"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="703.15,-597.35 712.87,-593.13 702.65,-590.37 703.15,-597.35"/>
+<g id="a_edge4"><a xlink:title="at generator.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt]">
+<path fill="none" stroke="saddlebrown" d="M168.19,-364.73C213.38,-413.11 332.57,-539.17 356.54,-549 473.95,-597.17 515.61,-559.55 642.08,-549 674.64,-546.28 709.83,-541.15 741.61,-535.68"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="741.96,-539.18 751.2,-534 740.75,-532.28 741.96,-539.18"/>
 </a>
 </g>
 </g>

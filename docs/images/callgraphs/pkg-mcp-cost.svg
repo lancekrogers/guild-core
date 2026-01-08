@@ -14,12 +14,12 @@
 <polygon fill="#e6ecfa" stroke="black" stroke-width="0.5" points="8,-8 8,-299 1013.12,-299 1013.12,-8 8,-8"/>
 <text xml:space="preserve" text-anchor="middle" x="510.56" y="-277.9" font-family="Arial" font-size="18.00">cost</text>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetAverageCost -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost | defined in observer.go:184&#10;at observer.go:185: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M636.08,-174C636.08,-174 402.29,-174 402.29,-174 396.29,-174 390.29,-168 390.29,-162 390.29,-162 390.29,-150 390.29,-150 390.29,-144 396.29,-138 402.29,-138 402.29,-138 636.08,-138 636.08,-138 642.08,-138 648.08,-144 648.08,-150 648.08,-150 648.08,-162 648.08,-162 648.08,-168 642.08,-174 636.08,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="519.18" y="-151.32" font-family="Verdana" font-size="14.00">(*MemoryObserver).GetTotalCost</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetAverageCost</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetAverageCost | defined in observer.go:149&#10;at observer.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M648.45,-52C648.45,-52 389.91,-52 389.91,-52 383.91,-52 377.91,-46 377.91,-40 377.91,-40 377.91,-28 377.91,-28 377.91,-22 383.91,-16 389.91,-16 389.91,-16 648.45,-16 648.45,-16 654.45,-16 660.45,-22 660.45,-28 660.45,-28 660.45,-40 660.45,-40 660.45,-46 654.45,-52 648.45,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="519.18" y="-29.32" font-family="Verdana" font-size="14.00">(*MemoryObserver).GetAverageCost</text>
 </a>
 </g>
 </g>
@@ -27,35 +27,35 @@
 <g id="node2" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts</title>
 <g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts | defined in observer.go:104">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M993.12,-174C993.12,-174 784.83,-174 784.83,-174 778.83,-174 772.83,-168 772.83,-162 772.83,-162 772.83,-150 772.83,-150 772.83,-144 778.83,-138 784.83,-138 784.83,-138 993.12,-138 993.12,-138 999.12,-138 1005.12,-144 1005.12,-150 1005.12,-150 1005.12,-162 1005.12,-162 1005.12,-168 999.12,-174 993.12,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="888.97" y="-151.32" font-family="Verdana" font-size="14.00">(*MemoryObserver).GetCosts</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts</title>
-<g id="a_edge2"><a xlink:title="at observer.go:185: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
-<path fill="none" stroke="black" d="M648.82,-156C685.24,-156 724.85,-156 761.16,-156"/>
-<polygon fill="black" stroke="black" points="760.8,-159.5 770.8,-156 760.8,-152.5 760.8,-159.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetAverageCost -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetAverageCost</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetAverageCost | defined in observer.go:149&#10;at observer.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M648.45,-52C648.45,-52 389.91,-52 389.91,-52 383.91,-52 377.91,-46 377.91,-40 377.91,-40 377.91,-28 377.91,-28 377.91,-22 383.91,-16 389.91,-16 389.91,-16 648.45,-16 648.45,-16 654.45,-16 660.45,-22 660.45,-28 660.45,-28 660.45,-40 660.45,-40 660.45,-46 654.45,-52 648.45,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="519.18" y="-29.32" font-family="Verdana" font-size="14.00">(*MemoryObserver).GetAverageCost</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M993.12,-157C993.12,-157 784.83,-157 784.83,-157 778.83,-157 772.83,-151 772.83,-145 772.83,-145 772.83,-133 772.83,-133 772.83,-127 778.83,-121 784.83,-121 784.83,-121 993.12,-121 993.12,-121 999.12,-121 1005.12,-127 1005.12,-133 1005.12,-133 1005.12,-145 1005.12,-145 1005.12,-151 999.12,-157 993.12,-157"/>
+<text xml:space="preserve" text-anchor="middle" x="888.97" y="-134.32" font-family="Verdana" font-size="14.00">(*MemoryObserver).GetCosts</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetAverageCost&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts -->
-<g id="edge3" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetAverageCost&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts</title>
-<g id="a_edge3"><a xlink:title="at observer.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
-<path fill="none" stroke="black" d="M653.64,-52.73C669.37,-56.2 685.06,-60.26 699.83,-65 752.57,-81.93 809.31,-111.03 846.52,-131.76"/>
-<polygon fill="black" stroke="black" points="844.74,-134.77 855.17,-136.63 848.17,-128.67 844.74,-134.77"/>
+<g id="a_edge5"><a xlink:title="at observer.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
+<path fill="none" stroke="black" d="M648,-52.75C665.54,-56.28 683.22,-60.35 699.83,-65 747.72,-78.4 800.23,-99.63 837.58,-115.92"/>
+<polygon fill="black" stroke="black" points="835.74,-118.94 846.31,-119.77 838.56,-112.54 835.74,-118.94"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost -->
+<g id="node3" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost</title>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost | defined in observer.go:184&#10;at observer.go:185: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M636.08,-201C636.08,-201 402.29,-201 402.29,-201 396.29,-201 390.29,-195 390.29,-189 390.29,-189 390.29,-177 390.29,-177 390.29,-171 396.29,-165 402.29,-165 402.29,-165 636.08,-165 636.08,-165 642.08,-165 648.08,-171 648.08,-177 648.08,-177 648.08,-189 648.08,-189 648.08,-195 642.08,-201 636.08,-201"/>
+<text xml:space="preserve" text-anchor="middle" x="519.18" y="-178.32" font-family="Verdana" font-size="14.00">(*MemoryObserver).GetTotalCost</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts -->
+<g id="edge6" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts</title>
+<g id="a_edge6"><a xlink:title="at observer.go:185: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
+<path fill="none" stroke="black" d="M648.82,-167.61C685.24,-163.25 724.85,-158.52 761.16,-154.17"/>
+<polygon fill="black" stroke="black" points="761.3,-157.68 770.81,-153.02 760.47,-150.73 761.3,-157.68"/>
 </a>
 </g>
 </g>
@@ -78,9 +78,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).RecordCost&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).rebuildIndices -->
-<g id="edge4" class="edge">
+<g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).RecordCost&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).rebuildIndices</title>
-<g id="a_edge4"><a xlink:title="at observer.go:88: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).rebuildIndices]">
+<g id="a_edge1"><a xlink:title="at observer.go:88: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).rebuildIndices]">
 <path fill="none" stroke="black" d="M266.07,-95C300.27,-95 337.66,-95 372.94,-95"/>
 <polygon fill="black" stroke="black" points="372.79,-98.5 382.79,-95 372.79,-91.5 372.79,-98.5"/>
 </a>
@@ -89,27 +89,27 @@
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze -->
 <g id="node6" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze | defined in observer.go:204&#10;at observer.go:319: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).generateRecommendations]&#10;at observer.go:216: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost]&#10;at observer.go:309: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M241.16,-218C241.16,-218 40.38,-218 40.38,-218 34.38,-218 28.37,-212 28.37,-206 28.37,-206 28.37,-194 28.37,-194 28.37,-188 34.37,-182 40.37,-182 40.37,-182 241.16,-182 241.16,-182 247.16,-182 253.16,-188 253.16,-194 253.16,-194 253.16,-206 253.16,-206 253.16,-212 247.16,-218 241.16,-218"/>
-<text xml:space="preserve" text-anchor="middle" x="140.77" y="-195.32" font-family="Verdana" font-size="14.00">(*MemoryObserver).Analyze</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost</title>
-<g id="a_edge5"><a xlink:title="at observer.go:216: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost]">
-<path fill="none" stroke="black" d="M253.69,-186.92C292.89,-182.33 337.42,-177.13 378.6,-172.32"/>
-<polygon fill="black" stroke="black" points="378.81,-175.82 388.34,-171.18 378,-168.86 378.81,-175.82"/>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze | defined in observer.go:204&#10;at observer.go:216: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost]&#10;at observer.go:309: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]&#10;at observer.go:319: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).generateRecommendations]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M241.16,-201C241.16,-201 40.38,-201 40.38,-201 34.38,-201 28.37,-195 28.37,-189 28.37,-189 28.37,-177 28.37,-177 28.37,-171 34.37,-165 40.37,-165 40.37,-165 241.16,-165 241.16,-165 247.16,-165 253.16,-171 253.16,-177 253.16,-177 253.16,-189 253.16,-189 253.16,-195 247.16,-201 241.16,-201"/>
+<text xml:space="preserve" text-anchor="middle" x="140.77" y="-178.32" font-family="Verdana" font-size="14.00">(*MemoryObserver).Analyze</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts -->
-<g id="edge6" class="edge">
+<g id="edge3" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts</title>
-<g id="a_edge6"><a xlink:title="at observer.go:309: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
-<path fill="none" stroke="black" d="M253.74,-201.99C366.61,-202.91 545.69,-201.42 699.83,-187 725.79,-184.57 753.58,-180.7 779.62,-176.51"/>
-<polygon fill="black" stroke="black" points="779.87,-180.02 789.17,-174.94 778.73,-173.11 779.87,-180.02"/>
+<g id="a_edge3"><a xlink:title="at observer.go:309: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetCosts]">
+<path fill="none" stroke="black" d="M248.19,-164.27C277.39,-159.82 309.11,-155.61 338.54,-153 482.92,-140.21 649.42,-137.67 760.94,-137.72"/>
+<polygon fill="black" stroke="black" points="760.72,-141.22 770.72,-137.73 760.73,-134.22 760.72,-141.22"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost</title>
+<g id="a_edge2"><a xlink:title="at observer.go:216: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).GetTotalCost]">
+<path fill="none" stroke="black" d="M253.69,-183C292.81,-183 337.23,-183 378.34,-183"/>
+<polygon fill="black" stroke="black" points="378.33,-186.5 388.33,-183 378.33,-179.5 378.33,-186.5"/>
 </a>
 </g>
 </g>
@@ -123,11 +123,11 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).generateRecommendations -->
-<g id="edge1" class="edge">
+<g id="edge4" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).Analyze&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).generateRecommendations</title>
-<g id="a_edge1"><a xlink:title="at observer.go:319: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).generateRecommendations]">
-<path fill="none" stroke="black" d="M253.69,-213.08C284.26,-216.66 318.06,-220.61 350.99,-224.46"/>
-<polygon fill="black" stroke="black" points="350.27,-227.9 360.61,-225.58 351.09,-220.94 350.27,-227.9"/>
+<g id="a_edge4"><a xlink:title="at observer.go:319: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/cost.MemoryObserver).generateRecommendations]">
+<path fill="none" stroke="black" d="M253.69,-201.14C298.03,-208.32 349.18,-216.61 394.61,-223.97"/>
+<polygon fill="black" stroke="black" points="393.8,-227.39 404.23,-225.53 394.92,-220.48 393.8,-227.39"/>
 </a>
 </g>
 </g>

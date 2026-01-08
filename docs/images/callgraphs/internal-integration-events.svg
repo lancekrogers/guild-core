@@ -22,12 +22,12 @@
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent -->
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent -->
 <g id="node1" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent</title>
-<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent | defined in schemas.go:135&#10;at schemas.go:146: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M155.29,-357C155.29,-357 54.25,-357 54.25,-357 48.25,-357 42.25,-351 42.25,-345 42.25,-345 42.25,-333 42.25,-333 42.25,-327 48.25,-321 54.25,-321 54.25,-321 155.29,-321 155.29,-321 161.29,-321 167.29,-327 167.29,-333 167.29,-333 167.29,-345 167.29,-345 167.29,-351 161.29,-357 155.29,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="104.77" y="-334.32" font-family="Verdana" font-size="14.00">NewDataEvent</text>
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent</title>
+<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent | defined in schemas.go:187&#10;at schemas.go:194: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M181.54,-235C181.54,-235 28,-235 28,-235 22,-235 16,-229 16,-223 16,-223 16,-211 16,-211 16,-205 22,-199 28,-199 28,-199 181.54,-199 181.54,-199 187.54,-199 193.54,-205 193.54,-211 193.54,-211 193.54,-223 193.54,-223 193.54,-229 187.54,-235 181.54,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="104.77" y="-212.32" font-family="Verdana" font-size="14.00">NewCommissionEvent</text>
 </a>
 </g>
 </g>
@@ -40,12 +40,12 @@
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge5" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge5"><a xlink:title="at schemas.go:146: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M168.01,-322.05C176.92,-318.41 185.71,-314.09 193.54,-309 226.37,-287.69 223.4,-265.43 256.68,-241.03"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="258.37,-244.11 264.71,-235.62 254.46,-238.3 258.37,-244.11"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
+<g id="edge7" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
+<g id="a_edge7"><a xlink:title="at schemas.go:194: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M194.24,-217C214.18,-217 235.14,-217 254.43,-217"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="254.37,-220.5 264.37,-217 254.37,-213.5 254.37,-220.5"/>
 </a>
 </g>
 </g>
@@ -59,9 +59,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewUIEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge6" class="edge">
+<g id="edge8" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewUIEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge6"><a xlink:title="at schemas.go:210: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<g id="a_edge8"><a xlink:title="at schemas.go:210: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
 <path fill="none" stroke="saddlebrown" d="M159.81,-48.27C171.47,-52.64 183.35,-58.15 193.54,-65 243.71,-98.71 287.25,-155.26 310.6,-189.06"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="307.55,-190.8 316.07,-197.11 313.35,-186.87 307.55,-190.8"/>
 </a>
@@ -77,9 +77,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewTaskEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge7" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewTaskEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge7"><a xlink:title="at schemas.go:162: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<g id="a_edge1"><a xlink:title="at schemas.go:162: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
 <path fill="none" stroke="saddlebrown" d="M165.17,-113.67C174.82,-117.36 184.59,-121.5 193.54,-126 230.48,-144.57 269.3,-171.57 295.83,-191.34"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="293.72,-194.13 303.82,-197.36 297.94,-188.54 293.72,-194.13"/>
 </a>
@@ -95,63 +95,27 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewServiceEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge8" class="edge">
+<g id="edge2" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewServiceEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge8"><a xlink:title="at schemas.go:126: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<g id="a_edge2"><a xlink:title="at schemas.go:126: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
 <path fill="none" stroke="saddlebrown" d="M174.21,-174.72C199.75,-181.7 228.86,-189.67 254.88,-196.78"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="253.8,-200.11 264.36,-199.37 255.64,-193.36 253.8,-200.11"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent -->
-<g id="node5" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent</title>
-<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent | defined in schemas.go:219&#10;at schemas.go:227: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M165.41,-235C165.41,-235 44.12,-235 44.12,-235 38.12,-235 32.12,-229 32.12,-223 32.12,-223 32.12,-211 32.12,-211 32.12,-205 38.12,-199 44.12,-199 44.12,-199 165.41,-199 165.41,-199 171.41,-199 177.41,-205 177.41,-211 177.41,-211 177.41,-223 177.41,-223 177.41,-229 171.41,-235 165.41,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="104.77" y="-212.32" font-family="Verdana" font-size="14.00">NewSystemEvent</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge1" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge1"><a xlink:title="at schemas.go:227: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M177.88,-217C202.38,-217 229.79,-217 254.47,-217"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="254.45,-220.5 264.45,-217 254.45,-213.5 254.45,-220.5"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent -->
-<g id="node6" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent</title>
-<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent | defined in schemas.go:187&#10;at schemas.go:194: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M181.54,-296C181.54,-296 28,-296 28,-296 22,-296 16,-290 16,-284 16,-284 16,-272 16,-272 16,-266 22,-260 28,-260 28,-260 181.54,-260 181.54,-260 187.54,-260 193.54,-266 193.54,-272 193.54,-272 193.54,-284 193.54,-284 193.54,-290 187.54,-296 181.54,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="104.77" y="-273.32" font-family="Verdana" font-size="14.00">NewCommissionEvent</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge2" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewCommissionEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge2"><a xlink:title="at schemas.go:194: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M174.21,-259.28C199.75,-252.3 228.86,-244.33 254.88,-237.22"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="255.64,-240.64 264.36,-234.63 253.8,-233.89 255.64,-240.64"/>
-</a>
-</g>
-</g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.GetEventCategory -->
-<g id="node7" class="node">
+<g id="node5" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.GetEventCategory</title>
-<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.GetEventCategory | defined in schemas.go:340&#10;at schemas.go:342: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:344: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:346: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:348: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:350: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:352: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:354: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:356: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:358: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]">
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.GetEventCategory | defined in schemas.go:340&#10;at schemas.go:342: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:344: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:346: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:348: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:350: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:352: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:354: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:356: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]&#10;at schemas.go:358: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M167.66,-479C167.66,-479 41.88,-479 41.88,-479 35.88,-479 29.87,-473 29.87,-467 29.87,-467 29.87,-455 29.87,-455 29.87,-449 35.87,-443 41.87,-443 41.87,-443 167.66,-443 167.66,-443 173.66,-443 179.66,-449 179.66,-455 179.66,-455 179.66,-467 179.66,-467 179.66,-473 173.66,-479 167.66,-479"/>
 <text xml:space="preserve" text-anchor="middle" x="104.77" y="-456.32" font-family="Verdana" font-size="14.00">GetEventCategory</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix -->
-<g id="node8" class="node">
+<g id="node6" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix</title>
-<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix | defined in schemas.go:365">
+<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.hasPrefix | defined in schemas.go:365">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M361.58,-479C361.58,-479 298.04,-479 298.04,-479 292.04,-479 286.04,-473 286.04,-467 286.04,-467 286.04,-455 286.04,-455 286.04,-449 292.04,-443 298.04,-443 298.04,-443 361.58,-443 361.58,-443 367.58,-443 373.58,-449 373.58,-455 373.58,-455 373.58,-467 373.58,-467 373.58,-473 367.58,-479 361.58,-479"/>
 <text xml:space="preserve" text-anchor="middle" x="329.81" y="-456.32" font-family="Verdana" font-size="14.00">hasPrefix</text>
 </a>
@@ -167,11 +131,11 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewAgentEvent -->
-<g id="node9" class="node">
+<g id="node7" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewAgentEvent</title>
-<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewAgentEvent | defined in schemas.go:171&#10;at schemas.go:178: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M159.79,-418C159.79,-418 49.75,-418 49.75,-418 43.75,-418 37.75,-412 37.75,-406 37.75,-406 37.75,-394 37.75,-394 37.75,-388 43.75,-382 49.75,-382 49.75,-382 159.79,-382 159.79,-382 165.79,-382 171.79,-388 171.79,-394 171.79,-394 171.79,-406 171.79,-406 171.79,-412 165.79,-418 159.79,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="104.77" y="-395.32" font-family="Verdana" font-size="14.00">NewAgentEvent</text>
+<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewAgentEvent | defined in schemas.go:171&#10;at schemas.go:178: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M159.79,-296C159.79,-296 49.75,-296 49.75,-296 43.75,-296 37.75,-290 37.75,-284 37.75,-284 37.75,-272 37.75,-272 37.75,-266 43.75,-260 49.75,-260 49.75,-260 159.79,-260 159.79,-260 165.79,-260 171.79,-266 171.79,-272 171.79,-272 171.79,-284 171.79,-284 171.79,-290 165.79,-296 159.79,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="104.77" y="-273.32" font-family="Verdana" font-size="14.00">NewAgentEvent</text>
 </a>
 </g>
 </g>
@@ -179,7 +143,43 @@
 <g id="edge4" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewAgentEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
 <g id="a_edge4"><a xlink:title="at schemas.go:178: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M172.15,-383.73C179.88,-380.04 187.24,-375.52 193.54,-370 239.84,-329.41 212.4,-286.05 257.75,-241.07"/>
+<path fill="none" stroke="saddlebrown" d="M172.39,-259.78C198.45,-252.65 228.44,-244.45 255.14,-237.15"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="255.79,-240.6 264.51,-234.58 253.94,-233.85 255.79,-240.6"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent -->
+<g id="node8" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent</title>
+<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent | defined in schemas.go:219&#10;at schemas.go:227: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M165.41,-357C165.41,-357 44.12,-357 44.12,-357 38.12,-357 32.12,-351 32.12,-345 32.12,-345 32.12,-333 32.12,-333 32.12,-327 38.12,-321 44.12,-321 44.12,-321 165.41,-321 165.41,-321 171.41,-321 177.41,-327 177.41,-333 177.41,-333 177.41,-345 177.41,-345 177.41,-351 171.41,-357 165.41,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="104.77" y="-334.32" font-family="Verdana" font-size="14.00">NewSystemEvent</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
+<g id="edge5" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewSystemEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
+<g id="a_edge5"><a xlink:title="at schemas.go:227: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M172.14,-320.31C179.62,-317.05 186.92,-313.3 193.54,-309 226.37,-287.69 223.4,-265.43 256.68,-241.03"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="258.37,-244.11 264.71,-235.62 254.46,-238.3 258.37,-244.11"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent -->
+<g id="node9" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent</title>
+<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent | defined in schemas.go:135&#10;at schemas.go:146: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M155.29,-418C155.29,-418 54.25,-418 54.25,-418 48.25,-418 42.25,-412 42.25,-406 42.25,-406 42.25,-394 42.25,-394 42.25,-388 48.25,-382 54.25,-382 54.25,-382 155.29,-382 155.29,-382 161.29,-382 167.29,-388 167.29,-394 167.29,-394 167.29,-406 167.29,-406 167.29,-412 161.29,-418 155.29,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="104.77" y="-395.32" font-family="Verdana" font-size="14.00">NewDataEvent</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
+<g id="edge6" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/events.NewDataEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
+<g id="a_edge6"><a xlink:title="at schemas.go:146: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M167.65,-385.77C177.01,-381.74 186.03,-376.58 193.54,-370 239.84,-329.41 212.4,-286.05 257.75,-241.07"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="259.86,-243.88 264.91,-234.57 255.15,-238.7 259.86,-243.88"/>
 </a>
 </g>

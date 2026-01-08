@@ -33,7 +33,7 @@
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP -->
 <g id="node1" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP</title>
-<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP | defined in discover.go:142&#10;at discover.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at discover.go:151: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:152: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP | defined in discover.go:142&#10;at discover.go:152: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at discover.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:151: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M1252.32,-241C1252.32,-241 1172.28,-241 1172.28,-241 1166.28,-241 1160.28,-235 1160.28,-229 1160.28,-229 1160.28,-217 1160.28,-217 1160.28,-211 1166.28,-205 1172.28,-205 1172.28,-205 1252.32,-205 1252.32,-205 1258.32,-205 1264.32,-211 1264.32,-217 1264.32,-217 1264.32,-229 1264.32,-229 1264.32,-235 1258.32,-241 1252.32,-241"/>
 <text xml:space="preserve" text-anchor="middle" x="1212.3" y="-218.32" font-family="Verdana" font-size="14.00">connectTCP</text>
 </a>
@@ -49,9 +49,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge10" class="edge">
+<g id="edge21" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge10"><a xlink:title="at discover.go:151: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge21"><a xlink:title="at discover.go:151: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M1264.29,-220.89C1308.9,-219.05 1372.86,-216.4 1414.19,-214.69"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1414.11,-218.2 1423.96,-214.29 1413.82,-211.2 1414.11,-218.2"/>
 </a>
@@ -67,9 +67,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge26" class="edge">
+<g id="edge12" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge26"><a xlink:title="at discover.go:152: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge12"><a xlink:title="at discover.go:152: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M1264.42,-204.79C1285.25,-197.62 1309.64,-189.56 1331.95,-183 1342.93,-179.77 1354.52,-176.58 1366.02,-173.54"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1366.74,-176.97 1375.54,-171.06 1364.98,-170.2 1366.74,-176.97"/>
 </a>
@@ -85,9 +85,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge7" class="edge">
+<g id="edge29" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge7"><a xlink:title="at discover.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_edge29"><a xlink:title="at discover.go:153: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="none" stroke="saddlebrown" d="M1234.16,-240.99C1256.8,-259.61 1294.71,-288.29 1331.95,-305 1338.27,-307.84 1344.91,-310.43 1351.67,-312.8"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1350.37,-316.05 1360.96,-315.86 1352.56,-309.41 1350.37,-316.05"/>
 </a>
@@ -103,9 +103,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge11" class="edge">
+<g id="edge13" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge11"><a xlink:title="at discover.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<g id="a_edge13"><a xlink:title="at discover.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
 <path fill="none" stroke="saddlebrown" d="M1264.29,-233.75C1290.81,-239.35 1324.17,-246.39 1355.55,-253"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1354.57,-256.37 1365.08,-255.01 1356.01,-249.52 1354.57,-256.37"/>
 </a>
@@ -114,16 +114,16 @@
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover -->
 <g id="node2" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover</title>
-<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover | defined in discover.go:35&#10;at discover.go:43: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at discover.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at discover.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:38: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP]&#10;at discover.go:69: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP]&#10;at discover.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:42: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at discover.go:73: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at discover.go:56: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix]">
+<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover | defined in discover.go:35&#10;at discover.go:38: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP]&#10;at discover.go:69: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP]&#10;at discover.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:56: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix]&#10;at discover.go:42: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at discover.go:73: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at discover.go:43: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at discover.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at discover.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M1031.78,-235C1031.78,-235 972.74,-235 972.74,-235 966.74,-235 960.74,-229 960.74,-223 960.74,-223 960.74,-211 960.74,-211 960.74,-205 966.74,-199 972.74,-199 972.74,-199 1031.78,-199 1031.78,-199 1037.78,-199 1043.78,-205 1043.78,-211 1043.78,-211 1043.78,-223 1043.78,-223 1043.78,-229 1037.78,-235 1031.78,-235"/>
 <text xml:space="preserve" text-anchor="middle" x="1002.26" y="-212.32" font-family="Verdana" font-size="14.00">Discover</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP -->
-<g id="edge23" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP</title>
-<g id="a_edge23"><a xlink:title="at discover.go:38: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP]&#10;at discover.go:69: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP]">
+<g id="a_edge1"><a xlink:title="at discover.go:38: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP]&#10;at discover.go:69: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectTCP]">
 <path fill="none" stroke="black" d="M1044.37,-218.19C1074.26,-219.05 1115.26,-220.23 1149.15,-221.21"/>
 <polygon fill="black" stroke="black" points="1148.73,-224.7 1158.83,-221.49 1148.94,-217.7 1148.73,-224.7"/>
 </a>
@@ -132,88 +132,88 @@
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix -->
 <g id="node3" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix | defined in discover.go:123&#10;at discover.go:135: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:132: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:133: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at discover.go:134: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix | defined in discover.go:123&#10;at discover.go:134: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at discover.go:132: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:135: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:133: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M1254.95,-337C1254.95,-337 1169.66,-337 1169.66,-337 1163.66,-337 1157.66,-331 1157.66,-325 1157.66,-325 1157.66,-313 1157.66,-313 1157.66,-307 1163.66,-301 1169.66,-301 1169.66,-301 1254.95,-301 1254.95,-301 1260.95,-301 1266.95,-307 1266.95,-313 1266.95,-313 1266.95,-325 1266.95,-325 1266.95,-331 1260.95,-337 1254.95,-337"/>
 <text xml:space="preserve" text-anchor="middle" x="1212.3" y="-314.32" font-family="Verdana" font-size="14.00">connectUnix</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix -->
-<g id="edge27" class="edge">
+<g id="edge15" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix</title>
-<g id="a_edge27"><a xlink:title="at discover.go:56: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix]">
+<g id="a_edge15"><a xlink:title="at discover.go:56: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix]">
 <path fill="none" stroke="black" d="M1041.42,-235.71C1075.95,-252.64 1126.92,-277.63 1164.02,-295.82"/>
 <polygon fill="black" stroke="black" points="1162.21,-298.83 1172.73,-300.09 1165.29,-292.54 1162.21,-298.83"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge24" class="edge">
+<g id="edge2" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge24"><a xlink:title="at discover.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge2"><a xlink:title="at discover.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at discover.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M1044.35,-208.85C1075.34,-203.13 1118.98,-195.99 1157.66,-193 1249.38,-185.91 1357.13,-198.31 1414.43,-206.55"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1413.63,-209.97 1424.03,-207.97 1414.65,-203.05 1413.63,-209.97"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge25" class="edge">
+<g id="edge23" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge25"><a xlink:title="at discover.go:42: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at discover.go:73: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge23"><a xlink:title="at discover.go:42: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at discover.go:73: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M1044.44,-207.28C1066.9,-202.12 1095.24,-195.87 1120.66,-191 1188.76,-177.95 1265.56,-168.62 1328.38,-162.36"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1328.42,-165.88 1338.03,-161.42 1327.73,-158.91 1328.42,-165.88"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge12" class="edge">
+<g id="edge24" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge12"><a xlink:title="at discover.go:43: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at discover.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_edge24"><a xlink:title="at discover.go:43: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at discover.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="none" stroke="saddlebrown" d="M1019.22,-235.73C1045.15,-264.91 1099.44,-320.87 1157.66,-350 1217.18,-379.78 1238.15,-391.99 1303.95,-382 1335.49,-377.21 1369.51,-367.1 1397.27,-357.48"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1398.29,-360.83 1406.54,-354.19 1395.95,-354.23 1398.29,-360.83"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge13" class="edge">
+<g id="edge30" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge13"><a xlink:title="at discover.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<g id="a_edge30"><a xlink:title="at discover.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at discover.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
 <path fill="none" stroke="saddlebrown" d="M1044.5,-228.88C1075.39,-237.29 1118.83,-248.08 1157.66,-254 1219.05,-263.35 1288.23,-268.33 1344.41,-270.98"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1344.18,-274.47 1354.32,-271.43 1344.49,-267.48 1344.18,-274.47"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge4" class="edge">
+<g id="edge6" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge4"><a xlink:title="at discover.go:132: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge6"><a xlink:title="at discover.go:132: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M1237.04,-300.79C1260.13,-283.87 1296.79,-259.08 1331.95,-244 1358.45,-232.63 1390.01,-224.79 1414.55,-219.84"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1414.99,-223.32 1424.15,-217.99 1413.66,-216.44 1414.99,-223.32"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge9" class="edge">
+<g id="edge14" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge9"><a xlink:title="at discover.go:133: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge14"><a xlink:title="at discover.go:133: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M1228.09,-300.87C1256.9,-265.71 1318.93,-190.98 1331.95,-183 1336.58,-180.16 1341.46,-177.58 1346.5,-175.24"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1347.82,-178.48 1355.64,-171.34 1345.07,-172.04 1347.82,-178.48"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge14" class="edge">
+<g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge14"><a xlink:title="at discover.go:134: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_edge3"><a xlink:title="at discover.go:134: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="none" stroke="saddlebrown" d="M1238.61,-337.02C1260.07,-351.88 1289.46,-371.13 1302.95,-375 1339.82,-385.57 1382.03,-372.5 1412.62,-358.55"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1414.05,-361.75 1421.56,-354.27 1411.03,-355.43 1414.05,-361.75"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge3" class="edge">
+<g id="edge9" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge3"><a xlink:title="at discover.go:135: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<g id="a_edge9"><a xlink:title="at discover.go:135: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
 <path fill="none" stroke="saddlebrown" d="M1237.77,-337.07C1256.61,-348.6 1282.89,-359.42 1303.95,-348 1324,-337.13 1313.39,-318.25 1331.95,-305 1336.32,-301.88 1340.97,-299.08 1345.81,-296.55"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1347.06,-299.83 1354.61,-292.4 1344.07,-293.5 1347.06,-299.83"/>
 </a>
@@ -222,43 +222,43 @@
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect -->
 <g id="node4" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect | defined in manager.go:52&#10;at manager.go:53: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]&#10;at manager.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:57: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:55: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect | defined in manager.go:52&#10;at manager.go:53: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]&#10;at manager.go:57: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:55: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at manager.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M830.37,-143C830.37,-143 687.33,-143 687.33,-143 681.33,-143 675.33,-137 675.33,-131 675.33,-131 675.33,-119 675.33,-119 675.33,-113 681.33,-107 687.33,-107 687.33,-107 830.37,-107 830.37,-107 836.37,-107 842.37,-113 842.37,-119 842.37,-119 842.37,-131 842.37,-131 842.37,-137 836.37,-143 830.37,-143"/>
 <text xml:space="preserve" text-anchor="middle" x="758.85" y="-120.33" font-family="Verdana" font-size="14.00">(*Manager).Connect</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover -->
-<g id="edge5" class="edge">
+<g id="edge7" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover</title>
-<g id="a_edge5"><a xlink:title="at manager.go:53: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]">
+<g id="a_edge7"><a xlink:title="at manager.go:53: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]">
 <path fill="none" stroke="black" d="M842.88,-139.56C856.77,-142.99 870.88,-147.11 883.87,-152 911.85,-162.53 941.28,-178.84 963.68,-192.49"/>
 <polygon fill="black" stroke="black" points="961.81,-195.45 972.16,-197.74 965.5,-189.5 961.81,-195.45"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge28" class="edge">
+<g id="edge22" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge28"><a xlink:title="at manager.go:55: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge22"><a xlink:title="at manager.go:55: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M843.11,-111.07C889.52,-104.46 948.44,-98 1001.26,-98 1001.26,-98 1001.26,-98 1213.3,-98 1278.17,-98 1273,-155.94 1331.95,-183 1358.19,-195.04 1389.89,-202.62 1414.55,-207.15"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1413.75,-210.56 1424.2,-208.82 1414.94,-203.67 1413.75,-210.56"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge15" class="edge">
+<g id="edge25" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge15"><a xlink:title="at manager.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge25"><a xlink:title="at manager.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M815.22,-106.28C836.16,-100.11 860.36,-94.05 882.87,-91 1068.32,-65.84 1120.23,-55.33 1303.95,-91 1340.94,-98.18 1380.34,-114.39 1409.63,-128.3"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1408.06,-131.43 1418.58,-132.64 1411.11,-125.13 1408.06,-131.43"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge16" class="edge">
+<g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).Connect&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge16"><a xlink:title="at manager.go:57: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_edge18"><a xlink:title="at manager.go:57: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="none" stroke="saddlebrown" d="M787.99,-143.63C805.38,-155.48 827.93,-171.48 846.87,-187 877.52,-212.11 879.52,-225.13 911.87,-248 1012.28,-318.97 1039.71,-340.25 1157.66,-375 1220.31,-393.46 1239.59,-400.15 1303.95,-389 1338.4,-383.03 1375.39,-369.94 1404.15,-358.14"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1405.48,-361.38 1413.35,-354.29 1402.78,-354.93 1405.48,-361.38"/>
 </a>
@@ -267,25 +267,25 @@
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign -->
 <g id="node5" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign</title>
-<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign | defined in discover.go:92&#10;at discover.go:108: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix]&#10;at discover.go:95: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]&#10;at discover.go:119: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]&#10;at discover.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/paths.GetCampaignSocket]">
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign | defined in discover.go:92&#10;at discover.go:108: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix]&#10;at discover.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/paths.GetCampaignSocket]&#10;at discover.go:95: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]&#10;at discover.go:119: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M834.87,-235C834.87,-235 682.83,-235 682.83,-235 676.83,-235 670.83,-229 670.83,-223 670.83,-223 670.83,-211 670.83,-211 670.83,-205 676.83,-199 682.83,-199 682.83,-199 834.87,-199 834.87,-199 840.87,-199 846.87,-205 846.87,-211 846.87,-211 846.87,-223 846.87,-223 846.87,-229 840.87,-235 834.87,-235"/>
 <text xml:space="preserve" text-anchor="middle" x="758.85" y="-212.32" font-family="Verdana" font-size="14.00">DiscoverForCampaign</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover -->
-<g id="edge21" class="edge">
+<g id="edge26" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover</title>
-<g id="a_edge21"><a xlink:title="at discover.go:95: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]&#10;at discover.go:119: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]">
+<g id="a_edge26"><a xlink:title="at discover.go:95: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]&#10;at discover.go:119: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]">
 <path fill="none" stroke="black" d="M847.35,-217C881.3,-217 919.05,-217 948.67,-217"/>
 <polygon fill="black" stroke="black" points="948.49,-220.5 958.49,-217 948.49,-213.5 948.49,-220.5"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix -->
-<g id="edge8" class="edge">
+<g id="edge16" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix</title>
-<g id="a_edge8"><a xlink:title="at discover.go:108: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix]">
+<g id="a_edge16"><a xlink:title="at discover.go:108: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.connectUnix]">
 <path fill="none" stroke="black" d="M842.65,-235.71C930.3,-255.51 1066.78,-286.35 1146.78,-304.42"/>
 <polygon fill="black" stroke="black" points="1145.68,-307.76 1156.2,-306.55 1147.22,-300.93 1145.68,-307.76"/>
 </a>
@@ -301,9 +301,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/paths.GetCampaignSocket -->
-<g id="edge29" class="edge">
+<g id="edge19" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/paths.GetCampaignSocket</title>
-<g id="a_edge29"><a xlink:title="at discover.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/paths.GetCampaignSocket]">
+<g id="a_edge19"><a xlink:title="at discover.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/paths.GetCampaignSocket]">
 <path fill="none" stroke="saddlebrown" d="M767.75,-235.62C785.65,-275.57 833.31,-370.1 910.29,-426.18"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="907.87,-428.76 918.08,-431.62 911.88,-423.02 907.87,-428.76"/>
 </a>
@@ -319,18 +319,18 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover -->
-<g id="edge6" class="edge">
+<g id="edge17" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover</title>
-<g id="a_edge6"><a xlink:title="at manager.go:227: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]">
+<g id="a_edge17"><a xlink:title="at manager.go:227: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Discover]">
 <path fill="none" stroke="black" d="M521.48,-112.12C561.97,-125.57 619.46,-143.65 670.83,-156 748.07,-174.58 768.75,-172.53 846.87,-187 880.92,-193.3 919.11,-200.72 949,-206.61"/>
 <polygon fill="black" stroke="black" points="948.04,-209.99 958.53,-208.49 949.4,-203.12 948.04,-209.99"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign -->
-<g id="edge19" class="edge">
+<g id="edge27" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign</title>
-<g id="a_edge19"><a xlink:title="at manager.go:225: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign]">
+<g id="a_edge27"><a xlink:title="at manager.go:225: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign]">
 <path fill="none" stroke="black" d="M511.46,-112.15C562.5,-133.87 648.04,-170.27 703.71,-193.96"/>
 <polygon fill="black" stroke="black" points="702.11,-197.09 712.69,-197.78 704.85,-190.64 702.11,-197.09"/>
 </a>
@@ -339,52 +339,52 @@
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign -->
 <g id="node7" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign | defined in manager.go:80&#10;at manager.go:81: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign]&#10;at manager.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:86: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at manager.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:83: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign | defined in manager.go:80&#10;at manager.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:86: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at manager.go:81: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign]&#10;at manager.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:83: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M585.83,-218C585.83,-218 349.79,-218 349.79,-218 343.79,-218 337.79,-212 337.79,-206 337.79,-206 337.79,-194 337.79,-194 337.79,-188 343.79,-182 349.79,-182 349.79,-182 585.83,-182 585.83,-182 591.83,-182 597.83,-188 597.83,-194 597.83,-194 597.83,-206 597.83,-206 597.83,-212 591.83,-218 585.83,-218"/>
 <text xml:space="preserve" text-anchor="middle" x="467.81" y="-195.32" font-family="Verdana" font-size="14.00">(*Manager).ConnectForCampaign</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign -->
-<g id="edge17" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign</title>
-<g id="a_edge17"><a xlink:title="at manager.go:81: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign]">
+<g id="a_edge10"><a xlink:title="at manager.go:81: calling [github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.DiscoverForCampaign]">
 <path fill="none" stroke="black" d="M598.53,-207.63C618.86,-208.83 639.58,-210.04 659.06,-211.19"/>
 <polygon fill="black" stroke="black" points="658.67,-214.67 668.86,-211.77 659.09,-207.68 658.67,-214.67"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge30" class="edge">
+<g id="edge28" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge30"><a xlink:title="at manager.go:83: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge28"><a xlink:title="at manager.go:83: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M500.59,-181.32C548.16,-153.75 636,-104.38 670.83,-95 782.05,-65.03 1255.46,-84.94 1266.95,-91 1311.22,-114.37 1290.55,-154.84 1331.95,-183 1356.33,-199.58 1388.92,-207.02 1414.45,-210.35"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1413.79,-213.8 1424.12,-211.44 1414.58,-206.84 1413.79,-213.8"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge22" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge22"><a xlink:title="at manager.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge11"><a xlink:title="at manager.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M502.68,-181.33C528.98,-166.59 566.16,-145.22 597.83,-125 631.19,-103.7 634.23,-89.06 670.83,-74 808.65,-17.3 852.24,-17 1001.26,-17 1001.26,-17 1001.26,-17 1213.3,-17 1301.5,-17 1387.46,-86.33 1429.1,-125.62"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1426.57,-128.05 1436.2,-132.46 1431.43,-123 1426.57,-128.05"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge18" class="edge">
+<g id="edge4" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge18"><a xlink:title="at manager.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_edge4"><a xlink:title="at manager.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="none" stroke="saddlebrown" d="M571.75,-218.71C580.86,-222.14 589.69,-226.2 597.83,-231 688.61,-284.55 652.46,-406 757.85,-406 757.85,-406 757.85,-406 883.87,-406 1070.63,-406 1121.06,-433.78 1303.95,-396 1340.6,-388.43 1379.72,-372.4 1408.98,-358.67"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1410.42,-361.87 1417.93,-354.39 1407.4,-355.55 1410.42,-361.87"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge20" class="edge">
+<g id="edge8" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).ConnectForCampaign&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge20"><a xlink:title="at manager.go:86: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<g id="a_edge8"><a xlink:title="at manager.go:86: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
 <path fill="none" stroke="saddlebrown" d="M546.66,-218.72C593.01,-229.83 647.26,-242.73 670.83,-248 886.57,-296.22 938.2,-323.43 1157.66,-350 1222.24,-357.82 1247.82,-387.9 1303.95,-355 1325.92,-342.12 1311.73,-320.48 1331.95,-305 1336.26,-301.7 1340.89,-298.74 1345.72,-296.1"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1347.11,-299.32 1354.55,-291.77 1344.03,-293.03 1347.11,-299.32"/>
 </a>
@@ -400,9 +400,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).maintainConnection&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect -->
-<g id="edge1" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).maintainConnection&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect</title>
-<g id="a_edge1"><a xlink:title="at manager.go:190: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect]&#10;at manager.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect]">
+<g id="a_edge5"><a xlink:title="at manager.go:190: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect]&#10;at manager.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).attemptReconnect]">
 <path fill="none" stroke="black" d="M241.69,-134.82C277.56,-128.31 318.22,-120.94 355.01,-114.27"/>
 <polygon fill="black" stroke="black" points="355.59,-117.72 364.8,-112.49 354.34,-110.84 355.59,-117.72"/>
 </a>
@@ -418,9 +418,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).maintainConnection&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).IsConnected -->
-<g id="edge2" class="edge">
+<g id="edge20" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).maintainConnection&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).IsConnected</title>
-<g id="a_edge2"><a xlink:title="at manager.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).IsConnected]">
+<g id="a_edge20"><a xlink:title="at manager.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/daemonconn.Manager).IsConnected]">
 <path fill="none" stroke="black" d="M181.75,-171.09C221.02,-188.2 282.64,-213.74 337.79,-231 347.38,-234 357.46,-236.85 367.57,-239.52"/>
 <polygon fill="black" stroke="black" points="366.52,-242.86 377.07,-241.95 368.26,-236.08 366.52,-242.86"/>
 </a>

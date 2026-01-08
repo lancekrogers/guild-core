@@ -20,23 +20,23 @@ bgcolor="#e6ecfa";
 label="context";
 labelloc="t";
         
-        "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" [ fillcolor="lightblue" label="NewXMLFormatter" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter | defined in formatter.go:52\nat formatter.go:95: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat formatter.go:96: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat formatter.go:98: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat formatter.go:97: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
-        "(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML" [ label="(*XMLFormatter).FormatAsXML" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML | defined in formatter.go:105\nat formatter.go:109: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat formatter.go:108: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat formatter.go:110: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat formatter.go:111: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" fillcolor="lightblue" ]
-        "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewDefaultFormatter" [ label="NewDefaultFormatter" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewDefaultFormatter | defined in formatter.go:218\nat formatter.go:219: calling [github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter]" fillcolor="lightblue" ]
+        "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" [ fillcolor="lightblue" label="NewXMLFormatter" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter | defined in formatter.go:52\nat formatter.go:95: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat formatter.go:96: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat formatter.go:97: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat formatter.go:98: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+        "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewDefaultFormatter" [ fillcolor="lightblue" label="NewDefaultFormatter" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewDefaultFormatter | defined in formatter.go:218\nat formatter.go:219: calling [github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter]" ]
+        "(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML | defined in formatter.go:105\nat formatter.go:109: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat formatter.go:110: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat formatter.go:108: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat formatter.go:111: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" fillcolor="lightblue" label="(*XMLFormatter).FormatAsXML" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
-        style="filled";
-fillcolor="lightyellow";
+        penwidth="0.8";
+style="filled";
 fontname="Tahoma bold";
-rank="sink";
-penwidth="0.8";
-label="gerror";
 URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
 tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
 fontsize="16";
+fillcolor="lightyellow";
+rank="sink";
+label="gerror";
         
-        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
-        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" fillcolor="moccasin" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" fillcolor="moccasin" label="Wrap" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" ]
         "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" ]
         "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" ]
         
@@ -45,12 +45,12 @@ fontsize="16";
     }
 
     "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at formatter.go:95: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
-    "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ tooltip="at formatter.go:96: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" color="saddlebrown" ]
-    "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at formatter.go:98: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
-    "(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ tooltip="at formatter.go:109: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" color="saddlebrown" ]
-    "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewDefaultFormatter" -> "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" [ tooltip="at formatter.go:219: calling [github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter]" ]
+    "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at formatter.go:96: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
     "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at formatter.go:97: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
-    "(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at formatter.go:108: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at formatter.go:98: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewDefaultFormatter" -> "github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter" [ tooltip="at formatter.go:219: calling [github.com/guild-framework/guild-core/pkg/prompts/layered/context.NewXMLFormatter]" ]
+    "(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at formatter.go:109: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
     "(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at formatter.go:110: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
-    "(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at formatter.go:111: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at formatter.go:108: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/prompts/layered/context.XMLFormatter).FormatAsXML" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ tooltip="at formatter.go:111: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" color="saddlebrown" ]
 }

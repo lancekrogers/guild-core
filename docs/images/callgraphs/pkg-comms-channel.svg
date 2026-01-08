@@ -17,8 +17,8 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="593.08,-148 593.08,-411 841.37,-411 841.37,-148 593.08,-148"/>
-<text xml:space="preserve" text-anchor="middle" x="717.22" y="-391.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="593.08,-201 593.08,-464 841.37,-464 841.37,-201 593.08,-201"/>
+<text xml:space="preserve" text-anchor="middle" x="717.22" y="-444.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
@@ -26,8 +26,8 @@
 <g id="node1" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry</title>
 <g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry | defined in channel.go:90&#10;at channel.go:99: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.topicRegistry).run]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M476.33,-662C476.33,-662 355.04,-662 355.04,-662 349.04,-662 343.04,-656 343.04,-650 343.04,-650 343.04,-638 343.04,-638 343.04,-632 349.04,-626 355.04,-626 355.04,-626 476.33,-626 476.33,-626 482.33,-626 488.33,-632 488.33,-638 488.33,-638 488.33,-650 488.33,-650 488.33,-656 482.33,-662 476.33,-662"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-639.33" font-family="Verdana" font-size="14.00">newTopicRegistry</text>
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M476.33,-52C476.33,-52 355.04,-52 355.04,-52 349.04,-52 343.04,-46 343.04,-40 343.04,-40 343.04,-28 343.04,-28 343.04,-22 349.04,-16 355.04,-16 355.04,-16 476.33,-16 476.33,-16 482.33,-16 488.33,-22 488.33,-28 488.33,-28 488.33,-40 488.33,-40 488.33,-46 482.33,-52 476.33,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-29.32" font-family="Verdana" font-size="14.00">newTopicRegistry</text>
 </a>
 </g>
 </g>
@@ -35,73 +35,73 @@
 <g id="node2" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.topicRegistry).run</title>
 <g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.topicRegistry).run | defined in channel.go:103">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M787.62,-662C787.62,-662 646.83,-662 646.83,-662 640.83,-662 634.83,-656 634.83,-650 634.83,-650 634.83,-638 634.83,-638 634.83,-632 640.83,-626 646.83,-626 646.83,-626 787.62,-626 787.62,-626 793.62,-626 799.62,-632 799.62,-638 799.62,-638 799.62,-650 799.62,-650 799.62,-656 793.62,-662 787.62,-662"/>
-<text xml:space="preserve" text-anchor="middle" x="717.22" y="-639.33" font-family="Verdana" font-size="14.00">(*topicRegistry).run</text>
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M787.62,-52C787.62,-52 646.83,-52 646.83,-52 640.83,-52 634.83,-46 634.83,-40 634.83,-40 634.83,-28 634.83,-28 634.83,-22 640.83,-16 646.83,-16 646.83,-16 787.62,-16 787.62,-16 793.62,-16 799.62,-22 799.62,-28 799.62,-28 799.62,-40 799.62,-40 799.62,-46 793.62,-52 787.62,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="717.22" y="-29.32" font-family="Verdana" font-size="14.00">(*topicRegistry).run</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.topicRegistry).run -->
-<g id="edge13" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.topicRegistry).run</title>
-<g id="a_edge13"><a xlink:title="at channel.go:99: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.topicRegistry).run]">
-<path fill="none" stroke="black" d="M488.43,-644C524.65,-644 569.32,-644 609.47,-644"/>
-<polygon fill="black" stroke="black" points="623.24,-647.5 633.24,-644 623.24,-640.5 623.24,-647.5"/>
-<polyline fill="none" stroke="black" points="622.74,-644 617.74,-644"/>
-<ellipse fill="none" stroke="black" cx="613.24" cy="-644" rx="4" ry="4"/>
+<g id="a_edge1"><a xlink:title="at channel.go:99: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.topicRegistry).run]">
+<path fill="none" stroke="black" d="M488.43,-34C524.65,-34 569.32,-34 609.47,-34"/>
+<polygon fill="black" stroke="black" points="623.24,-37.5 633.24,-34 623.24,-30.5 623.24,-37.5"/>
+<polyline fill="none" stroke="black" points="622.74,-34 617.74,-34"/>
+<ellipse fill="none" stroke="black" cx="613.24" cy="-34" rx="4" ry="4"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport -->
 <g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close | defined in channel.go:387&#10;at channel.go:388: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close]&#10;at channel.go:389: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M181.54,-82C181.54,-82 64.75,-82 64.75,-82 58.75,-82 52.75,-76 52.75,-70 52.75,-70 52.75,-58 52.75,-58 52.75,-52 58.75,-46 64.75,-46 64.75,-46 181.54,-46 181.54,-46 187.54,-46 193.54,-52 193.54,-58 193.54,-58 193.54,-70 193.54,-70 193.54,-76 187.54,-82 181.54,-82"/>
-<text xml:space="preserve" text-anchor="middle" x="123.14" y="-59.33" font-family="Verdana" font-size="14.00">(*PubSub).Close</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport</title>
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport | defined in channel.go:23&#10;at channel.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M171.04,-52C171.04,-52 75.25,-52 75.25,-52 69.25,-52 63.25,-46 63.25,-40 63.25,-40 63.25,-28 63.25,-28 63.25,-22 69.25,-16 75.25,-16 75.25,-16 171.04,-16 171.04,-16 177.04,-16 183.04,-22 183.04,-28 183.04,-28 183.04,-40 183.04,-40 183.04,-46 177.04,-52 171.04,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="123.14" y="-29.32" font-family="Verdana" font-size="14.00">NewTransport</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry -->
+<g id="edge20" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry</title>
+<g id="a_edge20"><a xlink:title="at channel.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry]">
+<path fill="none" stroke="black" d="M183.64,-34C226.28,-34 284.27,-34 331.49,-34"/>
+<polygon fill="black" stroke="black" points="331.43,-37.5 341.43,-34 331.43,-30.5 331.43,-37.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage -->
 <g id="node4" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close | defined in channel.go:203">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M479.33,-52C479.33,-52 352.04,-52 352.04,-52 346.04,-52 340.04,-46 340.04,-40 340.04,-40 340.04,-28 340.04,-28 340.04,-22 346.04,-16 352.04,-16 352.04,-16 479.33,-16 479.33,-16 485.33,-16 491.33,-22 491.33,-28 491.33,-28 491.33,-40 491.33,-40 491.33,-46 485.33,-52 479.33,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-29.32" font-family="Verdana" font-size="14.00">(*Publisher).Close</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage</title>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage | defined in channel.go:195&#10;at channel.go:199: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M516.08,-418C516.08,-418 315.29,-418 315.29,-418 309.29,-418 303.29,-412 303.29,-406 303.29,-406 303.29,-394 303.29,-394 303.29,-388 309.29,-382 315.29,-382 315.29,-382 516.08,-382 516.08,-382 522.08,-382 528.08,-388 528.08,-394 528.08,-394 528.08,-406 528.08,-406 528.08,-412 522.08,-418 516.08,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-395.32" font-family="Verdana" font-size="14.00">(*Publisher).PublishMessage</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close -->
-<g id="edge21" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close</title>
-<g id="a_edge21"><a xlink:title="at channel.go:388: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close]">
-<path fill="none" stroke="black" d="M194.11,-56.78C234.41,-52.61 285.41,-47.35 328.22,-42.93"/>
-<polygon fill="black" stroke="black" points="328.39,-46.43 337.98,-41.92 327.67,-39.47 328.39,-46.43"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish -->
 <g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close | defined in channel.go:334">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M483.83,-113C483.83,-113 347.54,-113 347.54,-113 341.54,-113 335.54,-107 335.54,-101 335.54,-101 335.54,-89 335.54,-89 335.54,-83 341.54,-77 347.54,-77 347.54,-77 483.83,-77 483.83,-77 489.83,-77 495.83,-83 495.83,-89 495.83,-89 495.83,-101 495.83,-101 495.83,-107 489.83,-113 483.83,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-90.33" font-family="Verdana" font-size="14.00">(*subscriber).Close</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish</title>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish | defined in channel.go:170">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M787.24,-524C787.24,-524 647.2,-524 647.2,-524 641.2,-524 635.2,-518 635.2,-512 635.2,-512 635.2,-500 635.2,-500 635.2,-494 641.2,-488 647.2,-488 647.2,-488 787.24,-488 787.24,-488 793.24,-488 799.24,-494 799.24,-500 799.24,-500 799.24,-512 799.24,-512 799.24,-518 793.24,-524 787.24,-524"/>
+<text xml:space="preserve" text-anchor="middle" x="717.22" y="-501.32" font-family="Verdana" font-size="14.00">(*Publisher).Publish</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close</title>
-<g id="a_edge22"><a xlink:title="at channel.go:389: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close]">
-<path fill="none" stroke="black" d="M194.11,-71.46C232.94,-75.61 281.71,-80.81 323.5,-85.27"/>
-<polygon fill="black" stroke="black" points="322.99,-88.74 333.3,-86.32 323.73,-81.78 322.99,-88.74"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish</title>
+<g id="a_edge2"><a xlink:title="at channel.go:199: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish]">
+<path fill="none" stroke="black" d="M494.32,-418.7C505.82,-422.3 517.38,-426.4 528.08,-431 559.03,-444.3 562.21,-456.5 593.08,-470 604.88,-475.16 617.63,-479.83 630.3,-483.96"/>
+<polygon fill="black" stroke="black" points="628.86,-487.18 639.45,-486.85 630.97,-480.5 628.86,-487.18"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub -->
 <g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher | defined in channel.go:30&#10;at channel.go:36: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M508.95,-174C508.95,-174 322.41,-174 322.41,-174 316.41,-174 310.41,-168 310.41,-162 310.41,-162 310.41,-150 310.41,-150 310.41,-144 316.41,-138 322.41,-138 322.41,-138 508.95,-138 508.95,-138 514.95,-138 520.95,-144 520.95,-150 520.95,-150 520.95,-162 520.95,-162 520.95,-168 514.95,-174 508.95,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-151.32" font-family="Verdana" font-size="14.00">(*Transport).NewPublisher</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub</title>
+<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub | defined in channel.go:354&#10;at channel.go:356: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher]&#10;at channel.go:357: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M456.45,-174C456.45,-174 374.91,-174 374.91,-174 368.91,-174 362.91,-168 362.91,-162 362.91,-162 362.91,-150 362.91,-150 362.91,-144 368.91,-138 374.91,-138 374.91,-138 456.45,-138 456.45,-138 462.45,-138 468.45,-144 468.45,-150 468.45,-150 468.45,-162 468.45,-162 468.45,-168 462.45,-174 456.45,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-151.32" font-family="Verdana" font-size="14.00">newPubSub</text>
 </a>
 </g>
 </g>
@@ -109,26 +109,80 @@
 <g id="node7" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher</title>
 <g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher | defined in channel.go:163">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M763.24,-131C763.24,-131 671.2,-131 671.2,-131 665.2,-131 659.2,-125 659.2,-119 659.2,-119 659.2,-107 659.2,-107 659.2,-101 665.2,-95 671.2,-95 671.2,-95 763.24,-95 763.24,-95 769.24,-95 775.24,-101 775.24,-107 775.24,-107 775.24,-119 775.24,-119 775.24,-125 769.24,-131 763.24,-131"/>
-<text xml:space="preserve" text-anchor="middle" x="717.22" y="-108.33" font-family="Verdana" font-size="14.00">newPublisher</text>
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M763.24,-181C763.24,-181 671.2,-181 671.2,-181 665.2,-181 659.2,-175 659.2,-169 659.2,-169 659.2,-157 659.2,-157 659.2,-151 665.2,-145 671.2,-145 671.2,-145 763.24,-145 763.24,-145 769.24,-145 775.24,-151 775.24,-157 775.24,-157 775.24,-169 775.24,-169 775.24,-175 769.24,-181 763.24,-181"/>
+<text xml:space="preserve" text-anchor="middle" x="717.22" y="-158.32" font-family="Verdana" font-size="14.00">newPublisher</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher</title>
-<g id="a_edge14"><a xlink:title="at channel.go:36: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher]">
-<path fill="none" stroke="black" d="M521.45,-140.96C563.34,-134.95 610.41,-128.19 647.79,-122.82"/>
-<polygon fill="black" stroke="black" points="648.16,-126.31 657.56,-121.42 647.16,-119.38 648.16,-126.31"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher -->
+<g id="edge3" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher</title>
+<g id="a_edge3"><a xlink:title="at channel.go:356: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher]">
+<path fill="none" stroke="black" d="M468.52,-157.21C518.15,-158.37 593.34,-160.13 647.86,-161.4"/>
+<polygon fill="black" stroke="black" points="647.57,-164.9 657.65,-161.63 647.73,-157.9 647.57,-164.9"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber -->
 <g id="node8" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe | defined in channel.go:233&#10;at channel.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at channel.go:261: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at channel.go:258: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at channel.go:259: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M499.95,-235C499.95,-235 331.41,-235 331.41,-235 325.41,-235 319.41,-229 319.41,-223 319.41,-223 319.41,-211 319.41,-211 319.41,-205 325.41,-199 331.41,-199 331.41,-199 499.95,-199 499.95,-199 505.95,-199 511.95,-205 511.95,-211 511.95,-211 511.95,-223 511.95,-223 511.95,-229 505.95,-235 499.95,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-212.32" font-family="Verdana" font-size="14.00">(*subscriber).Subscribe</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber</title>
+<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber | defined in channel.go:224">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M768.87,-114C768.87,-114 665.58,-114 665.58,-114 659.58,-114 653.58,-108 653.58,-102 653.58,-102 653.58,-90 653.58,-90 653.58,-84 659.58,-78 665.58,-78 665.58,-78 768.87,-78 768.87,-78 774.87,-78 780.87,-84 780.87,-90 780.87,-90 780.87,-102 780.87,-102 780.87,-108 774.87,-114 768.87,-114"/>
+<text xml:space="preserve" text-anchor="middle" x="717.22" y="-91.33" font-family="Verdana" font-size="14.00">newSubscriber</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber -->
+<g id="edge16" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber</title>
+<g id="a_edge16"><a xlink:title="at channel.go:357: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber]">
+<path fill="none" stroke="black" d="M468.52,-145.62C516.43,-136.02 588.16,-121.65 642.12,-110.84"/>
+<polygon fill="black" stroke="black" points="642.75,-114.29 651.86,-108.89 641.37,-107.42 642.75,-114.29"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub -->
+<g id="node9" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub</title>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub | defined in channel.go:50&#10;at channel.go:56: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M211.16,-174C211.16,-174 35.12,-174 35.12,-174 29.12,-174 23.12,-168 23.12,-162 23.12,-162 23.12,-150 23.12,-150 23.12,-144 29.12,-138 35.12,-138 35.12,-138 211.16,-138 211.16,-138 217.16,-138 223.16,-144 223.16,-150 223.16,-150 223.16,-162 223.16,-162 223.16,-168 217.16,-174 211.16,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="123.14" y="-151.32" font-family="Verdana" font-size="14.00">(*Transport).NewPubSub</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub</title>
+<g id="a_edge4"><a xlink:title="at channel.go:56: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub]">
+<path fill="none" stroke="black" d="M223.73,-156C266.15,-156 314.37,-156 351.74,-156"/>
+<polygon fill="black" stroke="black" points="351.45,-159.5 361.45,-156 351.45,-152.5 351.45,-159.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber -->
+<g id="node10" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber</title>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber | defined in channel.go:40&#10;at channel.go:46: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M514.58,-113C514.58,-113 316.79,-113 316.79,-113 310.79,-113 304.79,-107 304.79,-101 304.79,-101 304.79,-89 304.79,-89 304.79,-83 310.79,-77 316.79,-77 316.79,-77 514.58,-77 514.58,-77 520.58,-77 526.58,-83 526.58,-89 526.58,-89 526.58,-101 526.58,-101 526.58,-107 520.58,-113 514.58,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-90.33" font-family="Verdana" font-size="14.00">(*Transport).NewSubscriber</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber</title>
+<g id="a_edge9"><a xlink:title="at channel.go:46: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber]">
+<path fill="none" stroke="black" d="M526.95,-95.37C565.31,-95.5 607.41,-95.64 642.13,-95.75"/>
+<polygon fill="black" stroke="black" points="642.09,-99.25 652.1,-95.79 642.11,-92.25 642.09,-99.25"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe -->
+<g id="node11" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe</title>
+<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe | defined in channel.go:275&#10;at channel.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at channel.go:302: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at channel.go:301: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at channel.go:303: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M508.58,-357C508.58,-357 322.79,-357 322.79,-357 316.79,-357 310.79,-351 310.79,-345 310.79,-345 310.79,-333 310.79,-333 310.79,-327 316.79,-321 322.79,-321 322.79,-321 508.58,-321 508.58,-321 514.58,-321 520.58,-327 520.58,-333 520.58,-333 520.58,-345 520.58,-345 520.58,-351 514.58,-357 508.58,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-334.32" font-family="Verdana" font-size="14.00">(*subscriber).Unsubscribe</text>
 </a>
 </g>
 </g>
@@ -136,17 +190,17 @@
 <g id="node23" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node23"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M735.12,-192C735.12,-192 699.33,-192 699.33,-192 693.33,-192 687.33,-186 687.33,-180 687.33,-180 687.33,-168 687.33,-168 687.33,-162 693.33,-156 699.33,-156 699.33,-156 735.12,-156 735.12,-156 741.12,-156 747.12,-162 747.12,-168 747.12,-168 747.12,-180 747.12,-180 747.12,-186 741.12,-192 735.12,-192"/>
-<text xml:space="preserve" text-anchor="middle" x="717.22" y="-169.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M735.12,-245C735.12,-245 699.33,-245 699.33,-245 693.33,-245 687.33,-239 687.33,-233 687.33,-233 687.33,-221 687.33,-221 687.33,-215 693.33,-209 699.33,-209 699.33,-209 735.12,-209 735.12,-209 741.12,-209 747.12,-215 747.12,-221 747.12,-221 747.12,-233 747.12,-233 747.12,-239 741.12,-245 735.12,-245"/>
+<text xml:space="preserve" text-anchor="middle" x="717.22" y="-222.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge15" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge15"><a xlink:title="at channel.go:258: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M512.7,-203.22C567.64,-195.33 633.71,-185.85 675.34,-179.87"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="675.77,-183.34 685.17,-178.46 674.77,-176.41 675.77,-183.34"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge5" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge5"><a xlink:title="at channel.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M500.77,-320.29C510.19,-317.05 519.48,-313.3 528.08,-309 560.91,-292.56 560.11,-274.17 593.08,-258 619.05,-245.26 650.75,-237.44 675.49,-232.84"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="675.92,-236.31 685.17,-231.15 674.72,-229.42 675.92,-236.31"/>
 </a>
 </g>
 </g>
@@ -154,98 +208,8 @@
 <g id="node24" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M821.37,-253C821.37,-253 613.08,-253 613.08,-253 607.08,-253 601.08,-247 601.08,-241 601.08,-241 601.08,-229 601.08,-229 601.08,-223 607.08,-217 613.08,-217 613.08,-217 821.37,-217 821.37,-217 827.37,-217 833.37,-223 833.37,-229 833.37,-229 833.37,-241 833.37,-241 833.37,-247 827.37,-253 821.37,-253"/>
-<text xml:space="preserve" text-anchor="middle" x="717.22" y="-230.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge23"><a xlink:title="at channel.go:259: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M512.51,-202.37C530,-201.29 548.09,-201.22 565.08,-203 586.89,-205.28 610.18,-209.37 631.79,-213.88"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="630.92,-217.27 641.43,-215.95 632.39,-210.43 630.92,-217.27"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="node25" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M815.74,-314C815.74,-314 618.7,-314 618.7,-314 612.7,-314 606.7,-308 606.7,-302 606.7,-302 606.7,-290 606.7,-290 606.7,-284 612.7,-278 618.7,-278 618.7,-278 815.74,-278 815.74,-278 821.74,-278 827.74,-284 827.74,-290 827.74,-290 827.74,-302 827.74,-302 827.74,-308 821.74,-314 815.74,-314"/>
-<text xml:space="preserve" text-anchor="middle" x="717.22" y="-291.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge1"><a xlink:title="at channel.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M512.68,-213.91C530.88,-216.45 549.18,-221.34 565.08,-230 582.88,-239.69 576.06,-254.99 593.08,-266 596.77,-268.39 600.63,-270.58 604.61,-272.6"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="602.83,-275.63 613.37,-276.65 605.76,-269.28 602.83,-275.63"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="node26" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M804.87,-375C804.87,-375 629.58,-375 629.58,-375 623.58,-375 617.58,-369 617.58,-363 617.58,-363 617.58,-351 617.58,-351 617.58,-345 623.58,-339 629.58,-339 629.58,-339 804.87,-339 804.87,-339 810.87,-339 816.87,-345 816.87,-351 816.87,-351 816.87,-363 816.87,-363 816.87,-369 810.87,-375 804.87,-375"/>
-<text xml:space="preserve" text-anchor="middle" x="717.22" y="-352.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge2"><a xlink:title="at channel.go:261: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M501.55,-235.74C510.78,-239.19 519.81,-243.25 528.08,-248 547.97,-259.43 550.51,-266.28 565.08,-284 579.56,-301.62 574.47,-313.82 593.08,-327 597.45,-330.1 602.1,-332.87 606.95,-335.37"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="605.21,-338.42 615.75,-339.46 608.16,-332.07 605.21,-338.42"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage -->
-<g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage | defined in channel.go:195&#10;at channel.go:199: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M516.08,-601C516.08,-601 315.29,-601 315.29,-601 309.29,-601 303.29,-595 303.29,-589 303.29,-589 303.29,-577 303.29,-577 303.29,-571 309.29,-565 315.29,-565 315.29,-565 516.08,-565 516.08,-565 522.08,-565 528.08,-571 528.08,-577 528.08,-577 528.08,-589 528.08,-589 528.08,-595 522.08,-601 516.08,-601"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-578.33" font-family="Verdana" font-size="14.00">(*Publisher).PublishMessage</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish -->
-<g id="node10" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish | defined in channel.go:170">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M787.24,-557C787.24,-557 647.2,-557 647.2,-557 641.2,-557 635.2,-551 635.2,-545 635.2,-545 635.2,-533 635.2,-533 635.2,-527 641.2,-521 647.2,-521 647.2,-521 787.24,-521 787.24,-521 793.24,-521 799.24,-527 799.24,-533 799.24,-533 799.24,-545 799.24,-545 799.24,-551 793.24,-557 787.24,-557"/>
-<text xml:space="preserve" text-anchor="middle" x="717.22" y="-534.33" font-family="Verdana" font-size="14.00">(*Publisher).Publish</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish -->
-<g id="edge8" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish</title>
-<g id="a_edge8"><a xlink:title="at channel.go:199: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish]">
-<path fill="none" stroke="black" d="M528.65,-566.55C559.89,-561.96 593.47,-557.03 623.47,-552.62"/>
-<polygon fill="black" stroke="black" points="623.9,-556.1 633.28,-551.18 622.88,-549.17 623.9,-556.1"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe -->
-<g id="node11" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe</title>
-<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe | defined in channel.go:275&#10;at channel.go:302: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at channel.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at channel.go:301: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at channel.go:303: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M508.58,-357C508.58,-357 322.79,-357 322.79,-357 316.79,-357 310.79,-351 310.79,-345 310.79,-345 310.79,-333 310.79,-333 310.79,-327 316.79,-321 322.79,-321 322.79,-321 508.58,-321 508.58,-321 514.58,-321 520.58,-327 520.58,-333 520.58,-333 520.58,-345 520.58,-345 520.58,-351 514.58,-357 508.58,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-334.32" font-family="Verdana" font-size="14.00">(*subscriber).Unsubscribe</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge9" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge9"><a xlink:title="at channel.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M504.28,-320.31C512.58,-317.1 520.65,-313.36 528.08,-309 548.41,-297.07 552.03,-290.63 565.08,-271 582.72,-244.46 568.88,-225.72 593.08,-205 615.91,-185.45 649.35,-177.93 675.62,-175.17"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="675.57,-178.69 685.25,-174.37 674.99,-171.72 675.57,-178.69"/>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M821.37,-367C821.37,-367 613.08,-367 613.08,-367 607.08,-367 601.08,-361 601.08,-355 601.08,-355 601.08,-343 601.08,-343 601.08,-337 607.08,-331 613.08,-331 613.08,-331 821.37,-331 821.37,-331 827.37,-331 833.37,-337 833.37,-343 833.37,-343 833.37,-355 833.37,-355 833.37,-361 827.37,-367 821.37,-367"/>
+<text xml:space="preserve" text-anchor="middle" x="717.22" y="-344.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
@@ -253,71 +217,197 @@
 <g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_edge10"><a xlink:title="at channel.go:301: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M521.31,-342.77C536.96,-339.59 552.15,-334.05 565.08,-325 588.86,-308.35 570.64,-284.41 593.08,-266 596.11,-263.51 599.32,-261.22 602.66,-259.11"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="604.08,-262.33 611.07,-254.37 600.64,-256.23 604.08,-262.33"/>
+<path fill="none" stroke="saddlebrown" d="M508.35,-357.72C526.73,-360.75 545.96,-363.41 564.08,-365 572.17,-365.71 580.51,-366.02 588.91,-366.02"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="588.93,-369.52 598.87,-365.85 588.81,-362.52 588.93,-369.52"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="node25" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M815.74,-306C815.74,-306 618.7,-306 618.7,-306 612.7,-306 606.7,-300 606.7,-294 606.7,-294 606.7,-282 606.7,-282 606.7,-276 612.7,-270 618.7,-270 618.7,-270 815.74,-270 815.74,-270 821.74,-270 827.74,-276 827.74,-282 827.74,-282 827.74,-294 827.74,-294 827.74,-300 821.74,-306 815.74,-306"/>
+<text xml:space="preserve" text-anchor="middle" x="717.22" y="-283.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge5" class="edge">
+<g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge5"><a xlink:title="at channel.go:302: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M486.8,-357.71C512.15,-361.25 540.55,-361.36 565.08,-352 580.67,-346.05 578.34,-334.82 593.08,-327 598.88,-323.92 605,-321.14 611.28,-318.63"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="612.42,-321.94 620.57,-315.18 609.98,-315.38 612.42,-321.94"/>
+<g id="a_edge6"><a xlink:title="at channel.go:302: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M521.26,-346C536.19,-344.79 551.18,-342.32 565.08,-338 579.44,-333.53 579.36,-325.15 593.08,-319 600.19,-315.81 607.68,-312.91 615.32,-310.29"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="616.32,-313.64 624.75,-307.22 614.16,-306.99 616.32,-313.64"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="node26" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M804.87,-428C804.87,-428 629.58,-428 629.58,-428 623.58,-428 617.58,-422 617.58,-416 617.58,-416 617.58,-404 617.58,-404 617.58,-398 623.58,-392 629.58,-392 629.58,-392 804.87,-392 804.87,-392 810.87,-392 816.87,-398 816.87,-404 816.87,-404 816.87,-416 816.87,-416 816.87,-422 810.87,-428 804.87,-428"/>
+<text xml:space="preserve" text-anchor="middle" x="717.22" y="-405.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge16" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge16"><a xlink:title="at channel.go:303: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M483.88,-357.66C520.69,-367.81 559.74,-378.42 564.08,-379 573.23,-380.22 588.53,-379.17 606,-377"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="606.18,-380.51 615.62,-375.71 605.25,-373.57 606.18,-380.51"/>
+<g id="a_edge11"><a xlink:title="at channel.go:303: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M495.78,-357.75C535.87,-367.25 584.74,-378.83 626.26,-388.68"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="625.2,-392.02 635.74,-390.92 626.81,-385.21 625.2,-392.02"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe -->
 <g id="node12" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub</title>
-<g id="a_node12"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub | defined in channel.go:354&#10;at channel.go:357: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber]&#10;at channel.go:356: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M456.45,-296C456.45,-296 374.91,-296 374.91,-296 368.91,-296 362.91,-290 362.91,-284 362.91,-284 362.91,-272 362.91,-272 362.91,-266 368.91,-260 374.91,-260 374.91,-260 456.45,-260 456.45,-260 462.45,-260 468.45,-266 468.45,-272 468.45,-272 468.45,-284 468.45,-284 468.45,-290 462.45,-296 456.45,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-273.32" font-family="Verdana" font-size="14.00">newPubSub</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe</title>
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe | defined in channel.go:233&#10;at channel.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at channel.go:261: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at channel.go:258: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at channel.go:259: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M499.95,-296C499.95,-296 331.41,-296 331.41,-296 325.41,-296 319.41,-290 319.41,-284 319.41,-284 319.41,-272 319.41,-272 319.41,-266 325.41,-260 331.41,-260 331.41,-260 499.95,-260 499.95,-260 505.95,-260 511.95,-266 511.95,-272 511.95,-272 511.95,-284 511.95,-284 511.95,-290 505.95,-296 499.95,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-273.32" font-family="Verdana" font-size="14.00">(*subscriber).Subscribe</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher -->
-<g id="edge17" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher</title>
-<g id="a_edge17"><a xlink:title="at channel.go:356: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher]">
-<path fill="none" stroke="black" d="M468.52,-272.38C488.64,-268.18 510.92,-260.83 528.08,-248 572.34,-214.91 548.3,-174.38 593.08,-142 609,-130.49 628.83,-123.48 647.89,-119.24"/>
-<polygon fill="black" stroke="black" points="648.37,-122.71 657.51,-117.34 647.02,-115.84 648.37,-122.71"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge21" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge21"><a xlink:title="at channel.go:258: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M512.7,-261.65C567.64,-252.3 633.71,-241.05 675.34,-233.96"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="675.9,-237.42 685.17,-232.29 674.73,-230.51 675.9,-237.42"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge22" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge22"><a xlink:title="at channel.go:259: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M512.48,-282.59C530.42,-285.57 548.67,-290.13 565.08,-297 579.68,-303.11 578.85,-312.08 593.08,-319 598.79,-321.77 604.77,-324.3 610.89,-326.61"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="609.28,-329.75 619.88,-329.77 611.61,-323.15 609.28,-329.75"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge7"><a xlink:title="at channel.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M512.59,-272.04C529.73,-271.19 547.43,-270.45 564.08,-270 574.14,-269.73 584.54,-269.93 594.97,-270.47"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="594.58,-273.95 604.78,-271.09 595.02,-266.96 594.58,-273.95"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge8"><a xlink:title="at channel.go:261: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M502.98,-296.72C511.76,-300.16 520.3,-304.22 528.08,-309 564.54,-331.38 556.26,-358.22 593.08,-380 597.4,-382.56 601.94,-384.9 606.61,-387.04"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="605.05,-390.18 615.63,-390.83 607.76,-383.73 605.05,-390.18"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher -->
 <g id="node13" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber</title>
-<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber | defined in channel.go:224">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M768.87,-455C768.87,-455 665.58,-455 665.58,-455 659.58,-455 653.58,-449 653.58,-443 653.58,-443 653.58,-431 653.58,-431 653.58,-425 659.58,-419 665.58,-419 665.58,-419 768.87,-419 768.87,-419 774.87,-419 780.87,-425 780.87,-431 780.87,-431 780.87,-443 780.87,-443 780.87,-449 774.87,-455 768.87,-455"/>
-<text xml:space="preserve" text-anchor="middle" x="717.22" y="-432.32" font-family="Verdana" font-size="14.00">newSubscriber</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher</title>
+<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher | defined in channel.go:30&#10;at channel.go:36: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M508.95,-235C508.95,-235 322.41,-235 322.41,-235 316.41,-235 310.41,-229 310.41,-223 310.41,-223 310.41,-211 310.41,-211 310.41,-205 316.41,-199 322.41,-199 322.41,-199 508.95,-199 508.95,-199 514.95,-199 520.95,-205 520.95,-211 520.95,-211 520.95,-223 520.95,-223 520.95,-229 514.95,-235 508.95,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-212.32" font-family="Verdana" font-size="14.00">(*Transport).NewPublisher</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber -->
-<g id="edge3" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber</title>
-<g id="a_edge3"><a xlink:title="at channel.go:357: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber]">
-<path fill="none" stroke="black" d="M468.54,-284.14C488.66,-288.53 510.93,-296.07 528.08,-309 572.21,-342.27 547.43,-383.85 593.08,-415 607.5,-424.84 625.01,-430.67 642.24,-434.04"/>
-<polygon fill="black" stroke="black" points="641.56,-437.47 652,-435.66 642.71,-430.57 641.56,-437.47"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher -->
+<g id="edge12" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPublisher&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher</title>
+<g id="a_edge12"><a xlink:title="at channel.go:36: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPublisher]">
+<path fill="none" stroke="black" d="M520.61,-198.26C562.9,-190.64 610.59,-182.04 648.3,-175.25"/>
+<polygon fill="black" stroke="black" points="648.45,-178.78 657.67,-173.56 647.2,-171.89 648.45,-178.78"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish -->
+<g id="node14" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish</title>
+<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish | defined in channel.go:362&#10;at channel.go:363: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M480.45,-540C480.45,-540 350.91,-540 350.91,-540 344.91,-540 338.91,-534 338.91,-528 338.91,-528 338.91,-516 338.91,-516 338.91,-510 344.91,-504 350.91,-504 350.91,-504 480.45,-504 480.45,-504 486.45,-504 492.45,-510 492.45,-516 492.45,-516 492.45,-528 492.45,-528 492.45,-534 486.45,-540 480.45,-540"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-517.33" font-family="Verdana" font-size="14.00">(*PubSub).Publish</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish</title>
+<g id="a_edge17"><a xlink:title="at channel.go:363: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish]">
+<path fill="none" stroke="black" d="M493.05,-517.92C532.66,-515.81 581.38,-513.2 623.18,-510.97"/>
+<polygon fill="black" stroke="black" points="623.18,-514.48 632.98,-510.45 622.81,-507.49 623.18,-514.48"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe -->
+<g id="node15" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe</title>
+<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe | defined in channel.go:372&#10;at channel.go:373: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M197.66,-296C197.66,-296 48.62,-296 48.62,-296 42.62,-296 36.62,-290 36.62,-284 36.62,-284 36.62,-272 36.62,-272 36.62,-266 42.62,-260 48.62,-260 48.62,-260 197.66,-260 197.66,-260 203.66,-260 209.66,-266 209.66,-272 209.66,-272 209.66,-284 209.66,-284 209.66,-290 203.66,-296 197.66,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="123.14" y="-273.32" font-family="Verdana" font-size="14.00">(*PubSub).Subscribe</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe</title>
+<g id="a_edge13"><a xlink:title="at channel.go:373: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe]">
+<path fill="none" stroke="black" d="M210.14,-278C240.67,-278 275.43,-278 307.51,-278"/>
+<polygon fill="black" stroke="black" points="307.22,-281.5 317.22,-278 307.22,-274.5 307.22,-281.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe -->
+<g id="node16" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe</title>
+<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe | defined in channel.go:377&#10;at channel.go:378: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M206.29,-357C206.29,-357 40,-357 40,-357 34,-357 28,-351 28,-345 28,-345 28,-333 28,-333 28,-327 34,-321 40,-321 40,-321 206.29,-321 206.29,-321 212.29,-321 218.29,-327 218.29,-333 218.29,-333 218.29,-345 218.29,-345 218.29,-351 212.29,-357 206.29,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="123.14" y="-334.32" font-family="Verdana" font-size="14.00">(*PubSub).Unsubscribe</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe -->
+<g id="edge14" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe</title>
+<g id="a_edge14"><a xlink:title="at channel.go:378: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe]">
+<path fill="none" stroke="black" d="M218.88,-339C244.45,-339 272.41,-339 298.99,-339"/>
+<polygon fill="black" stroke="black" points="298.78,-342.5 308.78,-339 298.78,-335.5 298.78,-342.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive -->
+<g id="node17" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive</title>
+<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive | defined in channel.go:382&#10;at channel.go:383: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M189.79,-479C189.79,-479 56.5,-479 56.5,-479 50.5,-479 44.5,-473 44.5,-467 44.5,-467 44.5,-455 44.5,-455 44.5,-449 50.5,-443 56.5,-443 56.5,-443 189.79,-443 189.79,-443 195.79,-443 201.79,-449 201.79,-455 201.79,-455 201.79,-467 201.79,-467 201.79,-473 195.79,-479 189.79,-479"/>
+<text xml:space="preserve" text-anchor="middle" x="123.14" y="-456.32" font-family="Verdana" font-size="14.00">(*PubSub).Receive</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive -->
+<g id="node18" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive</title>
+<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive | defined in channel.go:317">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M492.08,-479C492.08,-479 339.29,-479 339.29,-479 333.29,-479 327.29,-473 327.29,-467 327.29,-467 327.29,-455 327.29,-455 327.29,-449 333.29,-443 339.29,-443 339.29,-443 492.08,-443 492.08,-443 498.08,-443 504.08,-449 504.08,-455 504.08,-455 504.08,-467 504.08,-467 504.08,-473 498.08,-479 492.08,-479"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-456.32" font-family="Verdana" font-size="14.00">(*subscriber).Receive</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive</title>
+<g id="a_edge15"><a xlink:title="at channel.go:383: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive]">
+<path fill="none" stroke="black" d="M202.39,-461C237.11,-461 278.39,-461 315.27,-461"/>
+<polygon fill="black" stroke="black" points="315.05,-464.5 325.05,-461 315.05,-457.5 315.05,-464.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).PublishMessage -->
-<g id="node14" class="node">
+<g id="node19" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).PublishMessage</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).PublishMessage | defined in channel.go:367&#10;at channel.go:368: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M218.29,-601C218.29,-601 28,-601 28,-601 22,-601 16,-595 16,-589 16,-589 16,-577 16,-577 16,-571 22,-565 28,-565 28,-565 218.29,-565 218.29,-565 224.29,-565 230.29,-571 230.29,-577 230.29,-577 230.29,-589 230.29,-589 230.29,-595 224.29,-601 218.29,-601"/>
-<text xml:space="preserve" text-anchor="middle" x="123.14" y="-578.33" font-family="Verdana" font-size="14.00">(*PubSub).PublishMessage</text>
+<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).PublishMessage | defined in channel.go:367&#10;at channel.go:368: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M218.29,-418C218.29,-418 28,-418 28,-418 22,-418 16,-412 16,-406 16,-406 16,-394 16,-394 16,-388 22,-382 28,-382 28,-382 218.29,-382 218.29,-382 224.29,-382 230.29,-388 230.29,-394 230.29,-394 230.29,-406 230.29,-406 230.29,-412 224.29,-418 218.29,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="123.14" y="-395.32" font-family="Verdana" font-size="14.00">(*PubSub).PublishMessage</text>
 </a>
 </g>
 </g>
@@ -325,143 +415,53 @@
 <g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).PublishMessage&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage</title>
 <g id="a_edge18"><a xlink:title="at channel.go:368: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).PublishMessage]">
-<path fill="none" stroke="black" d="M230.68,-583C250.4,-583 271.15,-583 291.33,-583"/>
-<polygon fill="black" stroke="black" points="291.28,-586.5 301.28,-583 291.28,-579.5 291.28,-586.5"/>
+<path fill="none" stroke="black" d="M230.68,-400C250.4,-400 271.15,-400 291.33,-400"/>
+<polygon fill="black" stroke="black" points="291.28,-403.5 301.28,-400 291.28,-396.5 291.28,-403.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe -->
-<g id="node15" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe</title>
-<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe | defined in channel.go:377&#10;at channel.go:378: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M206.29,-357C206.29,-357 40,-357 40,-357 34,-357 28,-351 28,-345 28,-345 28,-333 28,-333 28,-327 34,-321 40,-321 40,-321 206.29,-321 206.29,-321 212.29,-321 218.29,-327 218.29,-333 218.29,-333 218.29,-345 218.29,-345 218.29,-351 212.29,-357 206.29,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="123.14" y="-334.32" font-family="Verdana" font-size="14.00">(*PubSub).Unsubscribe</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Unsubscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe</title>
-<g id="a_edge4"><a xlink:title="at channel.go:378: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Unsubscribe]">
-<path fill="none" stroke="black" d="M218.88,-339C244.45,-339 272.41,-339 298.99,-339"/>
-<polygon fill="black" stroke="black" points="298.78,-342.5 308.78,-339 298.78,-335.5 298.78,-342.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub -->
-<g id="node16" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub</title>
-<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub | defined in channel.go:50&#10;at channel.go:56: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M211.16,-296C211.16,-296 35.12,-296 35.12,-296 29.12,-296 23.12,-290 23.12,-284 23.12,-284 23.12,-272 23.12,-272 23.12,-266 29.12,-260 35.12,-260 35.12,-260 211.16,-260 211.16,-260 217.16,-260 223.16,-266 223.16,-272 223.16,-272 223.16,-284 223.16,-284 223.16,-290 217.16,-296 211.16,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="123.14" y="-273.32" font-family="Verdana" font-size="14.00">(*Transport).NewPubSub</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub -->
-<g id="edge19" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewPubSub&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub</title>
-<g id="a_edge19"><a xlink:title="at channel.go:56: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newPubSub]">
-<path fill="none" stroke="black" d="M223.73,-278C266.15,-278 314.37,-278 351.74,-278"/>
-<polygon fill="black" stroke="black" points="351.45,-281.5 361.45,-278 351.45,-274.5 351.45,-281.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe -->
-<g id="node17" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe</title>
-<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe | defined in channel.go:372&#10;at channel.go:373: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M197.66,-235C197.66,-235 48.62,-235 48.62,-235 42.62,-235 36.62,-229 36.62,-223 36.62,-223 36.62,-211 36.62,-211 36.62,-205 42.62,-199 48.62,-199 48.62,-199 197.66,-199 197.66,-199 203.66,-199 209.66,-205 209.66,-211 209.66,-211 209.66,-223 209.66,-223 209.66,-229 203.66,-235 197.66,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="123.14" y="-212.32" font-family="Verdana" font-size="14.00">(*PubSub).Subscribe</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe -->
-<g id="edge11" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Subscribe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe</title>
-<g id="a_edge11"><a xlink:title="at channel.go:373: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Subscribe]">
-<path fill="none" stroke="black" d="M210.14,-217C240.67,-217 275.43,-217 307.51,-217"/>
-<polygon fill="black" stroke="black" points="307.22,-220.5 317.22,-217 307.22,-213.5 307.22,-220.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish -->
-<g id="node18" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish</title>
-<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish | defined in channel.go:362&#10;at channel.go:363: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M480.45,-479C480.45,-479 350.91,-479 350.91,-479 344.91,-479 338.91,-473 338.91,-467 338.91,-467 338.91,-455 338.91,-455 338.91,-449 344.91,-443 350.91,-443 350.91,-443 480.45,-443 480.45,-443 486.45,-443 492.45,-449 492.45,-455 492.45,-455 492.45,-467 492.45,-467 492.45,-473 486.45,-479 480.45,-479"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-456.32" font-family="Verdana" font-size="14.00">(*PubSub).Publish</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish -->
-<g id="edge6" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Publish&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish</title>
-<g id="a_edge6"><a xlink:title="at channel.go:363: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Publish]">
-<path fill="none" stroke="black" d="M488.43,-479.68C532,-491.03 587.8,-505.56 633.26,-517.4"/>
-<polygon fill="black" stroke="black" points="632.26,-520.75 642.82,-519.89 634.02,-513.98 632.26,-520.75"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive -->
-<g id="node19" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive</title>
-<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive | defined in channel.go:382&#10;at channel.go:383: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M189.79,-540C189.79,-540 56.5,-540 56.5,-540 50.5,-540 44.5,-534 44.5,-528 44.5,-528 44.5,-516 44.5,-516 44.5,-510 50.5,-504 56.5,-504 56.5,-504 189.79,-504 189.79,-504 195.79,-504 201.79,-510 201.79,-516 201.79,-516 201.79,-528 201.79,-528 201.79,-534 195.79,-540 189.79,-540"/>
-<text xml:space="preserve" text-anchor="middle" x="123.14" y="-517.33" font-family="Verdana" font-size="14.00">(*PubSub).Receive</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close -->
 <g id="node20" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive</title>
-<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive | defined in channel.go:317">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M492.08,-540C492.08,-540 339.29,-540 339.29,-540 333.29,-540 327.29,-534 327.29,-528 327.29,-528 327.29,-516 327.29,-516 327.29,-510 333.29,-504 339.29,-504 339.29,-504 492.08,-504 492.08,-504 498.08,-504 504.08,-510 504.08,-516 504.08,-516 504.08,-528 504.08,-528 504.08,-534 498.08,-540 492.08,-540"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-517.33" font-family="Verdana" font-size="14.00">(*subscriber).Receive</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close</title>
+<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close | defined in channel.go:387&#10;at channel.go:389: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close]&#10;at channel.go:388: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M181.54,-631C181.54,-631 64.75,-631 64.75,-631 58.75,-631 52.75,-625 52.75,-619 52.75,-619 52.75,-607 52.75,-607 52.75,-601 58.75,-595 64.75,-595 64.75,-595 181.54,-595 181.54,-595 187.54,-595 193.54,-601 193.54,-607 193.54,-607 193.54,-619 193.54,-619 193.54,-625 187.54,-631 181.54,-631"/>
+<text xml:space="preserve" text-anchor="middle" x="123.14" y="-608.33" font-family="Verdana" font-size="14.00">(*PubSub).Close</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive -->
-<g id="edge20" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Receive&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive</title>
-<g id="a_edge20"><a xlink:title="at channel.go:383: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Receive]">
-<path fill="none" stroke="black" d="M202.39,-522C237.11,-522 278.39,-522 315.27,-522"/>
-<polygon fill="black" stroke="black" points="315.05,-525.5 325.05,-522 315.05,-518.5 315.05,-525.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close -->
 <g id="node21" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber</title>
-<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber | defined in channel.go:40&#10;at channel.go:46: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M514.58,-418C514.58,-418 316.79,-418 316.79,-418 310.79,-418 304.79,-412 304.79,-406 304.79,-406 304.79,-394 304.79,-394 304.79,-388 310.79,-382 316.79,-382 316.79,-382 514.58,-382 514.58,-382 520.58,-382 526.58,-388 526.58,-394 526.58,-394 526.58,-406 526.58,-406 526.58,-412 520.58,-418 514.58,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="415.68" y="-395.32" font-family="Verdana" font-size="14.00">(*Transport).NewSubscriber</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close</title>
+<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close | defined in channel.go:203">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M479.33,-601C479.33,-601 352.04,-601 352.04,-601 346.04,-601 340.04,-595 340.04,-589 340.04,-589 340.04,-577 340.04,-577 340.04,-571 346.04,-565 352.04,-565 352.04,-565 479.33,-565 479.33,-565 485.33,-565 491.33,-571 491.33,-577 491.33,-577 491.33,-589 491.33,-589 491.33,-595 485.33,-601 479.33,-601"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-578.33" font-family="Verdana" font-size="14.00">(*Publisher).Close</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber -->
-<g id="edge12" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Transport).NewSubscriber&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber</title>
-<g id="a_edge12"><a xlink:title="at channel.go:46: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newSubscriber]">
-<path fill="none" stroke="black" d="M526.95,-413.62C565.48,-418.38 607.77,-423.6 642.59,-427.9"/>
-<polygon fill="black" stroke="black" points="641.76,-431.33 652.11,-429.08 642.62,-424.38 641.76,-431.33"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close -->
+<g id="edge23" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close</title>
+<g id="a_edge23"><a xlink:title="at channel.go:388: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.Publisher).Close]">
+<path fill="none" stroke="black" d="M194.11,-605.78C234.41,-601.61 285.41,-596.35 328.22,-591.93"/>
+<polygon fill="black" stroke="black" points="328.39,-595.43 337.98,-590.92 327.67,-588.47 328.39,-595.43"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close -->
 <g id="node22" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport</title>
-<g id="a_node22"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport | defined in channel.go:23&#10;at channel.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M171.04,-662C171.04,-662 75.25,-662 75.25,-662 69.25,-662 63.25,-656 63.25,-650 63.25,-650 63.25,-638 63.25,-638 63.25,-632 69.25,-626 75.25,-626 75.25,-626 171.04,-626 171.04,-626 177.04,-626 183.04,-632 183.04,-638 183.04,-638 183.04,-650 183.04,-650 183.04,-656 177.04,-662 171.04,-662"/>
-<text xml:space="preserve" text-anchor="middle" x="123.14" y="-639.33" font-family="Verdana" font-size="14.00">NewTransport</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close</title>
+<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close | defined in channel.go:334">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M483.83,-662C483.83,-662 347.54,-662 347.54,-662 341.54,-662 335.54,-656 335.54,-650 335.54,-650 335.54,-638 335.54,-638 335.54,-632 341.54,-626 347.54,-626 347.54,-626 483.83,-626 483.83,-626 489.83,-626 495.83,-632 495.83,-638 495.83,-638 495.83,-650 495.83,-650 495.83,-656 489.83,-662 483.83,-662"/>
+<text xml:space="preserve" text-anchor="middle" x="415.68" y="-639.33" font-family="Verdana" font-size="14.00">(*subscriber).Close</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry -->
-<g id="edge7" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.NewTransport&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry</title>
-<g id="a_edge7"><a xlink:title="at channel.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.newTopicRegistry]">
-<path fill="none" stroke="black" d="M183.64,-644C226.28,-644 284.27,-644 331.49,-644"/>
-<polygon fill="black" stroke="black" points="331.43,-647.5 341.43,-644 331.43,-640.5 331.43,-647.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close -->
+<g id="edge19" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.PubSub).Close&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close</title>
+<g id="a_edge19"><a xlink:title="at channel.go:389: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/comms/channel.subscriber).Close]">
+<path fill="none" stroke="black" d="M194.11,-620.46C232.94,-624.61 281.71,-629.81 323.5,-634.27"/>
+<polygon fill="black" stroke="black" points="322.99,-637.74 333.3,-635.32 323.73,-630.78 322.99,-637.74"/>
 </a>
 </g>
 </g>

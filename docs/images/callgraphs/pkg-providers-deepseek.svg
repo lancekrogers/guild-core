@@ -22,57 +22,57 @@
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient -->
-<g id="node1" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient</title>
-<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient | defined in client.go:26&#10;at client.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M127.91,-60C127.91,-60 59.12,-60 59.12,-60 53.12,-60 47.12,-54 47.12,-48 47.12,-48 47.12,-36 47.12,-36 47.12,-30 53.12,-24 59.12,-24 59.12,-24 127.91,-24 127.91,-24 133.91,-24 139.91,-30 139.91,-36 139.91,-36 139.91,-48 139.91,-48 139.91,-54 133.91,-60 127.91,-60"/>
-<text xml:space="preserve" text-anchor="middle" x="93.52" y="-37.33" font-family="Verdana" font-size="14.00">NewClient</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider -->
-<g id="node3" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider | defined in openai_compatible.go:32">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M528.46,-60C528.46,-60 309.67,-60 309.67,-60 303.67,-60 297.67,-54 297.67,-48 297.67,-48 297.67,-36 297.67,-36 297.67,-30 303.67,-24 309.67,-24 309.67,-24 528.46,-24 528.46,-24 534.46,-24 540.46,-30 540.46,-36 540.46,-36 540.46,-48 540.46,-48 540.46,-54 534.46,-60 528.46,-60"/>
-<text xml:space="preserve" text-anchor="middle" x="419.06" y="-37.33" font-family="Verdana" font-size="14.00">NewOpenAICompatibleProvider</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider -->
-<g id="edge1" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider</title>
-<g id="a_edge1"><a xlink:title="at client.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider]">
-<path fill="none" stroke="saddlebrown" d="M140.53,-42C178.48,-42 234.29,-42 285.92,-42"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="285.69,-45.5 295.69,-42 285.69,-38.5 285.69,-45.5"/>
-</a>
-</g>
-</g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.Client).Complete -->
-<g id="node2" class="node">
+<g id="node1" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.Client).Complete</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.Client).Complete | defined in client.go:92&#10;at client.go:100: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M159.04,-121C159.04,-121 28,-121 28,-121 22,-121 16,-115 16,-109 16,-109 16,-97 16,-97 16,-91 22,-85 28,-85 28,-85 159.04,-85 159.04,-85 165.04,-85 171.04,-91 171.04,-97 171.04,-97 171.04,-109 171.04,-109 171.04,-115 165.04,-121 159.04,-121"/>
-<text xml:space="preserve" text-anchor="middle" x="93.52" y="-98.33" font-family="Verdana" font-size="14.00">(*Client).Complete</text>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.Client).Complete | defined in client.go:92&#10;at client.go:100: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M159.04,-60C159.04,-60 28,-60 28,-60 22,-60 16,-54 16,-48 16,-48 16,-36 16,-36 16,-30 22,-24 28,-24 28,-24 159.04,-24 159.04,-24 165.04,-24 171.04,-30 171.04,-36 171.04,-36 171.04,-48 171.04,-48 171.04,-54 165.04,-60 159.04,-60"/>
+<text xml:space="preserve" text-anchor="middle" x="93.52" y="-37.33" font-family="Verdana" font-size="14.00">(*Client).Complete</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion -->
-<g id="node4" class="node">
+<g id="node3" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion | defined in openai_compatible.go:50">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M582.08,-121C582.08,-121 256.04,-121 256.04,-121 250.04,-121 244.04,-115 244.04,-109 244.04,-109 244.04,-97 244.04,-97 244.04,-91 250.04,-85 256.04,-85 256.04,-85 582.08,-85 582.08,-85 588.08,-85 594.08,-91 594.08,-97 594.08,-97 594.08,-109 594.08,-109 594.08,-115 588.08,-121 582.08,-121"/>
-<text xml:space="preserve" text-anchor="middle" x="419.06" y="-98.33" font-family="Verdana" font-size="14.00">(*OpenAICompatibleProvider).ChatCompletion</text>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion | defined in openai_compatible.go:50">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M582.08,-60C582.08,-60 256.04,-60 256.04,-60 250.04,-60 244.04,-54 244.04,-48 244.04,-48 244.04,-36 244.04,-36 244.04,-30 250.04,-24 256.04,-24 256.04,-24 582.08,-24 582.08,-24 588.08,-24 594.08,-30 594.08,-36 594.08,-36 594.08,-48 594.08,-48 594.08,-54 588.08,-60 582.08,-60"/>
+<text xml:space="preserve" text-anchor="middle" x="419.06" y="-37.33" font-family="Verdana" font-size="14.00">(*OpenAICompatibleProvider).ChatCompletion</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion -->
-<g id="edge2" class="edge">
+<g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion</title>
-<g id="a_edge2"><a xlink:title="at client.go:100: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion]">
-<path fill="none" stroke="saddlebrown" d="M171.6,-103C190.14,-103 210.74,-103 231.92,-103"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="231.87,-106.5 241.87,-103 231.87,-99.5 231.87,-106.5"/>
+<g id="a_edge1"><a xlink:title="at client.go:100: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion]">
+<path fill="none" stroke="saddlebrown" d="M171.6,-42C190.14,-42 210.74,-42 231.92,-42"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="231.87,-45.5 241.87,-42 231.87,-38.5 231.87,-45.5"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient -->
+<g id="node2" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient</title>
+<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient | defined in client.go:26&#10;at client.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M127.91,-121C127.91,-121 59.12,-121 59.12,-121 53.12,-121 47.12,-115 47.12,-109 47.12,-109 47.12,-97 47.12,-97 47.12,-91 53.12,-85 59.12,-85 59.12,-85 127.91,-85 127.91,-85 133.91,-85 139.91,-91 139.91,-97 139.91,-97 139.91,-109 139.91,-109 139.91,-115 133.91,-121 127.91,-121"/>
+<text xml:space="preserve" text-anchor="middle" x="93.52" y="-98.33" font-family="Verdana" font-size="14.00">NewClient</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider -->
+<g id="node4" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider</title>
+<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider | defined in openai_compatible.go:32">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M528.46,-121C528.46,-121 309.67,-121 309.67,-121 303.67,-121 297.67,-115 297.67,-109 297.67,-109 297.67,-97 297.67,-97 297.67,-91 303.67,-85 309.67,-85 309.67,-85 528.46,-85 528.46,-85 534.46,-85 540.46,-91 540.46,-97 540.46,-97 540.46,-109 540.46,-109 540.46,-115 534.46,-121 528.46,-121"/>
+<text xml:space="preserve" text-anchor="middle" x="419.06" y="-98.33" font-family="Verdana" font-size="14.00">NewOpenAICompatibleProvider</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider -->
+<g id="edge2" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/deepseek.NewClient&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider</title>
+<g id="a_edge2"><a xlink:title="at client.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/base.NewOpenAICompatibleProvider]">
+<path fill="none" stroke="saddlebrown" d="M140.53,-103C178.48,-103 234.29,-103 285.92,-103"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="285.69,-106.5 295.69,-103 285.69,-99.5 285.69,-106.5"/>
 </a>
 </g>
 </g>

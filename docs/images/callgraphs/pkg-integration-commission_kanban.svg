@@ -17,16 +17,16 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="935.46,-191 935.46,-454 1183.74,-454 1183.74,-191 935.46,-191"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-434.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="935.46,-130 935.46,-393 1183.74,-393 1183.74,-130 935.46,-130"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-373.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
 <g id="clust3" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/kanban</title>
 <g id="a_clust3"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/kanban" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/kanban">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1436.5,-69 1436.5,-149 1536.29,-149 1536.29,-69 1436.5,-69"/>
-<text xml:space="preserve" text-anchor="middle" x="1486.39" y="-129.8" font-family="Tahoma bold" font-size="16.00">kanban</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1436.5,-292 1436.5,-372 1536.29,-372 1536.29,-292 1436.5,-292"/>
+<text xml:space="preserve" text-anchor="middle" x="1486.39" y="-352.8" font-family="Tahoma bold" font-size="16.00">kanban</text>
 </a>
 </g>
 </g>
@@ -46,12 +46,30 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks | defined in integrator.go:604&#10;at integrator.go:608: calling [github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1257.87,-113C1257.87,-113 861.33,-113 861.33,-113 855.33,-113 849.33,-107 849.33,-101 849.33,-101 849.33,-89 849.33,-89 849.33,-83 855.33,-77 861.33,-77 861.33,-77 1257.87,-77 1257.87,-77 1263.87,-77 1269.87,-83 1269.87,-89 1269.87,-89 1269.87,-101 1269.87,-101 1269.87,-107 1263.87,-113 1257.87,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-90.33" font-family="Verdana" font-size="14.00">(*Integrator).ConvertRefinedCommissionToKanbanTasks</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban | defined in integrator.go:354&#10;at integrator.go:364: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban]&#10;at integrator.go:355: calling [github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1194.12,-113C1194.12,-113 925.08,-113 925.08,-113 919.08,-113 913.08,-107 913.08,-101 913.08,-101 913.08,-89 913.08,-89 913.08,-83 919.08,-77 925.08,-77 925.08,-77 1194.12,-77 1194.12,-77 1200.12,-77 1206.12,-83 1206.12,-89 1206.12,-89 1206.12,-101 1206.12,-101 1206.12,-107 1200.12,-113 1194.12,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-90.33" font-family="Verdana" font-size="14.00">(*Integrator).convertDBTaskToKanban</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban -->
+<g id="node2" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban | defined in integrator.go:433">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1617.91,-113C1617.91,-113 1354.87,-113 1354.87,-113 1348.87,-113 1342.87,-107 1342.87,-101 1342.87,-101 1342.87,-89 1342.87,-89 1342.87,-83 1348.87,-77 1354.87,-77 1354.87,-77 1617.91,-77 1617.91,-77 1623.91,-77 1629.91,-83 1629.91,-89 1629.91,-89 1629.91,-101 1629.91,-101 1629.91,-107 1623.91,-113 1617.91,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="1486.39" y="-90.33" font-family="Verdana" font-size="14.00">(*Integrator).convertStatusToKanban</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban</title>
+<g id="a_edge13"><a xlink:title="at integrator.go:364: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban]">
+<path fill="none" stroke="black" d="M1206.19,-95C1246.59,-95 1290.57,-95 1331.43,-95"/>
+<polygon fill="black" stroke="black" points="1331.35,-98.5 1341.35,-95 1331.35,-91.5 1331.35,-98.5"/>
 </a>
 </g>
 </g>
@@ -59,177 +77,42 @@
 <g id="node19" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask</title>
 <g id="a_node19"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask | defined in taskmodel.go:99">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1516.29,-113C1516.29,-113 1456.5,-113 1456.5,-113 1450.5,-113 1444.5,-107 1444.5,-101 1444.5,-101 1444.5,-89 1444.5,-89 1444.5,-83 1450.5,-77 1456.5,-77 1456.5,-77 1516.29,-77 1516.29,-77 1522.29,-77 1528.29,-83 1528.29,-89 1528.29,-89 1528.29,-101 1528.29,-101 1528.29,-107 1522.29,-113 1516.29,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="1486.39" y="-90.33" font-family="Verdana" font-size="14.00">NewTask</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1516.29,-336C1516.29,-336 1456.5,-336 1456.5,-336 1450.5,-336 1444.5,-330 1444.5,-324 1444.5,-324 1444.5,-312 1444.5,-312 1444.5,-306 1450.5,-300 1456.5,-300 1456.5,-300 1516.29,-300 1516.29,-300 1522.29,-300 1528.29,-306 1528.29,-312 1528.29,-312 1528.29,-324 1528.29,-324 1528.29,-330 1522.29,-336 1516.29,-336"/>
+<text xml:space="preserve" text-anchor="middle" x="1486.39" y="-313.32" font-family="Verdana" font-size="14.00">NewTask</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask -->
-<g id="edge33" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask</title>
-<g id="a_edge33"><a xlink:title="at integrator.go:608: calling [github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask]">
-<path fill="none" stroke="saddlebrown" d="M1270.51,-95C1330.75,-95 1391.27,-95 1432.65,-95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1432.55,-98.5 1442.55,-95 1432.55,-91.5 1432.55,-98.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists -->
-<g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists | defined in integrator.go:118&#10;at integrator.go:120: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission]&#10;at integrator.go:132: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:151: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:152: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:149: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:140: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard]&#10;at integrator.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:129: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:148: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:128: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M735.08,-371C735.08,-371 508.04,-371 508.04,-371 502.04,-371 496.04,-365 496.04,-359 496.04,-359 496.04,-347 496.04,-347 496.04,-341 502.04,-335 508.04,-335 508.04,-335 735.08,-335 735.08,-335 741.08,-335 747.08,-341 747.08,-347 747.08,-347 747.08,-359 747.08,-359 747.08,-365 741.08,-371 735.08,-371"/>
-<text xml:space="preserve" text-anchor="middle" x="621.56" y="-348.32" font-family="Verdana" font-size="14.00">(*Integrator).ensureBoardExists</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError -->
-<g id="node3" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError | defined in integrator.go:643">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1116.12,-174C1116.12,-174 1003.08,-174 1003.08,-174 997.08,-174 991.08,-168 991.08,-162 991.08,-162 991.08,-150 991.08,-150 991.08,-144 997.08,-138 1003.08,-138 1003.08,-138 1116.12,-138 1116.12,-138 1122.12,-138 1128.12,-144 1128.12,-150 1128.12,-150 1128.12,-162 1128.12,-162 1128.12,-168 1122.12,-174 1116.12,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-151.32" font-family="Verdana" font-size="14.00">isNotFoundError</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError -->
-<g id="edge49" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError</title>
-<g id="a_edge49"><a xlink:title="at integrator.go:128: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError]">
-<path fill="none" stroke="black" d="M630,-334.84C650.59,-287.38 713.4,-160.02 812.33,-112 828.15,-104.32 832.32,-121.54 849.33,-126 891.66,-137.11 939.95,-144.38 979.47,-148.97"/>
-<polygon fill="black" stroke="black" points="979.07,-152.45 989.4,-150.09 979.86,-145.49 979.07,-152.45"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="node15" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_node15"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1077.49,-235C1077.49,-235 1041.7,-235 1041.7,-235 1035.7,-235 1029.7,-229 1029.7,-223 1029.7,-223 1029.7,-211 1029.7,-211 1029.7,-205 1035.7,-199 1041.7,-199 1041.7,-199 1077.49,-199 1077.49,-199 1083.49,-199 1089.49,-205 1089.49,-211 1089.49,-211 1089.49,-223 1089.49,-223 1089.49,-229 1083.49,-235 1077.49,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-212.32" font-family="Verdana" font-size="14.00">Wrap</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge41" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge41"><a xlink:title="at integrator.go:129: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:148: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M630.29,-334.94C651.37,-288.36 714.86,-164.57 812.33,-118 846.59,-101.63 818.41,-172.97 849.33,-195 898.87,-230.3 972.49,-228.99 1017.92,-223.76"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1018.13,-227.26 1027.6,-222.51 1017.24,-220.31 1018.13,-227.26"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="node16" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1163.74,-296C1163.74,-296 955.45,-296 955.45,-296 949.45,-296 943.45,-290 943.45,-284 943.45,-284 943.45,-272 943.45,-272 943.45,-266 949.45,-260 955.45,-260 955.45,-260 1163.74,-260 1163.74,-260 1169.74,-260 1175.74,-266 1175.74,-272 1175.74,-272 1175.74,-284 1175.74,-284 1175.74,-290 1169.74,-296 1163.74,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-273.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge20" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge20"><a xlink:title="at integrator.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:149: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M658.15,-334.85C695.45,-316.91 756.32,-290.64 812.33,-280 850.66,-272.72 892.95,-270.38 931.51,-270.37"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="931.28,-273.87 941.3,-270.43 931.32,-266.87 931.28,-273.87"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="node17" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1158.12,-357C1158.12,-357 961.08,-357 961.08,-357 955.08,-357 949.08,-351 949.08,-345 949.08,-345 949.08,-333 949.08,-333 949.08,-327 955.08,-321 961.08,-321 961.08,-321 1158.12,-321 1158.12,-321 1164.12,-321 1170.12,-327 1170.12,-333 1170.12,-333 1170.12,-345 1170.12,-345 1170.12,-351 1164.12,-357 1158.12,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-334.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge34" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge34"><a xlink:title="at integrator.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M747.22,-349C806.92,-347.08 878.14,-344.79 937.39,-342.89"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="937.3,-346.4 947.18,-342.58 937.07,-339.4 937.3,-346.4"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="node18" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1147.24,-418C1147.24,-418 971.95,-418 971.95,-418 965.95,-418 959.95,-412 959.95,-406 959.95,-406 959.95,-394 959.95,-394 959.95,-388 965.95,-382 971.95,-382 971.95,-382 1147.24,-382 1147.24,-382 1153.24,-382 1159.24,-388 1159.24,-394 1159.24,-394 1159.24,-406 1159.24,-406 1159.24,-412 1153.24,-418 1147.24,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-395.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge15" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge15"><a xlink:title="at integrator.go:132: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:151: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:152: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M747.22,-366.44C810.6,-373.27 886.96,-381.5 948.2,-388.1"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="947.63,-391.56 957.95,-389.15 948.38,-384.6 947.63,-391.56"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission -->
-<g id="node23" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission</title>
-<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission | defined in boards.sql.go:71">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1183.24,-620C1183.24,-620 935.95,-620 935.95,-620 929.95,-620 923.95,-614 923.95,-608 923.95,-608 923.95,-596 923.95,-596 923.95,-590 929.95,-584 935.95,-584 935.95,-584 1183.24,-584 1183.24,-584 1189.24,-584 1195.24,-590 1195.24,-596 1195.24,-596 1195.24,-608 1195.24,-608 1195.24,-614 1189.24,-620 1183.24,-620"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-597.33" font-family="Verdana" font-size="14.00">(*Queries).GetBoardByCommission</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission -->
-<g id="edge8" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission</title>
-<g id="a_edge8"><a xlink:title="at integrator.go:120: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission]">
-<path fill="none" stroke="saddlebrown" d="M747.31,-366.49C757.8,-370.99 767.68,-376.72 776.33,-384 844.9,-441.72 779.15,-516.24 849.33,-572 867.48,-586.42 889.42,-595.55 912.16,-601.13"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="911.38,-604.54 921.9,-603.26 912.88,-597.7 911.38,-604.54"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard -->
-<g id="node24" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard</title>
-<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard | defined in boards.sql.go:26">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1142.74,-559C1142.74,-559 976.45,-559 976.45,-559 970.45,-559 964.45,-553 964.45,-547 964.45,-547 964.45,-535 964.45,-535 964.45,-529 970.45,-523 976.45,-523 976.45,-523 1142.74,-523 1142.74,-523 1148.74,-523 1154.74,-529 1154.74,-535 1154.74,-535 1154.74,-547 1154.74,-547 1154.74,-553 1148.74,-559 1142.74,-559"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-536.33" font-family="Verdana" font-size="14.00">(*Queries).CreateBoard</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard -->
-<g id="edge27" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard</title>
-<g id="a_edge27"><a xlink:title="at integrator.go:140: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard]">
-<path fill="none" stroke="saddlebrown" d="M747.15,-367.97C757.55,-372.18 767.46,-377.44 776.33,-384 831.16,-424.57 792.65,-481.06 849.33,-519 879.26,-539.03 917.17,-546.9 952.47,-549"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="952.18,-552.49 962.32,-549.42 952.48,-545.5 952.18,-552.49"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask -->
+<g id="edge52" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask</title>
+<g id="a_edge52"><a xlink:title="at integrator.go:355: calling [github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask]">
+<path fill="none" stroke="saddlebrown" d="M1206.26,-95.51C1229.18,-100.92 1251.38,-109.84 1269.87,-124 1335.8,-174.49 1277.33,-245 1342.87,-296 1367.99,-315.55 1403.3,-321.1 1432.5,-321.75"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1432.24,-325.25 1442.25,-321.76 1432.25,-318.25 1432.24,-325.25"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies -->
-<g id="node4" class="node">
+<g id="node3" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies | defined in integrator.go:264&#10;at integrator.go:265: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at integrator.go:294: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent]&#10;at integrator.go:299: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr]&#10;at integrator.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr]">
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies | defined in integrator.go:264&#10;at integrator.go:294: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent]&#10;at integrator.go:299: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr]&#10;at integrator.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr]&#10;at integrator.go:265: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M756.83,-1223C756.83,-1223 486.29,-1223 486.29,-1223 480.29,-1223 474.29,-1217 474.29,-1211 474.29,-1211 474.29,-1199 474.29,-1199 474.29,-1193 480.29,-1187 486.29,-1187 486.29,-1187 756.83,-1187 756.83,-1187 762.83,-1187 768.83,-1193 768.83,-1199 768.83,-1199 768.83,-1211 768.83,-1211 768.83,-1217 762.83,-1223 756.83,-1223"/>
 <text xml:space="preserve" text-anchor="middle" x="621.56" y="-1200.33" font-family="Verdana" font-size="14.00">(*Integrator).recordTaskDependencies</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr -->
-<g id="node5" class="node">
+<g id="node4" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr</title>
-<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr | defined in integrator.go:599">
+<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr | defined in integrator.go:599">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M1089.12,-1390C1089.12,-1390 1030.08,-1390 1030.08,-1390 1024.08,-1390 1018.08,-1384 1018.08,-1378 1018.08,-1378 1018.08,-1366 1018.08,-1366 1018.08,-1360 1024.08,-1354 1030.08,-1354 1030.08,-1354 1089.12,-1354 1089.12,-1354 1095.12,-1354 1101.12,-1360 1101.12,-1366 1101.12,-1366 1101.12,-1378 1101.12,-1378 1101.12,-1384 1095.12,-1390 1089.12,-1390"/>
 <text xml:space="preserve" text-anchor="middle" x="1059.6" y="-1367.33" font-family="Verdana" font-size="14.00">stringPtr</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr -->
-<g id="edge42" class="edge">
+<g id="edge14" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr</title>
-<g id="a_edge42"><a xlink:title="at integrator.go:299: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr]&#10;at integrator.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr]">
+<g id="a_edge14"><a xlink:title="at integrator.go:299: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr]&#10;at integrator.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.stringPtr]">
 <path fill="none" stroke="black" d="M643.3,-1223.09C681.21,-1255 765.53,-1320.66 849.33,-1350 900.81,-1368.03 963.43,-1372.51 1006.68,-1373.11"/>
 <polygon fill="black" stroke="black" points="1006.53,-1376.61 1016.55,-1373.18 1006.57,-1369.61 1006.53,-1376.61"/>
 </a>
@@ -245,119 +128,164 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge1" class="edge">
+<g id="edge37" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge1"><a xlink:title="at integrator.go:265: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<g id="a_edge37"><a xlink:title="at integrator.go:265: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
 <path fill="none" stroke="saddlebrown" d="M768.97,-1193.25C848.06,-1186.9 941.3,-1179.42 1000.19,-1174.69"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1000.29,-1178.19 1009.98,-1173.9 999.73,-1171.21 1000.29,-1178.19"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent -->
-<g id="node25" class="node">
+<g id="node23" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent</title>
-<g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent | defined in tasks.sql.go:427">
+<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent | defined in tasks.sql.go:427">
 <path fill="moccasin" stroke="black" stroke-width="1.5" d="M1158.87,-1047C1158.87,-1047 960.33,-1047 960.33,-1047 954.33,-1047 948.33,-1041 948.33,-1035 948.33,-1035 948.33,-1023 948.33,-1023 948.33,-1017 954.33,-1011 960.33,-1011 960.33,-1011 1158.87,-1011 1158.87,-1011 1164.87,-1011 1170.87,-1017 1170.87,-1023 1170.87,-1023 1170.87,-1035 1170.87,-1035 1170.87,-1041 1164.87,-1047 1158.87,-1047"/>
 <text xml:space="preserve" text-anchor="middle" x="1059.6" y="-1024.33" font-family="Verdana" font-size="14.00">(*Queries).RecordTaskEvent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent -->
-<g id="edge2" class="edge">
+<g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent</title>
-<g id="a_edge2"><a xlink:title="at integrator.go:294: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent]">
+<g id="a_edge6"><a xlink:title="at integrator.go:294: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).RecordTaskEvent]">
 <path fill="none" stroke="saddlebrown" d="M641.9,-1186.82C678.87,-1153.32 763.52,-1082.39 849.33,-1051 876.71,-1040.99 907.36,-1035.08 936.57,-1031.69"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="936.61,-1035.2 946.18,-1030.67 935.87,-1028.24 936.61,-1035.2"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission -->
-<g id="node6" class="node">
+<g id="node5" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission | defined in integrator.go:45&#10;at integrator.go:53: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithComponent]&#10;at integrator.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists]&#10;at integrator.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:99: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies]&#10;at integrator.go:47: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:52: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at integrator.go:81: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask]&#10;at integrator.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:54: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M381.79,-677C381.79,-677 28,-677 28,-677 22,-677 16,-671 16,-665 16,-665 16,-653 16,-653 16,-647 22,-641 28,-641 28,-641 381.79,-641 381.79,-641 387.79,-641 393.79,-647 393.79,-653 393.79,-653 393.79,-665 393.79,-665 393.79,-671 387.79,-677 381.79,-677"/>
-<text xml:space="preserve" text-anchor="middle" x="204.89" y="-654.33" font-family="Verdana" font-size="14.00">(*Integrator).CreateTasksFromRefinedCommission</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists</title>
-<g id="a_edge4"><a xlink:title="at integrator.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists]">
-<path fill="none" stroke="black" d="M217.34,-640.61C249.64,-590.39 347.01,-450.26 466.79,-384 472.81,-380.67 479.14,-377.69 485.66,-375.04"/>
-<polygon fill="black" stroke="black" points="486.51,-378.46 494.63,-371.65 484.04,-371.91 486.51,-378.46"/>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission | defined in integrator.go:45&#10;at integrator.go:99: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies]&#10;at integrator.go:54: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithOperation]&#10;at integrator.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:53: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithComponent]&#10;at integrator.go:47: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:52: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at integrator.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists]&#10;at integrator.go:81: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask]&#10;at integrator.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M381.79,-662C381.79,-662 28,-662 28,-662 22,-662 16,-656 16,-650 16,-650 16,-638 16,-638 16,-632 22,-626 28,-626 28,-626 381.79,-626 381.79,-626 387.79,-626 393.79,-632 393.79,-638 393.79,-638 393.79,-650 393.79,-650 393.79,-656 387.79,-662 381.79,-662"/>
+<text xml:space="preserve" text-anchor="middle" x="204.89" y="-639.33" font-family="Verdana" font-size="14.00">(*Integrator).CreateTasksFromRefinedCommission</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies -->
-<g id="edge22" class="edge">
+<g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies</title>
-<g id="a_edge22"><a xlink:title="at integrator.go:99: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies]">
-<path fill="none" stroke="black" d="M207.99,-677.73C217.45,-752.9 263.28,-1035 429.79,-1168 440.09,-1176.22 451.68,-1182.8 463.94,-1188.04"/>
-<polygon fill="black" stroke="black" points="462.39,-1191.19 472.97,-1191.58 464.94,-1184.67 462.39,-1191.19"/>
+<g id="a_edge1"><a xlink:title="at integrator.go:99: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).recordTaskDependencies]">
+<path fill="none" stroke="black" d="M207.74,-662.74C216.32,-739.27 259.5,-1030.49 429.79,-1168 440.04,-1176.28 451.61,-1182.89 463.85,-1188.16"/>
+<polygon fill="black" stroke="black" points="462.28,-1191.3 472.87,-1191.71 464.85,-1184.79 462.28,-1191.3"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists -->
+<g id="node6" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists</title>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists | defined in integrator.go:118&#10;at integrator.go:129: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:148: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:128: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError]&#10;at integrator.go:120: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission]&#10;at integrator.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:149: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:132: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:151: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:152: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:140: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M735.08,-371C735.08,-371 508.04,-371 508.04,-371 502.04,-371 496.04,-365 496.04,-359 496.04,-359 496.04,-347 496.04,-347 496.04,-341 502.04,-335 508.04,-335 508.04,-335 735.08,-335 735.08,-335 741.08,-335 747.08,-341 747.08,-347 747.08,-347 747.08,-359 747.08,-359 747.08,-365 741.08,-371 735.08,-371"/>
+<text xml:space="preserve" text-anchor="middle" x="621.56" y="-348.32" font-family="Verdana" font-size="14.00">(*Integrator).ensureBoardExists</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists -->
+<g id="edge47" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists</title>
+<g id="a_edge47"><a xlink:title="at integrator.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists]">
+<path fill="none" stroke="black" d="M218.33,-625.58C252.01,-577.27 350.36,-446.3 466.79,-384 473.01,-380.67 479.55,-377.7 486.28,-375.04"/>
+<polygon fill="black" stroke="black" points="487.38,-378.37 495.57,-371.64 484.98,-371.79 487.38,-378.37"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask -->
-<g id="node7" class="node">
+<g id="node8" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask | defined in integrator.go:159&#10;at integrator.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:207: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:189: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn]&#10;at integrator.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent]&#10;at integrator.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:192: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateTask]&#10;at integrator.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:204: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:205: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:219: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M706.58,-795C706.58,-795 536.54,-795 536.54,-795 530.54,-795 524.54,-789 524.54,-783 524.54,-783 524.54,-771 524.54,-771 524.54,-765 530.54,-759 536.54,-759 536.54,-759 706.58,-759 706.58,-759 712.58,-759 718.58,-765 718.58,-771 718.58,-771 718.58,-783 718.58,-783 718.58,-789 712.58,-795 706.58,-795"/>
-<text xml:space="preserve" text-anchor="middle" x="621.56" y="-772.33" font-family="Verdana" font-size="14.00">(*Integrator).createTask</text>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask | defined in integrator.go:159&#10;at integrator.go:192: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateTask]&#10;at integrator.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:205: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:207: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent]&#10;at integrator.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:219: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at integrator.go:189: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn]&#10;at integrator.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:204: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M706.58,-734C706.58,-734 536.54,-734 536.54,-734 530.54,-734 524.54,-728 524.54,-722 524.54,-722 524.54,-710 524.54,-710 524.54,-704 530.54,-698 536.54,-698 536.54,-698 706.58,-698 706.58,-698 712.58,-698 718.58,-704 718.58,-710 718.58,-710 718.58,-722 718.58,-722 718.58,-728 712.58,-734 706.58,-734"/>
+<text xml:space="preserve" text-anchor="middle" x="621.56" y="-711.33" font-family="Verdana" font-size="14.00">(*Integrator).createTask</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask -->
-<g id="edge37" class="edge">
+<g id="edge49" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask</title>
-<g id="a_edge37"><a xlink:title="at integrator.go:81: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask]">
-<path fill="none" stroke="black" d="M254.83,-677.68C306.82,-697.01 391.7,-727.11 466.79,-747 481.85,-750.99 497.87,-754.7 513.67,-758.05"/>
-<polygon fill="black" stroke="black" points="512.57,-761.39 523.07,-760 513.99,-754.54 512.57,-761.39"/>
+<g id="a_edge49"><a xlink:title="at integrator.go:81: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask]">
+<path fill="none" stroke="black" d="M313.76,-662.73C375.21,-673.4 451.93,-686.72 513.28,-697.37"/>
+<polygon fill="black" stroke="black" points="512.61,-700.81 523.06,-699.07 513.8,-693.91 512.61,-700.81"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="node15" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_node15"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1077.49,-357C1077.49,-357 1041.7,-357 1041.7,-357 1035.7,-357 1029.7,-351 1029.7,-345 1029.7,-345 1029.7,-333 1029.7,-333 1029.7,-327 1035.7,-321 1041.7,-321 1041.7,-321 1077.49,-321 1077.49,-321 1083.49,-321 1089.49,-327 1089.49,-333 1089.49,-333 1089.49,-345 1089.49,-345 1089.49,-351 1083.49,-357 1077.49,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-334.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge28" class="edge">
+<g id="edge34" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge28"><a xlink:title="at integrator.go:47: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M212.61,-640.31C236.65,-575.89 324.69,-360.62 466.79,-244 594.19,-139.44 675.54,-21.57 813.33,-112 846.95,-134.06 816.91,-171.21 849.33,-195 898.37,-230.99 972.14,-229.47 1017.73,-224.01"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1018.01,-227.5 1027.46,-222.72 1017.09,-220.56 1018.01,-227.5"/>
+<g id="a_edge34"><a xlink:title="at integrator.go:47: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M343.19,-625.26C465.8,-603.17 645.69,-557.1 776.33,-465 798.63,-449.28 797.63,-438.32 813.33,-416 830.14,-392.11 824.39,-376.22 849.33,-361 900.85,-329.55 973.05,-329.54 1017.76,-333.48"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1017.25,-336.94 1027.55,-334.46 1017.95,-329.98 1017.25,-336.94"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="node16" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1163.74,-174C1163.74,-174 955.45,-174 955.45,-174 949.45,-174 943.45,-168 943.45,-162 943.45,-162 943.45,-150 943.45,-150 943.45,-144 949.45,-138 955.45,-138 955.45,-138 1163.74,-138 1163.74,-138 1169.74,-138 1175.74,-144 1175.74,-150 1175.74,-150 1175.74,-162 1175.74,-162 1175.74,-168 1169.74,-174 1163.74,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-151.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge9" class="edge">
+<g id="edge29" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge9"><a xlink:title="at integrator.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M213.99,-640.43C240.47,-582.12 330.72,-401.94 466.79,-323 611.38,-239.11 810.38,-243.47 936.76,-257.92"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="936.15,-261.38 946.5,-259.08 936.98,-254.43 936.15,-261.38"/>
+<g id="a_edge29"><a xlink:title="at integrator.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M211.91,-625.49C234.22,-559.74 318.75,-335.15 466.79,-220 594.13,-120.95 658.04,-68.31 813.33,-112 831.38,-117.08 831.57,-127.98 849.33,-134 875.25,-142.78 903.93,-148.31 931.53,-151.73"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="931.02,-155.2 941.36,-152.86 931.82,-148.24 931.02,-155.2"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="node17" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1158.12,-235C1158.12,-235 961.08,-235 961.08,-235 955.08,-235 949.08,-229 949.08,-223 949.08,-223 949.08,-211 949.08,-211 949.08,-205 955.08,-199 961.08,-199 961.08,-199 1158.12,-199 1158.12,-199 1164.12,-199 1170.12,-205 1170.12,-211 1170.12,-211 1170.12,-223 1170.12,-223 1170.12,-229 1164.12,-235 1158.12,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-212.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge43" class="edge">
+<g id="edge38" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge43"><a xlink:title="at integrator.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M265.52,-640.31C393.15,-599.71 688.34,-502.51 776.33,-445 815.27,-419.55 807.92,-391.19 849.33,-370 876.15,-356.28 907.26,-348.16 937.17,-343.48"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="937.66,-346.94 947.06,-342.06 936.67,-340.01 937.66,-346.94"/>
+<g id="a_edge38"><a xlink:title="at integrator.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M215.01,-625.38C243.5,-569.37 336.73,-401.44 466.79,-323 611.9,-235.48 810.98,-216.34 937.21,-214.04"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="936.97,-217.54 946.92,-213.9 936.87,-210.55 936.97,-217.54"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="node18" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1147.24,-296C1147.24,-296 971.95,-296 971.95,-296 965.95,-296 959.95,-290 959.95,-284 959.95,-284 959.95,-272 959.95,-272 959.95,-266 965.95,-260 971.95,-260 971.95,-260 1147.24,-260 1147.24,-260 1153.24,-260 1159.24,-266 1159.24,-272 1159.24,-272 1159.24,-284 1159.24,-284 1159.24,-290 1153.24,-296 1147.24,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-273.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge16" class="edge">
+<g id="edge53" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge16"><a xlink:title="at integrator.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M349.16,-640.25C526.02,-616.82 804.74,-578.82 813.33,-571 863.7,-525.12 798.08,-466.88 849.33,-422 876.11,-398.55 912.83,-389.76 948.04,-387.87"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="948.01,-391.38 957.89,-387.54 947.78,-384.38 948.01,-391.38"/>
+<g id="a_edge53"><a xlink:title="at integrator.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M224.42,-625.53C264.47,-586.96 363.87,-498.52 466.79,-463 531.92,-440.52 718.25,-482.07 776.33,-445 834.15,-408.09 793.2,-348.45 849.33,-309 877.87,-288.94 914.03,-279.5 948.24,-275.56"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="948.15,-279.08 957.76,-274.61 947.46,-272.12 948.15,-279.08"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge35" class="edge">
+<g id="edge45" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge35"><a xlink:title="at integrator.go:52: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M223.32,-677.36C291.48,-748.1 549.27,-1005.62 812.33,-1138 871.41,-1167.73 948.11,-1173.32 1000.1,-1173.03"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="999.99,-1176.53 1009.94,-1172.89 999.9,-1169.53 999.99,-1176.53"/>
+<g id="a_edge45"><a xlink:title="at integrator.go:52: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M222.61,-662.71C289.14,-735.93 544.52,-1005.61 812.33,-1138 871.62,-1167.31 948.28,-1172.98 1000.2,-1172.82"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1000.07,-1176.32 1010.03,-1172.71 999.99,-1169.33 1000.07,-1176.32"/>
 </a>
 </g>
 </g>
@@ -371,10 +299,10 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithComponent -->
-<g id="edge3" class="edge">
+<g id="edge30" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithComponent</title>
-<g id="a_edge3"><a xlink:title="at integrator.go:53: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M207,-677.56C213.22,-762.46 251.72,-1114.91 466.79,-1236 552.38,-1284.19 840.24,-1257.61 980.49,-1241.06"/>
+<g id="a_edge30"><a xlink:title="at integrator.go:53: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M206.76,-662.49C211.92,-748.67 246.58,-1112.02 466.79,-1236 552.38,-1284.19 840.24,-1257.61 980.49,-1241.06"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="980.53,-1244.58 990.05,-1239.92 979.7,-1237.63 980.53,-1244.58"/>
 </a>
 </g>
@@ -389,74 +317,164 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithOperation -->
-<g id="edge50" class="edge">
+<g id="edge21" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).CreateTasksFromRefinedCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithOperation</title>
-<g id="a_edge50"><a xlink:title="at integrator.go:54: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M206.22,-677.62C208.95,-766.84 234.24,-1150.66 466.79,-1257 557.38,-1298.42 849.3,-1297.22 986.32,-1294.16"/>
+<g id="a_edge21"><a xlink:title="at integrator.go:54: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M206,-662.5C207.7,-752.9 228.81,-1148.17 466.79,-1257 557.38,-1298.42 849.3,-1297.22 986.32,-1294.16"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="986.07,-1297.67 995.99,-1293.94 985.91,-1290.67 986.07,-1297.67"/>
 </a>
 </g>
 </g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError -->
+<g id="node7" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError</title>
+<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError | defined in integrator.go:643">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1116.12,-52C1116.12,-52 1003.08,-52 1003.08,-52 997.08,-52 991.08,-46 991.08,-40 991.08,-40 991.08,-28 991.08,-28 991.08,-22 997.08,-16 1003.08,-16 1003.08,-16 1116.12,-16 1116.12,-16 1122.12,-16 1128.12,-22 1128.12,-28 1128.12,-28 1128.12,-40 1128.12,-40 1128.12,-46 1122.12,-52 1116.12,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-29.32" font-family="Verdana" font-size="14.00">isNotFoundError</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError</title>
+<g id="a_edge15"><a xlink:title="at integrator.go:128: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.isNotFoundError]">
+<path fill="none" stroke="black" d="M630.7,-334.94C655.18,-282.89 733.71,-132.03 849.33,-65 888.54,-42.27 938.57,-34.25 979.88,-32.04"/>
+<polygon fill="black" stroke="black" points="979.93,-35.54 989.78,-31.62 979.64,-28.55 979.93,-35.54"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge7"><a xlink:title="at integrator.go:129: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:148: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M731.48,-371.21C746.71,-374.84 762.04,-379.08 776.33,-384 793.25,-389.82 794.92,-397.89 812.33,-402 836.22,-407.64 827.53,-372.28 849.33,-361 902.68,-333.4 973.83,-332.18 1017.9,-334.83"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1017.58,-338.32 1027.8,-335.54 1018.07,-331.34 1017.58,-338.32"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge32" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge32"><a xlink:title="at integrator.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:149: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M630.29,-334.94C651.37,-288.36 714.86,-164.57 812.33,-118 828.5,-110.28 832.02,-129.37 849.33,-134 875.54,-141.01 904.15,-145.81 931.57,-149.08"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="931,-152.54 941.32,-150.18 931.78,-145.59 931,-152.54"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge8"><a xlink:title="at integrator.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:150: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M654.09,-334.85C696.87,-311.06 776.38,-269.8 849.33,-248 877.34,-239.63 908.15,-233.47 937.33,-228.95"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="937.55,-232.46 946.92,-227.52 936.52,-225.54 937.55,-232.46"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge39" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge39"><a xlink:title="at integrator.go:132: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:151: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:152: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M711.52,-334.79C753.27,-326.48 803.77,-316.79 849.33,-309 881.39,-303.52 916.31,-298.12 948.28,-293.4"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="948.57,-296.9 957.96,-291.98 947.55,-289.97 948.57,-296.9"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission -->
+<g id="node24" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission</title>
+<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission | defined in boards.sql.go:71">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1183.24,-620C1183.24,-620 935.95,-620 935.95,-620 929.95,-620 923.95,-614 923.95,-608 923.95,-608 923.95,-596 923.95,-596 923.95,-590 929.95,-584 935.95,-584 935.95,-584 1183.24,-584 1183.24,-584 1189.24,-584 1195.24,-590 1195.24,-596 1195.24,-596 1195.24,-608 1195.24,-608 1195.24,-614 1189.24,-620 1183.24,-620"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-597.33" font-family="Verdana" font-size="14.00">(*Queries).GetBoardByCommission</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission -->
+<g id="edge31" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission</title>
+<g id="a_edge31"><a xlink:title="at integrator.go:120: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).GetBoardByCommission]">
+<path fill="none" stroke="saddlebrown" d="M747.31,-366.49C757.8,-370.99 767.68,-376.72 776.33,-384 844.9,-441.72 779.15,-516.24 849.33,-572 867.48,-586.42 889.42,-595.55 912.16,-601.13"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="911.38,-604.54 921.9,-603.26 912.88,-597.7 911.38,-604.54"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard -->
+<g id="node25" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard</title>
+<g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard | defined in boards.sql.go:26">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1142.74,-559C1142.74,-559 976.45,-559 976.45,-559 970.45,-559 964.45,-553 964.45,-547 964.45,-547 964.45,-535 964.45,-535 964.45,-529 970.45,-523 976.45,-523 976.45,-523 1142.74,-523 1142.74,-523 1148.74,-523 1154.74,-529 1154.74,-535 1154.74,-535 1154.74,-547 1154.74,-547 1154.74,-553 1148.74,-559 1142.74,-559"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-536.33" font-family="Verdana" font-size="14.00">(*Queries).CreateBoard</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard -->
+<g id="edge46" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ensureBoardExists&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard</title>
+<g id="a_edge46"><a xlink:title="at integrator.go:140: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateBoard]">
+<path fill="none" stroke="saddlebrown" d="M747.15,-367.97C757.55,-372.18 767.46,-377.44 776.33,-384 831.16,-424.57 792.65,-481.06 849.33,-519 879.26,-539.03 917.17,-546.9 952.47,-549"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="952.18,-552.49 962.32,-549.42 952.48,-545.5 952.18,-552.49"/>
+</a>
+</g>
+</g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn -->
-<g id="node8" class="node">
+<g id="node9" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn | defined in integrator.go:231">
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn | defined in integrator.go:231">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M1189.99,-1127C1189.99,-1127 929.2,-1127 929.2,-1127 923.2,-1127 917.2,-1121 917.2,-1115 917.2,-1115 917.2,-1103 917.2,-1103 917.2,-1097 923.2,-1091 929.2,-1091 929.2,-1091 1189.99,-1091 1189.99,-1091 1195.99,-1091 1201.99,-1097 1201.99,-1103 1201.99,-1103 1201.99,-1115 1201.99,-1115 1201.99,-1121 1195.99,-1127 1189.99,-1127"/>
 <text xml:space="preserve" text-anchor="middle" x="1059.6" y="-1104.33" font-family="Verdana" font-size="14.00">(*Integrator).determineInitialColumn</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn -->
-<g id="edge6" class="edge">
+<g id="edge48" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn</title>
-<g id="a_edge6"><a xlink:title="at integrator.go:189: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn]">
-<path fill="none" stroke="black" d="M629.49,-795.08C651.69,-850.18 726.79,-1016.51 849.33,-1087 866.63,-1096.95 886.08,-1103.66 905.97,-1108.05"/>
-<polygon fill="black" stroke="black" points="905.08,-1111.44 915.57,-1109.96 906.44,-1104.58 905.08,-1111.44"/>
+<g id="a_edge48"><a xlink:title="at integrator.go:189: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).determineInitialColumn]">
+<path fill="none" stroke="black" d="M669.65,-734.11C704.12,-749.73 749.41,-775.54 776.33,-812 851.45,-913.72 753.27,-1004.76 849.33,-1087 865.58,-1100.91 885.34,-1109.61 906.15,-1114.75"/>
+<polygon fill="black" stroke="black" points="905.13,-1118.11 915.65,-1116.8 906.61,-1111.27 905.13,-1118.11"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge36" class="edge">
+<g id="edge54" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge36"><a xlink:title="at integrator.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:204: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M718.77,-776.65C740.34,-771.98 761.26,-763.08 776.33,-747 852.97,-665.23 769.28,-326.44 849.33,-248 893.59,-204.63 970.39,-204.96 1017.63,-210.23"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1017.11,-213.69 1027.46,-211.46 1017.98,-206.74 1017.11,-213.69"/>
+<g id="a_edge54"><a xlink:title="at integrator.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:204: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M718.57,-709.9C738.94,-705.28 759.38,-697.83 776.33,-686 802.34,-667.86 802.74,-654.89 813.33,-625 833.1,-569.19 806.82,-402.22 849.33,-361 893.67,-318.01 970.71,-322.2 1017.93,-330.01"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1017.01,-333.4 1027.47,-331.73 1018.25,-326.51 1017.01,-333.4"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge44" class="edge">
+<g id="edge22" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge44"><a xlink:title="at integrator.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:205: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M718.75,-776.16C740.19,-771.48 761.06,-762.69 776.33,-747 845.14,-676.27 778.93,-378.14 849.33,-309 871.27,-287.46 901.24,-276.69 931.64,-271.95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="931.89,-275.45 941.35,-270.67 930.97,-268.51 931.89,-275.45"/>
+<g id="a_edge22"><a xlink:title="at integrator.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:205: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M718.59,-716.38C740.43,-711.75 761.52,-702.68 776.33,-686 848.37,-604.84 745.33,-284.36 812.33,-199 840.37,-163.28 886.63,-149.57 931.53,-145.86"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="931.64,-149.36 941.39,-145.22 931.19,-142.37 931.64,-149.36"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge10" class="edge">
+<g id="edge40" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge10"><a xlink:title="at integrator.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M718.46,-775.88C739.91,-771.21 760.86,-762.49 776.33,-747 836.63,-686.62 787.67,-428.99 849.33,-370 872.77,-347.57 904.95,-336.93 937.05,-332.61"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="937.34,-336.1 946.88,-331.51 936.56,-329.15 937.34,-336.1"/>
+<g id="a_edge40"><a xlink:title="at integrator.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M718.57,-715.92C740.27,-711.27 761.31,-702.31 776.33,-686 825.55,-632.55 796.94,-432.02 812.33,-361 823.52,-309.35 808.94,-282.07 849.33,-248 873.75,-227.4 905.74,-217.22 937.34,-212.76"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="937.47,-216.27 946.98,-211.59 936.63,-209.32 937.47,-216.27"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge5" class="edge">
+<g id="edge23" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge5"><a xlink:title="at integrator.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:207: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M718.79,-773.63C739.61,-768.93 760.19,-760.77 776.33,-747 812.7,-715.98 801.26,-692.26 813.33,-646 826.06,-597.22 812.72,-456.66 849.33,-422 875.42,-397.3 912.35,-388.33 947.95,-386.65"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="948.02,-390.15 957.93,-386.39 947.84,-383.15 948.02,-390.15"/>
+<g id="a_edge23"><a xlink:title="at integrator.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:207: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M718.46,-714.88C739.91,-710.21 760.86,-701.49 776.33,-686 836.63,-625.62 787.67,-367.99 849.33,-309 875.54,-283.92 912.69,-273.58 948.42,-270.34"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="948.22,-273.86 957.94,-269.66 947.72,-266.88 948.22,-273.86"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge51" class="edge">
+<g id="edge44" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge51"><a xlink:title="at integrator.go:219: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M627.67,-795C644.61,-851.75 704.13,-1029.25 812.33,-1131 862.23,-1177.93 944.54,-1181.74 1000.12,-1177.81"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1000.37,-1181.3 1010.05,-1176.99 999.8,-1174.33 1000.37,-1181.3"/>
+<g id="a_edge44"><a xlink:title="at integrator.go:219: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M673.7,-734.22C708.56,-749.44 752.56,-774.72 776.33,-812 858.5,-940.85 714.36,-1076.33 849.33,-1148 895.83,-1172.69 956.3,-1176.56 1000.27,-1175.22"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1000.28,-1178.72 1010.13,-1174.81 999.99,-1171.72 1000.28,-1178.72"/>
 </a>
 </g>
 </g>
@@ -464,17 +482,17 @@
 <g id="node26" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateTask</title>
 <g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateTask | defined in tasks.sql.go:46">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1137.12,-986C1137.12,-986 982.08,-986 982.08,-986 976.08,-986 970.08,-980 970.08,-974 970.08,-974 970.08,-962 970.08,-962 970.08,-956 976.08,-950 982.08,-950 982.08,-950 1137.12,-950 1137.12,-950 1143.12,-950 1149.12,-956 1149.12,-962 1149.12,-962 1149.12,-974 1149.12,-974 1149.12,-980 1143.12,-986 1137.12,-986"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-963.33" font-family="Verdana" font-size="14.00">(*Queries).CreateTask</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1137.12,-864C1137.12,-864 982.08,-864 982.08,-864 976.08,-864 970.08,-858 970.08,-852 970.08,-852 970.08,-840 970.08,-840 970.08,-834 976.08,-828 982.08,-828 982.08,-828 1137.12,-828 1137.12,-828 1143.12,-828 1149.12,-834 1149.12,-840 1149.12,-840 1149.12,-852 1149.12,-852 1149.12,-858 1143.12,-864 1137.12,-864"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-841.33" font-family="Verdana" font-size="14.00">(*Queries).CreateTask</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateTask -->
-<g id="edge21" class="edge">
+<g id="edge16" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateTask</title>
-<g id="a_edge21"><a xlink:title="at integrator.go:192: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateTask]">
-<path fill="none" stroke="saddlebrown" d="M635.76,-795.24C663.57,-832.02 732.29,-914.53 812.33,-949 857.72,-968.55 912.15,-974.35 958.29,-974.81"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="958,-978.31 968.01,-974.82 958.01,-971.31 958,-978.31"/>
+<g id="a_edge16"><a xlink:title="at integrator.go:192: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).CreateTask]">
+<path fill="none" stroke="saddlebrown" d="M664.69,-734.1C698.49,-750.38 745.25,-777.1 776.33,-812 801.19,-839.91 780.75,-868.01 812.33,-888 826.83,-897.17 832.59,-880.77 849.33,-877 884.57,-869.05 923.62,-862.64 958.35,-857.75"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="958.54,-861.26 967.97,-856.42 957.58,-854.32 958.54,-861.26"/>
 </a>
 </g>
 </g>
@@ -482,89 +500,71 @@
 <g id="node27" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent</title>
 <g id="a_node27"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent | defined in tasks.sql.go:24">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1166.37,-925C1166.37,-925 952.83,-925 952.83,-925 946.83,-925 940.83,-919 940.83,-913 940.83,-913 940.83,-901 940.83,-901 940.83,-895 946.83,-889 952.83,-889 952.83,-889 1166.37,-889 1166.37,-889 1172.37,-889 1178.37,-895 1178.37,-901 1178.37,-901 1178.37,-913 1178.37,-913 1178.37,-919 1172.37,-925 1166.37,-925"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-902.33" font-family="Verdana" font-size="14.00">(*Queries).AssignTaskToAgent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1166.37,-742C1166.37,-742 952.83,-742 952.83,-742 946.83,-742 940.83,-736 940.83,-730 940.83,-730 940.83,-718 940.83,-718 940.83,-712 946.83,-706 952.83,-706 952.83,-706 1166.37,-706 1166.37,-706 1172.37,-706 1178.37,-712 1178.37,-718 1178.37,-718 1178.37,-730 1178.37,-730 1178.37,-736 1172.37,-742 1166.37,-742"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-719.33" font-family="Verdana" font-size="14.00">(*Queries).AssignTaskToAgent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent -->
-<g id="edge7" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent</title>
-<g id="a_edge7"><a xlink:title="at integrator.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent]">
-<path fill="none" stroke="saddlebrown" d="M635.74,-795C663.52,-831.23 732.18,-912.03 812.33,-942 813.88,-942.58 870.43,-934.58 928.94,-926.08"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="929.37,-929.55 938.76,-924.65 928.36,-922.63 929.37,-929.55"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission -->
-<g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission | defined in integrator.go:314&#10;at integrator.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:329: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:340: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:330: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:325: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission]&#10;at integrator.go:316: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:327: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:338: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:317: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:328: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:339: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:336: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban]&#10;at integrator.go:321: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M754.58,-432C754.58,-432 488.54,-432 488.54,-432 482.54,-432 476.54,-426 476.54,-420 476.54,-420 476.54,-408 476.54,-408 476.54,-402 482.54,-396 488.54,-396 488.54,-396 754.58,-396 754.58,-396 760.58,-396 766.58,-402 766.58,-408 766.58,-408 766.58,-420 766.58,-420 766.58,-426 760.58,-432 754.58,-432"/>
-<text xml:space="preserve" text-anchor="middle" x="621.56" y="-409.32" font-family="Verdana" font-size="14.00">(*Integrator).GetTasksForCommission</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban -->
-<g id="node10" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban | defined in integrator.go:354&#10;at integrator.go:364: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban]&#10;at integrator.go:355: calling [github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1194.12,-52C1194.12,-52 925.08,-52 925.08,-52 919.08,-52 913.08,-46 913.08,-40 913.08,-40 913.08,-28 913.08,-28 913.08,-22 919.08,-16 925.08,-16 925.08,-16 1194.12,-16 1194.12,-16 1200.12,-16 1206.12,-22 1206.12,-28 1206.12,-28 1206.12,-40 1206.12,-40 1206.12,-46 1200.12,-52 1194.12,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-29.32" font-family="Verdana" font-size="14.00">(*Integrator).convertDBTaskToKanban</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban -->
-<g id="edge25" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban</title>
-<g id="a_edge25"><a xlink:title="at integrator.go:336: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban]">
-<path fill="none" stroke="black" d="M762.76,-395.48C767.64,-392.14 772.2,-388.33 776.33,-384 814.32,-344.19 795.82,-191.49 812.33,-139 823.36,-103.92 819.56,-86.58 849.33,-65 865.07,-53.6 883.24,-45.58 902.16,-40.04"/>
-<polygon fill="black" stroke="black" points="902.84,-43.49 911.6,-37.53 901.03,-36.72 902.84,-43.49"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge23"><a xlink:title="at integrator.go:316: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:327: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:338: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M762.74,-395.46C767.63,-392.12 772.19,-388.32 776.33,-384 850.63,-306.42 730.91,-215.07 812.33,-145 833.28,-126.97 825.42,-181.13 849.33,-195 901.54,-225.29 973.54,-225.65 1018.02,-222.09"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1018.11,-225.6 1027.75,-221.2 1017.47,-218.62 1018.11,-225.6"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
 <g id="edge24" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge24"><a xlink:title="at integrator.go:317: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:328: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:339: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M758.4,-395.41C764.73,-392.13 770.76,-388.35 776.33,-384 806.1,-360.75 781.7,-329.11 812.33,-307 846.38,-282.42 890.24,-272.36 931.49,-269.32"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="931.48,-272.83 941.25,-268.75 931.07,-265.84 931.48,-272.83"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).createTask&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent</title>
+<g id="a_edge24"><a xlink:title="at integrator.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent]">
+<path fill="none" stroke="saddlebrown" d="M651.59,-734.12C704.47,-767.12 811.21,-833.68 812.33,-834 849.61,-844.65 818.35,-778.31 849.33,-755 872.19,-737.79 900.52,-728.19 928.87,-723.15"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="929.32,-726.63 938.66,-721.62 928.23,-719.71 929.32,-726.63"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge11" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge11"><a xlink:title="at integrator.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:329: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:340: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M718.66,-395.25C777.38,-383.81 842.52,-371.16 849.33,-370 877.69,-365.15 908.3,-360.36 937.12,-356.06"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="937.61,-359.52 946.99,-354.59 936.58,-352.6 937.61,-359.52"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission -->
+<g id="node10" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission</title>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission | defined in integrator.go:552&#10;at integrator.go:554: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:565: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:568: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:556: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:567: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:559: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at integrator.go:563: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission]&#10;at integrator.go:574: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTaskEvents]&#10;at integrator.go:582: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTask]&#10;at integrator.go:555: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:566: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M764.33,-860C764.33,-860 478.79,-860 478.79,-860 472.79,-860 466.79,-854 466.79,-848 466.79,-848 466.79,-836 466.79,-836 466.79,-830 472.79,-824 478.79,-824 478.79,-824 764.33,-824 764.33,-824 770.33,-824 776.33,-830 776.33,-836 776.33,-836 776.33,-848 776.33,-848 776.33,-854 770.33,-860 764.33,-860"/>
+<text xml:space="preserve" text-anchor="middle" x="621.56" y="-837.33" font-family="Verdana" font-size="14.00">(*Integrator).DeleteTasksForCommission</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge12" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge12"><a xlink:title="at integrator.go:330: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M632.26,-432.41C660.26,-483.23 743.67,-618.2 813.33,-564 864.71,-524.02 800.11,-464.62 849.33,-422 876.18,-398.75 912.82,-389.99 947.95,-388.06"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="947.9,-391.56 957.77,-387.72 947.65,-384.57 947.9,-391.56"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge2"><a xlink:title="at integrator.go:554: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:565: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M670.15,-823.28C704.2,-807.62 748.72,-782.17 776.33,-747 809.23,-705.1 801.56,-684.95 813.33,-633 826.8,-573.53 805.64,-403.53 849.33,-361 893.61,-317.89 970.75,-322.15 1017.98,-330"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1017.36,-333.44 1027.82,-331.77 1018.6,-326.55 1017.36,-333.44"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge29" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge29"><a xlink:title="at integrator.go:321: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M641.25,-432.65C674.62,-467.2 743.96,-544.95 776.33,-625 820.32,-733.79 764.96,-1066.44 849.33,-1148 888.52,-1185.88 953.11,-1187.08 1000.18,-1181.49"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1000.5,-1184.98 1009.95,-1180.18 999.57,-1178.04 1000.5,-1184.98"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge41" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge41"><a xlink:title="at integrator.go:555: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:566: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M675.59,-823.31C710.15,-808.25 753.01,-783.49 776.33,-747 843.91,-641.25 760.87,-276.02 849.33,-187 871.06,-165.13 901.04,-154.27 931.52,-149.55"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="931.8,-153.05 941.26,-148.28 930.89,-146.1 931.8,-153.05"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge9"><a xlink:title="at integrator.go:556: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:567: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M674.95,-823.31C709.46,-808.18 752.52,-783.36 776.33,-747 807.03,-700.13 809.69,-287.6 849.33,-248 872.46,-224.9 904.8,-214.11 937.15,-209.87"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="937.51,-213.35 947.08,-208.8 936.76,-206.39 937.51,-213.35"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge3" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge3"><a xlink:title="at integrator.go:568: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M674.32,-823.3C708.77,-808.11 752.02,-783.21 776.33,-747 803.83,-706.04 814.13,-343.57 849.33,-309 875.27,-283.52 912.45,-273.11 948.29,-269.93"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="948.12,-273.45 957.85,-269.27 947.63,-266.47 948.12,-273.45"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
+<g id="a_edge17"><a xlink:title="at integrator.go:559: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M630.24,-860.44C651.87,-910.36 717.9,-1049.79 812.33,-1131 863.96,-1175.4 945.13,-1179.96 1000.04,-1176.88"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1000.09,-1180.38 1009.83,-1176.22 999.62,-1173.4 1000.09,-1180.38"/>
 </a>
 </g>
 </g>
@@ -572,107 +572,17 @@
 <g id="node28" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission</title>
 <g id="a_node28"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission | defined in tasks.sql.go:271">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1181.74,-681C1181.74,-681 937.45,-681 937.45,-681 931.45,-681 925.45,-675 925.45,-669 925.45,-669 925.45,-657 925.45,-657 925.45,-651 931.45,-645 937.45,-645 937.45,-645 1181.74,-645 1181.74,-645 1187.74,-645 1193.74,-651 1193.74,-657 1193.74,-657 1193.74,-669 1193.74,-669 1193.74,-675 1187.74,-681 1181.74,-681"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-658.33" font-family="Verdana" font-size="14.00">(*Queries).ListTasksByCommission</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission</title>
-<g id="a_edge17"><a xlink:title="at integrator.go:325: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission]">
-<path fill="none" stroke="saddlebrown" d="M635.32,-432.63C666.25,-476.14 750.03,-584.4 849.33,-633 869.21,-642.73 891.34,-649.54 913.55,-654.27"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="912.84,-657.7 923.33,-656.2 914.19,-650.83 912.84,-657.7"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban -->
-<g id="node11" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban</title>
-<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban | defined in integrator.go:433">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1617.91,-52C1617.91,-52 1354.87,-52 1354.87,-52 1348.87,-52 1342.87,-46 1342.87,-40 1342.87,-40 1342.87,-28 1342.87,-28 1342.87,-22 1348.87,-16 1354.87,-16 1354.87,-16 1617.91,-16 1617.91,-16 1623.91,-16 1629.91,-22 1629.91,-28 1629.91,-28 1629.91,-40 1629.91,-40 1629.91,-46 1623.91,-52 1617.91,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="1486.39" y="-29.32" font-family="Verdana" font-size="14.00">(*Integrator).convertStatusToKanban</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban</title>
-<g id="a_edge13"><a xlink:title="at integrator.go:364: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertStatusToKanban]">
-<path fill="none" stroke="black" d="M1206.19,-34C1246.59,-34 1290.57,-34 1331.43,-34"/>
-<polygon fill="black" stroke="black" points="1331.35,-37.5 1341.35,-34 1331.35,-30.5 1331.35,-37.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask -->
-<g id="edge18" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask</title>
-<g id="a_edge18"><a xlink:title="at integrator.go:355: calling [github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask]">
-<path fill="none" stroke="saddlebrown" d="M1187.48,-52.22C1269.47,-63.99 1371.87,-78.7 1432.77,-87.44"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1432.11,-90.89 1442.51,-88.84 1433.11,-83.96 1432.11,-90.89"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission -->
-<g id="node12" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission | defined in integrator.go:552&#10;at integrator.go:556: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:567: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:559: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at integrator.go:574: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTaskEvents]&#10;at integrator.go:582: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTask]&#10;at integrator.go:563: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission]&#10;at integrator.go:568: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:554: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:565: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:555: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:566: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M764.33,-734C764.33,-734 478.79,-734 478.79,-734 472.79,-734 466.79,-728 466.79,-722 466.79,-722 466.79,-710 466.79,-710 466.79,-704 472.79,-698 478.79,-698 478.79,-698 764.33,-698 764.33,-698 770.33,-698 776.33,-704 776.33,-710 776.33,-710 776.33,-722 776.33,-722 776.33,-728 770.33,-734 764.33,-734"/>
-<text xml:space="preserve" text-anchor="middle" x="621.56" y="-711.33" font-family="Verdana" font-size="14.00">(*Integrator).DeleteTasksForCommission</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge45" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge45"><a xlink:title="at integrator.go:554: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:565: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M763.81,-697.37C768.33,-694.04 772.54,-690.27 776.33,-686 848.37,-604.84 732.82,-272.85 812.33,-199 819.73,-192.12 949.88,-205.15 1017.91,-212.48"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1017.23,-215.93 1027.55,-213.53 1017.98,-208.97 1017.23,-215.93"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge46" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge46"><a xlink:title="at integrator.go:555: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:566: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M763.29,-697.43C767.99,-694.09 772.37,-690.3 776.33,-686 825.55,-632.55 786.44,-428.89 812.33,-361 822.44,-334.5 825.14,-323.82 849.33,-309 873.87,-293.97 902.99,-285.23 931.59,-280.35"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="932.09,-283.81 941.44,-278.83 931.02,-276.89 932.09,-283.81"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge19" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge19"><a xlink:title="at integrator.go:556: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:567: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M762.04,-697.32C767.15,-694.03 771.95,-690.27 776.33,-686 829.43,-634.19 795.61,-595.28 812.33,-523 828.1,-454.84 797.68,-417.19 849.33,-370 873.16,-348.23 905.29,-337.75 937.22,-333.38"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="937.45,-336.88 946.99,-332.25 936.65,-329.92 937.45,-336.88"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge39" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge39"><a xlink:title="at integrator.go:568: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M756.35,-697.37C763.36,-694.12 770.08,-690.36 776.33,-686 852.23,-633.05 842.33,-428.53 849.33,-422 875.56,-397.56 912.43,-388.63 947.93,-386.9"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="947.98,-390.4 957.88,-386.63 947.78,-383.4 947.98,-390.4"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge26" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge26"><a xlink:title="at integrator.go:559: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M762.05,-734.53C767.23,-738.12 772.03,-742.26 776.33,-747 829.87,-806.09 781.29,-1030.55 812.33,-1104 822.28,-1127.54 826.76,-1136.02 849.33,-1148 895.83,-1172.69 956.3,-1176.56 1000.27,-1175.22"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1000.28,-1178.72 1010.13,-1174.81 999.99,-1171.72 1000.28,-1178.72"/>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1181.74,-803C1181.74,-803 937.45,-803 937.45,-803 931.45,-803 925.45,-797 925.45,-791 925.45,-791 925.45,-779 925.45,-779 925.45,-773 931.45,-767 937.45,-767 937.45,-767 1181.74,-767 1181.74,-767 1187.74,-767 1193.74,-773 1193.74,-779 1193.74,-779 1193.74,-791 1193.74,-791 1193.74,-797 1187.74,-803 1181.74,-803"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-780.33" font-family="Verdana" font-size="14.00">(*Queries).ListTasksByCommission</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission -->
-<g id="edge38" class="edge">
+<g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission</title>
-<g id="a_edge38"><a xlink:title="at integrator.go:563: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission]">
-<path fill="none" stroke="saddlebrown" d="M754.51,-734.63C762.19,-738.12 769.54,-742.21 776.33,-747 801.93,-765.07 788.04,-825.49 813.33,-807 855.88,-775.9 809.18,-728.15 849.33,-694 867.63,-678.44 890.23,-668.81 913.75,-663.09"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="914.46,-666.51 923.5,-660.98 912.98,-659.67 914.46,-666.51"/>
+<g id="a_edge18"><a xlink:title="at integrator.go:563: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission]">
+<path fill="none" stroke="saddlebrown" d="M649.87,-860.68C688.85,-884.8 761.45,-920.06 813.33,-888 843.76,-869.19 820.36,-836.99 849.33,-816 868.26,-802.28 890.72,-793.46 913.79,-787.97"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="914.26,-791.44 923.3,-785.92 912.78,-784.6 914.26,-791.44"/>
 </a>
 </g>
 </g>
@@ -680,17 +590,17 @@
 <g id="node29" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTaskEvents</title>
 <g id="a_node29"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTaskEvents | defined in tasks.sql.go:74">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1159.99,-803C1159.99,-803 959.2,-803 959.2,-803 953.2,-803 947.2,-797 947.2,-791 947.2,-791 947.2,-779 947.2,-779 947.2,-773 953.2,-767 959.2,-767 959.2,-767 1159.99,-767 1159.99,-767 1165.99,-767 1171.99,-773 1171.99,-779 1171.99,-779 1171.99,-791 1171.99,-791 1171.99,-797 1165.99,-803 1159.99,-803"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-780.33" font-family="Verdana" font-size="14.00">(*Queries).DeleteTaskEvents</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1159.99,-925C1159.99,-925 959.2,-925 959.2,-925 953.2,-925 947.2,-919 947.2,-913 947.2,-913 947.2,-901 947.2,-901 947.2,-895 953.2,-889 959.2,-889 959.2,-889 1159.99,-889 1159.99,-889 1165.99,-889 1171.99,-895 1171.99,-901 1171.99,-901 1171.99,-913 1171.99,-913 1171.99,-919 1165.99,-925 1159.99,-925"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-902.33" font-family="Verdana" font-size="14.00">(*Queries).DeleteTaskEvents</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTaskEvents -->
-<g id="edge30" class="edge">
+<g id="edge25" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTaskEvents</title>
-<g id="a_edge30"><a xlink:title="at integrator.go:574: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTaskEvents]">
-<path fill="none" stroke="saddlebrown" d="M755.52,-734.62C762.87,-738.12 769.88,-742.21 776.33,-747 803.48,-767.14 783.32,-796.65 812.33,-814 818.09,-817.44 876.68,-810.65 935.27,-802.78"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="935.64,-806.26 945.08,-801.45 934.7,-799.32 935.64,-806.26"/>
+<g id="a_edge25"><a xlink:title="at integrator.go:574: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTaskEvents]">
+<path fill="none" stroke="saddlebrown" d="M647.93,-860.58C682.87,-884.9 748.7,-926.26 812.33,-942 815.64,-942.82 875.48,-934.33 935.34,-925.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="935.63,-929.01 945.01,-924.08 934.61,-922.08 935.63,-929.01"/>
 </a>
 </g>
 </g>
@@ -698,98 +608,170 @@
 <g id="node30" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTask</title>
 <g id="a_node30"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTask | defined in tasks.sql.go:65">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1136.37,-864C1136.37,-864 982.83,-864 982.83,-864 976.83,-864 970.83,-858 970.83,-852 970.83,-852 970.83,-840 970.83,-840 970.83,-834 976.83,-828 982.83,-828 982.83,-828 1136.37,-828 1136.37,-828 1142.37,-828 1148.37,-834 1148.37,-840 1148.37,-840 1148.37,-852 1148.37,-852 1148.37,-858 1142.37,-864 1136.37,-864"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-841.33" font-family="Verdana" font-size="14.00">(*Queries).DeleteTask</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1136.37,-986C1136.37,-986 982.83,-986 982.83,-986 976.83,-986 970.83,-980 970.83,-974 970.83,-974 970.83,-962 970.83,-962 970.83,-956 976.83,-950 982.83,-950 982.83,-950 1136.37,-950 1136.37,-950 1142.37,-950 1148.37,-956 1148.37,-962 1148.37,-962 1148.37,-974 1148.37,-974 1148.37,-980 1142.37,-986 1136.37,-986"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-963.33" font-family="Verdana" font-size="14.00">(*Queries).DeleteTask</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTask -->
-<g id="edge31" class="edge">
+<g id="edge35" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).DeleteTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTask</title>
-<g id="a_edge31"><a xlink:title="at integrator.go:582: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTask]">
-<path fill="none" stroke="saddlebrown" d="M756.49,-734.68C763.51,-738.17 770.19,-742.25 776.33,-747 805.26,-769.38 782.34,-800.06 812.33,-821 854.33,-850.33 910.6,-857.76 958.76,-857.34"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="958.74,-860.84 968.66,-857.12 958.59,-853.84 958.74,-860.84"/>
+<g id="a_edge35"><a xlink:title="at integrator.go:582: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).DeleteTask]">
+<path fill="none" stroke="saddlebrown" d="M647.32,-860.72C682.08,-885.83 748.28,-929.52 812.33,-949 859.23,-963.26 913.35,-968.58 958.89,-970.09"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="958.67,-973.58 968.76,-970.35 958.86,-966.59 958.67,-973.58"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission -->
+<g id="node11" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission</title>
+<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission | defined in integrator.go:314&#10;at integrator.go:321: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at integrator.go:336: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban]&#10;at integrator.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:329: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:340: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:325: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission]&#10;at integrator.go:330: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:317: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:328: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:339: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:316: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:327: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:338: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M754.58,-432C754.58,-432 488.54,-432 488.54,-432 482.54,-432 476.54,-426 476.54,-420 476.54,-420 476.54,-408 476.54,-408 476.54,-402 482.54,-396 488.54,-396 488.54,-396 754.58,-396 754.58,-396 760.58,-396 766.58,-402 766.58,-408 766.58,-408 766.58,-420 766.58,-420 766.58,-426 760.58,-432 754.58,-432"/>
+<text xml:space="preserve" text-anchor="middle" x="621.56" y="-409.32" font-family="Verdana" font-size="14.00">(*Integrator).GetTasksForCommission</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban -->
+<g id="edge5" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban</title>
+<g id="a_edge5"><a xlink:title="at integrator.go:336: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertDBTaskToKanban]">
+<path fill="none" stroke="black" d="M762.76,-395.48C767.64,-392.14 772.2,-388.33 776.33,-384 852.31,-304.38 744.35,-225.55 812.33,-139 834.18,-111.18 867.05,-96.61 901.71,-89.67"/>
+<polygon fill="black" stroke="black" points="902.29,-93.13 911.53,-87.94 901.07,-86.23 902.29,-93.13"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge42" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge42"><a xlink:title="at integrator.go:316: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:327: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:338: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M767.24,-424C783.34,-421.13 799.05,-416.37 813.33,-409 837.02,-396.76 826.14,-374.16 849.33,-361 901.69,-331.3 973.34,-330.72 1017.76,-334.08"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1017.21,-337.54 1027.48,-334.92 1017.82,-330.57 1017.21,-337.54"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge33" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge33"><a xlink:title="at integrator.go:317: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:328: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:339: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M762.74,-395.46C767.63,-392.12 772.19,-388.32 776.33,-384 850.63,-306.42 730.91,-215.07 812.33,-145 822.02,-136.66 876.34,-138.5 931.51,-142.84"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="931.14,-146.32 941.4,-143.65 931.71,-139.35 931.14,-146.32"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge10" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge10"><a xlink:title="at integrator.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:329: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:340: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M758.4,-395.41C764.73,-392.13 770.76,-388.35 776.33,-384 806.1,-360.75 794.26,-340.18 812.33,-307 827.13,-279.82 823.42,-264.93 849.33,-248 875.21,-231.09 906.69,-221.95 937.29,-217.29"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="937.57,-220.79 947.01,-215.98 936.64,-213.85 937.57,-220.79"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge27" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge27"><a xlink:title="at integrator.go:330: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M750.56,-395.37C759.51,-392.16 768.2,-388.4 776.33,-384 817.25,-361.87 807.92,-330.19 849.33,-309 879.44,-293.59 914.97,-285.26 948.12,-280.9"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="948.24,-284.41 957.75,-279.75 947.41,-277.46 948.24,-284.41"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
+<g id="a_edge4"><a xlink:title="at integrator.go:321: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M641.25,-432.65C674.62,-467.2 743.96,-544.95 776.33,-625 820.32,-733.79 764.96,-1066.44 849.33,-1148 888.52,-1185.88 953.11,-1187.08 1000.18,-1181.49"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1000.5,-1184.98 1009.95,-1180.18 999.57,-1178.04 1000.5,-1184.98"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission -->
+<g id="edge26" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).GetTasksForCommission&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission</title>
+<g id="a_edge26"><a xlink:title="at integrator.go:325: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).ListTasksByCommission]">
+<path fill="none" stroke="saddlebrown" d="M637.33,-432.67C665.67,-468.84 729.07,-551.38 776.33,-625 812.13,-680.76 794.67,-717.54 849.33,-755 868.39,-768.06 890.73,-776.51 913.58,-781.83"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="912.84,-785.25 923.35,-783.89 914.28,-778.4 912.84,-785.25"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban -->
-<g id="node13" class="node">
+<g id="node12" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban</title>
-<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban | defined in integrator.go:452&#10;at integrator.go:499: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).UpdateTask]&#10;at integrator.go:459: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at integrator.go:456: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:477: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:511: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:454: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:475: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:509: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:478: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:512: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:455: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:476: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:510: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:496: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn]&#10;at integrator.go:517: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent]">
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban | defined in integrator.go:452&#10;at integrator.go:455: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:476: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:510: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:496: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn]&#10;at integrator.go:459: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at integrator.go:478: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:512: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:454: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:475: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:509: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:499: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).UpdateTask]&#10;at integrator.go:456: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:477: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:511: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:517: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M754.58,-673C754.58,-673 488.54,-673 488.54,-673 482.54,-673 476.54,-667 476.54,-661 476.54,-661 476.54,-649 476.54,-649 476.54,-643 482.54,-637 488.54,-637 488.54,-637 754.58,-637 754.58,-637 760.58,-637 766.58,-643 766.58,-649 766.58,-649 766.58,-661 766.58,-661 766.58,-667 760.58,-673 754.58,-673"/>
 <text xml:space="preserve" text-anchor="middle" x="621.56" y="-650.33" font-family="Verdana" font-size="14.00">(*Integrator).UpdateTaskFromKanban</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn -->
-<g id="node14" class="node">
+<g id="node13" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn | defined in integrator.go:533">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1217.74,-498C1217.74,-498 901.45,-498 901.45,-498 895.45,-498 889.45,-492 889.45,-486 889.45,-486 889.45,-474 889.45,-474 889.45,-468 895.45,-462 901.45,-462 901.45,-462 1217.74,-462 1217.74,-462 1223.74,-462 1229.74,-468 1229.74,-474 1229.74,-474 1229.74,-486 1229.74,-486 1229.74,-492 1223.74,-498 1217.74,-498"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-475.32" font-family="Verdana" font-size="14.00">(*Integrator).convertKanbanStatusToColumn</text>
+<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn | defined in integrator.go:533">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1217.74,-437C1217.74,-437 901.45,-437 901.45,-437 895.45,-437 889.45,-431 889.45,-425 889.45,-425 889.45,-413 889.45,-413 889.45,-407 895.45,-401 901.45,-401 901.45,-401 1217.74,-401 1217.74,-401 1223.74,-401 1229.74,-407 1229.74,-413 1229.74,-413 1229.74,-425 1229.74,-425 1229.74,-431 1223.74,-437 1217.74,-437"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-414.32" font-family="Verdana" font-size="14.00">(*Integrator).convertKanbanStatusToColumn</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn -->
-<g id="edge53" class="edge">
+<g id="edge12" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn</title>
-<g id="a_edge53"><a xlink:title="at integrator.go:496: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn]">
-<path fill="none" stroke="black" d="M766.93,-666.9C783.82,-662.87 799.82,-655.98 813.33,-645 861.86,-605.58 802.52,-550.46 849.33,-509 858.23,-501.12 868.22,-494.77 878.89,-489.69"/>
-<polygon fill="black" stroke="black" points="880.13,-492.97 887.93,-485.8 877.36,-486.54 880.13,-492.97"/>
+<g id="a_edge12"><a xlink:title="at integrator.go:496: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).convertKanbanStatusToColumn]">
+<path fill="none" stroke="black" d="M767.26,-667.98C784.2,-663.82 800.12,-656.59 813.33,-645 879.57,-586.87 785.92,-511.2 849.33,-450 858.18,-441.46 868.3,-434.62 879.2,-429.18"/>
+<polygon fill="black" stroke="black" points="880.36,-432.5 888.04,-425.2 877.49,-426.12 880.36,-432.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge47" class="edge">
+<g id="edge28" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge47"><a xlink:title="at integrator.go:454: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:475: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:509: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M641.31,-636.48C674.78,-602.17 744.27,-524.89 776.33,-445 799.12,-388.21 766.32,-212.34 812.33,-172 826.89,-159.23 831.05,-188.6 849.33,-195 905.43,-214.63 974.75,-218.2 1017.83,-218.19"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1017.76,-221.69 1027.74,-218.11 1017.71,-214.69 1017.76,-221.69"/>
+<g id="a_edge28"><a xlink:title="at integrator.go:454: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:475: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at integrator.go:509: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M767.08,-647.28C784.47,-640.84 800.56,-631.46 813.33,-618 892.72,-534.34 766.38,-441.14 849.33,-361 893.65,-318.18 970.44,-322.24 1017.65,-329.99"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1017.03,-333.44 1027.49,-331.75 1018.26,-326.54 1017.03,-333.44"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge52" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge52"><a xlink:title="at integrator.go:455: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:476: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:510: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M639.42,-636.4C670.43,-601.33 736.92,-522.04 776.33,-445 799.95,-398.83 781.15,-375.44 812.33,-334 839.98,-297.26 886.3,-281.22 931.35,-275.09"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="931.74,-278.57 941.26,-273.92 930.92,-271.62 931.74,-278.57"/>
+<g id="a_edge11"><a xlink:title="at integrator.go:455: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:476: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at integrator.go:510: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M641.31,-636.48C674.78,-602.17 744.27,-524.89 776.33,-445 799.12,-388.21 767.65,-213.81 812.33,-172 830.11,-155.36 880.64,-150.34 931.34,-149.91"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="931.33,-153.41 941.32,-149.89 931.31,-146.41 931.33,-153.41"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge40" class="edge">
+<g id="edge43" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge40"><a xlink:title="at integrator.go:456: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:477: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:511: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M645.35,-636.26C684.24,-603.3 763.99,-531.24 813.33,-456 836.05,-421.35 816.61,-395.43 849.33,-370 874.3,-350.59 906.14,-340.73 937.41,-336.2"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="937.45,-339.72 946.94,-334.99 936.58,-332.77 937.45,-339.72"/>
+<g id="a_edge43"><a xlink:title="at integrator.go:456: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:477: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at integrator.go:511: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M639.42,-636.4C670.43,-601.33 736.92,-522.04 776.33,-445 797.59,-403.44 812.33,-276.47 849.33,-248 874.39,-228.72 906.27,-218.9 937.54,-214.36"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="937.58,-217.88 947.06,-213.16 936.7,-210.94 937.58,-217.88"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge48" class="edge">
+<g id="edge20" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge48"><a xlink:title="at integrator.go:478: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:512: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M767.03,-646.6C784.32,-640.25 800.39,-631.07 813.33,-618 875.65,-555.06 784.34,-482.17 849.33,-422 875.57,-397.7 912.35,-388.77 947.77,-387.01"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="947.8,-390.51 957.69,-386.72 947.59,-383.51 947.8,-390.51"/>
+<g id="a_edge20"><a xlink:title="at integrator.go:478: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at integrator.go:512: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M647.61,-636.26C688.75,-604.1 770.36,-534.24 813.33,-456 845.71,-397.04 799.61,-354.3 849.33,-309 875.85,-284.84 912.6,-274.6 947.91,-271.18"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="948.1,-274.68 957.8,-270.42 947.56,-267.7 948.1,-274.68"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge32" class="edge">
+<g id="edge19" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge32"><a xlink:title="at integrator.go:459: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<g id="a_edge19"><a xlink:title="at integrator.go:459: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
 <path fill="none" stroke="saddlebrown" d="M762.43,-673.71C767.47,-677.27 772.14,-681.34 776.33,-686 834.64,-750.91 787.7,-993.29 812.33,-1077 822.37,-1111.14 819.91,-1127.98 849.33,-1148 893.37,-1177.97 955.13,-1180.94 1000.14,-1177.94"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="1000.29,-1181.44 1009.98,-1177.15 999.73,-1174.46 1000.29,-1181.44"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent -->
-<g id="edge54" class="edge">
+<g id="edge50" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent</title>
-<g id="a_edge54"><a xlink:title="at integrator.go:517: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent]">
-<path fill="none" stroke="saddlebrown" d="M759.67,-673.65C765.64,-677.19 771.24,-681.28 776.33,-686 842.96,-747.8 773.87,-826.36 849.33,-877 872.8,-892.75 901.1,-901.74 929.19,-906.61"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="928.43,-910.04 938.85,-908.11 929.51,-903.12 928.43,-910.04"/>
+<g id="a_edge50"><a xlink:title="at integrator.go:517: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).AssignTaskToAgent]">
+<path fill="none" stroke="saddlebrown" d="M758.57,-673.68C764.9,-677.2 770.87,-681.28 776.33,-686 812.36,-717.2 773.38,-759.54 812.33,-787 830.1,-799.53 829.63,-764.2 849.33,-755 873.97,-743.49 901.87,-736.05 929.07,-731.28"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="929.47,-734.76 938.77,-729.7 928.34,-727.85 929.47,-734.76"/>
 </a>
 </g>
 </g>
@@ -797,17 +779,35 @@
 <g id="node31" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).UpdateTask</title>
 <g id="a_node31"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).UpdateTask | defined in tasks.sql.go:455">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1139.37,-742C1139.37,-742 979.83,-742 979.83,-742 973.83,-742 967.83,-736 967.83,-730 967.83,-730 967.83,-718 967.83,-718 967.83,-712 973.83,-706 979.83,-706 979.83,-706 1139.37,-706 1139.37,-706 1145.37,-706 1151.37,-712 1151.37,-718 1151.37,-718 1151.37,-730 1151.37,-730 1151.37,-736 1145.37,-742 1139.37,-742"/>
-<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-719.33" font-family="Verdana" font-size="14.00">(*Queries).UpdateTask</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1139.37,-681C1139.37,-681 979.83,-681 979.83,-681 973.83,-681 967.83,-675 967.83,-669 967.83,-669 967.83,-657 967.83,-657 967.83,-651 973.83,-645 979.83,-645 979.83,-645 1139.37,-645 1139.37,-645 1145.37,-645 1151.37,-651 1151.37,-657 1151.37,-657 1151.37,-669 1151.37,-669 1151.37,-675 1145.37,-681 1139.37,-681"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-658.33" font-family="Verdana" font-size="14.00">(*Queries).UpdateTask</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).UpdateTask -->
-<g id="edge14" class="edge">
+<g id="edge36" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).UpdateTaskFromKanban&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).UpdateTask</title>
-<g id="a_edge14"><a xlink:title="at integrator.go:499: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).UpdateTask]">
-<path fill="none" stroke="saddlebrown" d="M759.59,-673.75C765.57,-677.26 771.2,-681.32 776.33,-686 817.75,-723.84 767.35,-773.46 812.33,-807 835.07,-823.96 825.24,-769.97 849.33,-755 880.85,-735.41 920.09,-726.45 956.05,-722.79"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="955.93,-726.31 965.58,-721.95 955.31,-719.34 955.93,-726.31"/>
+<g id="a_edge36"><a xlink:title="at integrator.go:499: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/storage/db.Queries).UpdateTask]">
+<path fill="none" stroke="saddlebrown" d="M758.08,-673.64C764.57,-677.16 770.72,-681.25 776.33,-686 810.49,-714.89 775.47,-754.65 812.33,-780 846.61,-803.58 816.48,-719.53 849.33,-694 879.22,-670.77 918.98,-661.22 955.8,-658.1"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="955.87,-661.6 965.61,-657.43 955.39,-654.62 955.87,-661.6"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks -->
+<g id="node14" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks</title>
+<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks | defined in integrator.go:604&#10;at integrator.go:608: calling [github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1257.87,-498C1257.87,-498 861.33,-498 861.33,-498 855.33,-498 849.33,-492 849.33,-486 849.33,-486 849.33,-474 849.33,-474 849.33,-468 855.33,-462 861.33,-462 861.33,-462 1257.87,-462 1257.87,-462 1263.87,-462 1269.87,-468 1269.87,-474 1269.87,-474 1269.87,-486 1269.87,-486 1269.87,-492 1263.87,-498 1257.87,-498"/>
+<text xml:space="preserve" text-anchor="middle" x="1059.6" y="-475.32" font-family="Verdana" font-size="14.00">(*Integrator).ConvertRefinedCommissionToKanbanTasks</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask -->
+<g id="edge51" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration/commission_kanban.Integrator).ConvertRefinedCommissionToKanbanTasks&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask</title>
+<g id="a_edge51"><a xlink:title="at integrator.go:608: calling [github.com/guild&#45;framework/guild&#45;core/pkg/kanban.NewTask]">
+<path fill="none" stroke="saddlebrown" d="M1232.19,-461.27C1245.09,-458.08 1257.79,-454.36 1269.87,-450 1340.37,-424.59 1412.74,-374.32 1453.1,-343.68"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1455.17,-346.5 1460.97,-337.64 1450.9,-340.95 1455.17,-346.5"/>
 </a>
 </g>
 </g>

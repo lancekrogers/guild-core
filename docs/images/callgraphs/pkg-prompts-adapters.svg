@@ -22,12 +22,12 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate | defined in layered_adapter.go:70&#10;at layered_adapter.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at layered_adapter.go:72: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at layered_adapter.go:73: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M321.79,-80C321.79,-80 28,-80 28,-80 22,-80 16,-74 16,-68 16,-68 16,-56 16,-56 16,-50 22,-44 28,-44 28,-44 321.79,-44 321.79,-44 327.79,-44 333.79,-50 333.79,-56 333.79,-56 333.79,-68 333.79,-68 333.79,-74 327.79,-80 321.79,-80"/>
-<text xml:space="preserve" text-anchor="middle" x="174.89" y="-57.33" font-family="Verdana" font-size="14.00">(*LayeredManagerAdapter).LoadTemplate</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate | defined in layered_adapter.go:40&#10;at layered_adapter.go:43: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at layered_adapter.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at layered_adapter.go:45: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M291.41,-80C291.41,-80 58.38,-80 58.38,-80 52.38,-80 46.37,-74 46.37,-68 46.37,-68 46.37,-56 46.37,-56 46.37,-50 52.37,-44 58.37,-44 58.37,-44 291.41,-44 291.41,-44 297.41,-44 303.41,-50 303.41,-56 303.41,-56 303.41,-68 303.41,-68 303.41,-74 297.41,-80 291.41,-80"/>
+<text xml:space="preserve" text-anchor="middle" x="174.89" y="-57.33" font-family="Verdana" font-size="14.00">(*LayeredAdapter).LoadTemplate</text>
 </a>
 </g>
 </g>
@@ -40,12 +40,12 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge3"><a xlink:title="at layered_adapter.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M334.48,-52.83C390.16,-49.62 447.84,-46.28 484.26,-44.18"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="484.01,-47.7 493.79,-43.63 483.61,-40.71 484.01,-47.7"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge1"><a xlink:title="at layered_adapter.go:43: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M303.76,-54.61C367.82,-50.91 440.76,-46.69 483.98,-44.19"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="484.06,-47.7 493.84,-43.62 483.66,-40.71 484.06,-47.7"/>
 </a>
 </g>
 </g>
@@ -58,12 +58,12 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge4"><a xlink:title="at layered_adapter.go:72: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M333.98,-80.73C354.4,-83.15 375.09,-85.6 394.92,-87.95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="394.32,-91.4 404.66,-89.1 395.14,-84.45 394.32,-91.4"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge2"><a xlink:title="at layered_adapter.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M303.76,-77.15C333.55,-80.68 365.26,-84.44 395.01,-87.96"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="394.47,-91.42 404.81,-89.12 395.29,-84.47 394.47,-91.42"/>
 </a>
 </g>
 </g>
@@ -76,48 +76,48 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge5"><a xlink:title="at layered_adapter.go:73: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge3" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge3"><a xlink:title="at layered_adapter.go:45: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="none" stroke="saddlebrown" d="M233.83,-80.72C299.83,-102.04 398.66,-133.96 398.79,-134 409,-136.89 419.74,-139.76 430.44,-142.5"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="429.54,-145.89 440.09,-144.95 431.26,-139.1 429.54,-145.89"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate -->
 <g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate | defined in layered_adapter.go:40&#10;at layered_adapter.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at layered_adapter.go:45: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at layered_adapter.go:43: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M291.41,-161C291.41,-161 58.38,-161 58.38,-161 52.38,-161 46.37,-155 46.37,-149 46.37,-149 46.37,-137 46.37,-137 46.37,-131 52.37,-125 58.37,-125 58.37,-125 291.41,-125 291.41,-125 297.41,-125 303.41,-131 303.41,-137 303.41,-137 303.41,-149 303.41,-149 303.41,-155 297.41,-161 291.41,-161"/>
-<text xml:space="preserve" text-anchor="middle" x="174.89" y="-138.32" font-family="Verdana" font-size="14.00">(*LayeredAdapter).LoadTemplate</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate | defined in layered_adapter.go:70&#10;at layered_adapter.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at layered_adapter.go:72: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at layered_adapter.go:73: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M321.79,-161C321.79,-161 28,-161 28,-161 22,-161 16,-155 16,-149 16,-149 16,-137 16,-137 16,-131 22,-125 28,-125 28,-125 321.79,-125 321.79,-125 327.79,-125 333.79,-131 333.79,-137 333.79,-137 333.79,-149 333.79,-149 333.79,-155 327.79,-161 321.79,-161"/>
+<text xml:space="preserve" text-anchor="middle" x="174.89" y="-138.32" font-family="Verdana" font-size="14.00">(*LayeredManagerAdapter).LoadTemplate</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge6" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge6"><a xlink:title="at layered_adapter.go:43: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge4"><a xlink:title="at layered_adapter.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
 <path fill="none" stroke="saddlebrown" d="M234.81,-124.3C295.28,-105.15 382.74,-77.54 398.79,-73 427.36,-64.92 459.95,-56.77 484.42,-50.85"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="485.02,-54.31 493.92,-48.57 483.38,-47.5 485.02,-54.31"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge1"><a xlink:title="at layered_adapter.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M303.76,-128.22C333.55,-124.78 365.26,-121.11 395.01,-117.67"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="395.28,-121.16 404.81,-116.54 394.47,-114.21 395.28,-121.16"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge5" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge5"><a xlink:title="at layered_adapter.go:72: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M334.48,-124.67C354.79,-122.32 375.37,-119.94 395.08,-117.66"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="395.23,-121.17 404.76,-116.54 394.42,-114.22 395.23,-121.17"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge2"><a xlink:title="at layered_adapter.go:45: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M303.76,-150.76C335.4,-152.68 369.2,-154.73 400.52,-156.63"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="400.23,-160.12 410.43,-157.23 400.66,-153.13 400.23,-160.12"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge6" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge6"><a xlink:title="at layered_adapter.go:73: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M334.48,-152.62C356.64,-153.97 379.12,-155.33 400.44,-156.63"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="400.11,-160.11 410.31,-157.23 400.54,-153.13 400.11,-160.11"/>
 </a>
 </g>
 </g>

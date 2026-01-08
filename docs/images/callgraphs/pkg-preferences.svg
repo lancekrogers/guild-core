@@ -17,62 +17,134 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1022.87,-121 1022.87,-445 1271.16,-445 1271.16,-121 1022.87,-121"/>
-<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-425.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1022.87,-172 1022.87,-496 1271.16,-496 1271.16,-172 1022.87,-172"/>
+<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-476.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
+<g id="node1" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference | defined in service.go:194&#10;at service.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get]&#10;at service.go:214: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set]&#10;at service.go:196: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M561.83,-197C561.83,-197 387.29,-197 387.29,-197 381.29,-197 375.29,-191 375.29,-185 375.29,-185 375.29,-173 375.29,-173 375.29,-167 381.29,-161 387.29,-161 387.29,-161 561.83,-161 561.83,-161 567.83,-161 573.83,-167 573.83,-173 573.83,-173 573.83,-185 573.83,-185 573.83,-191 567.83,-197 561.83,-197"/>
+<text xml:space="preserve" text-anchor="middle" x="474.56" y="-174.32" font-family="Verdana" font-size="14.00">(*Service).getPreference</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey -->
+<g id="node2" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey | defined in service.go:279">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M897.12,-224C897.12,-224 716.58,-224 716.58,-224 710.58,-224 704.58,-218 704.58,-212 704.58,-212 704.58,-200 704.58,-200 704.58,-194 710.58,-188 716.58,-188 716.58,-188 897.12,-188 897.12,-188 903.12,-188 909.12,-194 909.12,-200 909.12,-200 909.12,-212 909.12,-212 909.12,-218 903.12,-224 897.12,-224"/>
+<text xml:space="preserve" text-anchor="middle" x="806.85" y="-201.32" font-family="Verdana" font-size="14.00">(*Service).buildCacheKey</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey -->
+<g id="edge32" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey</title>
+<g id="a_edge32"><a xlink:title="at service.go:196: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]">
+<path fill="none" stroke="black" d="M573.76,-187.03C611.32,-190.1 654.44,-193.62 693.24,-196.79"/>
+<polygon fill="black" stroke="black" points="692.83,-200.27 703.08,-197.6 693.4,-193.3 692.83,-200.27"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get -->
+<g id="node3" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get</title>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get | defined in cache.go:42">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M890.37,-90C890.37,-90 723.33,-90 723.33,-90 717.33,-90 711.33,-84 711.33,-78 711.33,-78 711.33,-66 711.33,-66 711.33,-60 717.33,-54 723.33,-54 723.33,-54 890.37,-54 890.37,-54 896.37,-54 902.37,-60 902.37,-66 902.37,-66 902.37,-78 902.37,-78 902.37,-84 896.37,-90 890.37,-90"/>
+<text xml:space="preserve" text-anchor="middle" x="806.85" y="-67.33" font-family="Verdana" font-size="14.00">(*PreferenceCache).Get</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get -->
+<g id="edge12" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get</title>
+<g id="a_edge12"><a xlink:title="at service.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get]">
+<path fill="none" stroke="black" d="M556.92,-160.76C568.07,-157.35 579.23,-153.43 589.58,-149 624.61,-133.99 627.27,-118.35 662.58,-104 674.48,-99.16 687.24,-94.99 700.07,-91.41"/>
+<polygon fill="black" stroke="black" points="700.62,-94.89 709.38,-88.93 698.82,-88.12 700.62,-94.89"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set -->
-<g id="node1" class="node">
+<g id="node4" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set | defined in cache.go:60&#10;at cache.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M889.99,-489C889.99,-489 723.7,-489 723.7,-489 717.7,-489 711.7,-483 711.7,-477 711.7,-477 711.7,-465 711.7,-465 711.7,-459 717.7,-453 723.7,-453 723.7,-453 889.99,-453 889.99,-453 895.99,-453 901.99,-459 901.99,-465 901.99,-465 901.99,-477 901.99,-477 901.99,-483 895.99,-489 889.99,-489"/>
-<text xml:space="preserve" text-anchor="middle" x="806.85" y="-466.32" font-family="Verdana" font-size="14.00">(*PreferenceCache).Set</text>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set | defined in cache.go:60&#10;at cache.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M889.99,-152C889.99,-152 723.7,-152 723.7,-152 717.7,-152 711.7,-146 711.7,-140 711.7,-140 711.7,-128 711.7,-128 711.7,-122 717.7,-116 723.7,-116 723.7,-116 889.99,-116 889.99,-116 895.99,-116 901.99,-122 901.99,-128 901.99,-128 901.99,-140 901.99,-140 901.99,-146 895.99,-152 889.99,-152"/>
+<text xml:space="preserve" text-anchor="middle" x="806.85" y="-129.32" font-family="Verdana" font-size="14.00">(*PreferenceCache).Set</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set</title>
+<g id="a_edge17"><a xlink:title="at service.go:214: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set]">
+<path fill="none" stroke="black" d="M573.76,-165.62C613.48,-160.21 659.42,-153.95 699.89,-148.44"/>
+<polygon fill="black" stroke="black" points="700.21,-151.93 709.65,-147.11 699.27,-144.99 700.21,-151.93"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL -->
-<g id="node2" class="node">
+<g id="node5" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL | defined in cache.go:65">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1257.91,-489C1257.91,-489 1036.12,-489 1036.12,-489 1030.12,-489 1024.12,-483 1024.12,-477 1024.12,-477 1024.12,-465 1024.12,-465 1024.12,-459 1030.12,-453 1036.12,-453 1036.12,-453 1257.91,-453 1257.91,-453 1263.91,-453 1269.91,-459 1269.91,-465 1269.91,-465 1269.91,-477 1269.91,-477 1269.91,-483 1263.91,-489 1257.91,-489"/>
-<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-466.32" font-family="Verdana" font-size="14.00">(*PreferenceCache).SetWithTTL</text>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL | defined in cache.go:65">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1257.91,-152C1257.91,-152 1036.12,-152 1036.12,-152 1030.12,-152 1024.12,-146 1024.12,-140 1024.12,-140 1024.12,-128 1024.12,-128 1024.12,-122 1030.12,-116 1036.12,-116 1036.12,-116 1257.91,-116 1257.91,-116 1263.91,-116 1269.91,-122 1269.91,-128 1269.91,-128 1269.91,-140 1269.91,-140 1269.91,-146 1263.91,-152 1257.91,-152"/>
+<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-129.32" font-family="Verdana" font-size="14.00">(*PreferenceCache).SetWithTTL</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL -->
-<g id="edge1" class="edge">
+<g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL</title>
-<g id="a_edge1"><a xlink:title="at cache.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL]">
-<path fill="none" stroke="black" d="M902.5,-471C936.5,-471 975.51,-471 1012.21,-471"/>
-<polygon fill="black" stroke="black" points="1012,-474.5 1022,-471 1012,-467.5 1012,-474.5"/>
+<g id="a_edge6"><a xlink:title="at cache.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).SetWithTTL]">
+<path fill="none" stroke="black" d="M902.5,-134C936.5,-134 975.51,-134 1012.21,-134"/>
+<polygon fill="black" stroke="black" points="1012,-137.5 1022,-134 1012,-130.5 1012,-137.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference -->
+<g id="node6" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference</title>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference | defined in service.go:73&#10;at service.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M259.91,-174C259.91,-174 42.62,-174 42.62,-174 36.63,-174 30.62,-168 30.62,-162 30.62,-162 30.62,-150 30.62,-150 30.62,-144 36.62,-138 42.62,-138 42.62,-138 259.91,-138 259.91,-138 265.91,-138 271.91,-144 271.91,-150 271.91,-150 271.91,-162 271.91,-162 271.91,-168 265.91,-174 259.91,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-151.32" font-family="Verdana" font-size="14.00">(*Service).GetAgentPreference</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
+<g id="a_edge13"><a xlink:title="at service.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="none" stroke="black" d="M272.36,-164.6C302.39,-166.75 334.44,-169.04 363.94,-171.15"/>
+<polygon fill="black" stroke="black" points="363.37,-174.62 373.59,-171.84 363.87,-167.64 363.37,-174.62"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference -->
-<g id="node3" class="node">
+<g id="node7" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference | defined in service.go:253&#10;at service.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:270: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:271: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:272: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:267: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service.go:266: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType]&#10;at service.go:258: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service.go:268: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service.go:259: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at service.go:269: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at service.go:257: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M910.24,-301C910.24,-301 703.45,-301 703.45,-301 697.45,-301 691.45,-295 691.45,-289 691.45,-289 691.45,-277 691.45,-277 691.45,-271 697.45,-265 703.45,-265 703.45,-265 910.24,-265 910.24,-265 916.24,-265 922.24,-271 922.24,-277 922.24,-277 922.24,-289 922.24,-289 922.24,-295 916.24,-301 910.24,-301"/>
-<text xml:space="preserve" text-anchor="middle" x="806.85" y="-278.32" font-family="Verdana" font-size="14.00">(*Service).validatePreference</text>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference | defined in service.go:253&#10;at service.go:258: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service.go:268: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:270: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:271: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:272: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:257: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service.go:259: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at service.go:269: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at service.go:267: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service.go:266: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M910.24,-427C910.24,-427 703.45,-427 703.45,-427 697.45,-427 691.45,-421 691.45,-415 691.45,-415 691.45,-403 691.45,-403 691.45,-397 697.45,-391 703.45,-391 703.45,-391 910.24,-391 910.24,-391 916.24,-391 922.24,-397 922.24,-403 922.24,-403 922.24,-415 922.24,-415 922.24,-421 916.24,-427 910.24,-427"/>
+<text xml:space="preserve" text-anchor="middle" x="806.85" y="-404.32" font-family="Verdana" font-size="14.00">(*Service).validatePreference</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType -->
-<g id="node4" class="node">
+<g id="node8" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType</title>
-<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType | defined in service.go:303">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1185.53,-104C1185.53,-104 1108.49,-104 1108.49,-104 1102.49,-104 1096.49,-98 1096.49,-92 1096.49,-92 1096.49,-80 1096.49,-80 1096.49,-74 1102.49,-68 1108.49,-68 1108.49,-68 1185.53,-68 1185.53,-68 1191.53,-68 1197.53,-74 1197.53,-80 1197.53,-80 1197.53,-92 1197.53,-92 1197.53,-98 1191.53,-104 1185.53,-104"/>
-<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-81.33" font-family="Verdana" font-size="14.00">isValidType</text>
+<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType | defined in service.go:303">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1185.53,-540C1185.53,-540 1108.49,-540 1108.49,-540 1102.49,-540 1096.49,-534 1096.49,-528 1096.49,-528 1096.49,-516 1096.49,-516 1096.49,-510 1102.49,-504 1108.49,-504 1108.49,-504 1185.53,-504 1185.53,-504 1191.53,-504 1197.53,-510 1197.53,-516 1197.53,-516 1197.53,-528 1197.53,-528 1197.53,-534 1191.53,-540 1185.53,-540"/>
+<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-517.33" font-family="Verdana" font-size="14.00">isValidType</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType -->
-<g id="edge18" class="edge">
+<g id="edge28" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType</title>
-<g id="a_edge18"><a xlink:title="at service.go:266: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType]">
-<path fill="none" stroke="black" d="M922.27,-268.97C932.59,-264.83 942.41,-259.6 951.12,-253 1006.2,-211.23 968.31,-157.45 1022.87,-115 1040.5,-101.28 1063.56,-93.88 1084.96,-89.95"/>
-<polygon fill="black" stroke="black" points="1085.47,-93.42 1094.79,-88.39 1084.37,-86.5 1085.47,-93.42"/>
+<g id="a_edge28"><a xlink:title="at service.go:266: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isValidType]">
+<path fill="none" stroke="black" d="M889.13,-427.24C909.85,-433.23 931.73,-440.78 951.12,-450 986.22,-466.68 986.96,-485.13 1022.87,-500 1042.33,-508.06 1064.73,-513.17 1085.04,-516.41"/>
+<polygon fill="black" stroke="black" points="1084.5,-519.87 1094.9,-517.85 1085.51,-512.94 1084.5,-519.87"/>
 </a>
 </g>
 </g>
@@ -80,17 +152,17 @@
 <g id="node30" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node30"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1164.91,-287C1164.91,-287 1129.12,-287 1129.12,-287 1123.12,-287 1117.12,-281 1117.12,-275 1117.12,-275 1117.12,-263 1117.12,-263 1117.12,-257 1123.12,-251 1129.12,-251 1129.12,-251 1164.91,-251 1164.91,-251 1170.91,-251 1176.91,-257 1176.91,-263 1176.91,-263 1176.91,-275 1176.91,-275 1176.91,-281 1170.91,-287 1164.91,-287"/>
-<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-264.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1164.91,-460C1164.91,-460 1129.12,-460 1129.12,-460 1123.12,-460 1117.12,-454 1117.12,-448 1117.12,-448 1117.12,-436 1117.12,-436 1117.12,-430 1123.12,-424 1129.12,-424 1129.12,-424 1164.91,-424 1164.91,-424 1170.91,-424 1176.91,-430 1176.91,-436 1176.91,-436 1176.91,-448 1176.91,-448 1176.91,-454 1170.91,-460 1164.91,-460"/>
+<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-437.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge37" class="edge">
+<g id="edge24" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge37"><a xlink:title="at service.go:257: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M922.12,-267.7C943.99,-265.87 966.73,-264.73 988.12,-265 1028.05,-265.51 1073.64,-266.73 1105.53,-267.69"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1105.01,-271.18 1115.11,-267.99 1105.23,-264.18 1105.01,-271.18"/>
+<g id="a_edge24"><a xlink:title="at service.go:257: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M922.34,-420.17C985.48,-426.33 1060.01,-433.61 1105.1,-438.01"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1104.66,-441.48 1114.95,-438.97 1105.34,-434.51 1104.66,-441.48"/>
 </a>
 </g>
 </g>
@@ -98,17 +170,17 @@
 <g id="node31" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node31"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1251.16,-348C1251.16,-348 1042.87,-348 1042.87,-348 1036.87,-348 1030.87,-342 1030.87,-336 1030.87,-336 1030.87,-324 1030.87,-324 1030.87,-318 1036.87,-312 1042.87,-312 1042.87,-312 1251.16,-312 1251.16,-312 1257.16,-312 1263.16,-318 1263.16,-324 1263.16,-324 1263.16,-336 1263.16,-336 1263.16,-342 1257.16,-348 1251.16,-348"/>
-<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-325.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1251.16,-338C1251.16,-338 1042.87,-338 1042.87,-338 1036.87,-338 1030.87,-332 1030.87,-326 1030.87,-326 1030.87,-314 1030.87,-314 1030.87,-308 1036.87,-302 1042.87,-302 1042.87,-302 1251.16,-302 1251.16,-302 1257.16,-302 1263.16,-308 1263.16,-314 1263.16,-314 1263.16,-326 1263.16,-326 1263.16,-332 1257.16,-338 1251.16,-338"/>
+<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-315.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge25" class="edge">
+<g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge25"><a xlink:title="at service.go:258: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service.go:268: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M922.34,-298.91C953.45,-303.24 987.32,-307.94 1019.07,-312.36"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1018.32,-315.79 1028.71,-313.7 1019.28,-308.85 1018.32,-315.79"/>
+<g id="a_edge1"><a xlink:title="at service.go:258: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service.go:268: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M905.5,-390.82C920.87,-387.31 936.51,-383.35 951.12,-379 983.93,-369.24 990.26,-361.42 1022.87,-351 1033,-347.76 1043.69,-344.64 1054.36,-341.71"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1055.24,-345.1 1063.99,-339.13 1053.42,-338.34 1055.24,-345.1"/>
 </a>
 </g>
 </g>
@@ -116,17 +188,17 @@
 <g id="node32" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node32"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1245.53,-409C1245.53,-409 1048.49,-409 1048.49,-409 1042.49,-409 1036.49,-403 1036.49,-397 1036.49,-397 1036.49,-385 1036.49,-385 1036.49,-379 1042.49,-373 1048.49,-373 1048.49,-373 1245.53,-373 1245.53,-373 1251.53,-373 1257.53,-379 1257.53,-385 1257.53,-385 1257.53,-397 1257.53,-397 1257.53,-403 1251.53,-409 1245.53,-409"/>
-<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-386.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1245.53,-399C1245.53,-399 1048.49,-399 1048.49,-399 1042.49,-399 1036.49,-393 1036.49,-387 1036.49,-387 1036.49,-375 1036.49,-375 1036.49,-369 1042.49,-363 1048.49,-363 1048.49,-363 1245.53,-363 1245.53,-363 1251.53,-363 1257.53,-369 1257.53,-375 1257.53,-375 1257.53,-387 1257.53,-387 1257.53,-393 1251.53,-399 1245.53,-399"/>
+<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-376.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge31" class="edge">
+<g id="edge25" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge31"><a xlink:title="at service.go:259: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at service.go:269: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M897,-301.23C915.21,-306.11 934.03,-312.02 951.12,-319 985.33,-332.98 988.61,-347.15 1022.87,-361 1030.01,-363.89 1037.5,-366.55 1045.11,-368.98"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1043.89,-372.27 1054.48,-371.84 1045.94,-365.58 1043.89,-372.27"/>
+<g id="a_edge25"><a xlink:title="at service.go:259: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at service.go:269: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M922.34,-399.52C955.3,-396.79 991.37,-393.8 1024.74,-391.04"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1024.75,-394.55 1034.43,-390.24 1024.17,-387.58 1024.75,-394.55"/>
 </a>
 </g>
 </g>
@@ -134,17 +206,17 @@
 <g id="node33" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_node33"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1234.66,-226C1234.66,-226 1059.37,-226 1059.37,-226 1053.37,-226 1047.37,-220 1047.37,-214 1047.37,-214 1047.37,-202 1047.37,-202 1047.37,-196 1053.37,-190 1059.37,-190 1059.37,-190 1234.66,-190 1234.66,-190 1240.66,-190 1246.66,-196 1246.66,-202 1246.66,-202 1246.66,-214 1246.66,-214 1246.66,-220 1240.66,-226 1234.66,-226"/>
-<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-203.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1234.66,-216C1234.66,-216 1059.37,-216 1059.37,-216 1053.37,-216 1047.37,-210 1047.37,-204 1047.37,-204 1047.37,-192 1047.37,-192 1047.37,-186 1053.37,-180 1059.37,-180 1059.37,-180 1234.66,-180 1234.66,-180 1240.66,-180 1246.66,-186 1246.66,-192 1246.66,-192 1246.66,-204 1246.66,-204 1246.66,-210 1240.66,-216 1234.66,-216"/>
+<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-193.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge14" class="edge">
+<g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge14"><a xlink:title="at service.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:270: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:271: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:272: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M896.18,-264.8C914.37,-260.97 933.37,-256.91 951.12,-253 985.4,-245.45 1022.99,-236.85 1055.94,-229.2"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1056.5,-232.67 1065.44,-226.99 1054.91,-225.85 1056.5,-232.67"/>
+<g id="a_edge18"><a xlink:title="at service.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:270: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:271: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service.go:272: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M922.14,-395.41C932.55,-391.2 942.42,-385.83 951.12,-379 1009.25,-333.37 965.67,-275.79 1022.87,-229 1027.13,-225.52 1031.72,-222.42 1036.55,-219.67"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1038.07,-222.82 1045.4,-215.17 1034.9,-216.58 1038.07,-222.82"/>
 </a>
 </g>
 </g>
@@ -152,312 +224,141 @@
 <g id="node34" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
 <g id="a_node34"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1162.01,-165C1162.01,-165 1132.01,-165 1132.01,-165 1126.01,-165 1120.01,-159 1120.01,-153 1120.01,-153 1120.01,-141 1120.01,-141 1120.01,-135 1126.01,-129 1132.01,-129 1132.01,-129 1162.01,-129 1162.01,-129 1168.01,-129 1174.01,-135 1174.01,-141 1174.01,-141 1174.01,-153 1174.01,-153 1174.01,-159 1168.01,-165 1162.01,-165"/>
-<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-142.32" font-family="Verdana" font-size="14.00">New</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1162.01,-277C1162.01,-277 1132.01,-277 1132.01,-277 1126.01,-277 1120.01,-271 1120.01,-265 1120.01,-265 1120.01,-253 1120.01,-253 1120.01,-247 1126.01,-241 1132.01,-241 1132.01,-241 1162.01,-241 1162.01,-241 1168.01,-241 1174.01,-247 1174.01,-253 1174.01,-253 1174.01,-265 1174.01,-265 1174.01,-271 1168.01,-277 1162.01,-277"/>
+<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-254.32" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge15" class="edge">
+<g id="edge26" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge15"><a xlink:title="at service.go:267: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M922.37,-265.64C932.39,-262.16 942.12,-258 951.12,-253 991.45,-230.6 983,-201.2 1022.87,-178 1049.14,-162.71 1082.84,-154.9 1108.34,-150.94"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1108.51,-154.45 1117.92,-149.6 1107.53,-147.52 1108.51,-154.45"/>
+<g id="a_edge26"><a xlink:title="at service.go:267: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M922.47,-392.57C932.52,-388.91 942.23,-384.44 951.12,-379 994.45,-352.47 980.08,-317.39 1022.87,-290 1048.63,-273.51 1082.64,-265.79 1108.39,-262.17"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1108.59,-265.68 1118.08,-260.97 1107.73,-258.73 1108.59,-265.68"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
-<g id="node5" class="node">
+<g id="node9" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference | defined in service.go:219&#10;at service.go:227: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete]&#10;at service.go:231: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound]&#10;at service.go:221: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference]&#10;at service.go:226: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M561.08,-179C561.08,-179 388.04,-179 388.04,-179 382.04,-179 376.04,-173 376.04,-167 376.04,-167 376.04,-155 376.04,-155 376.04,-149 382.04,-143 388.04,-143 388.04,-143 561.08,-143 561.08,-143 567.08,-143 573.08,-149 573.08,-155 573.08,-155 573.08,-167 573.08,-167 573.08,-173 567.08,-179 561.08,-179"/>
-<text xml:space="preserve" text-anchor="middle" x="474.56" y="-156.32" font-family="Verdana" font-size="14.00">(*Service).setPreference</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference -->
-<g id="edge21" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference</title>
-<g id="a_edge21"><a xlink:title="at service.go:221: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference]">
-<path fill="none" stroke="black" d="M506.29,-179.12C542.52,-199.77 605.11,-233.2 662.58,-253 672.11,-256.28 682.12,-259.27 692.24,-261.97"/>
-<polygon fill="black" stroke="black" points="691.23,-265.32 701.78,-264.41 692.97,-258.54 691.23,-265.32"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey | defined in service.go:279">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M897.12,-240C897.12,-240 716.58,-240 716.58,-240 710.58,-240 704.58,-234 704.58,-228 704.58,-228 704.58,-216 704.58,-216 704.58,-210 710.58,-204 716.58,-204 716.58,-204 897.12,-204 897.12,-204 903.12,-204 909.12,-210 909.12,-216 909.12,-216 909.12,-228 909.12,-228 909.12,-234 903.12,-240 897.12,-240"/>
-<text xml:space="preserve" text-anchor="middle" x="806.85" y="-217.32" font-family="Verdana" font-size="14.00">(*Service).buildCacheKey</text>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference | defined in service.go:219&#10;at service.go:221: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference]&#10;at service.go:231: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound]&#10;at service.go:226: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]&#10;at service.go:227: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M561.08,-418C561.08,-418 388.04,-418 388.04,-418 382.04,-418 376.04,-412 376.04,-406 376.04,-406 376.04,-394 376.04,-394 376.04,-388 382.04,-382 388.04,-382 388.04,-382 561.08,-382 561.08,-382 567.08,-382 573.08,-388 573.08,-394 573.08,-394 573.08,-406 573.08,-406 573.08,-412 567.08,-418 561.08,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="474.56" y="-395.32" font-family="Verdana" font-size="14.00">(*Service).setPreference</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey -->
-<g id="edge32" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey</title>
-<g id="a_edge32"><a xlink:title="at service.go:226: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]">
-<path fill="none" stroke="black" d="M573.32,-179.05C611.84,-186.17 656.26,-194.37 695.89,-201.69"/>
-<polygon fill="black" stroke="black" points="695.24,-205.13 705.71,-203.51 696.51,-198.25 695.24,-205.13"/>
+<g id="a_edge10"><a xlink:title="at service.go:226: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]">
+<path fill="none" stroke="black" d="M494.88,-381.91C527.32,-352.33 595.77,-293.27 662.58,-257 683.82,-245.47 708.18,-235.67 730.72,-227.83"/>
+<polygon fill="black" stroke="black" points="731.84,-231.15 740.18,-224.62 729.59,-224.52 731.84,-231.15"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference</title>
+<g id="a_edge2"><a xlink:title="at service.go:221: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference]">
+<path fill="none" stroke="black" d="M573.32,-402.66C606.79,-403.58 644.72,-404.61 680.09,-405.57"/>
+<polygon fill="black" stroke="black" points="679.87,-409.07 689.96,-405.84 680.06,-402.07 679.87,-409.07"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete -->
-<g id="node7" class="node">
+<g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete | defined in cache.go:76">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M900.49,-179C900.49,-179 713.2,-179 713.2,-179 707.2,-179 701.2,-173 701.2,-167 701.2,-167 701.2,-155 701.2,-155 701.2,-149 707.2,-143 713.2,-143 713.2,-143 900.49,-143 900.49,-143 906.49,-143 912.49,-149 912.49,-155 912.49,-155 912.49,-167 912.49,-167 912.49,-173 906.49,-179 900.49,-179"/>
-<text xml:space="preserve" text-anchor="middle" x="806.85" y="-156.32" font-family="Verdana" font-size="14.00">(*PreferenceCache).Delete</text>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete | defined in cache.go:76">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M900.49,-305C900.49,-305 713.2,-305 713.2,-305 707.2,-305 701.2,-299 701.2,-293 701.2,-293 701.2,-281 701.2,-281 701.2,-275 707.2,-269 713.2,-269 713.2,-269 900.49,-269 900.49,-269 906.49,-269 912.49,-275 912.49,-281 912.49,-281 912.49,-293 912.49,-293 912.49,-299 906.49,-305 900.49,-305"/>
+<text xml:space="preserve" text-anchor="middle" x="806.85" y="-282.32" font-family="Verdana" font-size="14.00">(*PreferenceCache).Delete</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete -->
-<g id="edge2" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete</title>
-<g id="a_edge2"><a xlink:title="at service.go:227: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete]">
-<path fill="none" stroke="black" d="M573.32,-161C609.76,-161 651.49,-161 689.45,-161"/>
-<polygon fill="black" stroke="black" points="689.06,-164.5 699.06,-161 689.06,-157.5 689.06,-164.5"/>
+<g id="a_edge11"><a xlink:title="at service.go:227: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Delete]">
+<path fill="none" stroke="black" d="M511.27,-381.77C548.31,-363.48 608.28,-335.58 662.58,-318 673.31,-314.52 684.63,-311.32 695.99,-308.41"/>
+<polygon fill="black" stroke="black" points="696.57,-311.87 705.43,-306.06 694.88,-305.08 696.57,-311.87"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound -->
-<g id="node8" class="node">
+<g id="node11" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound</title>
-<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound | defined in service.go:296">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M845.74,-118C845.74,-118 767.95,-118 767.95,-118 761.95,-118 755.95,-112 755.95,-106 755.95,-106 755.95,-94 755.95,-94 755.95,-88 761.95,-82 767.95,-82 767.95,-82 845.74,-82 845.74,-82 851.74,-82 857.74,-88 857.74,-94 857.74,-94 857.74,-106 857.74,-106 857.74,-112 851.74,-118 845.74,-118"/>
-<text xml:space="preserve" text-anchor="middle" x="806.85" y="-95.33" font-family="Verdana" font-size="14.00">isNotFound</text>
+<g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound | defined in service.go:296">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M845.74,-366C845.74,-366 767.95,-366 767.95,-366 761.95,-366 755.95,-360 755.95,-354 755.95,-354 755.95,-342 755.95,-342 755.95,-336 761.95,-330 767.95,-330 767.95,-330 845.74,-330 845.74,-330 851.74,-330 857.74,-336 857.74,-342 857.74,-342 857.74,-354 857.74,-354 857.74,-360 851.74,-366 845.74,-366"/>
+<text xml:space="preserve" text-anchor="middle" x="806.85" y="-343.32" font-family="Verdana" font-size="14.00">isNotFound</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound -->
-<g id="edge19" class="edge">
+<g id="edge3" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound</title>
-<g id="a_edge19"><a xlink:title="at service.go:231: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound]">
-<path fill="none" stroke="black" d="M573.32,-142.95C628.97,-132.67 696.94,-120.11 744.98,-111.24"/>
-<polygon fill="black" stroke="black" points="745.45,-114.71 754.65,-109.46 744.18,-107.83 745.45,-114.71"/>
+<g id="a_edge3"><a xlink:title="at service.go:231: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.isNotFound]">
+<path fill="none" stroke="black" d="M573.32,-384.61C628.97,-375.85 696.94,-365.15 744.98,-357.58"/>
+<polygon fill="black" stroke="black" points="745.31,-361.07 754.64,-356.06 744.22,-354.16 745.31,-361.07"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference -->
-<g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference | defined in service.go:68&#10;at service.go:69: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M256.91,-113C256.91,-113 45.62,-113 45.62,-113 39.63,-113 33.62,-107 33.62,-101 33.62,-101 33.62,-89 33.62,-89 33.62,-83 39.62,-77 45.62,-77 45.62,-77 256.91,-77 256.91,-77 262.91,-77 268.91,-83 268.91,-89 268.91,-89 268.91,-101 268.91,-101 268.91,-107 262.91,-113 256.91,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-90.33" font-family="Verdana" font-size="14.00">(*Service).SetGuildPreference</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
-<g id="a_edge22"><a xlink:title="at service.go:69: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="none" stroke="black" d="M243.48,-113.74C284.1,-122.08 332.04,-131.93 373.63,-140.47"/>
-<polygon fill="black" stroke="black" points="372.91,-143.9 383.41,-142.48 374.32,-137.04 372.91,-143.9"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope -->
-<g id="node10" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope | defined in service.go:185&#10;at service.go:187: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M939.12,-577C939.12,-577 674.58,-577 674.58,-577 668.58,-577 662.58,-571 662.58,-565 662.58,-565 662.58,-553 662.58,-553 662.58,-547 668.58,-541 674.58,-541 674.58,-541 939.12,-541 939.12,-541 945.12,-541 951.12,-547 951.12,-553 951.12,-553 951.12,-565 951.12,-565 951.12,-571 945.12,-577 939.12,-577"/>
-<text xml:space="preserve" text-anchor="middle" x="806.85" y="-554.33" font-family="Verdana" font-size="14.00">(*Service).DeletePreferencesByScope</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear -->
-<g id="node11" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear</title>
-<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear | defined in cache.go:84">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1236.53,-550C1236.53,-550 1057.49,-550 1057.49,-550 1051.49,-550 1045.49,-544 1045.49,-538 1045.49,-538 1045.49,-526 1045.49,-526 1045.49,-520 1051.49,-514 1057.49,-514 1057.49,-514 1236.53,-514 1236.53,-514 1242.53,-514 1248.53,-520 1248.53,-526 1248.53,-526 1248.53,-538 1248.53,-538 1248.53,-544 1242.53,-550 1236.53,-550"/>
-<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-527.33" font-family="Verdana" font-size="14.00">(*PreferenceCache).Clear</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear -->
-<g id="edge26" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear</title>
-<g id="a_edge26"><a xlink:title="at service.go:187: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]">
-<path fill="none" stroke="black" d="M951.75,-547.51C979.2,-545.32 1007.55,-543.06 1033.83,-540.96"/>
-<polygon fill="black" stroke="black" points="1033.76,-544.47 1043.45,-540.19 1033.2,-537.5 1033.76,-544.47"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference -->
 <g id="node12" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference | defined in service.go:83&#10;at service.go:103: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]&#10;at service.go:115: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set]&#10;at service.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M577.58,-381C577.58,-381 371.54,-381 371.54,-381 365.54,-381 359.54,-375 359.54,-369 359.54,-369 359.54,-357 359.54,-357 359.54,-351 365.54,-345 371.54,-345 371.54,-345 577.58,-345 577.58,-345 583.58,-345 589.58,-351 589.58,-357 589.58,-357 589.58,-369 589.58,-369 589.58,-375 583.58,-381 577.58,-381"/>
-<text xml:space="preserve" text-anchor="middle" x="474.56" y="-358.32" font-family="Verdana" font-size="14.00">(*Service).ResolvePreference</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference</title>
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference | defined in service.go:48&#10;at service.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M255.04,-540C255.04,-540 47.5,-540 47.5,-540 41.5,-540 35.5,-534 35.5,-528 35.5,-528 35.5,-516 35.5,-516 35.5,-510 41.5,-504 47.5,-504 47.5,-504 255.04,-504 255.04,-504 261.04,-504 267.04,-510 267.04,-516 267.04,-516 267.04,-528 267.04,-528 267.04,-534 261.04,-540 255.04,-540"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-517.33" font-family="Verdana" font-size="14.00">(*Service).SetUserPreference</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set -->
-<g id="edge7" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set</title>
-<g id="a_edge7"><a xlink:title="at service.go:115: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set]">
-<path fill="none" stroke="black" d="M514.17,-381.63C551.44,-399.01 609.83,-424.64 662.58,-441 674.59,-444.73 687.32,-448.13 700.03,-451.21"/>
-<polygon fill="black" stroke="black" points="699.17,-454.6 709.71,-453.47 700.77,-447.78 699.17,-454.6"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey -->
-<g id="edge6" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey</title>
-<g id="a_edge6"><a xlink:title="at service.go:103: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]">
-<path fill="none" stroke="black" d="M501.14,-344.34C535.96,-319.82 601,-277.05 662.58,-253 672.43,-249.15 682.86,-245.74 693.42,-242.71"/>
-<polygon fill="black" stroke="black" points="694.27,-246.11 702.99,-240.1 692.43,-239.36 694.27,-246.11"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get -->
-<g id="node13" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get</title>
-<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get | defined in cache.go:42">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M890.37,-428C890.37,-428 723.33,-428 723.33,-428 717.33,-428 711.33,-422 711.33,-416 711.33,-416 711.33,-404 711.33,-404 711.33,-398 717.33,-392 723.33,-392 723.33,-392 890.37,-392 890.37,-392 896.37,-392 902.37,-398 902.37,-404 902.37,-404 902.37,-416 902.37,-416 902.37,-422 896.37,-428 890.37,-428"/>
-<text xml:space="preserve" text-anchor="middle" x="806.85" y="-405.32" font-family="Verdana" font-size="14.00">(*PreferenceCache).Get</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get -->
-<g id="edge16" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get</title>
-<g id="a_edge16"><a xlink:title="at service.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get]">
-<path fill="none" stroke="black" d="M590.21,-377.96C602.49,-379.63 614.8,-381.33 626.58,-383 650.25,-386.35 675.67,-390.09 699.7,-393.69"/>
-<polygon fill="black" stroke="black" points="699.09,-397.14 709.5,-395.17 700.13,-390.22 699.09,-397.14"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference -->
-<g id="node14" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference | defined in service.go:58&#10;at service.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M274.16,-235C274.16,-235 28.37,-235 28.37,-235 22.37,-235 16.37,-229 16.37,-223 16.37,-223 16.37,-211 16.37,-211 16.37,-205 22.37,-199 28.37,-199 28.37,-199 274.16,-199 274.16,-199 280.16,-199 286.16,-205 286.16,-211 286.16,-211 286.16,-223 286.16,-223 286.16,-229 280.16,-235 274.16,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-212.32" font-family="Verdana" font-size="14.00">(*Service).SetCampaignPreference</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
-<g id="edge33" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
-<g id="a_edge33"><a xlink:title="at service.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="none" stroke="black" d="M259.7,-198.27C293.61,-192.36 331.09,-185.83 365.07,-179.91"/>
-<polygon fill="black" stroke="black" points="365.23,-183.43 374.48,-178.27 364.03,-176.54 365.23,-183.43"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
+<g id="a_edge4"><a xlink:title="at service.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
+<path fill="none" stroke="black" d="M249.13,-503.26C261.85,-499.95 274.6,-496.2 286.54,-492 338.8,-473.6 395.44,-444.3 432.53,-423.72"/>
+<polygon fill="black" stroke="black" points="434.12,-426.85 441.14,-418.91 430.7,-420.74 434.12,-426.85"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop -->
-<g id="node15" class="node">
+<g id="node13" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop</title>
-<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop | defined in cache.go:105&#10;at cache.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup]">
+<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop | defined in cache.go:105&#10;at cache.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup]">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M922.24,-662C922.24,-662 691.45,-662 691.45,-662 685.45,-662 679.45,-656 679.45,-650 679.45,-650 679.45,-638 679.45,-638 679.45,-632 685.45,-626 691.45,-626 691.45,-626 922.24,-626 922.24,-626 928.24,-626 934.24,-632 934.24,-638 934.24,-638 934.24,-650 934.24,-650 934.24,-656 928.24,-662 922.24,-662"/>
 <text xml:space="preserve" text-anchor="middle" x="806.85" y="-639.33" font-family="Verdana" font-size="14.00">(*PreferenceCache).cleanupLoop</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup -->
-<g id="node16" class="node">
+<g id="node14" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup</title>
-<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup | defined in cache.go:120">
+<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup | defined in cache.go:120">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M1245.91,-662C1245.91,-662 1048.12,-662 1048.12,-662 1042.12,-662 1036.12,-656 1036.12,-650 1036.12,-650 1036.12,-638 1036.12,-638 1036.12,-632 1042.12,-626 1048.12,-626 1048.12,-626 1245.91,-626 1245.91,-626 1251.91,-626 1257.91,-632 1257.91,-638 1257.91,-638 1257.91,-650 1257.91,-650 1257.91,-656 1251.91,-662 1245.91,-662"/>
 <text xml:space="preserve" text-anchor="middle" x="1147.01" y="-639.33" font-family="Verdana" font-size="14.00">(*PreferenceCache).cleanup</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup -->
-<g id="edge27" class="edge">
+<g id="edge14" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup</title>
-<g id="a_edge27"><a xlink:title="at cache.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup]">
+<g id="a_edge14"><a xlink:title="at cache.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanup]">
 <path fill="none" stroke="black" d="M934.25,-644C963.86,-644 995.34,-644 1024.72,-644"/>
 <polygon fill="black" stroke="black" points="1024.36,-647.5 1034.36,-644 1024.36,-640.5 1024.36,-647.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference -->
-<g id="node17" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference</title>
-<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference | defined in service.go:38&#10;at service.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M265.16,-52C265.16,-52 37.38,-52 37.38,-52 31.38,-52 25.37,-46 25.37,-40 25.37,-40 25.37,-28 25.37,-28 25.37,-22 31.37,-16 37.37,-16 37.37,-16 265.16,-16 265.16,-16 271.16,-16 277.16,-22 277.16,-28 277.16,-28 277.16,-40 277.16,-40 277.16,-46 271.16,-52 265.16,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-29.32" font-family="Verdana" font-size="14.00">(*Service).SetSystemPreference</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
-<g id="a_edge3"><a xlink:title="at service.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="none" stroke="black" d="M246.68,-52.68C260.21,-56.25 273.85,-60.36 286.54,-65 339.65,-84.42 396.97,-115.5 433.96,-137.01"/>
-<polygon fill="black" stroke="black" points="432.13,-139.99 442.53,-142.04 435.68,-133.96 432.13,-139.99"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
-<g id="node18" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
-<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference | defined in service.go:194&#10;at service.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get]&#10;at service.go:196: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]&#10;at service.go:214: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M561.83,-464C561.83,-464 387.29,-464 387.29,-464 381.29,-464 375.29,-458 375.29,-452 375.29,-452 375.29,-440 375.29,-440 375.29,-434 381.29,-428 387.29,-428 387.29,-428 561.83,-428 561.83,-428 567.83,-428 573.83,-434 573.83,-440 573.83,-440 573.83,-452 573.83,-452 573.83,-458 567.83,-464 561.83,-464"/>
-<text xml:space="preserve" text-anchor="middle" x="474.56" y="-441.32" font-family="Verdana" font-size="14.00">(*Service).getPreference</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set -->
-<g id="edge35" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set</title>
-<g id="a_edge35"><a xlink:title="at service.go:214: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set]">
-<path fill="none" stroke="black" d="M573.76,-453.43C613.48,-456.44 659.42,-459.92 699.89,-462.98"/>
-<polygon fill="black" stroke="black" points="699.4,-466.45 709.64,-463.72 699.93,-459.47 699.4,-466.45"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey -->
-<g id="edge34" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey</title>
-<g id="a_edge34"><a xlink:title="at service.go:196: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]">
-<path fill="none" stroke="black" d="M534.59,-427.82C553.8,-419.76 574.13,-408.7 589.58,-394 640.71,-345.36 606.53,-295.88 662.58,-253 671.92,-245.85 682.56,-240.27 693.73,-235.93"/>
-<polygon fill="black" stroke="black" points="694.86,-239.25 703.14,-232.64 692.54,-232.64 694.86,-239.25"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get -->
-<g id="edge8" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get</title>
-<g id="a_edge8"><a xlink:title="at service.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get]">
-<path fill="none" stroke="black" d="M573.76,-435.3C613.31,-430.99 659.01,-426 699.35,-421.61"/>
-<polygon fill="black" stroke="black" points="699.51,-425.11 709.08,-420.55 698.76,-418.15 699.51,-425.11"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference -->
-<g id="node19" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference</title>
-<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference | defined in service.go:53&#10;at service.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M274.54,-479C274.54,-479 28,-479 28,-479 22,-479 16,-473 16,-467 16,-467 16,-455 16,-455 16,-449 22,-443 28,-443 28,-443 274.54,-443 274.54,-443 280.54,-443 286.54,-449 286.54,-455 286.54,-455 286.54,-467 286.54,-467 286.54,-473 280.54,-479 274.54,-479"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-456.32" font-family="Verdana" font-size="14.00">(*Service).GetCampaignPreference</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
-<g id="edge30" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
-<g id="a_edge30"><a xlink:title="at service.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="none" stroke="black" d="M287.13,-454.7C312.74,-453.51 339.26,-452.27 363.97,-451.12"/>
-<polygon fill="black" stroke="black" points="363.85,-454.63 373.68,-450.66 363.52,-447.63 363.85,-454.63"/>
-</a>
-</g>
-</g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache -->
-<g id="node20" class="node">
+<g id="node15" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache</title>
-<g id="a_node20"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache | defined in cache.go:27&#10;at cache.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop]">
+<g id="a_node15"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache | defined in cache.go:27&#10;at cache.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M547.95,-662C547.95,-662 401.16,-662 401.16,-662 395.16,-662 389.16,-656 389.16,-650 389.16,-650 389.16,-638 389.16,-638 389.16,-632 395.16,-626 401.16,-626 401.16,-626 547.95,-626 547.95,-626 553.95,-626 559.95,-632 559.95,-638 559.95,-638 559.95,-650 559.95,-650 559.95,-656 553.95,-662 547.95,-662"/>
 <text xml:space="preserve" text-anchor="middle" x="474.56" y="-639.33" font-family="Verdana" font-size="14.00">NewPreferenceCache</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop -->
-<g id="edge9" class="edge">
+<g id="edge19" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop</title>
-<g id="a_edge9"><a xlink:title="at cache.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop]">
+<g id="a_edge19"><a xlink:title="at cache.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).cleanupLoop]">
 <path fill="none" stroke="black" d="M560.62,-644C589.12,-644 621.83,-644 653.87,-644"/>
 <polygon fill="black" stroke="black" points="667.81,-647.5 677.81,-644 667.81,-640.5 667.81,-647.5"/>
 <polyline fill="none" stroke="black" points="667.31,-644 662.31,-644"/>
@@ -465,111 +366,201 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences -->
-<g id="node21" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences</title>
-<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences | defined in service.go:170&#10;at service.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service.go:179: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]&#10;at service.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at service.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M910.62,-367C910.62,-367 703.08,-367 703.08,-367 697.08,-367 691.08,-361 691.08,-355 691.08,-355 691.08,-343 691.08,-343 691.08,-337 697.08,-331 703.08,-331 703.08,-331 910.62,-331 910.62,-331 916.62,-331 922.62,-337 922.62,-343 922.62,-343 922.62,-355 922.62,-355 922.62,-361 916.62,-367 910.62,-367"/>
-<text xml:space="preserve" text-anchor="middle" x="806.85" y="-344.32" font-family="Verdana" font-size="14.00">(*Service).ImportPreferences</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference -->
+<g id="node16" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference</title>
+<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference | defined in service.go:43&#10;at service.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M255.41,-52C255.41,-52 47.13,-52 47.13,-52 41.12,-52 35.12,-46 35.12,-40 35.12,-40 35.12,-28 35.12,-28 35.12,-22 41.12,-16 47.12,-16 47.12,-16 255.41,-16 255.41,-16 261.41,-16 267.41,-22 267.41,-28 267.41,-28 267.41,-40 267.41,-40 267.41,-46 261.41,-52 255.41,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-29.32" font-family="Verdana" font-size="14.00">(*Service).GetUserPreference</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear -->
-<g id="edge10" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear</title>
-<g id="a_edge10"><a xlink:title="at service.go:179: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]">
-<path fill="none" stroke="black" d="M923.02,-364.78C933.01,-368.81 942.56,-373.81 951.12,-380 1002.09,-416.86 972.38,-464.48 1022.87,-502 1026.65,-504.81 1030.65,-507.35 1034.82,-509.66"/>
-<polygon fill="black" stroke="black" points="1032.94,-512.64 1043.45,-513.96 1036.06,-506.37 1032.94,-512.64"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge23"><a xlink:title="at service.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M886.71,-330.34C955.07,-314.17 1051.27,-291.41 1105.22,-278.65"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1105.98,-282.07 1114.91,-276.36 1104.37,-275.26 1105.98,-282.07"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge4"><a xlink:title="at service.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M923.28,-342.51C954.04,-340.79 987.44,-338.91 1018.79,-337.15"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1018.94,-340.65 1028.73,-336.59 1018.55,-333.66 1018.94,-340.65"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
 <g id="edge20" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge20"><a xlink:title="at service.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M923.28,-363.34C956.03,-367.4 991.77,-371.84 1024.85,-375.95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1024.1,-379.38 1034.45,-377.14 1024.96,-372.44 1024.1,-379.38"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences -->
-<g id="node22" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences</title>
-<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences | defined in service.go:145&#10;at service.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]&#10;at service.go:148: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M565.95,-528C565.95,-528 383.16,-528 383.16,-528 377.16,-528 371.16,-522 371.16,-516 371.16,-516 371.16,-504 371.16,-504 371.16,-498 377.16,-492 383.16,-492 383.16,-492 565.95,-492 565.95,-492 571.95,-492 577.95,-498 577.95,-504 577.95,-504 577.95,-516 577.95,-516 577.95,-522 571.95,-528 565.95,-528"/>
-<text xml:space="preserve" text-anchor="middle" x="474.56" y="-505.32" font-family="Verdana" font-size="14.00">(*Service).SetPreferences</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference -->
-<g id="edge11" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference</title>
-<g id="a_edge11"><a xlink:title="at service.go:148: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference]">
-<path fill="none" stroke="black" d="M567.34,-491.34C575.36,-487.43 582.94,-482.71 589.58,-477 648.25,-426.59 603.02,-368.36 662.58,-319 668.48,-314.11 674.96,-309.87 681.8,-306.19"/>
-<polygon fill="black" stroke="black" points="683.23,-309.39 690.69,-301.86 680.17,-303.09 683.23,-309.39"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear</title>
-<g id="a_edge5"><a xlink:title="at service.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]">
-<path fill="none" stroke="black" d="M578.48,-513.38C701.5,-517.41 906.63,-524.15 1033.67,-528.31"/>
-<polygon fill="black" stroke="black" points="1033.34,-531.8 1043.45,-528.63 1033.57,-524.81 1033.34,-531.8"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference -->
-<g id="node23" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference</title>
-<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference | defined in service.go:48&#10;at service.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M255.04,-174C255.04,-174 47.5,-174 47.5,-174 41.5,-174 35.5,-168 35.5,-162 35.5,-162 35.5,-150 35.5,-150 35.5,-144 41.5,-138 47.5,-138 47.5,-138 255.04,-138 255.04,-138 261.04,-138 267.04,-144 267.04,-150 267.04,-150 267.04,-162 267.04,-162 267.04,-168 261.04,-174 255.04,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-151.32" font-family="Verdana" font-size="14.00">(*Service).SetUserPreference</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
-<g id="edge28" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetUserPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
-<g id="a_edge28"><a xlink:title="at service.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="none" stroke="black" d="M267.36,-157.79C299.03,-158.28 333.28,-158.82 364.59,-159.3"/>
-<polygon fill="black" stroke="black" points="364.42,-162.8 374.47,-159.46 364.53,-155.8 364.42,-162.8"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
+<g id="a_edge20"><a xlink:title="at service.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="none" stroke="black" d="M260.9,-52.7C269.87,-56.13 278.54,-60.19 286.54,-65 328.93,-90.48 317.54,-122.88 359.54,-149 363.81,-151.66 368.31,-154.08 372.96,-156.29"/>
+<polygon fill="black" stroke="black" points="371.38,-159.42 381.95,-160.19 374.17,-153 371.38,-159.42"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetGuildPreference -->
-<g id="node24" class="node">
+<g id="node17" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetGuildPreference</title>
-<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetGuildPreference | defined in service.go:63&#10;at service.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M257.29,-601C257.29,-601 45.25,-601 45.25,-601 39.25,-601 33.25,-595 33.25,-589 33.25,-589 33.25,-577 33.25,-577 33.25,-571 39.25,-565 45.25,-565 45.25,-565 257.29,-565 257.29,-565 263.29,-565 269.29,-571 269.29,-577 269.29,-577 269.29,-589 269.29,-589 269.29,-595 263.29,-601 257.29,-601"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-578.33" font-family="Verdana" font-size="14.00">(*Service).GetGuildPreference</text>
+<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetGuildPreference | defined in service.go:63&#10;at service.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M257.29,-113C257.29,-113 45.25,-113 45.25,-113 39.25,-113 33.25,-107 33.25,-101 33.25,-101 33.25,-89 33.25,-89 33.25,-83 39.25,-77 45.25,-77 45.25,-77 257.29,-77 257.29,-77 263.29,-77 269.29,-83 269.29,-89 269.29,-89 269.29,-101 269.29,-101 269.29,-107 263.29,-113 257.29,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-90.33" font-family="Verdana" font-size="14.00">(*Service).GetGuildPreference</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetGuildPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
-<g id="edge24" class="edge">
+<g id="edge29" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetGuildPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
-<g id="a_edge24"><a xlink:title="at service.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="none" stroke="black" d="M261.24,-564.3C270.03,-561.11 278.59,-557.37 286.54,-553 326.75,-530.9 320.13,-503.5 359.54,-480 366.96,-475.57 375,-471.69 383.26,-468.28"/>
-<polygon fill="black" stroke="black" points="384.33,-471.62 392.4,-464.76 381.81,-465.09 384.33,-471.62"/>
+<g id="a_edge29"><a xlink:title="at service.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="none" stroke="black" d="M237.76,-113.68C254.01,-117.53 270.84,-121.72 286.54,-126 319.36,-134.94 326.86,-139.56 359.54,-149 369.76,-151.95 380.52,-154.94 391.19,-157.83"/>
+<polygon fill="black" stroke="black" points="390.23,-161.19 400.79,-160.41 392.04,-154.43 390.23,-161.19"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference -->
+<g id="node18" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference</title>
+<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference | defined in service.go:58&#10;at service.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M274.16,-601C274.16,-601 28.37,-601 28.37,-601 22.37,-601 16.37,-595 16.37,-589 16.37,-589 16.37,-577 16.37,-577 16.37,-571 22.37,-565 28.37,-565 28.37,-565 274.16,-565 274.16,-565 280.16,-565 286.16,-571 286.16,-577 286.16,-577 286.16,-589 286.16,-589 286.16,-595 280.16,-601 274.16,-601"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-578.33" font-family="Verdana" font-size="14.00">(*Service).SetCampaignPreference</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
+<g id="edge36" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetCampaignPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
+<g id="a_edge36"><a xlink:title="at service.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
+<path fill="none" stroke="black" d="M262.96,-564.37C271.19,-561.16 279.15,-557.4 286.54,-553 329.02,-527.67 321.7,-500.86 359.54,-469 380.17,-451.63 405.64,-435.78 427.28,-423.66"/>
+<polygon fill="black" stroke="black" points="428.83,-426.8 435.91,-418.92 425.46,-420.67 428.83,-426.8"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference -->
+<g id="node19" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference</title>
+<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference | defined in service.go:33&#10;at service.go:34: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M265.54,-235C265.54,-235 37,-235 37,-235 31,-235 25,-229 25,-223 25,-223 25,-211 25,-211 25,-205 31,-199 37,-199 37,-199 265.54,-199 265.54,-199 271.54,-199 277.54,-205 277.54,-211 277.54,-211 277.54,-223 277.54,-223 277.54,-229 271.54,-235 265.54,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-212.32" font-family="Verdana" font-size="14.00">(*Service).GetSystemPreference</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
+<g id="a_edge7"><a xlink:title="at service.go:34: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="none" stroke="black" d="M277.87,-202.14C306.25,-198.79 336.17,-195.25 363.85,-191.98"/>
+<polygon fill="black" stroke="black" points="364.12,-195.47 373.64,-190.82 363.3,-188.52 364.12,-195.47"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference -->
+<g id="node20" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference</title>
+<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference | defined in service.go:53&#10;at service.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M274.54,-296C274.54,-296 28,-296 28,-296 22,-296 16,-290 16,-284 16,-284 16,-272 16,-272 16,-266 22,-260 28,-260 28,-260 274.54,-260 274.54,-260 280.54,-260 286.54,-266 286.54,-272 286.54,-272 286.54,-284 286.54,-284 286.54,-290 280.54,-296 274.54,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-273.32" font-family="Verdana" font-size="14.00">(*Service).GetCampaignPreference</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
+<g id="edge21" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetCampaignPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
+<g id="a_edge21"><a xlink:title="at service.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
+<path fill="none" stroke="black" d="M243.7,-259.3C258.11,-255.85 272.79,-252.05 286.54,-248 331.86,-234.64 382.03,-215.91 418.99,-201.33"/>
+<polygon fill="black" stroke="black" points="420.12,-204.65 428.13,-197.7 417.54,-198.14 420.12,-204.65"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences -->
+<g id="node21" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences</title>
+<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences | defined in service.go:170&#10;at service.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service.go:179: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]&#10;at service.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at service.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M910.62,-498C910.62,-498 703.08,-498 703.08,-498 697.08,-498 691.08,-492 691.08,-486 691.08,-486 691.08,-474 691.08,-474 691.08,-468 697.08,-462 703.08,-462 703.08,-462 910.62,-462 910.62,-462 916.62,-462 922.62,-468 922.62,-474 922.62,-474 922.62,-486 922.62,-486 922.62,-492 916.62,-498 910.62,-498"/>
+<text xml:space="preserve" text-anchor="middle" x="806.85" y="-475.32" font-family="Verdana" font-size="14.00">(*Service).ImportPreferences</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear -->
+<g id="node22" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear</title>
+<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear | defined in cache.go:84">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1236.53,-601C1236.53,-601 1057.49,-601 1057.49,-601 1051.49,-601 1045.49,-595 1045.49,-589 1045.49,-589 1045.49,-577 1045.49,-577 1045.49,-571 1051.49,-565 1057.49,-565 1057.49,-565 1236.53,-565 1236.53,-565 1242.53,-565 1248.53,-571 1248.53,-577 1248.53,-577 1248.53,-589 1248.53,-589 1248.53,-595 1242.53,-601 1236.53,-601"/>
+<text xml:space="preserve" text-anchor="middle" x="1147.01" y="-578.33" font-family="Verdana" font-size="14.00">(*PreferenceCache).Clear</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear</title>
+<g id="a_edge15"><a xlink:title="at service.go:179: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]">
+<path fill="none" stroke="black" d="M893.09,-498.72C923.74,-506.84 958.13,-517.6 988.12,-531 1004.81,-538.45 1006.05,-545.85 1022.87,-553 1029.59,-555.86 1036.65,-558.48 1043.83,-560.87"/>
+<polygon fill="black" stroke="black" points="1042.77,-564.21 1053.36,-563.89 1044.88,-557.53 1042.77,-564.21"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge5" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge5"><a xlink:title="at service.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M923.28,-467.03C986.34,-459.94 1060.5,-451.61 1105.34,-446.57"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1105.58,-450.07 1115.13,-445.47 1104.8,-443.11 1105.58,-450.07"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge33" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge33"><a xlink:title="at service.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M906.19,-461.33C921.95,-455.91 937.53,-448.95 951.12,-440 993.56,-412.06 980.08,-378.39 1022.87,-351 1027.33,-348.14 1032.05,-345.55 1036.92,-343.19"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1038.01,-346.54 1045.74,-339.3 1035.18,-340.13 1038.01,-346.54"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge30" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ImportPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge30"><a xlink:title="at service.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M880.06,-461.35C902.93,-455.04 928.22,-447.65 951.12,-440 983.59,-429.16 990.26,-422.42 1022.87,-412 1033,-408.76 1043.69,-405.64 1054.36,-402.71"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1055.24,-406.1 1063.99,-400.13 1053.42,-399.34 1055.24,-406.1"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope -->
+<g id="node23" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope</title>
+<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope | defined in service.go:185&#10;at service.go:187: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M939.12,-601C939.12,-601 674.58,-601 674.58,-601 668.58,-601 662.58,-595 662.58,-589 662.58,-589 662.58,-577 662.58,-577 662.58,-571 668.58,-565 674.58,-565 674.58,-565 939.12,-565 939.12,-565 945.12,-565 951.12,-571 951.12,-577 951.12,-577 951.12,-589 951.12,-589 951.12,-595 945.12,-601 939.12,-601"/>
+<text xml:space="preserve" text-anchor="middle" x="806.85" y="-578.33" font-family="Verdana" font-size="14.00">(*Service).DeletePreferencesByScope</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear -->
+<g id="edge31" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).DeletePreferencesByScope&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear</title>
+<g id="a_edge31"><a xlink:title="at service.go:187: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]">
+<path fill="none" stroke="black" d="M951.75,-583C979.08,-583 1007.3,-583 1033.48,-583"/>
+<polygon fill="black" stroke="black" points="1033.44,-586.5 1043.44,-583 1033.44,-579.5 1033.44,-586.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference -->
+<g id="node24" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference</title>
+<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference | defined in service.go:83&#10;at service.go:115: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set]&#10;at service.go:103: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]&#10;at service.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M577.58,-136C577.58,-136 371.54,-136 371.54,-136 365.54,-136 359.54,-130 359.54,-124 359.54,-124 359.54,-112 359.54,-112 359.54,-106 365.54,-100 371.54,-100 371.54,-100 577.58,-100 577.58,-100 583.58,-100 589.58,-106 589.58,-112 589.58,-112 589.58,-124 589.58,-124 589.58,-130 583.58,-136 577.58,-136"/>
+<text xml:space="preserve" text-anchor="middle" x="474.56" y="-113.33" font-family="Verdana" font-size="14.00">(*Service).ResolvePreference</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey -->
+<g id="edge34" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey</title>
+<g id="a_edge34"><a xlink:title="at service.go:103: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).buildCacheKey]">
+<path fill="none" stroke="black" d="M545.61,-136.66C598.69,-150.8 671.65,-170.25 726.82,-184.94"/>
+<polygon fill="black" stroke="black" points="725.57,-188.23 736.14,-187.43 727.38,-181.47 725.57,-188.23"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get -->
+<g id="edge35" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get</title>
+<g id="a_edge35"><a xlink:title="at service.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Get]">
+<path fill="none" stroke="black" d="M573.84,-99.25C591.05,-96.27 608.81,-93.39 625.58,-91 649.38,-87.61 675.03,-84.55 699.31,-81.93"/>
+<polygon fill="black" stroke="black" points="699.65,-85.41 709.22,-80.87 698.91,-78.45 699.65,-85.41"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set -->
+<g id="edge16" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).ResolvePreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set</title>
+<g id="a_edge16"><a xlink:title="at service.go:115: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Set]">
+<path fill="none" stroke="black" d="M590.15,-123.55C625.79,-125.28 664.91,-127.17 699.94,-128.87"/>
+<polygon fill="black" stroke="black" points="699.48,-132.35 709.64,-129.34 699.82,-125.36 699.48,-132.35"/>
 </a>
 </g>
 </g>
@@ -577,89 +568,98 @@
 <g id="node25" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetAgentPreference</title>
 <g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetAgentPreference | defined in service.go:78&#10;at service.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M259.54,-296C259.54,-296 43,-296 43,-296 37,-296 31,-290 31,-284 31,-284 31,-272 31,-272 31,-266 37,-260 43,-260 43,-260 259.54,-260 259.54,-260 265.54,-260 271.54,-266 271.54,-272 271.54,-272 271.54,-284 271.54,-284 271.54,-290 265.54,-296 259.54,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-273.32" font-family="Verdana" font-size="14.00">(*Service).SetAgentPreference</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M259.54,-357C259.54,-357 43,-357 43,-357 37,-357 31,-351 31,-345 31,-345 31,-333 31,-333 31,-327 37,-321 43,-321 43,-321 259.54,-321 259.54,-321 265.54,-321 271.54,-327 271.54,-333 271.54,-333 271.54,-345 271.54,-345 271.54,-351 265.54,-357 259.54,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-334.32" font-family="Verdana" font-size="14.00">(*Service).SetAgentPreference</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetAgentPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
-<g id="edge12" class="edge">
+<g id="edge27" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetAgentPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
-<g id="a_edge12"><a xlink:title="at service.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
-<path fill="none" stroke="black" d="M247.97,-259.29C261.05,-255.95 274.21,-252.19 286.54,-248 337.52,-230.67 393.13,-203.69 430.35,-184.37"/>
-<polygon fill="black" stroke="black" points="431.76,-187.58 439,-179.84 428.52,-181.37 431.76,-187.58"/>
+<g id="a_edge27"><a xlink:title="at service.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
+<path fill="none" stroke="black" d="M250.85,-357.72C287.53,-364.68 329.32,-372.61 366.71,-379.71"/>
+<polygon fill="black" stroke="black" points="365.68,-383.08 376.16,-381.51 366.99,-376.2 365.68,-383.08"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference -->
 <g id="node26" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference</title>
-<g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference | defined in service.go:33&#10;at service.go:34: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M265.54,-357C265.54,-357 37,-357 37,-357 31,-357 25,-351 25,-345 25,-345 25,-333 25,-333 25,-327 31,-321 37,-321 37,-321 265.54,-321 265.54,-321 271.54,-321 277.54,-327 277.54,-333 277.54,-333 277.54,-345 277.54,-345 277.54,-351 271.54,-357 265.54,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-334.32" font-family="Verdana" font-size="14.00">(*Service).GetSystemPreference</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference</title>
+<g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference | defined in service.go:68&#10;at service.go:69: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M256.91,-418C256.91,-418 45.62,-418 45.62,-418 39.63,-418 33.62,-412 33.62,-406 33.62,-406 33.62,-394 33.62,-394 33.62,-388 39.62,-382 45.62,-382 45.62,-382 256.91,-382 256.91,-382 262.91,-382 268.91,-388 268.91,-394 268.91,-394 268.91,-406 268.91,-406 268.91,-412 262.91,-418 256.91,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-395.32" font-family="Verdana" font-size="14.00">(*Service).SetGuildPreference</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
-<g id="edge29" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetSystemPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
-<g id="a_edge29"><a xlink:title="at service.go:34: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="none" stroke="black" d="M242.36,-357.72C257.23,-361.4 272.4,-365.53 286.54,-370 334.19,-385.08 386.78,-406.94 424.02,-423.35"/>
-<polygon fill="black" stroke="black" points="422.16,-426.35 432.72,-427.21 425,-419.95 422.16,-426.35"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetGuildPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
+<g id="a_edge8"><a xlink:title="at service.go:69: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
+<path fill="none" stroke="black" d="M269.63,-400C300.76,-400 334.24,-400 364.88,-400"/>
+<polygon fill="black" stroke="black" points="364.52,-403.5 374.52,-400 364.52,-396.5 364.52,-403.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences -->
 <g id="node27" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference</title>
-<g id="a_node27"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference | defined in service.go:43&#10;at service.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M255.41,-418C255.41,-418 47.13,-418 47.13,-418 41.12,-418 35.12,-412 35.12,-406 35.12,-406 35.12,-394 35.12,-394 35.12,-388 41.12,-382 47.12,-382 47.12,-382 255.41,-382 255.41,-382 261.41,-382 267.41,-388 267.41,-394 267.41,-394 267.41,-406 267.41,-406 267.41,-412 261.41,-418 255.41,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-395.32" font-family="Verdana" font-size="14.00">(*Service).GetUserPreference</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences</title>
+<g id="a_node27"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences | defined in service.go:145&#10;at service.go:148: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference]&#10;at service.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M565.95,-517C565.95,-517 383.16,-517 383.16,-517 377.16,-517 371.16,-511 371.16,-505 371.16,-505 371.16,-493 371.16,-493 371.16,-487 377.16,-481 383.16,-481 383.16,-481 565.95,-481 565.95,-481 571.95,-481 577.95,-487 577.95,-493 577.95,-493 577.95,-505 577.95,-505 577.95,-511 571.95,-517 565.95,-517"/>
+<text xml:space="preserve" text-anchor="middle" x="474.56" y="-494.32" font-family="Verdana" font-size="14.00">(*Service).SetPreferences</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetUserPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
-<g id="a_edge13"><a xlink:title="at service.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="none" stroke="black" d="M267.81,-416.54C299.13,-421.03 332.95,-425.87 363.94,-430.3"/>
-<polygon fill="black" stroke="black" points="363.32,-433.75 373.72,-431.71 364.31,-426.82 363.32,-433.75"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference</title>
+<g id="a_edge9"><a xlink:title="at service.go:148: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).validatePreference]">
+<path fill="none" stroke="black" d="M544,-480.35C597.58,-465.75 672.14,-445.43 728,-430.21"/>
+<polygon fill="black" stroke="black" points="728.72,-433.64 737.45,-427.64 726.88,-426.89 728.72,-433.64"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear -->
+<g id="edge22" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetPreferences&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear</title>
+<g id="a_edge22"><a xlink:title="at service.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.PreferenceCache).Clear]">
+<path fill="none" stroke="black" d="M578.68,-509.52C675.1,-519.63 823.05,-535.88 951.12,-553 977.96,-556.59 1006.82,-560.82 1033.89,-564.96"/>
+<polygon fill="black" stroke="black" points="1033.06,-568.38 1043.47,-566.44 1034.12,-561.46 1033.06,-568.38"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference -->
+<g id="node28" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference</title>
+<g id="a_node28"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference | defined in service.go:38&#10;at service.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M265.16,-479C265.16,-479 37.38,-479 37.38,-479 31.38,-479 25.37,-473 25.37,-467 25.37,-467 25.37,-455 25.37,-455 25.37,-449 31.37,-443 37.37,-443 37.37,-443 265.16,-443 265.16,-443 271.16,-443 277.16,-449 277.16,-455 277.16,-455 277.16,-467 277.16,-467 277.16,-473 271.16,-479 265.16,-479"/>
+<text xml:space="preserve" text-anchor="middle" x="151.27" y="-456.32" font-family="Verdana" font-size="14.00">(*Service).SetSystemPreference</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference -->
+<g id="edge37" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).SetSystemPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference</title>
+<g id="a_edge37"><a xlink:title="at service.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).setPreference]">
+<path fill="none" stroke="black" d="M250.85,-442.28C287.53,-435.32 329.32,-427.39 366.71,-420.29"/>
+<polygon fill="black" stroke="black" points="366.99,-423.8 376.16,-418.49 365.68,-416.92 366.99,-423.8"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewService -->
-<g id="node28" class="node">
+<g id="node29" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewService</title>
-<g id="a_node28"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewService | defined in service.go:25&#10;at service.go:28: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache]">
+<g id="a_node29"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewService | defined in service.go:25&#10;at service.go:28: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M191.66,-662C191.66,-662 110.87,-662 110.87,-662 104.87,-662 98.87,-656 98.87,-650 98.87,-650 98.87,-638 98.87,-638 98.87,-632 104.87,-626 110.87,-626 110.87,-626 191.66,-626 191.66,-626 197.66,-626 203.66,-632 203.66,-638 203.66,-638 203.66,-650 203.66,-650 203.66,-656 197.66,-662 191.66,-662"/>
 <text xml:space="preserve" text-anchor="middle" x="151.27" y="-639.33" font-family="Verdana" font-size="14.00">NewService</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache -->
-<g id="edge36" class="edge">
+<g id="edge23" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache</title>
-<g id="a_edge36"><a xlink:title="at service.go:28: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache]">
+<g id="a_edge23"><a xlink:title="at service.go:28: calling [github.com/guild&#45;framework/guild&#45;core/pkg/preferences.NewPreferenceCache]">
 <path fill="none" stroke="black" d="M204.25,-644C250.87,-644 320.48,-644 377.24,-644"/>
 <polygon fill="black" stroke="black" points="376.9,-647.5 386.9,-644 376.9,-640.5 376.9,-647.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference -->
-<g id="node29" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference</title>
-<g id="a_node29"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference | defined in service.go:73&#10;at service.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M259.91,-540C259.91,-540 42.62,-540 42.62,-540 36.63,-540 30.62,-534 30.62,-528 30.62,-528 30.62,-516 30.62,-516 30.62,-510 36.62,-504 42.62,-504 42.62,-504 259.91,-504 259.91,-504 265.91,-504 271.91,-510 271.91,-516 271.91,-516 271.91,-528 271.91,-528 271.91,-534 265.91,-540 259.91,-540"/>
-<text xml:space="preserve" text-anchor="middle" x="151.27" y="-517.33" font-family="Verdana" font-size="14.00">(*Service).GetAgentPreference</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).GetAgentPreference&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference</title>
-<g id="a_edge17"><a xlink:title="at service.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/preferences.Service).getPreference]">
-<path fill="none" stroke="black" d="M237.21,-503.31C253.59,-499.62 270.61,-495.74 286.54,-492 320.61,-484 358.09,-474.86 390.48,-466.84"/>
-<polygon fill="black" stroke="black" points="390.93,-470.33 399.8,-464.53 389.25,-463.54 390.93,-470.33"/>
 </a>
 </g>
 </g>

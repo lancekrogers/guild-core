@@ -17,17 +17,35 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="767.12,-85 767.12,-470 1015.41,-470 1015.41,-85 767.12,-85"/>
-<text xml:space="preserve" text-anchor="middle" x="891.26" y="-450.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="767.12,-78 767.12,-463 1015.41,-463 1015.41,-78 767.12,-78"/>
+<text xml:space="preserve" text-anchor="middle" x="891.26" y="-443.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post -->
+<g id="node1" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post | defined in transport.go:204&#10;at transport.go:207: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:217: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do]&#10;at transport.go:210: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M351.08,-263C351.08,-263 256.79,-263 256.79,-263 250.79,-263 244.79,-257 244.79,-251 244.79,-251 244.79,-239 244.79,-239 244.79,-233 250.79,-227 256.79,-227 256.79,-227 351.08,-227 351.08,-227 357.08,-227 363.08,-233 363.08,-239 363.08,-239 363.08,-251 363.08,-251 363.08,-257 357.08,-263 351.08,-263"/>
+<text xml:space="preserve" text-anchor="middle" x="303.93" y="-240.32" font-family="Verdana" font-size="14.00">(*Client).Post</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do -->
-<g id="node1" class="node">
+<g id="node2" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do | defined in transport.go:162&#10;at transport.go:172: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:173: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:184: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:176: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M610.99,-273C610.99,-273 527.2,-273 527.2,-273 521.2,-273 515.2,-267 515.2,-261 515.2,-261 515.2,-249 515.2,-249 515.2,-243 521.2,-237 527.2,-237 527.2,-237 610.99,-237 610.99,-237 616.99,-237 622.99,-243 622.99,-249 622.99,-249 622.99,-261 622.99,-261 622.99,-267 616.99,-273 610.99,-273"/>
-<text xml:space="preserve" text-anchor="middle" x="569.1" y="-250.32" font-family="Verdana" font-size="14.00">(*Client).Do</text>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do | defined in transport.go:162&#10;at transport.go:172: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:176: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext]&#10;at transport.go:173: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:184: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M610.99,-263C610.99,-263 527.2,-263 527.2,-263 521.2,-263 515.2,-257 515.2,-251 515.2,-251 515.2,-239 515.2,-239 515.2,-233 521.2,-227 527.2,-227 527.2,-227 610.99,-227 610.99,-227 616.99,-227 622.99,-233 622.99,-239 622.99,-239 622.99,-251 622.99,-251 622.99,-257 616.99,-263 610.99,-263"/>
+<text xml:space="preserve" text-anchor="middle" x="569.1" y="-240.32" font-family="Verdana" font-size="14.00">(*Client).Do</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do -->
+<g id="edge16" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do</title>
+<g id="a_edge16"><a xlink:title="at transport.go:217: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do]">
+<path fill="none" stroke="black" d="M363.67,-245C405.02,-245 460.39,-245 503.07,-245"/>
+<polygon fill="black" stroke="black" points="502.96,-248.5 512.96,-245 502.96,-241.5 502.96,-248.5"/>
 </a>
 </g>
 </g>
@@ -35,17 +53,17 @@
 <g id="node8" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M909.16,-434C909.16,-434 873.37,-434 873.37,-434 867.37,-434 861.37,-428 861.37,-422 861.37,-422 861.37,-410 861.37,-410 861.37,-404 867.37,-398 873.37,-398 873.37,-398 909.16,-398 909.16,-398 915.16,-398 921.16,-404 921.16,-410 921.16,-410 921.16,-422 921.16,-422 921.16,-428 915.16,-434 909.16,-434"/>
-<text xml:space="preserve" text-anchor="middle" x="891.26" y="-411.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M909.16,-427C909.16,-427 873.37,-427 873.37,-427 867.37,-427 861.37,-421 861.37,-415 861.37,-415 861.37,-403 861.37,-403 861.37,-397 867.37,-391 873.37,-391 873.37,-391 909.16,-391 909.16,-391 915.16,-391 921.16,-397 921.16,-403 921.16,-403 921.16,-415 921.16,-415 921.16,-421 915.16,-427 909.16,-427"/>
+<text xml:space="preserve" text-anchor="middle" x="891.26" y="-404.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge2"><a xlink:title="at transport.go:172: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M601.2,-273.65C628.22,-290.06 668.24,-314.89 702.12,-338 731.79,-358.24 734.59,-370.78 767.12,-386 793.27,-398.23 824.97,-405.81 849.66,-410.29"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="848.87,-413.7 859.32,-411.93 850.05,-406.8 848.87,-413.7"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge13"><a xlink:title="at transport.go:207: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M307.12,-263.6C314.27,-314.85 342.27,-457.53 436.08,-507 555.8,-570.13 612.04,-583.58 739.12,-537 793.78,-516.97 842.24,-467.45 868.8,-436.21"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="871.34,-438.63 875.04,-428.7 865.96,-434.16 871.34,-438.63"/>
 </a>
 </g>
 </g>
@@ -53,17 +71,17 @@
 <g id="node9" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M995.41,-251C995.41,-251 787.12,-251 787.12,-251 781.12,-251 775.12,-245 775.12,-239 775.12,-239 775.12,-227 775.12,-227 775.12,-221 781.12,-215 787.12,-215 787.12,-215 995.41,-215 995.41,-215 1001.41,-215 1007.41,-221 1007.41,-227 1007.41,-227 1007.41,-239 1007.41,-239 1007.41,-245 1001.41,-251 995.41,-251"/>
-<text xml:space="preserve" text-anchor="middle" x="891.26" y="-228.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M995.41,-183C995.41,-183 787.12,-183 787.12,-183 781.12,-183 775.12,-177 775.12,-171 775.12,-171 775.12,-159 775.12,-159 775.12,-153 781.12,-147 787.12,-147 787.12,-147 995.41,-147 995.41,-147 1001.41,-147 1007.41,-153 1007.41,-159 1007.41,-159 1007.41,-171 1007.41,-171 1007.41,-177 1001.41,-183 995.41,-183"/>
+<text xml:space="preserve" text-anchor="middle" x="891.26" y="-160.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge8" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge8"><a xlink:title="at transport.go:173: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M623.69,-251.32C661.84,-248.7 714.76,-245.06 763.39,-241.72"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="763.43,-245.22 773.16,-241.05 762.95,-238.24 763.43,-245.22"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge14" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge14"><a xlink:title="at transport.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M351.52,-226.27C376.24,-217.13 407.37,-206.86 436.08,-201 545.07,-178.75 671.38,-170.08 763.09,-166.79"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="762.99,-170.29 772.87,-166.45 762.75,-163.3 762.99,-170.29"/>
 </a>
 </g>
 </g>
@@ -71,17 +89,17 @@
 <g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M989.78,-190C989.78,-190 792.74,-190 792.74,-190 786.74,-190 780.74,-184 780.74,-178 780.74,-178 780.74,-166 780.74,-166 780.74,-160 786.74,-154 792.74,-154 792.74,-154 989.78,-154 989.78,-154 995.78,-154 1001.78,-160 1001.78,-166 1001.78,-166 1001.78,-178 1001.78,-178 1001.78,-184 995.78,-190 989.78,-190"/>
-<text xml:space="preserve" text-anchor="middle" x="891.26" y="-167.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M989.78,-366C989.78,-366 792.74,-366 792.74,-366 786.74,-366 780.74,-360 780.74,-354 780.74,-354 780.74,-342 780.74,-342 780.74,-336 786.74,-330 792.74,-330 792.74,-330 989.78,-330 989.78,-330 995.78,-330 1001.78,-336 1001.78,-342 1001.78,-342 1001.78,-354 1001.78,-354 1001.78,-360 995.78,-366 989.78,-366"/>
+<text xml:space="preserve" text-anchor="middle" x="891.26" y="-343.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge13"><a xlink:title="at transport.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M623.57,-240.71C663.18,-230.17 718.48,-215.54 767.12,-203 779.17,-199.89 791.9,-196.65 804.42,-193.48"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="805.04,-196.93 813.87,-191.09 803.32,-190.14 805.04,-196.93"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge15"><a xlink:title="at transport.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M306.7,-263.64C311.88,-306.54 331.27,-412.01 399.08,-456 525.86,-538.26 615.34,-542.7 739.12,-456 768.95,-435.11 740.09,-403.4 767.12,-379 769.61,-376.75 772.25,-374.66 774.99,-372.71"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="776.81,-375.7 783.45,-367.45 773.11,-369.76 776.81,-375.7"/>
 </a>
 </g>
 </g>
@@ -89,17 +107,53 @@
 <g id="node11" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M978.91,-373C978.91,-373 803.62,-373 803.62,-373 797.62,-373 791.62,-367 791.62,-361 791.62,-361 791.62,-349 791.62,-349 791.62,-343 797.62,-337 803.62,-337 803.62,-337 978.91,-337 978.91,-337 984.91,-337 990.91,-343 990.91,-349 990.91,-349 990.91,-361 990.91,-361 990.91,-367 984.91,-373 978.91,-373"/>
-<text xml:space="preserve" text-anchor="middle" x="891.26" y="-350.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M978.91,-244C978.91,-244 803.62,-244 803.62,-244 797.62,-244 791.62,-238 791.62,-232 791.62,-232 791.62,-220 791.62,-220 791.62,-214 797.62,-208 803.62,-208 803.62,-208 978.91,-208 978.91,-208 984.91,-208 990.91,-214 990.91,-220 990.91,-220 990.91,-232 990.91,-232 990.91,-238 984.91,-244 978.91,-244"/>
+<text xml:space="preserve" text-anchor="middle" x="891.26" y="-221.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge18" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge18"><a xlink:title="at transport.go:210: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M363.53,-228.63C386.02,-223.14 412.06,-217.71 436.08,-215 552.89,-201.81 687.62,-207.71 779.82,-214.94"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="779.38,-218.41 789.63,-215.72 779.94,-211.43 779.38,-218.41"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge2"><a xlink:title="at transport.go:172: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M596.33,-263.61C645.63,-298.48 748.83,-370.87 767.12,-379 793.42,-390.69 824.99,-398.26 849.58,-402.88"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="848.74,-406.28 859.2,-404.59 849.96,-399.39 848.74,-406.28"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge9"><a xlink:title="at transport.go:173: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M623.69,-231.61C673.02,-219.28 747.05,-200.78 804.59,-186.41"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="805.18,-189.87 814.03,-184.05 803.48,-183.08 805.18,-189.87"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge19" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge19"><a xlink:title="at transport.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M615.76,-263.64C655.37,-279.38 714.45,-301.89 767.12,-318 776.7,-320.93 786.77,-323.77 796.85,-326.45"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="795.74,-329.78 806.3,-328.92 797.51,-323.01 795.74,-329.78"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge9" class="edge">
+<g id="edge20" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge9"><a xlink:title="at transport.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:184: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M618.22,-273.66C657.84,-288.63 715.64,-309.63 767.12,-325 776.87,-327.91 787.13,-330.75 797.38,-333.45"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="796.45,-336.83 807.01,-335.94 798.2,-330.05 796.45,-336.83"/>
+<g id="a_edge20"><a xlink:title="at transport.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:184: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M623.69,-241.82C666.14,-239.3 726.89,-235.7 779.68,-232.56"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="779.87,-236.06 789.64,-231.97 779.45,-229.07 779.87,-236.06"/>
 </a>
 </g>
 </g>
@@ -107,98 +161,44 @@
 <g id="node12" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext</title>
 <g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext | defined in errors.go:250">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M984.53,-312C984.53,-312 797.99,-312 797.99,-312 791.99,-312 785.99,-306 785.99,-300 785.99,-300 785.99,-288 785.99,-288 785.99,-282 791.99,-276 797.99,-276 797.99,-276 984.53,-276 984.53,-276 990.53,-276 996.53,-282 996.53,-288 996.53,-288 996.53,-300 996.53,-300 996.53,-306 990.53,-312 984.53,-312"/>
-<text xml:space="preserve" text-anchor="middle" x="891.26" y="-289.32" font-family="Verdana" font-size="14.00">(*GuildError).FromContext</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M984.53,-305C984.53,-305 797.99,-305 797.99,-305 791.99,-305 785.99,-299 785.99,-293 785.99,-293 785.99,-281 785.99,-281 785.99,-275 791.99,-269 797.99,-269 797.99,-269 984.53,-269 984.53,-269 990.53,-269 996.53,-275 996.53,-281 996.53,-281 996.53,-293 996.53,-293 996.53,-299 990.53,-305 984.53,-305"/>
+<text xml:space="preserve" text-anchor="middle" x="891.26" y="-282.32" font-family="Verdana" font-size="14.00">(*GuildError).FromContext</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext -->
-<g id="edge20" class="edge">
+<g id="edge3" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext</title>
-<g id="a_edge20"><a xlink:title="at transport.go:176: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext]">
-<path fill="none" stroke="saddlebrown" d="M623.69,-261.53C664.65,-266.52 722.64,-273.58 774.08,-279.85"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="773.43,-283.29 783.78,-281.03 774.28,-276.35 773.43,-283.29"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post -->
-<g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post | defined in transport.go:204&#10;at transport.go:210: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:217: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do]&#10;at transport.go:207: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M351.08,-197C351.08,-197 256.79,-197 256.79,-197 250.79,-197 244.79,-191 244.79,-185 244.79,-185 244.79,-173 244.79,-173 244.79,-167 250.79,-161 256.79,-161 256.79,-161 351.08,-161 351.08,-161 357.08,-161 363.08,-167 363.08,-173 363.08,-173 363.08,-185 363.08,-185 363.08,-191 357.08,-197 351.08,-197"/>
-<text xml:space="preserve" text-anchor="middle" x="303.93" y="-174.32" font-family="Verdana" font-size="14.00">(*Client).Post</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do</title>
-<g id="a_edge14"><a xlink:title="at transport.go:217: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do]">
-<path fill="none" stroke="black" d="M363.67,-195.96C405.19,-207.95 460.86,-224.03 503.62,-236.38"/>
-<polygon fill="black" stroke="black" points="502.44,-239.68 513.02,-239.09 504.38,-232.96 502.44,-239.68"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge21" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge21"><a xlink:title="at transport.go:207: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M335.85,-197.65C345.83,-205.04 356.1,-214.34 363.08,-225 414.19,-303.14 354.55,-376.49 436.08,-422 571.36,-497.51 766.51,-453.59 849.95,-429.07"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="850.72,-432.5 859.29,-426.27 848.7,-425.79 850.72,-432.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge22"><a xlink:title="at transport.go:208: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M336.16,-160.3C354.3,-151.38 377.89,-143.02 400.08,-145 541.05,-157.55 702.16,-190.03 800.01,-211.82"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="799.04,-215.19 809.57,-213.96 800.57,-208.36 799.04,-215.19"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge23"><a xlink:title="at transport.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M325.94,-160.25C343.92,-145.54 371.25,-126.23 399.08,-118 544.01,-75.15 597.38,-65.57 739.12,-118 754.49,-123.69 752.54,-134.52 767.12,-142 772.44,-144.73 778.03,-147.22 783.75,-149.49"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="782.17,-152.63 792.77,-152.81 784.59,-146.07 782.17,-152.63"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge10" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Post&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge10"><a xlink:title="at transport.go:210: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M334.12,-197.56C344.3,-205.12 355.14,-214.54 363.08,-225 413.79,-291.79 366.24,-352.57 436.08,-399 534.54,-464.47 584.66,-412.55 702.12,-399 712.68,-397.78 758.91,-386.98 802.9,-376.39"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="803.64,-379.81 812.54,-374.06 802,-373.01 803.64,-379.81"/>
+<g id="a_edge3"><a xlink:title="at transport.go:176: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext]">
+<path fill="none" stroke="saddlebrown" d="M623.69,-252.03C664.65,-257.4 722.64,-265.01 774.08,-271.76"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="773.42,-275.2 783.79,-273.03 774.33,-268.26 773.42,-275.2"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport -->
 <g id="node3" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport | defined in transport.go:24&#10;at transport.go:27: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:26: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at transport.go:28: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport | defined in transport.go:24&#10;at transport.go:26: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at transport.go:27: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:28: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M656.37,-52C656.37,-52 481.83,-52 481.83,-52 475.83,-52 469.83,-46 469.83,-40 469.83,-40 469.83,-28 469.83,-28 469.83,-22 475.83,-16 481.83,-16 481.83,-16 656.37,-16 656.37,-16 662.37,-16 668.37,-22 668.37,-28 668.37,-28 668.37,-40 668.37,-40 668.37,-46 662.37,-52 656.37,-52"/>
 <text xml:space="preserve" text-anchor="middle" x="569.1" y="-29.32" font-family="Verdana" font-size="14.00">NewUnixSocketTransport</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge11" class="edge">
+<g id="edge5" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge11"><a xlink:title="at transport.go:27: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M635.26,-52.69C670.39,-65.79 711.98,-86.67 739.12,-118 765.16,-148.06 737.9,-176.01 767.12,-203 769.02,-204.76 771.01,-206.42 773.08,-207.99"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="771.03,-210.83 781.3,-213.44 774.9,-205 771.03,-210.83"/>
+<g id="a_edge5"><a xlink:title="at transport.go:27: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M668.9,-34.73C693.99,-39.17 719.39,-47.87 739.12,-64 765.38,-85.47 741.55,-112.71 767.12,-135 769.22,-136.83 771.41,-138.55 773.68,-140.17"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="771.82,-143.13 782.15,-145.48 775.53,-137.2 771.82,-143.13"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge16" class="edge">
+<g id="edge12" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge16"><a xlink:title="at transport.go:28: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M668.8,-34.25C694.03,-38.66 719.53,-47.47 739.12,-64 767.27,-87.75 739.74,-117.37 767.12,-142 769.23,-143.9 771.44,-145.68 773.74,-147.36"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="771.4,-150.02 781.71,-152.48 775.19,-144.13 771.4,-150.02"/>
+<g id="a_edge12"><a xlink:title="at transport.go:28: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M584.4,-52.72C609.1,-85.25 661.04,-154.51 702.12,-215 732.53,-259.78 723.17,-286.4 767.12,-318 770.16,-320.18 773.33,-322.21 776.62,-324.09"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="774.92,-327.15 785.42,-328.61 778.12,-320.93 774.92,-327.15"/>
 </a>
 </g>
 </g>
@@ -206,17 +206,17 @@
 <g id="node13" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
 <g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M906.26,-129C906.26,-129 876.26,-129 876.26,-129 870.26,-129 864.26,-123 864.26,-117 864.26,-117 864.26,-105 864.26,-105 864.26,-99 870.26,-93 876.26,-93 876.26,-93 906.26,-93 906.26,-93 912.26,-93 918.26,-99 918.26,-105 918.26,-105 918.26,-117 918.26,-117 918.26,-123 912.26,-129 906.26,-129"/>
-<text xml:space="preserve" text-anchor="middle" x="891.26" y="-106.33" font-family="Verdana" font-size="14.00">New</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M906.26,-122C906.26,-122 876.26,-122 876.26,-122 870.26,-122 864.26,-116 864.26,-110 864.26,-110 864.26,-98 864.26,-98 864.26,-92 870.26,-86 876.26,-86 876.26,-86 906.26,-86 906.26,-86 912.26,-86 918.26,-92 918.26,-98 918.26,-98 918.26,-110 918.26,-110 918.26,-116 912.26,-122 906.26,-122"/>
+<text xml:space="preserve" text-anchor="middle" x="891.26" y="-99.33" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge15" class="edge">
+<g id="edge4" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge15"><a xlink:title="at transport.go:26: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M668.89,-28.54C692.17,-29.23 716.72,-31.6 739.12,-37 780.97,-47.09 824.72,-70.08 854.31,-87.78"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="852.13,-90.54 862.49,-92.76 855.77,-84.57 852.13,-90.54"/>
+<g id="a_edge4"><a xlink:title="at transport.go:26: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M668.74,-29.16C692.03,-29.82 716.62,-32.03 739.12,-37 780.24,-46.09 823.86,-66.76 853.62,-82.76"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="851.76,-85.73 862.22,-87.47 855.13,-79.59 851.76,-85.73"/>
 </a>
 </g>
 </g>
@@ -230,9 +230,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/client.NewClient&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport -->
-<g id="edge3" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/client.NewClient&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport</title>
-<g id="a_edge3"><a xlink:title="at transport.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport]">
+<g id="a_edge1"><a xlink:title="at transport.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/client.NewUnixSocketTransport]">
 <path fill="none" stroke="black" d="M351.08,-34C380.79,-34 420.76,-34 458.29,-34"/>
 <polygon fill="black" stroke="black" points="457.81,-37.5 467.81,-34 457.81,-30.5 457.81,-37.5"/>
 </a>
@@ -241,108 +241,90 @@
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get -->
 <g id="node5" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get | defined in transport.go:191&#10;at transport.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:200: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do]&#10;at transport.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:194: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:196: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M348.45,-273C348.45,-273 259.41,-273 259.41,-273 253.41,-273 247.41,-267 247.41,-261 247.41,-261 247.41,-249 247.41,-249 247.41,-243 253.41,-237 259.41,-237 259.41,-237 348.45,-237 348.45,-237 354.45,-237 360.45,-243 360.45,-249 360.45,-249 360.45,-261 360.45,-261 360.45,-267 354.45,-273 348.45,-273"/>
-<text xml:space="preserve" text-anchor="middle" x="303.93" y="-250.32" font-family="Verdana" font-size="14.00">(*Client).Get</text>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get | defined in transport.go:191&#10;at transport.go:194: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:196: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:200: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M348.45,-177C348.45,-177 259.41,-177 259.41,-177 253.41,-177 247.41,-171 247.41,-165 247.41,-165 247.41,-153 247.41,-153 247.41,-147 253.41,-141 259.41,-141 259.41,-141 348.45,-141 348.45,-141 354.45,-141 360.45,-147 360.45,-153 360.45,-153 360.45,-165 360.45,-165 360.45,-171 354.45,-177 348.45,-177"/>
+<text xml:space="preserve" text-anchor="middle" x="303.93" y="-154.32" font-family="Verdana" font-size="14.00">(*Client).Get</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do -->
-<g id="edge4" class="edge">
+<g id="edge23" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do</title>
-<g id="a_edge4"><a xlink:title="at transport.go:200: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do]">
-<path fill="none" stroke="black" d="M361.07,-255C402.78,-255 459.76,-255 503.39,-255"/>
-<polygon fill="black" stroke="black" points="503.23,-258.5 513.23,-255 503.23,-251.5 503.23,-258.5"/>
+<g id="a_edge23"><a xlink:title="at transport.go:200: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Do]">
+<path fill="none" stroke="black" d="M361.07,-177.34C402.96,-191.03 460.25,-209.76 503.95,-224.04"/>
+<polygon fill="black" stroke="black" points="502.72,-227.32 513.31,-227.09 504.89,-220.66 502.72,-227.32"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge24" class="edge">
+<g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge24"><a xlink:title="at transport.go:194: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M307.54,-273.49C315.69,-323.06 345.74,-458.3 436.08,-505 556.39,-567.19 611.33,-581.85 739.12,-537 792.24,-518.36 840.54,-472.32 867.6,-442.72"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="869.9,-445.38 873.96,-435.6 864.69,-440.72 869.9,-445.38"/>
+<g id="a_edge6"><a xlink:title="at transport.go:194: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M329.94,-177.52C341.64,-187.41 354.78,-200.53 363.08,-215 412.44,-301.08 349.79,-377.01 436.08,-426 570.89,-502.54 766.29,-451.59 849.88,-423.75"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="850.91,-427.09 859.24,-420.56 848.65,-420.47 850.91,-427.09"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge17" class="edge">
+<g id="edge21" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge17"><a xlink:title="at transport.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M360.94,-239.27C384.01,-233.56 411.13,-227.82 436.08,-225 546.1,-212.58 672.05,-216.19 763.36,-221.98"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="762.89,-225.45 773.09,-222.62 763.34,-218.47 762.89,-225.45"/>
+<g id="a_edge21"><a xlink:title="at transport.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M325.99,-140.4C344,-125.78 371.34,-106.51 399.08,-98 471.33,-75.82 672.87,-54.63 739.12,-91 759.44,-102.15 748.28,-121.5 767.12,-135 770.16,-137.18 773.34,-139.2 776.63,-141.07"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="774.94,-144.14 785.43,-145.58 778.13,-137.91 774.94,-144.14"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge25" class="edge">
+<g id="edge22" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge25"><a xlink:title="at transport.go:196: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M351.53,-236.35C376.26,-227.23 407.39,-216.96 436.08,-211 547.29,-187.91 676.55,-178.46 768.67,-174.6"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="768.64,-178.1 778.49,-174.21 768.36,-171.11 768.64,-178.1"/>
+<g id="a_edge22"><a xlink:title="at transport.go:196: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M328.51,-177.55C340.13,-187.64 353.63,-200.92 363.08,-215 412.1,-288.06 363.3,-349.57 436.08,-399 558.02,-481.81 625.16,-418.68 767.12,-379 778.5,-375.82 790.51,-372.61 802.39,-369.53"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="802.97,-372.99 811.78,-367.11 801.22,-366.22 802.97,-372.99"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge1" class="edge">
+<g id="edge17" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge1"><a xlink:title="at transport.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M307.14,-273.71C313.17,-315.23 334.05,-414.65 399.08,-456 526.61,-537.09 613.98,-540.73 739.12,-456 766.87,-437.21 741.89,-408.06 767.12,-386 771.42,-382.24 776.11,-378.93 781.06,-376"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="782.32,-379.3 789.55,-371.55 779.07,-373.1 782.32,-379.3"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy | defined in transport.go:232&#10;at transport.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M159.79,-273C159.79,-273 28,-273 28,-273 22,-273 16,-267 16,-261 16,-261 16,-249 16,-249 16,-243 22,-237 28,-237 28,-237 159.79,-237 159.79,-237 165.79,-237 171.79,-243 171.79,-249 171.79,-249 171.79,-261 171.79,-261 171.79,-267 165.79,-273 159.79,-273"/>
-<text xml:space="preserve" text-anchor="middle" x="93.89" y="-250.32" font-family="Verdana" font-size="14.00">(*Client).IsHealthy</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get</title>
-<g id="a_edge5"><a xlink:title="at transport.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get]">
-<path fill="none" stroke="black" d="M172.36,-255C193.12,-255 215.4,-255 235.57,-255"/>
-<polygon fill="black" stroke="black" points="235.34,-258.5 245.34,-255 235.34,-251.5 235.34,-258.5"/>
+<g id="a_edge17"><a xlink:title="at transport.go:197: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M335.75,-140.29C353.96,-131.22 377.74,-122.72 400.08,-125 476.15,-132.76 679.32,-177.59 798.87,-204.85"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="797.81,-208.2 808.34,-207.01 799.37,-201.37 797.81,-208.2"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip -->
-<g id="node7" class="node">
+<g id="node6" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip | defined in transport.go:72&#10;at transport.go:86: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:95: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:87: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:88: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:89: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext]">
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip | defined in transport.go:72&#10;at transport.go:87: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:88: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:89: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext]&#10;at transport.go:86: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:95: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M690.12,-386C690.12,-386 448.08,-386 448.08,-386 442.08,-386 436.08,-380 436.08,-374 436.08,-374 436.08,-362 436.08,-362 436.08,-356 442.08,-350 448.08,-350 448.08,-350 690.12,-350 690.12,-350 696.12,-350 702.12,-356 702.12,-362 702.12,-362 702.12,-374 702.12,-374 702.12,-380 696.12,-386 690.12,-386"/>
 <text xml:space="preserve" text-anchor="middle" x="569.1" y="-363.32" font-family="Verdana" font-size="14.00">(*UnixSocketTransport).RoundTrip</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge12" class="edge">
+<g id="edge24" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge12"><a xlink:title="at transport.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M694.8,-386.7C749.7,-394.93 810.44,-404.03 849.41,-409.88"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="848.87,-413.33 859.28,-411.35 849.91,-406.41 848.87,-413.33"/>
+<g id="a_edge24"><a xlink:title="at transport.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transport.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M702.63,-384.97C755.41,-391.73 812.31,-399.02 849.44,-403.77"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="848.9,-407.23 859.27,-405.03 849.79,-400.29 848.9,-407.23"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge18" class="edge">
+<g id="edge25" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge18"><a xlink:title="at transport.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M599.75,-349.45C637.42,-326.58 705,-287.82 767.12,-264 775.7,-260.71 784.75,-257.67 793.9,-254.88"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="794.58,-258.33 803.19,-252.16 792.61,-251.61 794.58,-258.33"/>
+<g id="a_edge25"><a xlink:title="at transport.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at transport.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M602.08,-349.26C630.03,-332.09 670.91,-304.99 702.12,-276 735.69,-244.82 728.49,-220.63 767.12,-196 771.59,-193.15 776.31,-190.56 781.19,-188.21"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="782.27,-191.56 790.01,-184.32 779.45,-185.15 782.27,-191.56"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge6" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge6"><a xlink:title="at transport.go:86: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:95: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M607.48,-349.39C635.3,-334.49 673.3,-311.85 702.12,-286 737,-254.72 727.84,-228.54 767.12,-203 771.39,-200.22 775.9,-197.69 780.56,-195.39"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="781.92,-198.61 789.61,-191.32 779.05,-192.23 781.92,-198.61"/>
+<g id="a_edge10"><a xlink:title="at transport.go:86: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at transport.go:95: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M702.58,-376.76C714.94,-376.59 727.27,-376.05 739.12,-375 755.56,-373.54 772.9,-371.21 789.73,-368.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="789.92,-372.03 799.21,-366.94 788.77,-365.12 789.92,-372.03"/>
 </a>
 </g>
 </g>
@@ -350,17 +332,35 @@
 <g id="edge7" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_edge7"><a xlink:title="at transport.go:87: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:88: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transport.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M702.54,-376.19C714.91,-376.14 727.25,-375.78 739.12,-375 752.46,-374.12 766.42,-372.81 780.23,-371.27"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="780.23,-374.8 789.76,-370.17 779.42,-367.84 780.23,-374.8"/>
+<path fill="none" stroke="saddlebrown" d="M597.63,-349.35C634.67,-324.99 703.31,-282.47 767.12,-257 775.34,-253.72 784.02,-250.7 792.8,-247.95"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="793.52,-251.39 802.09,-245.16 791.51,-244.68 793.52,-251.39"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext -->
-<g id="edge19" class="edge">
+<g id="edge8" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.UnixSocketTransport).RoundTrip&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext</title>
-<g id="a_edge19"><a xlink:title="at transport.go:89: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext]">
-<path fill="none" stroke="saddlebrown" d="M650.89,-349.33C695.74,-338.96 751.69,-326.03 798.22,-315.27"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="798.79,-318.73 807.75,-313.07 797.22,-311.91 798.79,-318.73"/>
+<g id="a_edge8"><a xlink:title="at transport.go:89: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).FromContext]">
+<path fill="none" stroke="saddlebrown" d="M643.54,-349.33C680.59,-339.92 726.24,-328.33 767.12,-318 779.27,-314.93 792.1,-311.69 804.7,-308.52"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="805.39,-311.95 814.23,-306.12 803.68,-305.17 805.39,-311.95"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy -->
+<g id="node7" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy</title>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy | defined in transport.go:232&#10;at transport.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M159.79,-177C159.79,-177 28,-177 28,-177 22,-177 16,-171 16,-165 16,-165 16,-153 16,-153 16,-147 22,-141 28,-141 28,-141 159.79,-141 159.79,-141 165.79,-141 171.79,-147 171.79,-153 171.79,-153 171.79,-165 171.79,-165 171.79,-171 165.79,-177 159.79,-177"/>
+<text xml:space="preserve" text-anchor="middle" x="93.89" y="-154.32" font-family="Verdana" font-size="14.00">(*Client).IsHealthy</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get -->
+<g id="edge11" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).IsHealthy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get</title>
+<g id="a_edge11"><a xlink:title="at transport.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/client.Client).Get]">
+<path fill="none" stroke="black" d="M172.36,-159C193.12,-159 215.4,-159 235.57,-159"/>
+<polygon fill="black" stroke="black" points="235.34,-162.5 245.34,-159 235.34,-155.5 235.34,-162.5"/>
 </a>
 </g>
 </g>

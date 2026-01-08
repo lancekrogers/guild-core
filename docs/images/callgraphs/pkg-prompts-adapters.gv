@@ -14,38 +14,38 @@ digraph gocallvis {
     edge [minlen="2"]
 
     subgraph "cluster_focus" {
-        fontsize="18";
-bgcolor="#e6ecfa";
-label="adapters";
+        label="adapters";
 labelloc="t";
 labeljust="c";
+fontsize="18";
+bgcolor="#e6ecfa";
         
-        "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate" [ label="(*LayeredManagerAdapter).LoadTemplate" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate | defined in layered_adapter.go:70\nat layered_adapter.go:71: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat layered_adapter.go:72: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat layered_adapter.go:73: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" fillcolor="lightblue" ]
-        "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate" [ fillcolor="lightblue" label="(*LayeredAdapter).LoadTemplate" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate | defined in layered_adapter.go:40\nat layered_adapter.go:44: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat layered_adapter.go:45: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat layered_adapter.go:43: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+        "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate" [ label="(*LayeredAdapter).LoadTemplate" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate | defined in layered_adapter.go:40\nat layered_adapter.go:43: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat layered_adapter.go:44: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat layered_adapter.go:45: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate" [ fillcolor="lightblue" label="(*LayeredManagerAdapter).LoadTemplate" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate | defined in layered_adapter.go:70\nat layered_adapter.go:71: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat layered_adapter.go:72: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat layered_adapter.go:73: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
-        style="filled";
-fillcolor="lightyellow";
+        URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+fontsize="16";
+style="filled";
 fontname="Tahoma bold";
 rank="sink";
-label="gerror";
-URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
 tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
 penwidth="0.8";
-fontsize="16";
+fillcolor="lightyellow";
+label="gerror";
         
-        "github.com/guild-framework/guild-core/pkg/gerror.New" [ fillcolor="moccasin" label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" ]
-        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" ]
-        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" fillcolor="moccasin" label="New" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" fillcolor="moccasin" label="(*GuildError).WithOperation" ]
         
     }
 
     }
 
-    "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ tooltip="at layered_adapter.go:44: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at layered_adapter.go:43: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at layered_adapter.go:44: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
     "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at layered_adapter.go:45: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
     "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at layered_adapter.go:71: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
     "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at layered_adapter.go:72: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
     "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredManagerAdapter).LoadTemplate" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at layered_adapter.go:73: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
-    "(*github.com/guild-framework/guild-core/pkg/prompts/adapters.LayeredAdapter).LoadTemplate" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at layered_adapter.go:43: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
 }

@@ -41,9 +41,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).isRecentFile -->
-<g id="edge1" class="edge">
+<g id="edge7" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).isRecentFile</title>
-<g id="a_edge1"><a xlink:title="at fuzzy_finder.go:395: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).isRecentFile]">
+<g id="a_edge7"><a xlink:title="at fuzzy_finder.go:395: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).isRecentFile]">
 <path fill="none" stroke="black" d="M949.83,-244C975.84,-244 1003.3,-244 1029.22,-244"/>
 <polygon fill="black" stroke="black" points="1029.11,-247.5 1039.11,-244 1029.11,-240.5 1029.11,-247.5"/>
 </a>
@@ -59,63 +59,18 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult -->
-<g id="edge2" class="edge">
+<g id="edge14" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult</title>
-<g id="a_edge2"><a xlink:title="at fuzzy_finder.go:413: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult]">
+<g id="a_edge14"><a xlink:title="at fuzzy_finder.go:413: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult]">
 <path fill="none" stroke="black" d="M588.67,-216.54C622.3,-220.42 659.2,-224.68 693.69,-228.67"/>
 <polygon fill="black" stroke="black" points="692.96,-232.1 703.29,-229.78 693.76,-225.15 692.96,-232.1"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles -->
-<g id="node4" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles | defined in fuzzy_finder.go:208&#10;at fuzzy_finder.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M241.54,-231C241.54,-231 28,-231 28,-231 22,-231 16,-225 16,-219 16,-219 16,-207 16,-207 16,-201 22,-195 28,-195 28,-195 241.54,-195 241.54,-195 247.54,-195 253.54,-201 253.54,-207 253.54,-207 253.54,-219 253.54,-219 253.54,-225 247.54,-231 241.54,-231"/>
-<text xml:space="preserve" text-anchor="middle" x="134.77" y="-208.32" font-family="Verdana" font-size="14.00">(*FuzzyFinder).GetRecentFiles</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles</title>
-<g id="a_edge3"><a xlink:title="at fuzzy_finder.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles]">
-<path fill="none" stroke="black" d="M253.88,-209.46C282.1,-208.61 312.35,-207.71 341.01,-206.85"/>
-<polygon fill="black" stroke="black" points="340.93,-210.35 350.82,-206.56 340.72,-203.36 340.93,-210.35"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore | defined in fuzzy_finder.go:296&#10;at fuzzy_finder.go:331: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore]&#10;at fuzzy_finder.go:337: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M564.08,-282C564.08,-282 376.79,-282 376.79,-282 370.79,-282 364.79,-276 364.79,-270 364.79,-270 364.79,-258 364.79,-258 364.79,-252 370.79,-246 376.79,-246 376.79,-246 564.08,-246 564.08,-246 570.08,-246 576.08,-252 576.08,-258 576.08,-258 576.08,-270 576.08,-270 576.08,-276 570.08,-282 564.08,-282"/>
-<text xml:space="preserve" text-anchor="middle" x="470.43" y="-259.32" font-family="Verdana" font-size="14.00">(*FuzzyFinder).fuzzyScore</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore | defined in fuzzy_finder.go:346">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M955.62,-323C955.62,-323 699.33,-323 699.33,-323 693.33,-323 687.33,-317 687.33,-311 687.33,-311 687.33,-299 687.33,-299 687.33,-293 693.33,-287 699.33,-287 699.33,-287 955.62,-287 955.62,-287 961.62,-287 967.62,-293 967.62,-299 967.62,-299 967.62,-311 967.62,-311 967.62,-317 961.62,-323 955.62,-323"/>
-<text xml:space="preserve" text-anchor="middle" x="827.47" y="-300.32" font-family="Verdana" font-size="14.00">(*FuzzyFinder).fuzzySequenceScore</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore</title>
-<g id="a_edge4"><a xlink:title="at fuzzy_finder.go:331: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore]&#10;at fuzzy_finder.go:337: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore]">
-<path fill="none" stroke="black" d="M576.04,-276.08C607.37,-279.7 642.37,-283.74 676.04,-287.63"/>
-<polygon fill="black" stroke="black" points="675.56,-291.1 685.9,-288.77 676.37,-284.14 675.56,-291.1"/>
-</a>
-</g>
-</g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded -->
-<g id="node7" class="node">
+<g id="node4" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded | defined in fuzzy_finder.go:213&#10;at fuzzy_finder.go:255: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at fuzzy_finder.go:256: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at fuzzy_finder.go:257: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded | defined in fuzzy_finder.go:213&#10;at fuzzy_finder.go:255: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at fuzzy_finder.go:256: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at fuzzy_finder.go:257: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M602.33,-79C602.33,-79 338.54,-79 338.54,-79 332.54,-79 326.54,-73 326.54,-67 326.54,-67 326.54,-55 326.54,-55 326.54,-49 332.54,-43 338.54,-43 338.54,-43 602.33,-43 602.33,-43 608.33,-43 614.33,-49 614.33,-55 614.33,-55 614.33,-67 614.33,-67 614.33,-73 608.33,-79 602.33,-79"/>
 <text xml:space="preserve" text-anchor="middle" x="470.43" y="-56.33" font-family="Verdana" font-size="14.00">(*FuzzyFinder).rebuildIndexIfNeeded</text>
 </a>
@@ -125,17 +80,17 @@
 <g id="node12" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node12"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M845.37,-60C845.37,-60 809.58,-60 809.58,-60 803.58,-60 797.58,-54 797.58,-48 797.58,-48 797.58,-36 797.58,-36 797.58,-30 803.58,-24 809.58,-24 809.58,-24 845.37,-24 845.37,-24 851.37,-24 857.37,-30 857.37,-36 857.37,-36 857.37,-48 857.37,-48 857.37,-54 851.37,-60 845.37,-60"/>
-<text xml:space="preserve" text-anchor="middle" x="827.47" y="-37.33" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M845.37,-182C845.37,-182 809.58,-182 809.58,-182 803.58,-182 797.58,-176 797.58,-170 797.58,-170 797.58,-158 797.58,-158 797.58,-152 803.58,-146 809.58,-146 809.58,-146 845.37,-146 845.37,-146 851.37,-146 857.37,-152 857.37,-158 857.37,-158 857.37,-170 857.37,-170 857.37,-176 851.37,-182 845.37,-182"/>
+<text xml:space="preserve" text-anchor="middle" x="827.47" y="-159.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge5" class="edge">
+<g id="edge8" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge5"><a xlink:title="at fuzzy_finder.go:255: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M614.56,-53.34C676.22,-50.04 743.62,-46.43 785.48,-44.19"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="785.53,-47.7 795.33,-43.67 785.16,-40.71 785.53,-47.7"/>
+<g id="a_edge8"><a xlink:title="at fuzzy_finder.go:255: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M519.82,-79.12C563.26,-94.97 628.97,-117.9 687.33,-134 720.2,-143.07 758.06,-151.08 785.99,-156.53"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="784.95,-159.9 795.44,-158.35 786.28,-153.03 784.95,-159.9"/>
 </a>
 </g>
 </g>
@@ -143,17 +98,17 @@
 <g id="node13" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M931.62,-182C931.62,-182 723.33,-182 723.33,-182 717.33,-182 711.33,-176 711.33,-170 711.33,-170 711.33,-158 711.33,-158 711.33,-152 717.33,-146 723.33,-146 723.33,-146 931.62,-146 931.62,-146 937.62,-146 943.62,-152 943.62,-158 943.62,-158 943.62,-170 943.62,-170 943.62,-176 937.62,-182 931.62,-182"/>
-<text xml:space="preserve" text-anchor="middle" x="827.47" y="-159.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M931.62,-121C931.62,-121 723.33,-121 723.33,-121 717.33,-121 711.33,-115 711.33,-109 711.33,-109 711.33,-97 711.33,-97 711.33,-91 717.33,-85 723.33,-85 723.33,-85 931.62,-85 931.62,-85 937.62,-85 943.62,-91 943.62,-97 943.62,-97 943.62,-109 943.62,-109 943.62,-115 937.62,-121 931.62,-121"/>
+<text xml:space="preserve" text-anchor="middle" x="827.47" y="-98.33" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge6" class="edge">
+<g id="edge9" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge6"><a xlink:title="at fuzzy_finder.go:256: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M519.82,-79.12C563.26,-94.97 628.97,-117.9 687.33,-134 698.34,-137.04 709.91,-139.96 721.49,-142.7"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="720.55,-146.08 731.09,-144.93 722.14,-139.26 720.55,-146.08"/>
+<g id="a_edge9"><a xlink:title="at fuzzy_finder.go:256: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M614.56,-77.93C642.66,-81.26 671.95,-84.72 699.47,-87.98"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="698.9,-91.43 709.24,-89.13 699.72,-84.48 698.9,-91.43"/>
 </a>
 </g>
 </g>
@@ -161,89 +116,134 @@
 <g id="node14" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M925.99,-121C925.99,-121 728.95,-121 728.95,-121 722.95,-121 716.95,-115 716.95,-109 716.95,-109 716.95,-97 716.95,-97 716.95,-91 722.95,-85 728.95,-85 728.95,-85 925.99,-85 925.99,-85 931.99,-85 937.99,-91 937.99,-97 937.99,-97 937.99,-109 937.99,-109 937.99,-115 931.99,-121 925.99,-121"/>
-<text xml:space="preserve" text-anchor="middle" x="827.47" y="-98.33" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M925.99,-60C925.99,-60 728.95,-60 728.95,-60 722.95,-60 716.95,-54 716.95,-48 716.95,-48 716.95,-36 716.95,-36 716.95,-30 722.95,-24 728.95,-24 728.95,-24 925.99,-24 925.99,-24 931.99,-24 937.99,-30 937.99,-36 937.99,-36 937.99,-48 937.99,-48 937.99,-54 931.99,-60 925.99,-60"/>
+<text xml:space="preserve" text-anchor="middle" x="827.47" y="-37.33" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge10" class="edge">
+<g id="edge15" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge10"><a xlink:title="at fuzzy_finder.go:257: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M614.56,-77.93C644.62,-81.49 676.04,-85.2 705.2,-88.65"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="704.41,-92.08 714.76,-89.78 705.24,-85.13 704.41,-92.08"/>
+<g id="a_edge15"><a xlink:title="at fuzzy_finder.go:257: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M614.56,-53.34C644.49,-51.74 675.76,-50.07 704.81,-48.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="704.95,-52.01 714.75,-47.98 704.57,-45.02 704.95,-52.01"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search -->
-<g id="node8" class="node">
+<g id="node5" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search | defined in fuzzy_finder.go:126&#10;at fuzzy_finder.go:128: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]&#10;at fuzzy_finder.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at fuzzy_finder.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at fuzzy_finder.go:144: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore]&#10;at fuzzy_finder.go:129: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at fuzzy_finder.go:136: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles]&#10;at fuzzy_finder.go:146: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult]">
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search | defined in fuzzy_finder.go:126&#10;at fuzzy_finder.go:144: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore]&#10;at fuzzy_finder.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at fuzzy_finder.go:128: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]&#10;at fuzzy_finder.go:146: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult]&#10;at fuzzy_finder.go:129: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at fuzzy_finder.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at fuzzy_finder.go:136: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M214.16,-150C214.16,-150 55.38,-150 55.38,-150 49.38,-150 43.37,-144 43.37,-138 43.37,-138 43.37,-126 43.37,-126 43.37,-120 49.37,-114 55.37,-114 55.37,-114 214.16,-114 214.16,-114 220.16,-114 226.16,-120 226.16,-126 226.16,-126 226.16,-138 226.16,-138 226.16,-144 220.16,-150 214.16,-150"/>
 <text xml:space="preserve" text-anchor="middle" x="134.77" y="-127.33" font-family="Verdana" font-size="14.00">(*FuzzyFinder).Search</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult -->
-<g id="edge15" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult</title>
-<g id="a_edge15"><a xlink:title="at fuzzy_finder.go:146: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult]">
+<g id="a_edge11"><a xlink:title="at fuzzy_finder.go:146: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).createFileResult]">
 <path fill="none" stroke="black" d="M226.91,-142.79C258.44,-146.32 294.02,-150.08 326.54,-153 390.39,-158.73 553.69,-152.21 614.33,-173 651.29,-185.67 650.96,-207.72 687.33,-222 689.55,-222.87 691.81,-223.71 694.09,-224.52"/>
 <polygon fill="black" stroke="black" points="692.92,-227.82 703.52,-227.58 695.09,-221.16 692.92,-227.82"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles -->
-<g id="edge14" class="edge">
+<g id="edge16" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles</title>
-<g id="a_edge14"><a xlink:title="at fuzzy_finder.go:136: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles]">
+<g id="a_edge16"><a xlink:title="at fuzzy_finder.go:136: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles]">
 <path fill="none" stroke="black" d="M219.12,-150.66C241.93,-155.71 266.68,-161.12 289.54,-166 315.19,-171.47 342.93,-177.25 368.76,-182.57"/>
 <polygon fill="black" stroke="black" points="367.72,-185.93 378.22,-184.51 369.13,-179.07 367.72,-185.93"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore -->
-<g id="edge12" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore</title>
-<g id="a_edge12"><a xlink:title="at fuzzy_finder.go:144: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore]">
-<path fill="none" stroke="black" d="M184.96,-150.71C206.49,-159.55 231.75,-170.83 253.54,-183 288.1,-202.29 290.22,-218.28 326.54,-234 335.33,-237.8 344.64,-241.14 354.12,-244.06"/>
-<polygon fill="black" stroke="black" points="352.85,-247.33 363.42,-246.76 354.8,-240.61 352.85,-247.33"/>
-</a>
-</g>
-</g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded -->
-<g id="edge7" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded</title>
-<g id="a_edge7"><a xlink:title="at fuzzy_finder.go:128: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]">
+<g id="a_edge10"><a xlink:title="at fuzzy_finder.go:128: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]">
 <path fill="none" stroke="black" d="M219.12,-113.34C241.93,-108.29 266.68,-102.88 289.54,-98 315.19,-92.53 342.93,-86.75 368.76,-81.43"/>
 <polygon fill="black" stroke="black" points="369.13,-84.93 378.22,-79.49 367.72,-78.07 369.13,-84.93"/>
 </a>
 </g>
 </g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore -->
+<g id="node6" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore</title>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore | defined in fuzzy_finder.go:296&#10;at fuzzy_finder.go:331: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore]&#10;at fuzzy_finder.go:337: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M564.08,-282C564.08,-282 376.79,-282 376.79,-282 370.79,-282 364.79,-276 364.79,-270 364.79,-270 364.79,-258 364.79,-258 364.79,-252 370.79,-246 376.79,-246 376.79,-246 564.08,-246 564.08,-246 570.08,-246 576.08,-252 576.08,-258 576.08,-258 576.08,-270 576.08,-270 576.08,-276 570.08,-282 564.08,-282"/>
+<text xml:space="preserve" text-anchor="middle" x="470.43" y="-259.32" font-family="Verdana" font-size="14.00">(*FuzzyFinder).fuzzyScore</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore</title>
+<g id="a_edge2"><a xlink:title="at fuzzy_finder.go:144: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore]">
+<path fill="none" stroke="black" d="M184.96,-150.71C206.49,-159.55 231.75,-170.83 253.54,-183 288.1,-202.29 290.22,-218.28 326.54,-234 335.33,-237.8 344.64,-241.14 354.12,-244.06"/>
+<polygon fill="black" stroke="black" points="352.85,-247.33 363.42,-246.76 354.8,-240.61 352.85,-247.33"/>
+</a>
+</g>
+</g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge13" class="edge">
+<g id="edge12" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge13"><a xlink:title="at fuzzy_finder.go:129: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M186.14,-113.31C207.41,-104.73 232.16,-93.84 253.54,-82 288.17,-62.83 288.79,-42.88 326.54,-31 490.23,20.52 699.19,-14.08 785.93,-32.52"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="785.1,-35.92 795.62,-34.63 786.59,-29.08 785.1,-35.92"/>
+<g id="a_edge12"><a xlink:title="at fuzzy_finder.go:129: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M226.64,-135.4C322.92,-139.09 479.36,-145.36 614.33,-152 673.94,-154.93 742.94,-158.95 785.65,-161.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="785.26,-164.99 795.46,-162.1 785.69,-158.01 785.26,-164.99"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge11" class="edge">
+<g id="edge13" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge11"><a xlink:title="at fuzzy_finder.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M226.64,-135.4C322.92,-139.09 479.36,-145.36 614.33,-152 641.77,-153.35 671.21,-154.93 699.15,-156.49"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="698.92,-159.98 709.1,-157.05 699.31,-153 698.92,-159.98"/>
+<g id="a_edge13"><a xlink:title="at fuzzy_finder.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M226.83,-127.79C247.45,-126.85 269.25,-125.88 289.54,-125 429.75,-118.94 590.58,-112.4 699.38,-108.04"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="699.37,-111.55 709.22,-107.65 699.09,-104.55 699.37,-111.55"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge8" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).Search&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge8"><a xlink:title="at fuzzy_finder.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M226.83,-127.79C247.45,-126.85 269.25,-125.88 289.54,-125 432.23,-118.83 596.26,-112.17 705.09,-107.82"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="705.07,-111.32 714.92,-107.42 704.79,-104.33 705.07,-111.32"/>
+<g id="a_edge5"><a xlink:title="at fuzzy_finder.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M186.14,-113.31C207.41,-104.73 232.16,-93.84 253.54,-82 288.17,-62.83 288.79,-42.88 326.54,-31 460.24,11.08 624.14,-4.29 726.97,-21.39"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="726.34,-24.83 736.78,-23.06 727.51,-17.93 726.34,-24.83"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore -->
+<g id="node7" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore</title>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore | defined in fuzzy_finder.go:346">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M955.62,-323C955.62,-323 699.33,-323 699.33,-323 693.33,-323 687.33,-317 687.33,-311 687.33,-311 687.33,-299 687.33,-299 687.33,-293 693.33,-287 699.33,-287 699.33,-287 955.62,-287 955.62,-287 961.62,-287 967.62,-293 967.62,-299 967.62,-299 967.62,-311 967.62,-311 967.62,-317 961.62,-323 955.62,-323"/>
+<text xml:space="preserve" text-anchor="middle" x="827.47" y="-300.32" font-family="Verdana" font-size="14.00">(*FuzzyFinder).fuzzySequenceScore</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzyScore&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore</title>
+<g id="a_edge1"><a xlink:title="at fuzzy_finder.go:331: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore]&#10;at fuzzy_finder.go:337: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).fuzzySequenceScore]">
+<path fill="none" stroke="black" d="M576.04,-276.08C607.37,-279.7 642.37,-283.74 676.04,-287.63"/>
+<polygon fill="black" stroke="black" points="675.56,-291.1 685.9,-288.77 676.37,-284.14 675.56,-291.1"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex -->
+<g id="node8" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex</title>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex | defined in fuzzy_finder.go:431&#10;at fuzzy_finder.go:433: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M237.04,-69C237.04,-69 32.5,-69 32.5,-69 26.5,-69 20.5,-63 20.5,-57 20.5,-57 20.5,-45 20.5,-45 20.5,-39 26.5,-33 32.5,-33 32.5,-33 237.04,-33 237.04,-33 243.04,-33 249.04,-39 249.04,-45 249.04,-45 249.04,-57 249.04,-57 249.04,-63 243.04,-69 237.04,-69"/>
+<text xml:space="preserve" text-anchor="middle" x="134.77" y="-46.33" font-family="Verdana" font-size="14.00">(*FuzzyFinder).RefreshIndex</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded -->
+<g id="edge6" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded</title>
+<g id="a_edge6"><a xlink:title="at fuzzy_finder.go:433: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]">
+<path fill="none" stroke="black" d="M249.67,-54.41C270.73,-55.04 293.04,-55.71 315.07,-56.37"/>
+<polygon fill="black" stroke="black" points="314.94,-59.87 325.04,-56.67 315.15,-52.87 314.94,-59.87"/>
 </a>
 </g>
 </g>
@@ -266,29 +266,29 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/search.NewFuzzyFinder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/search.DefaultExcludePatterns -->
-<g id="edge16" class="edge">
+<g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/search.NewFuzzyFinder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/search.DefaultExcludePatterns</title>
-<g id="a_edge16"><a xlink:title="at fuzzy_finder.go:113: calling [github.com/guild&#45;framework/guild&#45;core/pkg/search.DefaultExcludePatterns]">
+<g id="a_edge3"><a xlink:title="at fuzzy_finder.go:113: calling [github.com/guild&#45;framework/guild&#45;core/pkg/search.DefaultExcludePatterns]">
 <path fill="none" stroke="black" d="M204.1,-325C250.55,-325 312.87,-325 365.44,-325"/>
 <polygon fill="black" stroke="black" points="365.33,-328.5 375.33,-325 365.33,-321.5 365.33,-328.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles -->
 <g id="node11" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex</title>
-<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex | defined in fuzzy_finder.go:431&#10;at fuzzy_finder.go:433: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M237.04,-69C237.04,-69 32.5,-69 32.5,-69 26.5,-69 20.5,-63 20.5,-57 20.5,-57 20.5,-45 20.5,-45 20.5,-39 26.5,-33 32.5,-33 32.5,-33 237.04,-33 237.04,-33 243.04,-33 249.04,-39 249.04,-45 249.04,-45 249.04,-57 249.04,-57 249.04,-63 243.04,-69 237.04,-69"/>
-<text xml:space="preserve" text-anchor="middle" x="134.77" y="-46.33" font-family="Verdana" font-size="14.00">(*FuzzyFinder).RefreshIndex</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles</title>
+<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles | defined in fuzzy_finder.go:208&#10;at fuzzy_finder.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M241.54,-231C241.54,-231 28,-231 28,-231 22,-231 16,-225 16,-219 16,-219 16,-207 16,-207 16,-201 22,-195 28,-195 28,-195 241.54,-195 241.54,-195 247.54,-195 253.54,-201 253.54,-207 253.54,-207 253.54,-219 253.54,-219 253.54,-225 247.54,-231 241.54,-231"/>
+<text xml:space="preserve" text-anchor="middle" x="134.77" y="-208.32" font-family="Verdana" font-size="14.00">(*FuzzyFinder).GetRecentFiles</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded -->
-<g id="edge9" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).RefreshIndex&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded</title>
-<g id="a_edge9"><a xlink:title="at fuzzy_finder.go:433: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).rebuildIndexIfNeeded]">
-<path fill="none" stroke="black" d="M249.67,-54.41C270.73,-55.04 293.04,-55.71 315.07,-56.37"/>
-<polygon fill="black" stroke="black" points="314.94,-59.87 325.04,-56.67 315.15,-52.87 314.94,-59.87"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).GetRecentFiles&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles</title>
+<g id="a_edge4"><a xlink:title="at fuzzy_finder.go:209: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/search.FuzzyFinder).getRecentFiles]">
+<path fill="none" stroke="black" d="M253.88,-209.46C282.1,-208.61 312.35,-207.71 341.01,-206.85"/>
+<polygon fill="black" stroke="black" points="340.93,-210.35 350.82,-206.56 340.72,-203.36 340.93,-210.35"/>
 </a>
 </g>
 </g>

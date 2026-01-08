@@ -18,8 +18,8 @@
 <g id="node1" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
 <g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190&#10;at errors.go:196: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.captureStack]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M617.58,-235C617.58,-235 587.58,-235 587.58,-235 581.58,-235 575.58,-229 575.58,-223 575.58,-223 575.58,-211 575.58,-211 575.58,-205 581.58,-199 587.58,-199 587.58,-199 617.58,-199 617.58,-199 623.58,-199 629.58,-205 629.58,-211 629.58,-211 629.58,-223 629.58,-223 629.58,-229 623.58,-235 617.58,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="602.58" y="-212.32" font-family="Verdana" font-size="14.00">New</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M617.58,-113C617.58,-113 587.58,-113 587.58,-113 581.58,-113 575.58,-107 575.58,-101 575.58,-101 575.58,-89 575.58,-89 575.58,-83 581.58,-77 587.58,-77 587.58,-77 617.58,-77 617.58,-77 623.58,-77 629.58,-83 629.58,-89 629.58,-89 629.58,-101 629.58,-101 629.58,-107 623.58,-113 617.58,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="602.58" y="-90.33" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
@@ -27,170 +27,170 @@
 <g id="node2" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.captureStack</title>
 <g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.captureStack | defined in errors.go:261">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M805.87,-235C805.87,-235 714.58,-235 714.58,-235 708.58,-235 702.58,-229 702.58,-223 702.58,-223 702.58,-211 702.58,-211 702.58,-205 708.58,-199 714.58,-199 714.58,-199 805.87,-199 805.87,-199 811.87,-199 817.87,-205 817.87,-211 817.87,-211 817.87,-223 817.87,-223 817.87,-229 811.87,-235 805.87,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="760.22" y="-212.32" font-family="Verdana" font-size="14.00">captureStack</text>
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M805.87,-113C805.87,-113 714.58,-113 714.58,-113 708.58,-113 702.58,-107 702.58,-101 702.58,-101 702.58,-89 702.58,-89 702.58,-83 708.58,-77 714.58,-77 714.58,-77 805.87,-77 805.87,-77 811.87,-77 817.87,-83 817.87,-89 817.87,-89 817.87,-101 817.87,-101 817.87,-107 811.87,-113 805.87,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="760.22" y="-90.33" font-family="Verdana" font-size="14.00">captureStack</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.captureStack -->
-<g id="edge8" class="edge">
+<g id="edge7" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.captureStack</title>
-<g id="a_edge8"><a xlink:title="at errors.go:196: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.captureStack]">
-<path fill="none" stroke="black" d="M629.98,-217C646.9,-217 669.67,-217 691.4,-217"/>
-<polygon fill="black" stroke="black" points="691.11,-220.5 701.11,-217 691.11,-213.5 691.11,-220.5"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="node3" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223&#10;at errors.go:230: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:241: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M420.08,-235C420.08,-235 384.29,-235 384.29,-235 378.29,-235 372.29,-229 372.29,-223 372.29,-223 372.29,-211 372.29,-211 372.29,-205 378.29,-199 384.29,-199 384.29,-199 420.08,-199 420.08,-199 426.08,-199 432.08,-205 432.08,-211 432.08,-211 432.08,-223 432.08,-223 432.08,-229 426.08,-235 420.08,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="402.18" y="-212.32" font-family="Verdana" font-size="14.00">Wrap</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge1" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge1"><a xlink:title="at errors.go:230: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:241: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="black" d="M432.46,-217C467.33,-217 525.66,-217 563.88,-217"/>
-<polygon fill="black" stroke="black" points="563.53,-220.5 573.53,-217 563.53,-213.5 563.53,-220.5"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable -->
-<g id="node4" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable</title>
-<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable | defined in errors.go:348&#10;at errors.go:351: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M162.04,-52C162.04,-52 82.75,-52 82.75,-52 76.75,-52 70.75,-46 70.75,-40 70.75,-40 70.75,-28 70.75,-28 70.75,-22 76.75,-16 82.75,-16 82.75,-16 162.04,-16 162.04,-16 168.04,-16 174.04,-22 174.04,-28 174.04,-28 174.04,-40 174.04,-40 174.04,-46 168.04,-52 162.04,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="122.39" y="-29.32" font-family="Verdana" font-size="14.00">IsRetryable</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable | defined in errors.go:168">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M490.58,-52C490.58,-52 313.79,-52 313.79,-52 307.79,-52 301.79,-46 301.79,-40 301.79,-40 301.79,-28 301.79,-28 301.79,-22 307.79,-16 313.79,-16 313.79,-16 490.58,-16 490.58,-16 496.58,-16 502.58,-22 502.58,-28 502.58,-28 502.58,-40 502.58,-40 502.58,-46 496.58,-52 490.58,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="402.18" y="-29.32" font-family="Verdana" font-size="14.00">(*GuildError).IsRetryable</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable -->
-<g id="edge2" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable</title>
-<g id="a_edge2"><a xlink:title="at errors.go:351: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable]">
-<path fill="none" stroke="black" d="M174.67,-34C206.99,-34 250,-34 289.85,-34"/>
-<polygon fill="black" stroke="black" points="289.76,-37.5 299.76,-34 289.76,-30.5 289.76,-37.5"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe -->
-<g id="node6" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe</title>
-<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe | defined in errors.go:357&#10;at errors.go:360: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M160.54,-113C160.54,-113 84.25,-113 84.25,-113 78.25,-113 72.25,-107 72.25,-101 72.25,-101 72.25,-89 72.25,-89 72.25,-83 78.25,-77 84.25,-77 84.25,-77 160.54,-77 160.54,-77 166.54,-77 172.54,-83 172.54,-89 172.54,-89 172.54,-101 172.54,-101 172.54,-107 166.54,-113 160.54,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="122.39" y="-90.33" font-family="Verdana" font-size="14.00">IsUserSafe</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe -->
-<g id="node7" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe | defined in errors.go:173">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M489.08,-113C489.08,-113 315.29,-113 315.29,-113 309.29,-113 303.29,-107 303.29,-101 303.29,-101 303.29,-89 303.29,-89 303.29,-83 309.29,-77 315.29,-77 315.29,-77 489.08,-77 489.08,-77 495.08,-77 501.08,-83 501.08,-89 501.08,-89 501.08,-101 501.08,-101 501.08,-107 495.08,-113 489.08,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="402.18" y="-90.33" font-family="Verdana" font-size="14.00">(*GuildError).IsUserSafe</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe -->
-<g id="edge3" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe</title>
-<g id="a_edge3"><a xlink:title="at errors.go:360: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe]">
-<path fill="none" stroke="black" d="M173.06,-95C205.94,-95 250.39,-95 291.32,-95"/>
-<polygon fill="black" stroke="black" points="291.24,-98.5 301.24,-95 291.24,-91.5 291.24,-98.5"/>
+<g id="a_edge7"><a xlink:title="at errors.go:196: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.captureStack]">
+<path fill="none" stroke="black" d="M629.98,-95C646.9,-95 669.67,-95 691.4,-95"/>
+<polygon fill="black" stroke="black" points="691.11,-98.5 701.11,-95 691.11,-91.5 691.11,-98.5"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf -->
-<g id="node8" class="node">
+<g id="node3" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf</title>
-<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf | defined in errors.go:218&#10;at errors.go:219: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M419.33,-174C419.33,-174 385.04,-174 385.04,-174 379.04,-174 373.04,-168 373.04,-162 373.04,-162 373.04,-150 373.04,-150 373.04,-144 379.04,-138 385.04,-138 385.04,-138 419.33,-138 419.33,-138 425.33,-138 431.33,-144 431.33,-150 431.33,-150 431.33,-162 431.33,-162 431.33,-168 425.33,-174 419.33,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="402.18" y="-151.32" font-family="Verdana" font-size="14.00">Newf</text>
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf | defined in errors.go:218&#10;at errors.go:219: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M419.33,-52C419.33,-52 385.04,-52 385.04,-52 379.04,-52 373.04,-46 373.04,-40 373.04,-40 373.04,-28 373.04,-28 373.04,-22 379.04,-16 385.04,-16 385.04,-16 419.33,-16 419.33,-16 425.33,-16 431.33,-22 431.33,-28 431.33,-28 431.33,-40 431.33,-40 431.33,-46 425.33,-52 419.33,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="402.18" y="-29.32" font-family="Verdana" font-size="14.00">Newf</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge4" class="edge">
+<g id="edge8" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge4"><a xlink:title="at errors.go:219: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="black" d="M432.03,-164.87C466.95,-175.61 525.83,-193.71 564.2,-205.51"/>
-<polygon fill="black" stroke="black" points="562.89,-208.76 573.47,-208.36 564.94,-202.07 562.89,-208.76"/>
+<g id="a_edge8"><a xlink:title="at errors.go:219: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="black" d="M432.03,-42.87C466.95,-53.61 525.83,-71.71 564.2,-83.51"/>
+<polygon fill="black" stroke="black" points="562.89,-86.76 573.47,-86.36 564.94,-80.07 562.89,-86.76"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init -->
+<g id="node4" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init</title>
+<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init | defined in .:0&#10;at errors.go:292: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:293: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:296: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:297: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:301: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:302: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:303: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:306: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:307: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:308: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M417.18,-113C417.18,-113 387.18,-113 387.18,-113 381.18,-113 375.18,-107 375.18,-101 375.18,-101 375.18,-89 375.18,-89 375.18,-83 381.18,-77 387.18,-77 387.18,-77 417.18,-77 417.18,-77 423.18,-77 429.18,-83 429.18,-89 429.18,-89 429.18,-101 429.18,-101 429.18,-107 423.18,-113 417.18,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="402.18" y="-90.33" font-family="Verdana" font-size="14.00">init</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge1" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge1"><a xlink:title="at errors.go:292: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:293: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:296: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:297: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:301: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:302: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:303: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:306: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:307: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:308: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="black" d="M429.12,-95C463.46,-95 524.27,-95 563.74,-95"/>
+<polygon fill="black" stroke="black" points="563.49,-98.5 573.49,-95 563.49,-91.5 563.49,-98.5"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="node5" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223&#10;at errors.go:230: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:241: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M420.08,-174C420.08,-174 384.29,-174 384.29,-174 378.29,-174 372.29,-168 372.29,-162 372.29,-162 372.29,-150 372.29,-150 372.29,-144 378.29,-138 384.29,-138 384.29,-138 420.08,-138 420.08,-138 426.08,-138 432.08,-144 432.08,-150 432.08,-150 432.08,-162 432.08,-162 432.08,-168 426.08,-174 420.08,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="402.18" y="-151.32" font-family="Verdana" font-size="14.00">Wrap</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge2" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge2"><a xlink:title="at errors.go:230: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:241: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="black" d="M432.78,-147.15C452.56,-141.22 479.15,-133.2 502.58,-126 522.97,-119.73 545.68,-112.63 564.2,-106.81"/>
+<polygon fill="black" stroke="black" points="565.2,-110.16 573.69,-103.82 563.1,-103.48 565.2,-110.16"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf -->
-<g id="node9" class="node">
+<g id="node6" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf</title>
-<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf | defined in errors.go:245&#10;at errors.go:246: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M142.91,-235C142.91,-235 101.87,-235 101.87,-235 95.87,-235 89.87,-229 89.87,-223 89.87,-223 89.87,-211 89.87,-211 89.87,-205 95.87,-199 101.87,-199 101.87,-199 142.91,-199 142.91,-199 148.91,-199 154.91,-205 154.91,-211 154.91,-211 154.91,-223 154.91,-223 154.91,-229 148.91,-235 142.91,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="122.39" y="-212.32" font-family="Verdana" font-size="14.00">Wrapf</text>
+<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf | defined in errors.go:245&#10;at errors.go:246: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M142.91,-174C142.91,-174 101.87,-174 101.87,-174 95.87,-174 89.87,-168 89.87,-162 89.87,-162 89.87,-150 89.87,-150 89.87,-144 95.87,-138 101.87,-138 101.87,-138 142.91,-138 142.91,-138 148.91,-138 154.91,-144 154.91,-150 154.91,-150 154.91,-162 154.91,-162 154.91,-168 148.91,-174 142.91,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="122.39" y="-151.32" font-family="Verdana" font-size="14.00">Wrapf</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge5" class="edge">
+<g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrapf&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge5"><a xlink:title="at errors.go:246: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="black" d="M155.53,-217C206.33,-217 305.11,-217 360.69,-217"/>
-<polygon fill="black" stroke="black" points="360.34,-220.5 370.34,-217 360.34,-213.5 360.34,-220.5"/>
+<g id="a_edge3"><a xlink:title="at errors.go:246: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="black" d="M155.53,-156C206.33,-156 305.11,-156 360.69,-156"/>
+<polygon fill="black" stroke="black" points="360.34,-159.5 370.34,-156 360.34,-152.5 360.34,-159.5"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable -->
+<g id="node7" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable</title>
+<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable | defined in errors.go:348&#10;at errors.go:351: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M162.04,-235C162.04,-235 82.75,-235 82.75,-235 76.75,-235 70.75,-229 70.75,-223 70.75,-223 70.75,-211 70.75,-211 70.75,-205 76.75,-199 82.75,-199 82.75,-199 162.04,-199 162.04,-199 168.04,-199 174.04,-205 174.04,-211 174.04,-211 174.04,-223 174.04,-223 174.04,-229 168.04,-235 162.04,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="122.39" y="-212.32" font-family="Verdana" font-size="14.00">IsRetryable</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable -->
+<g id="node8" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable</title>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable | defined in errors.go:168">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M490.58,-235C490.58,-235 313.79,-235 313.79,-235 307.79,-235 301.79,-229 301.79,-223 301.79,-223 301.79,-211 301.79,-211 301.79,-205 307.79,-199 313.79,-199 313.79,-199 490.58,-199 490.58,-199 496.58,-199 502.58,-205 502.58,-211 502.58,-211 502.58,-223 502.58,-223 502.58,-229 496.58,-235 490.58,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="402.18" y="-212.32" font-family="Verdana" font-size="14.00">(*GuildError).IsRetryable</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable -->
+<g id="edge4" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsRetryable&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable</title>
+<g id="a_edge4"><a xlink:title="at errors.go:351: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsRetryable]">
+<path fill="none" stroke="black" d="M174.67,-217C206.99,-217 250,-217 289.85,-217"/>
+<polygon fill="black" stroke="black" points="289.76,-220.5 299.76,-217 289.76,-213.5 289.76,-220.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).MarshalJSON -->
-<g id="node10" class="node">
+<g id="node9" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).MarshalJSON</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).MarshalJSON | defined in errors.go:178&#10;at errors.go:185: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error]">
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).MarshalJSON | defined in errors.go:178&#10;at errors.go:185: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M216.79,-296C216.79,-296 28,-296 28,-296 22,-296 16,-290 16,-284 16,-284 16,-272 16,-272 16,-266 22,-260 28,-260 28,-260 216.79,-260 216.79,-260 222.79,-260 228.79,-266 228.79,-272 228.79,-272 228.79,-284 228.79,-284 228.79,-290 222.79,-296 216.79,-296"/>
 <text xml:space="preserve" text-anchor="middle" x="122.39" y="-273.32" font-family="Verdana" font-size="14.00">(*GuildError).MarshalJSON</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error -->
-<g id="node11" class="node">
+<g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error</title>
-<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error | defined in errors.go:119">
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error | defined in errors.go:119">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M468.08,-296C468.08,-296 336.29,-296 336.29,-296 330.29,-296 324.29,-290 324.29,-284 324.29,-284 324.29,-272 324.29,-272 324.29,-266 330.29,-260 336.29,-260 336.29,-260 468.08,-260 468.08,-260 474.08,-260 480.08,-266 480.08,-272 480.08,-272 480.08,-284 480.08,-284 480.08,-290 474.08,-296 468.08,-296"/>
 <text xml:space="preserve" text-anchor="middle" x="402.18" y="-273.32" font-family="Verdana" font-size="14.00">(*GuildError).Error</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).MarshalJSON&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error -->
-<g id="edge6" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).MarshalJSON&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error</title>
-<g id="a_edge6"><a xlink:title="at errors.go:185: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error]">
+<g id="a_edge5"><a xlink:title="at errors.go:185: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).Error]">
 <path fill="none" stroke="black" d="M229.21,-278C256.71,-278 286.05,-278 312.57,-278"/>
 <polygon fill="black" stroke="black" points="312.23,-281.5 322.23,-278 312.23,-274.5 312.23,-281.5"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init -->
-<g id="node12" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init</title>
-<g id="a_node12"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init | defined in .:0&#10;at errors.go:292: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:293: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:296: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:297: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:301: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:302: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:303: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:306: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:307: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:308: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M417.18,-357C417.18,-357 387.18,-357 387.18,-357 381.18,-357 375.18,-351 375.18,-345 375.18,-345 375.18,-333 375.18,-333 375.18,-327 381.18,-321 387.18,-321 387.18,-321 417.18,-321 417.18,-321 423.18,-321 429.18,-327 429.18,-333 429.18,-333 429.18,-345 429.18,-345 429.18,-351 423.18,-357 417.18,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="402.18" y="-334.32" font-family="Verdana" font-size="14.00">init</text>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe -->
+<g id="node11" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe</title>
+<g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe | defined in errors.go:357&#10;at errors.go:360: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M160.54,-357C160.54,-357 84.25,-357 84.25,-357 78.25,-357 72.25,-351 72.25,-345 72.25,-345 72.25,-333 72.25,-333 72.25,-327 78.25,-321 84.25,-321 84.25,-321 160.54,-321 160.54,-321 166.54,-321 172.54,-327 172.54,-333 172.54,-333 172.54,-345 172.54,-345 172.54,-351 166.54,-357 160.54,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="122.39" y="-334.32" font-family="Verdana" font-size="14.00">IsUserSafe</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge7" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.init&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge7"><a xlink:title="at errors.go:292: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:293: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:296: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:297: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:300: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:301: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:302: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:303: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:306: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:307: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at errors.go:308: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="black" d="M429.4,-334.49C450.24,-330.12 479.6,-322.19 502.58,-309 532.18,-292.01 560.11,-264.62 578.71,-244.14"/>
-<polygon fill="black" stroke="black" points="581.3,-246.49 585.32,-236.69 576.07,-241.84 581.3,-246.49"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe -->
+<g id="node12" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe</title>
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe | defined in errors.go:173">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M489.08,-357C489.08,-357 315.29,-357 315.29,-357 309.29,-357 303.29,-351 303.29,-345 303.29,-345 303.29,-333 303.29,-333 303.29,-327 309.29,-321 315.29,-321 315.29,-321 489.08,-321 489.08,-321 495.08,-321 501.08,-327 501.08,-333 501.08,-333 501.08,-345 501.08,-345 501.08,-351 495.08,-357 489.08,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="402.18" y="-334.32" font-family="Verdana" font-size="14.00">(*GuildError).IsUserSafe</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe -->
+<g id="edge6" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.IsUserSafe&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe</title>
+<g id="a_edge6"><a xlink:title="at errors.go:360: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).IsUserSafe]">
+<path fill="none" stroke="black" d="M173.06,-339C205.94,-339 250.39,-339 291.32,-339"/>
+<polygon fill="black" stroke="black" points="291.24,-342.5 301.24,-339 291.24,-335.5 291.24,-342.5"/>
 </a>
 </g>
 </g>

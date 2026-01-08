@@ -17,8 +17,8 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/events</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/events" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/events">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="845.46,-561 845.46,-702 1047.99,-702 1047.99,-561 845.46,-561"/>
-<text xml:space="preserve" text-anchor="middle" x="946.73" y="-682.8" font-family="Tahoma bold" font-size="16.00">events</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="845.46,-381 845.46,-522 1047.99,-522 1047.99,-381 845.46,-381"/>
+<text xml:space="preserve" text-anchor="middle" x="946.73" y="-502.8" font-family="Tahoma bold" font-size="16.00">events</text>
 </a>
 </g>
 </g>
@@ -33,115 +33,97 @@
 <g id="clust4" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/observability</title>
 <g id="a_clust4"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/observability" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/observability">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="888.23,-449 888.23,-529 1006.23,-529 1006.23,-449 888.23,-449"/>
-<text xml:space="preserve" text-anchor="middle" x="947.23" y="-509.8" font-family="Tahoma bold" font-size="16.00">observability</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="888.23,-603 888.23,-683 1006.23,-683 1006.23,-603 888.23,-603"/>
+<text xml:space="preserve" text-anchor="middle" x="947.23" y="-663.8" font-family="Tahoma bold" font-size="16.00">observability</text>
 </a>
 </g>
 </g>
 <g id="clust5" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions</title>
 <g id="a_clust5"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/security/permissions" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1161.99,-584 1161.99,-664 1462.78,-664 1462.78,-584 1161.99,-584"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-644.8" font-family="Tahoma bold" font-size="16.00">permissions</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set -->
-<g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set | defined in controller.go:283&#10;at controller.go:289: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1395.91,-708C1395.91,-708 1228.87,-708 1228.87,-708 1222.87,-708 1216.87,-702 1216.87,-696 1216.87,-696 1216.87,-684 1216.87,-684 1216.87,-678 1222.87,-672 1228.87,-672 1228.87,-672 1395.91,-672 1395.91,-672 1401.91,-672 1407.91,-678 1407.91,-684 1407.91,-684 1407.91,-696 1407.91,-696 1407.91,-702 1401.91,-708 1395.91,-708"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-685.33" font-family="Verdana" font-size="14.00">(*PermissionCache).Set</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest -->
-<g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest | defined in controller.go:345">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1797.58,-708C1797.58,-708 1575.79,-708 1575.79,-708 1569.79,-708 1563.79,-702 1563.79,-696 1563.79,-696 1563.79,-684 1563.79,-684 1563.79,-678 1569.79,-672 1575.79,-672 1575.79,-672 1797.58,-672 1797.58,-672 1803.58,-672 1809.58,-678 1809.58,-684 1809.58,-684 1809.58,-696 1809.58,-696 1809.58,-702 1803.58,-708 1797.58,-708"/>
-<text xml:space="preserve" text-anchor="middle" x="1686.68" y="-685.33" font-family="Verdana" font-size="14.00">(*PermissionCache).evictOldest</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest -->
-<g id="edge8" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest</title>
-<g id="a_edge8"><a xlink:title="at controller.go:289: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest]">
-<path fill="none" stroke="black" d="M1408.3,-690C1452.08,-690 1504.8,-690 1552.47,-690"/>
-<polygon fill="black" stroke="black" points="1552.31,-693.5 1562.31,-690 1552.31,-686.5 1552.31,-693.5"/>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1161.99,-523 1161.99,-603 1462.78,-603 1462.78,-523 1161.99,-523"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-583.8" font-family="Tahoma bold" font-size="16.00">permissions</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess -->
-<g id="node3" class="node">
+<g id="node1" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess | defined in controller.go:43&#10;at controller.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey]&#10;at controller.go:47: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at controller.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set]&#10;at controller.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get]&#10;at controller.go:112: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:135: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions.PermissionModel).CheckPermission]&#10;at controller.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier]&#10;at controller.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1062.87,-371C1062.87,-371 830.58,-371 830.58,-371 824.58,-371 818.58,-365 818.58,-359 818.58,-359 818.58,-347 818.58,-347 818.58,-341 824.58,-335 830.58,-335 830.58,-335 1062.87,-335 1062.87,-335 1068.87,-335 1074.87,-341 1074.87,-347 1074.87,-347 1074.87,-359 1074.87,-359 1074.87,-365 1068.87,-371 1062.87,-371"/>
-<text xml:space="preserve" text-anchor="middle" x="946.73" y="-348.32" font-family="Verdana" font-size="14.00">(*AccessController).CheckAccess</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set -->
-<g id="edge10" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set</title>
-<g id="a_edge10"><a xlink:title="at controller.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set]">
-<path fill="none" stroke="black" d="M1058.72,-371.61C1064.58,-375.1 1070.03,-379.2 1074.87,-384 1121.16,-429.87 1099.09,-624.8 1147.87,-668 1163.77,-682.09 1184.19,-689.86 1205.17,-693.79"/>
-<polygon fill="black" stroke="black" points="1204.59,-697.24 1215.01,-695.32 1205.67,-690.32 1204.59,-697.24"/>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess | defined in controller.go:43&#10;at controller.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier]&#10;at controller.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get]&#10;at controller.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions.PermissionModel).CheckPermission]&#10;at controller.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:112: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:135: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:47: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at controller.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set]&#10;at controller.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1062.87,-364C1062.87,-364 830.58,-364 830.58,-364 824.58,-364 818.58,-358 818.58,-352 818.58,-352 818.58,-340 818.58,-340 818.58,-334 824.58,-328 830.58,-328 830.58,-328 1062.87,-328 1062.87,-328 1068.87,-328 1074.87,-334 1074.87,-340 1074.87,-340 1074.87,-352 1074.87,-352 1074.87,-358 1068.87,-364 1062.87,-364"/>
+<text xml:space="preserve" text-anchor="middle" x="946.73" y="-341.32" font-family="Verdana" font-size="14.00">(*AccessController).CheckAccess</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier -->
-<g id="node4" class="node">
+<g id="node2" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier | defined in controller.go:158">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1464.91,-445C1464.91,-445 1159.87,-445 1159.87,-445 1153.87,-445 1147.87,-439 1147.87,-433 1147.87,-433 1147.87,-421 1147.87,-421 1147.87,-415 1153.87,-409 1159.87,-409 1159.87,-409 1464.91,-409 1464.91,-409 1470.91,-409 1476.91,-415 1476.91,-421 1476.91,-421 1476.91,-433 1476.91,-433 1476.91,-439 1470.91,-445 1464.91,-445"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-422.32" font-family="Verdana" font-size="14.00">(*AccessController).buildResourceIdentifier</text>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier | defined in controller.go:158">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1464.91,-647C1464.91,-647 1159.87,-647 1159.87,-647 1153.87,-647 1147.87,-641 1147.87,-635 1147.87,-635 1147.87,-623 1147.87,-623 1147.87,-617 1153.87,-611 1159.87,-611 1159.87,-611 1464.91,-611 1464.91,-611 1470.91,-611 1476.91,-617 1476.91,-623 1476.91,-623 1476.91,-635 1476.91,-635 1476.91,-641 1470.91,-647 1464.91,-647"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-624.33" font-family="Verdana" font-size="14.00">(*AccessController).buildResourceIdentifier</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier -->
-<g id="edge36" class="edge">
+<g id="edge8" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier</title>
-<g id="a_edge36"><a xlink:title="at controller.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier]">
-<path fill="none" stroke="black" d="M1029.87,-371.74C1066,-379.8 1108.98,-389.16 1147.87,-397 1164.12,-400.28 1181.3,-403.59 1198.19,-406.76"/>
-<polygon fill="black" stroke="black" points="1197.27,-410.15 1207.74,-408.55 1198.55,-403.27 1197.27,-410.15"/>
+<g id="a_edge8"><a xlink:title="at controller.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).buildResourceIdentifier]">
+<path fill="none" stroke="black" d="M1061.02,-364.67C1065.97,-367.66 1070.63,-371.09 1074.87,-375 1112.19,-409.43 1107.33,-553.2 1145.08,-602.64"/>
+<polygon fill="black" stroke="black" points="1142.48,-604.99 1151.89,-609.87 1147.58,-600.19 1142.48,-604.99"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey -->
-<g id="node5" class="node">
+<g id="node3" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey | defined in controller.go:202">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1448.78,-506C1448.78,-506 1175.99,-506 1175.99,-506 1169.99,-506 1163.99,-500 1163.99,-494 1163.99,-494 1163.99,-482 1163.99,-482 1163.99,-476 1169.99,-470 1175.99,-470 1175.99,-470 1448.78,-470 1448.78,-470 1454.78,-470 1460.78,-476 1460.78,-482 1460.78,-482 1460.78,-494 1460.78,-494 1460.78,-500 1454.78,-506 1448.78,-506"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-483.32" font-family="Verdana" font-size="14.00">(*AccessController).generateCacheKey</text>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey | defined in controller.go:202">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1448.78,-708C1448.78,-708 1175.99,-708 1175.99,-708 1169.99,-708 1163.99,-702 1163.99,-696 1163.99,-696 1163.99,-684 1163.99,-684 1163.99,-678 1169.99,-672 1175.99,-672 1175.99,-672 1448.78,-672 1448.78,-672 1454.78,-672 1460.78,-678 1460.78,-684 1460.78,-684 1460.78,-696 1460.78,-696 1460.78,-702 1454.78,-708 1448.78,-708"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-685.33" font-family="Verdana" font-size="14.00">(*AccessController).generateCacheKey</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey -->
-<g id="edge3" class="edge">
+<g id="edge32" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey</title>
-<g id="a_edge3"><a xlink:title="at controller.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey]">
-<path fill="none" stroke="black" d="M1047.66,-371.66C1057.14,-375.11 1066.37,-379.18 1074.87,-384 1115.06,-406.78 1107.04,-436.39 1147.87,-458 1153.29,-460.87 1158.94,-463.47 1164.74,-465.82"/>
-<polygon fill="black" stroke="black" points="1163.32,-469.03 1173.91,-469.27 1165.78,-462.48 1163.32,-469.03"/>
+<g id="a_edge32"><a xlink:title="at controller.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).generateCacheKey]">
+<path fill="none" stroke="black" d="M1061.56,-364.58C1066.34,-367.6 1070.81,-371.05 1074.87,-375 1121.71,-420.61 1100.07,-615.4 1147.87,-660 1150.04,-662.02 1152.3,-663.93 1154.64,-665.74"/>
+<polygon fill="black" stroke="black" points="1152.55,-668.55 1162.77,-671.31 1156.5,-662.77 1152.55,-668.55"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get -->
-<g id="node6" class="node">
+<g id="node4" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get | defined in controller.go:266">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1396.28,-567C1396.28,-567 1228.49,-567 1228.49,-567 1222.49,-567 1216.49,-561 1216.49,-555 1216.49,-555 1216.49,-543 1216.49,-543 1216.49,-537 1222.49,-531 1228.49,-531 1228.49,-531 1396.28,-531 1396.28,-531 1402.28,-531 1408.28,-537 1408.28,-543 1408.28,-543 1408.28,-555 1408.28,-555 1408.28,-561 1402.28,-567 1396.28,-567"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-544.33" font-family="Verdana" font-size="14.00">(*PermissionCache).Get</text>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get | defined in controller.go:266">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1396.28,-445C1396.28,-445 1228.49,-445 1228.49,-445 1222.49,-445 1216.49,-439 1216.49,-433 1216.49,-433 1216.49,-421 1216.49,-421 1216.49,-415 1222.49,-409 1228.49,-409 1228.49,-409 1396.28,-409 1396.28,-409 1402.28,-409 1408.28,-415 1408.28,-421 1408.28,-421 1408.28,-433 1408.28,-433 1408.28,-439 1402.28,-445 1396.28,-445"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-422.32" font-family="Verdana" font-size="14.00">(*PermissionCache).Get</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get -->
-<g id="edge16" class="edge">
+<g id="edge9" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get</title>
-<g id="a_edge16"><a xlink:title="at controller.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get]">
-<path fill="none" stroke="black" d="M1054.63,-371.71C1061.82,-375.15 1068.66,-379.21 1074.87,-384 1128.88,-425.67 1092.68,-478.91 1147.87,-519 1164.6,-531.15 1184.76,-538.85 1205.14,-543.64"/>
-<polygon fill="black" stroke="black" points="1204.14,-547.01 1214.64,-545.64 1205.58,-540.15 1204.14,-547.01"/>
+<g id="a_edge9"><a xlink:title="at controller.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Get]">
+<path fill="none" stroke="black" d="M1033.41,-364.7C1047.31,-367.98 1061.52,-371.47 1074.87,-375 1107.63,-383.66 1114.93,-389.04 1147.87,-397 1166.16,-401.42 1185.75,-405.53 1204.77,-409.21"/>
+<polygon fill="black" stroke="black" points="1203.93,-412.62 1214.41,-411.04 1205.24,-405.74 1203.93,-412.62"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set -->
+<g id="node5" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set</title>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set | defined in controller.go:283&#10;at controller.go:289: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1395.91,-506C1395.91,-506 1228.87,-506 1228.87,-506 1222.87,-506 1216.87,-500 1216.87,-494 1216.87,-494 1216.87,-482 1216.87,-482 1216.87,-476 1222.87,-470 1228.87,-470 1228.87,-470 1395.91,-470 1395.91,-470 1401.91,-470 1407.91,-476 1407.91,-482 1407.91,-482 1407.91,-494 1407.91,-494 1407.91,-500 1401.91,-506 1395.91,-506"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-483.32" font-family="Verdana" font-size="14.00">(*PermissionCache).Set</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set -->
+<g id="edge28" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set</title>
+<g id="a_edge28"><a xlink:title="at controller.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set]">
+<path fill="none" stroke="black" d="M1053.81,-364.72C1061.15,-367.66 1068.25,-371.06 1074.87,-375 1117.09,-400.12 1105.13,-433.79 1147.87,-458 1165.35,-467.9 1185.42,-474.64 1205.37,-479.2"/>
+<polygon fill="black" stroke="black" points="1204.43,-482.58 1214.94,-481.2 1205.87,-475.73 1204.43,-482.58"/>
 </a>
 </g>
 </g>
@@ -158,8 +140,8 @@
 <g id="edge20" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID</title>
 <g id="a_edge20"><a xlink:title="at controller.go:112: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:135: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]">
-<path fill="none" stroke="black" d="M1075.43,-357.57C1131.2,-359.56 1194.46,-361.82 1241.42,-363.5"/>
-<polygon fill="black" stroke="black" points="1241.07,-366.99 1251.18,-363.85 1241.32,-359.99 1241.07,-366.99"/>
+<path fill="none" stroke="black" d="M1075.43,-353.02C1131.2,-356.09 1194.46,-359.57 1241.42,-362.15"/>
+<polygon fill="black" stroke="black" points="1241.01,-365.63 1251.19,-362.69 1241.39,-358.65 1241.01,-365.63"/>
 </a>
 </g>
 </g>
@@ -167,17 +149,17 @@
 <g id="node31" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node31"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1330.28,-182C1330.28,-182 1294.49,-182 1294.49,-182 1288.49,-182 1282.49,-176 1282.49,-170 1282.49,-170 1282.49,-158 1282.49,-158 1282.49,-152 1288.49,-146 1294.49,-146 1294.49,-146 1330.28,-146 1330.28,-146 1336.28,-146 1342.28,-152 1342.28,-158 1342.28,-158 1342.28,-170 1342.28,-170 1342.28,-176 1336.28,-182 1330.28,-182"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-159.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1330.28,-304C1330.28,-304 1294.49,-304 1294.49,-304 1288.49,-304 1282.49,-298 1282.49,-292 1282.49,-292 1282.49,-280 1282.49,-280 1282.49,-274 1288.49,-268 1294.49,-268 1294.49,-268 1330.28,-268 1330.28,-268 1336.28,-268 1342.28,-274 1342.28,-280 1342.28,-280 1342.28,-292 1342.28,-292 1342.28,-298 1336.28,-304 1330.28,-304"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-281.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge9" class="edge">
+<g id="edge27" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge9"><a xlink:title="at controller.go:47: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M965,-334.4C997.39,-300.77 1070.94,-230.08 1147.87,-195 1187.14,-177.09 1236.26,-169.53 1270.37,-166.33"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1270.58,-169.83 1280.25,-165.5 1269.99,-162.85 1270.58,-169.83"/>
+<g id="a_edge27"><a xlink:title="at controller.go:47: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M1040.71,-327.27C1074.4,-320.77 1112.78,-313.69 1147.87,-308 1189.6,-301.24 1237.57,-294.96 1270.71,-290.85"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1270.78,-294.37 1280.28,-289.68 1269.92,-287.42 1270.78,-294.37"/>
 </a>
 </g>
 </g>
@@ -185,17 +167,17 @@
 <g id="node32" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node32"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1416.53,-304C1416.53,-304 1208.24,-304 1208.24,-304 1202.24,-304 1196.24,-298 1196.24,-292 1196.24,-292 1196.24,-280 1196.24,-280 1196.24,-274 1202.24,-268 1208.24,-268 1208.24,-268 1416.53,-268 1416.53,-268 1422.53,-268 1428.53,-274 1428.53,-280 1428.53,-280 1428.53,-292 1428.53,-292 1428.53,-298 1422.53,-304 1416.53,-304"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-281.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1416.53,-182C1416.53,-182 1208.24,-182 1208.24,-182 1202.24,-182 1196.24,-176 1196.24,-170 1196.24,-170 1196.24,-158 1196.24,-158 1196.24,-152 1202.24,-146 1208.24,-146 1208.24,-146 1416.53,-146 1416.53,-146 1422.53,-146 1428.53,-152 1428.53,-158 1428.53,-158 1428.53,-170 1428.53,-170 1428.53,-176 1422.53,-182 1416.53,-182"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-159.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge2" class="edge">
+<g id="edge21" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge2"><a xlink:title="at controller.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M1023.44,-334.34C1060.75,-325.56 1106.5,-315.42 1147.87,-308 1159.63,-305.89 1171.91,-303.88 1184.21,-302"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1184.64,-305.48 1194.01,-300.54 1183.6,-298.56 1184.64,-305.48"/>
+<g id="a_edge21"><a xlink:title="at controller.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M1014.17,-327.31C1034.92,-319.47 1057.03,-308.87 1074.87,-295 1118.31,-261.23 1101.36,-224.41 1147.87,-195 1159.13,-187.88 1171.63,-182.32 1184.57,-177.99"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1185.54,-181.36 1194.07,-175.08 1183.49,-174.66 1185.54,-181.36"/>
 </a>
 </g>
 </g>
@@ -203,17 +185,17 @@
 <g id="node33" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node33"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1410.91,-121C1410.91,-121 1213.87,-121 1213.87,-121 1207.87,-121 1201.87,-115 1201.87,-109 1201.87,-109 1201.87,-97 1201.87,-97 1201.87,-91 1207.87,-85 1213.87,-85 1213.87,-85 1410.91,-85 1410.91,-85 1416.91,-85 1422.91,-91 1422.91,-97 1422.91,-97 1422.91,-109 1422.91,-109 1422.91,-115 1416.91,-121 1410.91,-121"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-98.33" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1410.91,-243C1410.91,-243 1213.87,-243 1213.87,-243 1207.87,-243 1201.87,-237 1201.87,-231 1201.87,-231 1201.87,-219 1201.87,-219 1201.87,-213 1207.87,-207 1213.87,-207 1213.87,-207 1410.91,-207 1410.91,-207 1416.91,-207 1422.91,-213 1422.91,-219 1422.91,-219 1422.91,-231 1422.91,-231 1422.91,-237 1416.91,-243 1410.91,-243"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-220.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge38" class="edge">
+<g id="edge19" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge38"><a xlink:title="at controller.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M970.68,-334.64C997.26,-312.81 1041.62,-274.61 1074.87,-237 1112.03,-194.96 1100.66,-164.32 1147.87,-134 1160.78,-125.71 1175.38,-119.52 1190.4,-114.93"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1191.24,-118.32 1199.93,-112.26 1189.36,-111.58 1191.24,-118.32"/>
+<g id="a_edge19"><a xlink:title="at controller.go:49: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M998.08,-327.26C1021.66,-318.12 1049.97,-306.6 1074.87,-295 1108.21,-279.46 1113.18,-268.23 1147.87,-256 1161.44,-251.21 1175.92,-247.12 1190.44,-243.62"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1191.11,-247.06 1200.07,-241.41 1189.54,-240.24 1191.11,-247.06"/>
 </a>
 </g>
 </g>
@@ -221,125 +203,44 @@
 <g id="node37" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions.PermissionModel).CheckPermission</title>
 <g id="a_node37"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions.PermissionModel).CheckPermission | defined in model.go:202">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1442.78,-628C1442.78,-628 1181.99,-628 1181.99,-628 1175.99,-628 1169.99,-622 1169.99,-616 1169.99,-616 1169.99,-604 1169.99,-604 1169.99,-598 1175.99,-592 1181.99,-592 1181.99,-592 1442.78,-592 1442.78,-592 1448.78,-592 1454.78,-598 1454.78,-604 1454.78,-604 1454.78,-616 1454.78,-616 1454.78,-622 1448.78,-628 1442.78,-628"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-605.33" font-family="Verdana" font-size="14.00">(*PermissionModel).CheckPermission</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1442.78,-567C1442.78,-567 1181.99,-567 1181.99,-567 1175.99,-567 1169.99,-561 1169.99,-555 1169.99,-555 1169.99,-543 1169.99,-543 1169.99,-537 1175.99,-531 1181.99,-531 1181.99,-531 1442.78,-531 1442.78,-531 1448.78,-531 1454.78,-537 1454.78,-543 1454.78,-543 1454.78,-555 1454.78,-555 1454.78,-561 1448.78,-567 1442.78,-567"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-544.33" font-family="Verdana" font-size="14.00">(*PermissionModel).CheckPermission</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions.PermissionModel).CheckPermission -->
-<g id="edge30" class="edge">
+<g id="edge14" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions.PermissionModel).CheckPermission</title>
-<g id="a_edge30"><a xlink:title="at controller.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions.PermissionModel).CheckPermission]">
-<path fill="none" stroke="saddlebrown" d="M1057.3,-371.66C1063.62,-375.13 1069.55,-379.21 1074.87,-384 1146.43,-448.44 1073.02,-527.42 1147.87,-588 1151.46,-590.91 1155.25,-593.54 1159.2,-595.91"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1157.5,-598.97 1167.97,-600.58 1160.79,-592.79 1157.5,-598.97"/>
+<g id="a_edge14"><a xlink:title="at controller.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/permissions.PermissionModel).CheckPermission]">
+<path fill="none" stroke="saddlebrown" d="M1058.85,-364.62C1064.52,-367.61 1069.92,-371.05 1074.87,-375 1133.44,-421.75 1087.24,-482.94 1147.87,-527 1151.55,-529.67 1155.39,-532.09 1159.38,-534.29"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1157.67,-537.35 1168.18,-538.63 1160.76,-531.07 1157.67,-537.35"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats -->
-<g id="node8" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats | defined in controller.go:221&#10;at controller.go:223: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats]&#10;at controller.go:225: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M264.41,-85C264.41,-85 62.87,-85 62.87,-85 56.88,-85 50.87,-79 50.87,-73 50.87,-73 50.87,-61 50.87,-61 50.87,-55 56.87,-49 62.87,-49 62.87,-49 264.41,-49 264.41,-49 270.41,-49 276.41,-55 276.41,-61 276.41,-61 276.41,-73 276.41,-73 276.41,-79 270.41,-85 264.41,-85"/>
-<text xml:space="preserve" text-anchor="middle" x="163.64" y="-62.33" font-family="Verdana" font-size="14.00">(*AccessController).GetStats</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest -->
+<g id="node6" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest</title>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest | defined in controller.go:345">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1797.58,-506C1797.58,-506 1575.79,-506 1575.79,-506 1569.79,-506 1563.79,-500 1563.79,-494 1563.79,-494 1563.79,-482 1563.79,-482 1563.79,-476 1569.79,-470 1575.79,-470 1575.79,-470 1797.58,-470 1797.58,-470 1803.58,-470 1809.58,-476 1809.58,-482 1809.58,-482 1809.58,-494 1809.58,-494 1809.58,-500 1803.58,-506 1797.58,-506"/>
+<text xml:space="preserve" text-anchor="middle" x="1686.68" y="-483.32" font-family="Verdana" font-size="14.00">(*PermissionCache).evictOldest</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats -->
-<g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats | defined in controller.go:319">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M666.83,-124C666.83,-124 463.04,-124 463.04,-124 457.04,-124 451.04,-118 451.04,-112 451.04,-112 451.04,-100 451.04,-100 451.04,-94 457.04,-88 463.04,-88 463.04,-88 666.83,-88 666.83,-88 672.83,-88 678.83,-94 678.83,-100 678.83,-100 678.83,-112 678.83,-112 678.83,-118 672.83,-124 666.83,-124"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-101.33" font-family="Verdana" font-size="14.00">(*PermissionCache).GetStats</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats -->
-<g id="edge39" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats</title>
-<g id="a_edge39"><a xlink:title="at controller.go:223: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats]">
-<path fill="none" stroke="black" d="M276.93,-77.97C327.43,-82.9 387.22,-88.74 439.12,-93.81"/>
-<polygon fill="black" stroke="black" points="438.61,-97.28 448.91,-94.76 439.3,-90.31 438.61,-97.28"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate -->
-<g id="node10" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate | defined in controller.go:333">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M674.33,-63C674.33,-63 455.54,-63 455.54,-63 449.54,-63 443.54,-57 443.54,-51 443.54,-51 443.54,-39 443.54,-39 443.54,-33 449.54,-27 455.54,-27 455.54,-27 674.33,-27 674.33,-27 680.33,-27 686.33,-33 686.33,-39 686.33,-39 686.33,-51 686.33,-51 686.33,-57 680.33,-63 674.33,-63"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-40.33" font-family="Verdana" font-size="14.00">(*PermissionCache).GetHitRate</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate -->
-<g id="edge40" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate</title>
-<g id="a_edge40"><a xlink:title="at controller.go:225: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate]">
-<path fill="none" stroke="black" d="M276.93,-60.81C325.08,-58.16 381.66,-55.04 431.8,-52.28"/>
-<polygon fill="black" stroke="black" points="431.76,-55.79 441.55,-51.74 431.38,-48.8 431.76,-55.79"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired -->
-<g id="node11" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired</title>
-<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired | defined in controller.go:363&#10;at controller.go:372: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1438.28,-769C1438.28,-769 1186.49,-769 1186.49,-769 1180.49,-769 1174.49,-763 1174.49,-757 1174.49,-757 1174.49,-745 1174.49,-745 1174.49,-739 1180.49,-733 1186.49,-733 1186.49,-733 1438.28,-733 1438.28,-733 1444.28,-733 1450.28,-739 1450.28,-745 1450.28,-745 1450.28,-757 1450.28,-757 1450.28,-763 1444.28,-769 1438.28,-769"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-746.33" font-family="Verdana" font-size="14.00">(*PermissionCache).cleanupExpired</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired -->
-<g id="node12" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired | defined in controller.go:378">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1811.45,-769C1811.45,-769 1561.91,-769 1561.91,-769 1555.91,-769 1549.91,-763 1549.91,-757 1549.91,-757 1549.91,-745 1549.91,-745 1549.91,-739 1555.91,-733 1561.91,-733 1561.91,-733 1811.45,-733 1811.45,-733 1817.45,-733 1823.45,-739 1823.45,-745 1823.45,-745 1823.45,-757 1823.45,-757 1823.45,-763 1817.45,-769 1811.45,-769"/>
-<text xml:space="preserve" text-anchor="middle" x="1686.68" y="-746.33" font-family="Verdana" font-size="14.00">(*PermissionCache).removeExpired</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired -->
-<g id="edge31" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired</title>
-<g id="a_edge31"><a xlink:title="at controller.go:372: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired]">
-<path fill="none" stroke="black" d="M1450.43,-751C1479.08,-751 1509.39,-751 1538.39,-751"/>
-<polygon fill="black" stroke="black" points="1538.35,-754.5 1548.35,-751 1538.35,-747.5 1538.35,-754.5"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor -->
-<g id="node13" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor</title>
-<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor | defined in controller.go:399&#10;at controller.go:400: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M632.7,-340C632.7,-340 497.16,-340 497.16,-340 491.16,-340 485.16,-334 485.16,-328 485.16,-328 485.16,-316 485.16,-316 485.16,-310 491.16,-304 497.16,-304 497.16,-304 632.7,-304 632.7,-304 638.7,-304 644.7,-310 644.7,-316 644.7,-316 644.7,-328 644.7,-328 644.7,-334 638.7,-340 632.7,-340"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-317.32" font-family="Verdana" font-size="14.00">NewToolInterceptor</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="node36" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_node36"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger | defined in logger.go:206">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M982.25,-493C982.25,-493 911.21,-493 911.21,-493 905.21,-493 899.21,-487 899.21,-481 899.21,-481 899.21,-469 899.21,-469 899.21,-463 905.21,-457 911.21,-457 911.21,-457 982.25,-457 982.25,-457 988.25,-457 994.25,-463 994.25,-469 994.25,-469 994.25,-481 994.25,-481 994.25,-487 988.25,-493 982.25,-493"/>
-<text xml:space="preserve" text-anchor="middle" x="946.73" y="-470.32" font-family="Verdana" font-size="14.00">GetLogger</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge32" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge32"><a xlink:title="at controller.go:400: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M645.27,-322.78C678.33,-326.26 715.87,-334.56 745.58,-353 792.33,-382.02 771.84,-423.97 818.58,-453 838.93,-465.64 864.46,-471.56 887.3,-474.16"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="886.82,-477.63 897.1,-475.08 887.47,-470.67 886.82,-477.63"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Set&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest</title>
+<g id="a_edge15"><a xlink:title="at controller.go:289: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).evictOldest]">
+<path fill="none" stroke="black" d="M1408.3,-488C1452.08,-488 1504.8,-488 1552.47,-488"/>
+<polygon fill="black" stroke="black" points="1552.31,-491.5 1562.31,-488 1552.31,-484.5 1552.31,-491.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishAuditEvent -->
-<g id="node14" class="node">
+<g id="node8" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishAuditEvent</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishAuditEvent | defined in controller_unified.go:120&#10;at controller_unified.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]&#10;at controller_unified.go:142: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:148: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:151: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:162: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M723.83,-584C723.83,-584 406.04,-584 406.04,-584 400.04,-584 394.04,-578 394.04,-572 394.04,-572 394.04,-560 394.04,-560 394.04,-554 400.04,-548 406.04,-548 406.04,-548 723.83,-548 723.83,-548 729.83,-548 735.83,-554 735.83,-560 735.83,-560 735.83,-572 735.83,-572 735.83,-578 729.83,-584 723.83,-584"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-561.33" font-family="Verdana" font-size="14.00">(*UnifiedAccessController).PublishAuditEvent</text>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishAuditEvent | defined in controller_unified.go:120&#10;at controller_unified.go:142: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:148: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:151: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:162: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M723.83,-586C723.83,-586 406.04,-586 406.04,-586 400.04,-586 394.04,-580 394.04,-574 394.04,-574 394.04,-562 394.04,-562 394.04,-556 400.04,-550 406.04,-550 406.04,-550 723.83,-550 723.83,-550 729.83,-550 735.83,-556 735.83,-562 735.83,-562 735.83,-574 735.83,-574 735.83,-580 729.83,-586 723.83,-586"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-563.33" font-family="Verdana" font-size="14.00">(*UnifiedAccessController).PublishAuditEvent</text>
 </a>
 </g>
 </g>
@@ -347,17 +248,17 @@
 <g id="node29" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
 <g id="a_node29"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent | defined in core.go:77">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M998,-605C998,-605 895.46,-605 895.46,-605 889.46,-605 883.46,-599 883.46,-593 883.46,-593 883.46,-581 883.46,-581 883.46,-575 889.46,-569 895.46,-569 895.46,-569 998,-569 998,-569 1004,-569 1010,-575 1010,-581 1010,-581 1010,-593 1010,-593 1010,-599 1004,-605 998,-605"/>
-<text xml:space="preserve" text-anchor="middle" x="946.73" y="-582.33" font-family="Verdana" font-size="14.00">NewBaseEvent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M998,-425C998,-425 895.46,-425 895.46,-425 889.46,-425 883.46,-419 883.46,-413 883.46,-413 883.46,-401 883.46,-401 883.46,-395 889.46,-389 895.46,-389 895.46,-389 998,-389 998,-389 1004,-389 1010,-395 1010,-401 1010,-401 1010,-413 1010,-413 1010,-419 1004,-425 998,-425"/>
+<text xml:space="preserve" text-anchor="middle" x="946.73" y="-402.32" font-family="Verdana" font-size="14.00">NewBaseEvent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishAuditEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge11" class="edge">
+<g id="edge37" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishAuditEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge11"><a xlink:title="at controller_unified.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M663.94,-547.26C701.15,-542.57 743.87,-540.1 782.58,-545 814.1,-548.99 848.24,-557.16 877.11,-565.24"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="875.86,-568.52 886.44,-567.9 877.79,-561.79 875.86,-568.52"/>
+<g id="a_edge37"><a xlink:title="at controller_unified.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M723.45,-549.32C731.15,-546.07 738.58,-542.32 745.58,-538 792.41,-509.1 772.85,-468.6 818.58,-438 834.37,-427.43 853.41,-420.46 871.89,-415.87"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="872.53,-419.31 881.51,-413.7 870.98,-412.48 872.53,-419.31"/>
 </a>
 </g>
 </g>
@@ -365,46 +266,80 @@
 <g id="node30" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData</title>
 <g id="a_node30"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData | defined in core.go:108">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1028,-666C1028,-666 865.46,-666 865.46,-666 859.46,-666 853.46,-660 853.46,-654 853.46,-654 853.46,-642 853.46,-642 853.46,-636 859.46,-630 865.46,-630 865.46,-630 1028,-630 1028,-630 1034,-630 1040,-636 1040,-642 1040,-642 1040,-654 1040,-654 1040,-660 1034,-666 1028,-666"/>
-<text xml:space="preserve" text-anchor="middle" x="946.73" y="-643.33" font-family="Verdana" font-size="14.00">(*BaseEvent).WithData</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1028,-486C1028,-486 865.46,-486 865.46,-486 859.46,-486 853.46,-480 853.46,-474 853.46,-474 853.46,-462 853.46,-462 853.46,-456 859.46,-450 865.46,-450 865.46,-450 1028,-450 1028,-450 1034,-450 1040,-456 1040,-462 1040,-462 1040,-474 1040,-474 1040,-480 1034,-486 1028,-486"/>
+<text xml:space="preserve" text-anchor="middle" x="946.73" y="-463.32" font-family="Verdana" font-size="14.00">(*BaseEvent).WithData</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishAuditEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData -->
-<g id="edge21" class="edge">
+<g id="edge33" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishAuditEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData</title>
-<g id="a_edge21"><a xlink:title="at controller_unified.go:142: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:148: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:151: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:162: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
-<path fill="none" stroke="saddlebrown" d="M685.16,-584.69C705.4,-588.4 726.15,-592.54 745.58,-597 778.49,-604.55 785.92,-609.45 818.58,-618 829.64,-620.89 841.27,-623.81 852.82,-626.63"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="851.83,-629.99 862.38,-628.94 853.48,-623.19 851.83,-629.99"/>
+<g id="a_edge33"><a xlink:title="at controller_unified.go:142: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:148: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:151: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:154: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:162: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
+<path fill="none" stroke="saddlebrown" d="M736.33,-552.58C752.09,-549.65 767.71,-546.16 782.58,-542 825.01,-530.14 870.44,-508.74 902.56,-492"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="903.96,-495.22 911.16,-487.45 900.68,-489.03 903.96,-495.22"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache -->
-<g id="node15" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache</title>
-<g id="a_node15"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache | defined in controller.go:251&#10;at controller.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1020.5,-432C1020.5,-432 872.96,-432 872.96,-432 866.96,-432 860.96,-426 860.96,-420 860.96,-420 860.96,-408 860.96,-408 860.96,-402 866.96,-396 872.96,-396 872.96,-396 1020.5,-396 1020.5,-396 1026.5,-396 1032.5,-402 1032.5,-408 1032.5,-408 1032.5,-420 1032.5,-420 1032.5,-426 1026.5,-432 1020.5,-432"/>
-<text xml:space="preserve" text-anchor="middle" x="946.73" y="-409.32" font-family="Verdana" font-size="14.00">NewPermissionCache</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess -->
+<g id="node9" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess</title>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess | defined in controller_unified.go:34&#10;at controller_unified.go:43: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]&#10;at controller_unified.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:70: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at controller_unified.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M705.83,-281C705.83,-281 424.04,-281 424.04,-281 418.04,-281 412.04,-275 412.04,-269 412.04,-269 412.04,-257 412.04,-257 412.04,-251 418.04,-245 424.04,-245 424.04,-245 705.83,-245 705.83,-245 711.83,-245 717.83,-251 717.83,-257 717.83,-257 717.83,-269 717.83,-269 717.83,-275 711.83,-281 705.83,-281"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-258.32" font-family="Verdana" font-size="14.00">(*UnifiedAccessController).CheckAccess</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired -->
-<g id="edge41" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired</title>
-<g id="a_edge41"><a xlink:title="at controller.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired]">
-<path fill="none" stroke="black" d="M1033.19,-420.13C1048.61,-424.71 1063.4,-431.9 1074.87,-443 1120.76,-487.42 1101.04,-677.57 1147.87,-721 1149.46,-722.48 1151.1,-723.89 1152.78,-725.25"/>
-<polygon fill="black" stroke="black" points="1162.7,-735.53 1173.04,-737.84 1166.39,-729.59 1162.7,-735.53"/>
-<polyline fill="none" stroke="black" points="1164.12,-732.3 1159.87,-729.66"/>
-<ellipse fill="none" stroke="black" cx="1156.05" cy="-727.28" rx="4" ry="4"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess -->
+<g id="edge38" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess</title>
+<g id="a_edge38"><a xlink:title="at controller_unified.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess]">
+<path fill="none" stroke="black" d="M682.65,-281.69C703.66,-285.46 725.32,-289.63 745.58,-294 786.46,-302.82 831.59,-314.38 868.62,-324.36"/>
+<polygon fill="black" stroke="black" points="867.31,-327.64 877.88,-326.87 869.14,-320.88 867.31,-327.64"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
+<g id="a_edge1"><a xlink:title="at controller_unified.go:43: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M718.28,-281.02C727.8,-284.65 736.99,-288.94 745.58,-294 790.24,-320.34 773.92,-358.65 818.58,-385 834.48,-394.38 853.31,-400 871.55,-403.31"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="870.88,-406.75 881.3,-404.85 871.97,-399.83 870.88,-406.75"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData</title>
+<g id="a_edge2"><a xlink:title="at controller_unified.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
+<path fill="none" stroke="saddlebrown" d="M718.55,-275.27C728.42,-280.18 737.59,-286.33 745.58,-294 800.37,-346.56 723.53,-412.05 781.58,-461 798.29,-475.09 819.71,-481.37 841.52,-483.26"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="841.25,-486.75 851.42,-483.78 841.62,-479.76 841.25,-486.75"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
+<g id="node36" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
+<g id="a_node36"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger | defined in logger.go:206">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M982.25,-647C982.25,-647 911.21,-647 911.21,-647 905.21,-647 899.21,-641 899.21,-635 899.21,-635 899.21,-623 899.21,-623 899.21,-617 905.21,-611 911.21,-611 911.21,-611 982.25,-611 982.25,-611 988.25,-611 994.25,-617 994.25,-623 994.25,-623 994.25,-635 994.25,-635 994.25,-641 988.25,-647 982.25,-647"/>
+<text xml:space="preserve" text-anchor="middle" x="946.73" y="-624.33" font-family="Verdana" font-size="14.00">GetLogger</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
+<g id="edge22" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
+<g id="a_edge22"><a xlink:title="at controller_unified.go:70: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M718.2,-274.99C728.21,-279.95 737.5,-286.19 745.58,-294 802.34,-348.91 752.41,-394.61 781.58,-468 793.15,-497.11 797.78,-504.57 818.58,-528 844.83,-557.57 880.49,-585.06 907.36,-603.87"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="905.37,-606.74 915.59,-609.54 909.34,-600.98 905.37,-606.74"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute -->
-<g id="node16" class="node">
+<g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute</title>
-<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute | defined in controller.go:412&#10;at controller.go:416: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at controller.go:442: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at controller.go:418: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:426: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:444: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:456: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:436: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:490: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:457: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at controller.go:458: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at controller.go:488: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult]&#10;at controller.go:440: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess]&#10;at controller.go:417: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:425: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:443: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:455: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:424: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at controller.go:454: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M658.58,-207C658.58,-207 471.29,-207 471.29,-207 465.29,-207 459.29,-201 459.29,-195 459.29,-195 459.29,-183 459.29,-183 459.29,-177 465.29,-171 471.29,-171 471.29,-171 658.58,-171 658.58,-171 664.58,-171 670.58,-177 670.58,-183 670.58,-183 670.58,-195 670.58,-195 670.58,-201 664.58,-207 658.58,-207"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-184.32" font-family="Verdana" font-size="14.00">(*ToolInterceptor).Execute</text>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute | defined in controller.go:412&#10;at controller.go:424: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at controller.go:454: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at controller.go:418: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:426: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:444: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:456: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:457: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at controller.go:458: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at controller.go:416: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at controller.go:442: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at controller.go:436: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:490: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:440: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess]&#10;at controller.go:488: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult]&#10;at controller.go:417: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:425: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:443: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:455: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M658.58,-98C658.58,-98 471.29,-98 471.29,-98 465.29,-98 459.29,-92 459.29,-86 459.29,-86 459.29,-74 459.29,-74 459.29,-68 465.29,-62 471.29,-62 471.29,-62 658.58,-62 658.58,-62 664.58,-62 670.58,-68 670.58,-74 670.58,-74 670.58,-86 670.58,-86 670.58,-92 664.58,-98 658.58,-98"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-75.33" font-family="Verdana" font-size="14.00">(*ToolInterceptor).Execute</text>
 </a>
 </g>
 </g>
@@ -412,62 +347,62 @@
 <g id="edge25" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess</title>
 <g id="a_edge25"><a xlink:title="at controller.go:440: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess]">
-<path fill="none" stroke="black" d="M671.11,-199.27C697.19,-205.52 723.85,-215.41 745.58,-231 770.23,-248.69 759.71,-267.97 781.58,-289 795.21,-302.11 801.32,-302.27 818.58,-310 835.49,-317.57 854.15,-324.59 871.86,-330.67"/>
-<polygon fill="black" stroke="black" points="870.7,-333.97 881.3,-333.84 872.94,-327.34 870.7,-333.97"/>
+<path fill="none" stroke="black" d="M670.89,-80.24C697.56,-84.82 724.57,-93.94 745.58,-111 813.88,-166.46 756.49,-232.67 818.58,-295 830.17,-306.64 844.76,-315.71 859.89,-322.75"/>
+<polygon fill="black" stroke="black" points="858.46,-325.94 869.03,-326.7 861.24,-319.52 858.46,-325.94"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID -->
-<g id="edge17" class="edge">
+<g id="edge24" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID</title>
-<g id="a_edge17"><a xlink:title="at controller.go:436: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:490: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]">
-<path fill="none" stroke="black" d="M649.29,-207.71C679.67,-214.73 714.24,-222.96 745.58,-231 892.77,-268.75 928.68,-281.55 1074.87,-323 1107.35,-332.21 1114.83,-337.06 1147.87,-344 1178.31,-350.39 1212.35,-355.32 1241.45,-358.87"/>
-<polygon fill="black" stroke="black" points="1240.92,-362.33 1251.26,-360.04 1241.74,-355.38 1240.92,-362.33"/>
+<g id="a_edge24"><a xlink:title="at controller.go:436: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]&#10;at controller.go:490: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.getRequestID]">
+<path fill="none" stroke="black" d="M671.25,-94.41C695.86,-98.82 721.82,-104.31 745.58,-111 779.18,-120.46 784.75,-131.39 818.58,-140 874.18,-154.15 1029.06,-136.47 1074.87,-171 1141.51,-221.23 1081.57,-293.32 1147.87,-344 1174.12,-364.06 1209.91,-370.51 1241.31,-371.54"/>
+<polygon fill="black" stroke="black" points="1241.1,-375.04 1251.14,-371.67 1241.19,-368.04 1241.1,-375.04"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult -->
-<g id="node17" class="node">
+<g id="node11" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult</title>
-<g id="a_node17"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult | defined in controller.go:536">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1003.62,-224C1003.62,-224 889.83,-224 889.83,-224 883.83,-224 877.83,-218 877.83,-212 877.83,-212 877.83,-200 877.83,-200 877.83,-194 883.83,-188 889.83,-188 889.83,-188 1003.62,-188 1003.62,-188 1009.62,-188 1015.62,-194 1015.62,-200 1015.62,-200 1015.62,-212 1015.62,-212 1015.62,-218 1009.62,-224 1003.62,-224"/>
-<text xml:space="preserve" text-anchor="middle" x="946.73" y="-201.32" font-family="Verdana" font-size="14.00">determineResult</text>
+<g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult | defined in controller.go:536">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1003.62,-219C1003.62,-219 889.83,-219 889.83,-219 883.83,-219 877.83,-213 877.83,-207 877.83,-207 877.83,-195 877.83,-195 877.83,-189 883.83,-183 889.83,-183 889.83,-183 1003.62,-183 1003.62,-183 1009.62,-183 1015.62,-189 1015.62,-195 1015.62,-195 1015.62,-207 1015.62,-207 1015.62,-213 1009.62,-219 1003.62,-219"/>
+<text xml:space="preserve" text-anchor="middle" x="946.73" y="-196.32" font-family="Verdana" font-size="14.00">determineResult</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult -->
-<g id="edge19" class="edge">
+<g id="edge26" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult</title>
-<g id="a_edge19"><a xlink:title="at controller.go:488: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult]">
-<path fill="none" stroke="black" d="M671.22,-193.71C732.94,-196.48 809.64,-199.91 866.27,-202.44"/>
-<polygon fill="black" stroke="black" points="866.01,-205.94 876.16,-202.89 866.33,-198.94 866.01,-205.94"/>
+<g id="a_edge26"><a xlink:title="at controller.go:488: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.determineResult]">
+<path fill="none" stroke="black" d="M670.92,-83.84C696.85,-88.51 723.5,-96.77 745.58,-111 769.52,-126.43 758.04,-147.97 781.58,-164 806.41,-180.91 837.78,-190.21 866.43,-195.28"/>
+<polygon fill="black" stroke="black" points="865.76,-198.71 876.18,-196.84 866.86,-191.8 865.76,-198.71"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge12" class="edge">
+<g id="edge23" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge12"><a xlink:title="at controller.go:416: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at controller.go:442: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M663.78,-170.26C700.56,-164.09 742.85,-158.03 781.58,-155 927.93,-143.53 965.11,-151.69 1111.87,-155 1166.81,-156.24 1230.19,-159.39 1270.51,-161.62"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1270.3,-165.11 1280.48,-162.17 1270.69,-158.12 1270.3,-165.11"/>
+<g id="a_edge23"><a xlink:title="at controller.go:416: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at controller.go:442: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M671.31,-95.25C716.62,-101.74 770.19,-109.34 818.58,-116 932.41,-131.66 976.9,-89.96 1074.87,-150 1123.64,-179.89 1099.85,-224.91 1147.87,-256 1184.66,-279.82 1235.33,-285.94 1270.48,-286.97"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1270.19,-290.47 1280.24,-287.12 1270.3,-283.47 1270.19,-290.47"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge33" class="edge">
+<g id="edge39" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge33"><a xlink:title="at controller.go:417: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:425: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:443: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:455: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M671.07,-175.9C798.59,-161.8 1005.18,-145.25 1074.87,-176 1118.91,-195.43 1105.77,-232.66 1147.87,-256 1159.31,-262.34 1171.82,-267.38 1184.67,-271.37"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1183.49,-274.68 1194.07,-274.07 1185.42,-267.95 1183.49,-274.68"/>
+<g id="a_edge39"><a xlink:title="at controller.go:417: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:425: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:443: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at controller.go:455: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M671.11,-78.79C818.49,-77.74 1072.9,-78.56 1111.87,-96 1133.1,-105.5 1127.42,-122.91 1147.87,-134 1159.37,-140.23 1171.92,-145.2 1184.79,-149.16"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1183.62,-152.46 1194.2,-151.83 1185.54,-145.73 1183.62,-152.46"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge13" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge13"><a xlink:title="at controller.go:418: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:426: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:444: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:456: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M664.35,-170.26C701.1,-163.39 743.22,-155.67 781.58,-149 920.5,-124.86 1082.22,-113.15 1190.1,-107.63"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1190.03,-111.14 1199.84,-107.14 1189.68,-104.15 1190.03,-111.14"/>
+<g id="a_edge10"><a xlink:title="at controller.go:418: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:426: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:444: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at controller.go:456: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M671.21,-85.85C809.21,-94 1038.14,-109.28 1074.87,-123 1093.94,-130.12 1097.16,-135.93 1111.87,-150 1130.38,-167.7 1125.89,-181.86 1147.87,-195 1160.93,-202.81 1175.54,-208.67 1190.51,-213.06"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1189.44,-216.39 1200,-215.61 1191.25,-209.63 1189.44,-216.39"/>
 </a>
 </g>
 </g>
@@ -475,17 +410,17 @@
 <g id="node34" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
 <g id="a_node34"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1327.39,-243C1327.39,-243 1297.39,-243 1297.39,-243 1291.39,-243 1285.39,-237 1285.39,-231 1285.39,-231 1285.39,-219 1285.39,-219 1285.39,-213 1291.39,-207 1297.39,-207 1297.39,-207 1327.39,-207 1327.39,-207 1333.39,-207 1339.39,-213 1339.39,-219 1339.39,-219 1339.39,-231 1339.39,-231 1339.39,-237 1333.39,-243 1327.39,-243"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-220.32" font-family="Verdana" font-size="14.00">New</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1327.39,-60C1327.39,-60 1297.39,-60 1297.39,-60 1291.39,-60 1285.39,-54 1285.39,-48 1285.39,-48 1285.39,-36 1285.39,-36 1285.39,-30 1291.39,-24 1297.39,-24 1297.39,-24 1327.39,-24 1327.39,-24 1333.39,-24 1339.39,-30 1339.39,-36 1339.39,-36 1339.39,-48 1339.39,-48 1339.39,-54 1333.39,-60 1327.39,-60"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-37.33" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge34" class="edge">
+<g id="edge3" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge34"><a xlink:title="at controller.go:424: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at controller.go:454: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M643.92,-207.74C693.58,-218.7 759.46,-231.43 818.58,-237 931.99,-247.68 961,-239.89 1074.87,-237 1145.01,-235.22 1226.73,-230.48 1273.44,-227.52"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1273.54,-231.02 1283.29,-226.89 1273.09,-224.03 1273.54,-231.02"/>
+<g id="a_edge3"><a xlink:title="at controller.go:424: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at controller.go:454: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M671.2,-69.41C706.29,-65.96 745.61,-62.21 781.58,-59 965.43,-42.6 1186.4,-41.46 1273.48,-41.74"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1273.34,-45.24 1283.35,-41.78 1273.37,-38.24 1273.34,-45.24"/>
 </a>
 </g>
 </g>
@@ -493,44 +428,172 @@
 <g id="node35" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_node35"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1400.03,-60C1400.03,-60 1224.74,-60 1224.74,-60 1218.74,-60 1212.74,-54 1212.74,-48 1212.74,-48 1212.74,-36 1212.74,-36 1212.74,-30 1218.74,-24 1224.74,-24 1224.74,-24 1400.03,-24 1400.03,-24 1406.03,-24 1412.03,-30 1412.03,-36 1412.03,-36 1412.03,-48 1412.03,-48 1412.03,-54 1406.03,-60 1400.03,-60"/>
-<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-37.33" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1400.03,-121C1400.03,-121 1224.74,-121 1224.74,-121 1218.74,-121 1212.74,-115 1212.74,-109 1212.74,-109 1212.74,-97 1212.74,-97 1212.74,-91 1218.74,-85 1224.74,-85 1224.74,-85 1400.03,-85 1400.03,-85 1406.03,-85 1412.03,-91 1412.03,-97 1412.03,-97 1412.03,-109 1412.03,-109 1412.03,-115 1406.03,-121 1400.03,-121"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-98.33" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge18" class="edge">
+<g id="edge16" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.ToolInterceptor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge18"><a xlink:title="at controller.go:457: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at controller.go:458: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M635.46,-170.35C668.95,-161 709.57,-149.09 745.58,-137 778.52,-125.94 784.92,-117.62 818.58,-109 947.65,-75.95 1100.16,-58.4 1200.97,-49.67"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1201.22,-53.16 1210.88,-48.83 1200.62,-46.19 1201.22,-53.16"/>
+<g id="a_edge16"><a xlink:title="at controller.go:457: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at controller.go:458: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M671.31,-71.37C781.42,-63.87 959.08,-56.07 1111.87,-69 1129.72,-70.51 1165,-76.21 1200.99,-82.52"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1200.22,-85.94 1210.67,-84.23 1201.43,-79.05 1200.22,-85.94"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert -->
+<g id="node12" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert</title>
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert | defined in controller_unified.go:213&#10;at controller_unified.go:234: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:240: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:245: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:224: calling [(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String]&#10;at controller_unified.go:218: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M733.58,-220C733.58,-220 396.29,-220 396.29,-220 390.29,-220 384.29,-214 384.29,-208 384.29,-208 384.29,-196 384.29,-196 384.29,-190 390.29,-184 396.29,-184 396.29,-184 733.58,-184 733.58,-184 739.58,-184 745.58,-190 745.58,-196 745.58,-196 745.58,-208 745.58,-208 745.58,-214 739.58,-220 733.58,-220"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-197.32" font-family="Verdana" font-size="14.00">(*UnifiedEventBusAdapter).PublishSecurityAlert</text>
+</a>
+</g>
+</g>
+<!-- (github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String -->
+<g id="node13" class="node">
+<title>(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String</title>
+<g id="a_node13"><a xlink:title="(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String | defined in types.go:134">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1021.62,-282C1021.62,-282 871.83,-282 871.83,-282 865.83,-282 859.83,-276 859.83,-270 859.83,-270 859.83,-258 859.83,-258 859.83,-252 865.83,-246 871.83,-246 871.83,-246 1021.62,-246 1021.62,-246 1027.62,-246 1033.62,-252 1033.62,-258 1033.62,-258 1033.62,-270 1033.62,-270 1033.62,-276 1027.62,-282 1021.62,-282"/>
+<text xml:space="preserve" text-anchor="middle" x="946.73" y="-259.32" font-family="Verdana" font-size="14.00">(AlertSeverity).String</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String -->
+<g id="edge11" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String</title>
+<g id="a_edge11"><a xlink:title="at controller_unified.go:224: calling [(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String]">
+<path fill="none" stroke="black" d="M680.66,-220.73C734.16,-229.46 797.16,-239.75 848.32,-248.1"/>
+<polygon fill="black" stroke="black" points="847.45,-251.5 857.88,-249.66 848.58,-244.59 847.45,-251.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
+<g id="a_edge17"><a xlink:title="at controller_unified.go:218: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M725.78,-220.74C732.74,-224.26 739.39,-228.33 745.58,-233 805.38,-278.17 758.79,-339.81 818.58,-385 833.75,-396.46 852.83,-402.74 871.57,-406.02"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="870.94,-409.46 881.34,-407.43 871.95,-402.54 870.94,-409.46"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData</title>
+<g id="a_edge4"><a xlink:title="at controller_unified.go:234: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:240: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:245: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
+<path fill="none" stroke="saddlebrown" d="M730.23,-220.57C735.72,-224.19 740.87,-228.32 745.58,-233 809.96,-296.97 718.28,-368.97 781.58,-434 797.63,-450.49 819.42,-460.03 841.88,-465.36"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="840.95,-468.74 851.45,-467.33 842.37,-461.88 840.95,-468.74"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired -->
+<g id="node14" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired</title>
+<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired | defined in controller.go:363&#10;at controller.go:372: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1438.28,-769C1438.28,-769 1186.49,-769 1186.49,-769 1180.49,-769 1174.49,-763 1174.49,-757 1174.49,-757 1174.49,-745 1174.49,-745 1174.49,-739 1180.49,-733 1186.49,-733 1186.49,-733 1438.28,-733 1438.28,-733 1444.28,-733 1450.28,-739 1450.28,-745 1450.28,-745 1450.28,-757 1450.28,-757 1450.28,-763 1444.28,-769 1438.28,-769"/>
+<text xml:space="preserve" text-anchor="middle" x="1312.39" y="-746.33" font-family="Verdana" font-size="14.00">(*PermissionCache).cleanupExpired</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired -->
+<g id="node15" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired</title>
+<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired | defined in controller.go:378">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1811.45,-769C1811.45,-769 1561.91,-769 1561.91,-769 1555.91,-769 1549.91,-763 1549.91,-757 1549.91,-757 1549.91,-745 1549.91,-745 1549.91,-739 1555.91,-733 1561.91,-733 1561.91,-733 1811.45,-733 1811.45,-733 1817.45,-733 1823.45,-739 1823.45,-745 1823.45,-745 1823.45,-757 1823.45,-757 1823.45,-763 1817.45,-769 1811.45,-769"/>
+<text xml:space="preserve" text-anchor="middle" x="1686.68" y="-746.33" font-family="Verdana" font-size="14.00">(*PermissionCache).removeExpired</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired -->
+<g id="edge5" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired</title>
+<g id="a_edge5"><a xlink:title="at controller.go:372: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).removeExpired]">
+<path fill="none" stroke="black" d="M1450.43,-751C1479.08,-751 1509.39,-751 1538.39,-751"/>
+<polygon fill="black" stroke="black" points="1538.35,-754.5 1548.35,-751 1538.35,-747.5 1538.35,-754.5"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache -->
+<g id="node16" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache</title>
+<g id="a_node16"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache | defined in controller.go:251&#10;at controller.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1020.5,-735C1020.5,-735 872.96,-735 872.96,-735 866.96,-735 860.96,-729 860.96,-723 860.96,-723 860.96,-711 860.96,-711 860.96,-705 866.96,-699 872.96,-699 872.96,-699 1020.5,-699 1020.5,-699 1026.5,-699 1032.5,-705 1032.5,-711 1032.5,-711 1032.5,-723 1032.5,-723 1032.5,-729 1026.5,-735 1020.5,-735"/>
+<text xml:space="preserve" text-anchor="middle" x="946.73" y="-712.33" font-family="Verdana" font-size="14.00">NewPermissionCache</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired -->
+<g id="edge40" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired</title>
+<g id="a_edge40"><a xlink:title="at controller.go:260: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).cleanupExpired]">
+<path fill="none" stroke="black" d="M1032.99,-724.97C1067.68,-728.22 1108.98,-732.08 1149.01,-735.82"/>
+<polygon fill="black" stroke="black" points="1162.58,-740.6 1172.87,-738.05 1163.23,-733.63 1162.58,-740.6"/>
+<polyline fill="none" stroke="black" points="1162.41,-737.07 1157.43,-736.61"/>
+<ellipse fill="none" stroke="black" cx="1152.95" cy="-736.19" rx="4" ry="4"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController -->
-<g id="node18" class="node">
+<g id="node17" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController</title>
-<g id="a_node18"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController | defined in controller.go:29&#10;at controller.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at controller.go:35: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M637.58,-279C637.58,-279 492.29,-279 492.29,-279 486.29,-279 480.29,-273 480.29,-267 480.29,-267 480.29,-255 480.29,-255 480.29,-249 486.29,-243 492.29,-243 492.29,-243 637.58,-243 637.58,-243 643.58,-243 649.58,-249 649.58,-255 649.58,-255 649.58,-267 649.58,-267 649.58,-273 643.58,-279 637.58,-279"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-256.32" font-family="Verdana" font-size="14.00">NewAccessController</text>
+<g id="a_node17"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController | defined in controller.go:29&#10;at controller.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at controller.go:35: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M637.58,-708C637.58,-708 492.29,-708 492.29,-708 486.29,-708 480.29,-702 480.29,-696 480.29,-696 480.29,-684 480.29,-684 480.29,-678 486.29,-672 492.29,-672 492.29,-672 637.58,-672 637.58,-672 643.58,-672 649.58,-678 649.58,-684 649.58,-684 649.58,-696 649.58,-696 649.58,-702 643.58,-708 637.58,-708"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-685.33" font-family="Verdana" font-size="14.00">NewAccessController</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache -->
-<g id="edge28" class="edge">
+<g id="edge29" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache</title>
-<g id="a_edge28"><a xlink:title="at controller.go:35: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache]">
-<path fill="none" stroke="black" d="M649.88,-262.93C681.64,-266.78 717,-275.04 745.58,-292 790.47,-318.63 774.52,-356.01 818.58,-384 828.06,-390.02 838.62,-394.83 849.5,-398.68"/>
-<polygon fill="black" stroke="black" points="848.42,-402.01 859.02,-401.75 850.57,-395.35 848.42,-402.01"/>
+<g id="a_edge29"><a xlink:title="at controller.go:35: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewPermissionCache]">
+<path fill="none" stroke="black" d="M650.22,-695.99C709.06,-700.18 787.73,-705.77 849.11,-710.13"/>
+<polygon fill="black" stroke="black" points="848.63,-713.61 858.85,-710.82 849.12,-706.62 848.63,-713.61"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge15" class="edge">
+<g id="edge6" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge15"><a xlink:title="at controller.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M649.98,-259.19C682.67,-262.4 718.66,-271.19 745.58,-292 807.74,-340.05 756.43,-404.94 818.58,-453 837.92,-467.96 863.88,-474.16 887.3,-476.35"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="886.83,-479.83 897.04,-477.02 887.31,-472.84 886.83,-479.83"/>
+<g id="a_edge6"><a xlink:title="at controller.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M650.22,-676.46C722.38,-664.87 824.36,-648.49 887.69,-638.32"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="887.85,-641.84 897.17,-636.8 886.74,-634.93 887.85,-641.84"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert -->
+<g id="node18" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert</title>
+<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert | defined in controller_unified.go:81&#10;at controller_unified.go:86: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]&#10;at controller_unified.go:92: calling [(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String]&#10;at controller_unified.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:105: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:108: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M730.95,-159C730.95,-159 398.91,-159 398.91,-159 392.91,-159 386.91,-153 386.91,-147 386.91,-147 386.91,-135 386.91,-135 386.91,-129 392.91,-123 398.91,-123 398.91,-123 730.95,-123 730.95,-123 736.95,-123 742.95,-129 742.95,-135 742.95,-135 742.95,-147 742.95,-147 742.95,-153 736.95,-159 730.95,-159"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-136.32" font-family="Verdana" font-size="14.00">(*UnifiedAccessController).PublishSecurityAlert</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String -->
+<g id="edge41" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String</title>
+<g id="a_edge41"><a xlink:title="at controller_unified.go:92: calling [(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String]">
+<path fill="none" stroke="black" d="M712.5,-159.68C723.92,-163.12 735.08,-167.19 745.58,-172 783.76,-189.49 781.08,-213.08 818.58,-232 828.01,-236.76 838.19,-240.84 848.55,-244.34"/>
+<polygon fill="black" stroke="black" points="847.35,-247.63 857.94,-247.32 849.47,-240.96 847.35,-247.63"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
+<g id="edge30" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
+<g id="a_edge30"><a xlink:title="at controller_unified.go:86: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M727.72,-159.56C734.04,-163.16 740.04,-167.28 745.58,-172 783.66,-204.45 780.5,-352.54 818.58,-385 833.33,-397.57 852.63,-404.16 871.72,-407.37"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="871.03,-410.81 881.41,-408.69 871.97,-403.87 871.03,-410.81"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData -->
+<g id="edge42" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData</title>
+<g id="a_edge42"><a xlink:title="at controller_unified.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:105: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:108: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
+<path fill="none" stroke="saddlebrown" d="M728.9,-159.62C734.83,-163.22 740.42,-167.32 745.58,-172 790.97,-213.19 774.46,-395.45 818.58,-438 825.5,-444.68 833.62,-449.96 842.35,-454.14"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="840.87,-457.32 851.44,-457.96 843.58,-450.86 840.87,-457.32"/>
 </a>
 </g>
 </g>
@@ -538,8 +601,8 @@
 <g id="node19" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateAllCache</title>
 <g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateAllCache | defined in controller.go:215&#10;at controller.go:216: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Clear]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M299.29,-401C299.29,-401 28,-401 28,-401 22,-401 16,-395 16,-389 16,-389 16,-377 16,-377 16,-371 22,-365 28,-365 28,-365 299.29,-365 299.29,-365 305.29,-365 311.29,-371 311.29,-377 311.29,-377 311.29,-389 311.29,-389 311.29,-395 305.29,-401 299.29,-401"/>
-<text xml:space="preserve" text-anchor="middle" x="163.64" y="-378.32" font-family="Verdana" font-size="14.00">(*AccessController).InvalidateAllCache</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M299.29,-403C299.29,-403 28,-403 28,-403 22,-403 16,-397 16,-391 16,-391 16,-379 16,-379 16,-373 22,-367 28,-367 28,-367 299.29,-367 299.29,-367 305.29,-367 311.29,-373 311.29,-379 311.29,-379 311.29,-391 311.29,-391 311.29,-397 305.29,-403 299.29,-403"/>
+<text xml:space="preserve" text-anchor="middle" x="163.64" y="-380.32" font-family="Verdana" font-size="14.00">(*AccessController).InvalidateAllCache</text>
 </a>
 </g>
 </g>
@@ -547,215 +610,152 @@
 <g id="node20" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Clear</title>
 <g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Clear | defined in controller.go:311">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M654.83,-401C654.83,-401 475.04,-401 475.04,-401 469.04,-401 463.04,-395 463.04,-389 463.04,-389 463.04,-377 463.04,-377 463.04,-371 469.04,-365 475.04,-365 475.04,-365 654.83,-365 654.83,-365 660.83,-365 666.83,-371 666.83,-377 666.83,-377 666.83,-389 666.83,-389 666.83,-395 660.83,-401 654.83,-401"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-378.32" font-family="Verdana" font-size="14.00">(*PermissionCache).Clear</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M654.83,-403C654.83,-403 475.04,-403 475.04,-403 469.04,-403 463.04,-397 463.04,-391 463.04,-391 463.04,-379 463.04,-379 463.04,-373 469.04,-367 475.04,-367 475.04,-367 654.83,-367 654.83,-367 660.83,-367 666.83,-373 666.83,-379 666.83,-379 666.83,-391 666.83,-391 666.83,-397 660.83,-403 654.83,-403"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-380.32" font-family="Verdana" font-size="14.00">(*PermissionCache).Clear</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateAllCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Clear -->
-<g id="edge29" class="edge">
+<g id="edge7" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateAllCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Clear</title>
-<g id="a_edge29"><a xlink:title="at controller.go:216: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Clear]">
-<path fill="none" stroke="black" d="M311.91,-383C357.92,-383 407.92,-383 451.16,-383"/>
-<polygon fill="black" stroke="black" points="451.07,-386.5 461.07,-383 451.07,-379.5 451.07,-386.5"/>
+<g id="a_edge7"><a xlink:title="at controller.go:216: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).Clear]">
+<path fill="none" stroke="black" d="M311.91,-385C357.92,-385 407.92,-385 451.16,-385"/>
+<polygon fill="black" stroke="black" points="451.07,-388.5 461.07,-385 451.07,-381.5 451.07,-388.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats -->
 <g id="node21" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert</title>
-<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert | defined in controller_unified.go:81&#10;at controller_unified.go:92: calling [(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String]&#10;at controller_unified.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:105: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:108: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:86: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M730.95,-767C730.95,-767 398.91,-767 398.91,-767 392.91,-767 386.91,-761 386.91,-755 386.91,-755 386.91,-743 386.91,-743 386.91,-737 392.91,-731 398.91,-731 398.91,-731 730.95,-731 730.95,-731 736.95,-731 742.95,-737 742.95,-743 742.95,-743 742.95,-755 742.95,-755 742.95,-761 736.95,-767 730.95,-767"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-744.33" font-family="Verdana" font-size="14.00">(*UnifiedAccessController).PublishSecurityAlert</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats</title>
+<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats | defined in controller.go:221&#10;at controller.go:223: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats]&#10;at controller.go:225: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M264.41,-480C264.41,-480 62.87,-480 62.87,-480 56.88,-480 50.87,-474 50.87,-468 50.87,-468 50.87,-456 50.87,-456 50.87,-450 56.87,-444 62.87,-444 62.87,-444 264.41,-444 264.41,-444 270.41,-444 276.41,-450 276.41,-456 276.41,-456 276.41,-468 276.41,-468 276.41,-474 270.41,-480 264.41,-480"/>
+<text xml:space="preserve" text-anchor="middle" x="163.64" y="-457.32" font-family="Verdana" font-size="14.00">(*AccessController).GetStats</text>
 </a>
 </g>
 </g>
-<!-- (github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats -->
 <g id="node22" class="node">
-<title>(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String</title>
-<g id="a_node22"><a xlink:title="(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String | defined in types.go:134">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1021.62,-761C1021.62,-761 871.83,-761 871.83,-761 865.83,-761 859.83,-755 859.83,-749 859.83,-749 859.83,-737 859.83,-737 859.83,-731 865.83,-725 871.83,-725 871.83,-725 1021.62,-725 1021.62,-725 1027.62,-725 1033.62,-731 1033.62,-737 1033.62,-737 1033.62,-749 1033.62,-749 1033.62,-755 1027.62,-761 1021.62,-761"/>
-<text xml:space="preserve" text-anchor="middle" x="946.73" y="-738.33" font-family="Verdana" font-size="14.00">(AlertSeverity).String</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats</title>
+<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats | defined in controller.go:319">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M666.83,-525C666.83,-525 463.04,-525 463.04,-525 457.04,-525 451.04,-519 451.04,-513 451.04,-513 451.04,-501 451.04,-501 451.04,-495 457.04,-489 463.04,-489 463.04,-489 666.83,-489 666.83,-489 672.83,-489 678.83,-495 678.83,-501 678.83,-501 678.83,-513 678.83,-513 678.83,-519 672.83,-525 666.83,-525"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-502.32" font-family="Verdana" font-size="14.00">(*PermissionCache).GetStats</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String -->
-<g id="edge35" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String</title>
-<g id="a_edge35"><a xlink:title="at controller_unified.go:92: calling [(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String]">
-<path fill="none" stroke="black" d="M743.58,-748.55C756.78,-748.41 769.89,-748.22 782.58,-748 803.71,-747.63 826.38,-747.05 847.9,-746.41"/>
-<polygon fill="black" stroke="black" points="847.97,-749.91 857.86,-746.11 847.76,-742.92 847.97,-749.91"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats -->
+<g id="edge34" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats</title>
+<g id="a_edge34"><a xlink:title="at controller.go:223: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetStats]">
+<path fill="none" stroke="black" d="M276.93,-474.65C327.43,-480.35 387.22,-487.08 439.12,-492.93"/>
+<polygon fill="black" stroke="black" points="438.58,-496.39 448.91,-494.04 439.36,-489.44 438.58,-496.39"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge42" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge42"><a xlink:title="at controller_unified.go:86: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M723.48,-730.36C731.17,-727.1 738.59,-723.33 745.58,-719 792.65,-689.8 772.62,-648.91 818.58,-618 834.35,-607.4 853.38,-600.41 871.86,-595.82"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="872.49,-599.26 881.48,-593.65 870.95,-592.43 872.49,-599.26"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData -->
-<g id="edge37" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).PublishSecurityAlert&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData</title>
-<g id="a_edge37"><a xlink:title="at controller_unified.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:105: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:108: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
-<path fill="none" stroke="saddlebrown" d="M711.06,-730.31C722.92,-727.12 734.56,-723.38 745.58,-719 781.89,-704.57 782.31,-684.54 818.58,-670 826.01,-667.02 833.85,-664.44 841.83,-662.22"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="842.51,-665.66 851.32,-659.77 840.76,-658.88 842.51,-665.66"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate -->
 <g id="node23" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache</title>
-<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache | defined in controller.go:209&#10;at controller.go:210: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M290.66,-523C290.66,-523 36.62,-523 36.62,-523 30.62,-523 24.62,-517 24.62,-511 24.62,-511 24.62,-499 24.62,-499 24.62,-493 30.62,-487 36.62,-487 36.62,-487 290.66,-487 290.66,-487 296.66,-487 302.66,-493 302.66,-499 302.66,-499 302.66,-511 302.66,-511 302.66,-517 296.66,-523 290.66,-523"/>
-<text xml:space="preserve" text-anchor="middle" x="163.64" y="-500.32" font-family="Verdana" font-size="14.00">(*AccessController).InvalidateCache</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate</title>
+<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate | defined in controller.go:333">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M674.33,-464C674.33,-464 455.54,-464 455.54,-464 449.54,-464 443.54,-458 443.54,-452 443.54,-452 443.54,-440 443.54,-440 443.54,-434 449.54,-428 455.54,-428 455.54,-428 674.33,-428 674.33,-428 680.33,-428 686.33,-434 686.33,-440 686.33,-440 686.33,-452 686.33,-452 686.33,-458 680.33,-464 674.33,-464"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-441.32" font-family="Verdana" font-size="14.00">(*PermissionCache).GetHitRate</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate -->
+<g id="edge35" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).GetStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate</title>
+<g id="a_edge35"><a xlink:title="at controller.go:225: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).GetHitRate]">
+<path fill="none" stroke="black" d="M276.93,-457.5C325.08,-455.57 381.66,-453.3 431.8,-451.29"/>
+<polygon fill="black" stroke="black" points="431.7,-454.8 441.55,-450.9 431.42,-447.81 431.7,-454.8"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor -->
 <g id="node24" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent</title>
-<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent | defined in controller.go:299">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M692.33,-523C692.33,-523 437.54,-523 437.54,-523 431.54,-523 425.54,-517 425.54,-511 425.54,-511 425.54,-499 425.54,-499 425.54,-493 431.54,-487 437.54,-487 437.54,-487 692.33,-487 692.33,-487 698.33,-487 704.33,-493 704.33,-499 704.33,-499 704.33,-511 704.33,-511 704.33,-517 698.33,-523 692.33,-523"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-500.32" font-family="Verdana" font-size="14.00">(*PermissionCache).InvalidateAgent</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor</title>
+<g id="a_node24"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor | defined in controller.go:399&#10;at controller.go:400: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M632.7,-647C632.7,-647 497.16,-647 497.16,-647 491.16,-647 485.16,-641 485.16,-635 485.16,-635 485.16,-623 485.16,-623 485.16,-617 491.16,-611 497.16,-611 497.16,-611 632.7,-611 632.7,-611 638.7,-611 644.7,-617 644.7,-623 644.7,-623 644.7,-635 644.7,-635 644.7,-641 638.7,-647 632.7,-647"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-624.33" font-family="Verdana" font-size="14.00">NewToolInterceptor</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent</title>
-<g id="a_edge4"><a xlink:title="at controller.go:210: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent]">
-<path fill="none" stroke="black" d="M303.18,-505C338.9,-505 377.51,-505 413.79,-505"/>
-<polygon fill="black" stroke="black" points="413.46,-508.5 423.46,-505 413.46,-501.5 413.46,-508.5"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController -->
-<g id="node25" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController</title>
-<g id="a_node25"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController | defined in controller_unified.go:23&#10;at controller_unified.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M261.04,-279C261.04,-279 66.25,-279 66.25,-279 60.25,-279 54.25,-273 54.25,-267 54.25,-267 54.25,-255 54.25,-255 54.25,-249 60.25,-243 66.25,-243 66.25,-243 261.04,-243 261.04,-243 267.04,-243 273.04,-249 273.04,-255 273.04,-255 273.04,-267 273.04,-267 273.04,-273 267.04,-279 261.04,-279"/>
-<text xml:space="preserve" text-anchor="middle" x="163.64" y="-256.32" font-family="Verdana" font-size="14.00">NewUnifiedAccessController</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController -->
-<g id="edge22" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController</title>
-<g id="a_edge22"><a xlink:title="at controller_unified.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController]">
-<path fill="none" stroke="black" d="M273.75,-261C334.58,-261 409.64,-261 468.17,-261"/>
-<polygon fill="black" stroke="black" points="468.14,-264.5 478.14,-261 468.14,-257.5 468.14,-264.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert -->
-<g id="node26" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert</title>
-<g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert | defined in controller_unified.go:213&#10;at controller_unified.go:218: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]&#10;at controller_unified.go:234: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:240: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:245: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:224: calling [(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M733.58,-706C733.58,-706 396.29,-706 396.29,-706 390.29,-706 384.29,-700 384.29,-694 384.29,-694 384.29,-682 384.29,-682 384.29,-676 390.29,-670 396.29,-670 396.29,-670 733.58,-670 733.58,-670 739.58,-670 745.58,-676 745.58,-682 745.58,-682 745.58,-694 745.58,-694 745.58,-700 739.58,-706 733.58,-706"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-683.33" font-family="Verdana" font-size="14.00">(*UnifiedEventBusAdapter).PublishSecurityAlert</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String -->
-<g id="edge26" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String</title>
-<g id="a_edge26"><a xlink:title="at controller_unified.go:224: calling [(github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AlertSeverity).String]">
-<path fill="none" stroke="black" d="M695.31,-706.74C745.26,-713.97 801.44,-722.1 847.91,-728.84"/>
-<polygon fill="black" stroke="black" points="847.31,-732.28 857.7,-730.25 848.31,-725.36 847.31,-732.28"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge1"><a xlink:title="at controller_unified.go:218: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M716.89,-669.32C726.8,-666.11 736.45,-662.37 745.58,-658 764.89,-648.76 762.59,-635.88 781.58,-626 809.34,-611.55 842.52,-602.37 871.77,-596.57"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="872.09,-600.07 881.27,-594.79 870.8,-593.19 872.09,-600.07"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishSecurityAlert&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData</title>
-<g id="a_edge5"><a xlink:title="at controller_unified.go:234: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:240: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:245: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
-<path fill="none" stroke="saddlebrown" d="M743.88,-669.26C777.31,-665.74 811.25,-662.16 841.51,-658.98"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="841.84,-662.46 851.41,-657.93 841.1,-655.5 841.84,-662.46"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
+<g id="edge12" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewToolInterceptor&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
+<g id="a_edge12"><a xlink:title="at controller.go:400: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M645.09,-629C717.38,-629 822.58,-629 887.45,-629"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="887.17,-632.5 897.17,-629 887.17,-625.5 887.17,-632.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishAccessEvent -->
-<g id="node27" class="node">
+<g id="node25" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishAccessEvent</title>
-<g id="a_node27"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishAccessEvent | defined in controller_unified.go:181&#10;at controller_unified.go:201: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:186: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M732.08,-645C732.08,-645 397.79,-645 397.79,-645 391.79,-645 385.79,-639 385.79,-633 385.79,-633 385.79,-621 385.79,-621 385.79,-615 391.79,-609 397.79,-609 397.79,-609 732.08,-609 732.08,-609 738.08,-609 744.08,-615 744.08,-621 744.08,-621 744.08,-633 744.08,-633 744.08,-639 738.08,-645 732.08,-645"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-622.33" font-family="Verdana" font-size="14.00">(*UnifiedEventBusAdapter).PublishAccessEvent</text>
+<g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishAccessEvent | defined in controller_unified.go:181&#10;at controller_unified.go:201: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:186: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M732.08,-342C732.08,-342 397.79,-342 397.79,-342 391.79,-342 385.79,-336 385.79,-330 385.79,-330 385.79,-318 385.79,-318 385.79,-312 391.79,-306 397.79,-306 397.79,-306 732.08,-306 732.08,-306 738.08,-306 744.08,-312 744.08,-318 744.08,-318 744.08,-330 744.08,-330 744.08,-336 738.08,-342 732.08,-342"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-319.32" font-family="Verdana" font-size="14.00">(*UnifiedEventBusAdapter).PublishAccessEvent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishAccessEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge23" class="edge">
+<g id="edge36" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishAccessEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge23"><a xlink:title="at controller_unified.go:186: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M700.97,-608.28C727.65,-604.92 755.48,-601.65 781.58,-599 810.94,-596.02 843.32,-593.5 871.51,-591.54"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="871.66,-595.04 881.4,-590.87 871.18,-588.05 871.66,-595.04"/>
+<g id="a_edge36"><a xlink:title="at controller_unified.go:186: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<path fill="none" stroke="saddlebrown" d="M708.77,-342.71C721.43,-346.14 733.87,-350.2 745.58,-355 763.6,-362.39 763.53,-372.68 781.58,-380 809.82,-391.44 842.66,-398.04 871.51,-401.84"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="870.92,-405.29 881.27,-403.03 871.76,-398.35 870.92,-405.29"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishAccessEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData -->
-<g id="edge14" class="edge">
+<g id="edge13" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedEventBusAdapter).PublishAccessEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData</title>
-<g id="a_edge14"><a xlink:title="at controller_unified.go:201: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
-<path fill="none" stroke="saddlebrown" d="M744.71,-636.89C777.89,-638.72 811.53,-640.58 841.55,-642.24"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="841.18,-645.72 851.35,-642.78 841.56,-638.74 841.18,-645.72"/>
+<g id="a_edge13"><a xlink:title="at controller_unified.go:201: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
+<path fill="none" stroke="saddlebrown" d="M728.92,-342.6C734.84,-346.2 740.43,-350.31 745.58,-355 790.86,-396.23 732.95,-450.78 781.58,-488 814.22,-512.98 861.7,-503.76 897.21,-490.78"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="898.35,-494.1 906.4,-487.22 895.81,-487.57 898.35,-494.1"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController -->
+<g id="node26" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController</title>
+<g id="a_node26"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController | defined in controller_unified.go:23&#10;at controller_unified.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M261.04,-708C261.04,-708 66.25,-708 66.25,-708 60.25,-708 54.25,-702 54.25,-696 54.25,-696 54.25,-684 54.25,-684 54.25,-678 60.25,-672 66.25,-672 66.25,-672 261.04,-672 261.04,-672 267.04,-672 273.04,-678 273.04,-684 273.04,-684 273.04,-696 273.04,-696 273.04,-702 267.04,-708 261.04,-708"/>
+<text xml:space="preserve" text-anchor="middle" x="163.64" y="-685.33" font-family="Verdana" font-size="14.00">NewUnifiedAccessController</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController -->
+<g id="edge18" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewUnifiedAccessController&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController</title>
+<g id="a_edge18"><a xlink:title="at controller_unified.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/security/access.NewAccessController]">
+<path fill="none" stroke="black" d="M273.75,-690C334.58,-690 409.64,-690 468.17,-690"/>
+<polygon fill="black" stroke="black" points="468.14,-693.5 478.14,-690 468.14,-686.5 468.14,-693.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache -->
+<g id="node27" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache</title>
+<g id="a_node27"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache | defined in controller.go:209&#10;at controller.go:210: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M290.66,-769C290.66,-769 36.62,-769 36.62,-769 30.62,-769 24.62,-763 24.62,-757 24.62,-757 24.62,-745 24.62,-745 24.62,-739 30.62,-733 36.62,-733 36.62,-733 290.66,-733 290.66,-733 296.66,-733 302.66,-739 302.66,-745 302.66,-745 302.66,-757 302.66,-757 302.66,-763 296.66,-769 290.66,-769"/>
+<text xml:space="preserve" text-anchor="middle" x="163.64" y="-746.33" font-family="Verdana" font-size="14.00">(*AccessController).InvalidateCache</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent -->
 <g id="node28" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess</title>
-<g id="a_node28"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess | defined in controller_unified.go:34&#10;at controller_unified.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:70: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at controller_unified.go:43: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]&#10;at controller_unified.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M705.83,-462C705.83,-462 424.04,-462 424.04,-462 418.04,-462 412.04,-456 412.04,-450 412.04,-450 412.04,-438 412.04,-438 412.04,-432 418.04,-426 424.04,-426 424.04,-426 705.83,-426 705.83,-426 711.83,-426 717.83,-432 717.83,-438 717.83,-438 717.83,-450 717.83,-450 717.83,-456 711.83,-462 705.83,-462"/>
-<text xml:space="preserve" text-anchor="middle" x="564.93" y="-439.32" font-family="Verdana" font-size="14.00">(*UnifiedAccessController).CheckAccess</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent</title>
+<g id="a_node28"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent | defined in controller.go:299">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M692.33,-769C692.33,-769 437.54,-769 437.54,-769 431.54,-769 425.54,-763 425.54,-757 425.54,-757 425.54,-745 425.54,-745 425.54,-739 431.54,-733 437.54,-733 437.54,-733 692.33,-733 692.33,-733 698.33,-733 704.33,-739 704.33,-745 704.33,-745 704.33,-757 704.33,-757 704.33,-763 698.33,-769 692.33,-769"/>
+<text xml:space="preserve" text-anchor="middle" x="564.93" y="-746.33" font-family="Verdana" font-size="14.00">(*PermissionCache).InvalidateAgent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess -->
-<g id="edge27" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess</title>
-<g id="a_edge27"><a xlink:title="at controller_unified.go:36: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).CheckAccess]">
-<path fill="none" stroke="black" d="M698.65,-425.31C714.58,-422.04 730.53,-418.29 745.58,-414 779.31,-404.38 785.22,-394.85 818.58,-384 828.68,-380.71 839.34,-377.59 850,-374.69"/>
-<polygon fill="black" stroke="black" points="850.87,-378.08 859.64,-372.13 849.07,-371.31 850.87,-378.08"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge24" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge24"><a xlink:title="at controller_unified.go:43: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
-<path fill="none" stroke="saddlebrown" d="M712.5,-462.68C723.92,-466.12 735.08,-470.19 745.58,-475 783.76,-492.49 782.52,-513.48 818.58,-535 837.41,-546.24 859.13,-556.12 879.22,-564.16"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="877.87,-567.39 888.46,-567.76 880.41,-560.87 877.87,-567.39"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData -->
-<g id="edge6" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData</title>
-<g id="a_edge6"><a xlink:title="at controller_unified.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]&#10;at controller_unified.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.BaseEvent).WithData]">
-<path fill="none" stroke="saddlebrown" d="M718.25,-459.49C727.94,-463.69 737.17,-468.81 745.58,-475 803.04,-517.32 762.44,-573.95 818.58,-618 825.75,-623.62 833.8,-628.22 842.27,-631.98"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="840.8,-635.16 851.39,-635.59 843.38,-628.65 840.8,-635.16"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge7" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.UnifiedAccessController).CheckAccess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge7"><a xlink:title="at controller_unified.go:70: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M718.5,-456.45C777.88,-461.3 842.34,-466.56 887.38,-470.24"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="886.92,-473.71 897.18,-471.04 887.49,-466.74 886.92,-473.71"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent -->
+<g id="edge31" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.AccessController).InvalidateCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent</title>
+<g id="a_edge31"><a xlink:title="at controller.go:210: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/security/access.PermissionCache).InvalidateAgent]">
+<path fill="none" stroke="black" d="M303.18,-751C338.9,-751 377.51,-751 413.79,-751"/>
+<polygon fill="black" stroke="black" points="413.46,-754.5 423.46,-751 413.46,-747.5 413.46,-754.5"/>
 </a>
 </g>
 </g>

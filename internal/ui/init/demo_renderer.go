@@ -24,7 +24,7 @@ type DemoRenderer struct {
 func NewDemoRenderer(width int, styles *Styles) (*DemoRenderer, error) {
 	// Use auto style for theme detection
 	renderer, err := glamour.NewTermRenderer(
-		glamour.WithAutoStyle(),
+		glamour.WithEnvironmentConfig(),
 		glamour.WithWordWrap(width-4),
 	)
 	if err != nil {

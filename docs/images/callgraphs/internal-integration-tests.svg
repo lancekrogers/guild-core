@@ -30,32 +30,12 @@
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService -->
 <g id="node1" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest</title>
-<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest | defined in framework.go:240&#10;at framework.go:241: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at framework.go:281: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1]&#10;at framework.go:262: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:295: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:263: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:296: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:264: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:265: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:297: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:298: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M200.66,-174C200.66,-174 71.12,-174 71.12,-174 65.12,-174 59.12,-168 59.12,-162 59.12,-162 59.12,-150 59.12,-150 59.12,-144 65.12,-138 71.12,-138 71.12,-138 200.66,-138 200.66,-138 206.66,-138 212.66,-144 212.66,-150 212.66,-150 212.66,-162 212.66,-162 212.66,-168 206.66,-174 200.66,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="135.89" y="-151.32" font-family="Verdana" font-size="14.00">runIntegrationTest</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1 -->
-<g id="node2" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1</title>
-<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1 | defined in framework.go:281">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="530.7,-193 359.16,-193 359.16,-157 530.7,-157 530.7,-193"/>
-<text xml:space="preserve" text-anchor="middle" x="444.93" y="-170.32" font-family="Verdana" font-size="14.00">runIntegrationTest$1</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1 -->
-<g id="edge4" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1</title>
-<g id="a_edge4"><a xlink:title="at framework.go:281: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1]">
-<path fill="none" stroke="black" d="M212.84,-144.28C238.33,-142.04 266.86,-141.37 292.79,-145 305.61,-146.8 308.18,-150.08 320.79,-153 323.86,-153.71 326.97,-154.41 330.12,-155.1"/>
-<polygon fill="black" stroke="black" points="346.93,-162.1 357.43,-160.67 348.33,-155.24 346.93,-162.1"/>
-<polyline fill="none" stroke="black" points="347.14,-158.57 342.24,-157.57"/>
-<polygon fill="none" stroke="black" points="329.6,-154.99 336.28,-152.27 341.36,-157.39 334.68,-160.11 329.6,-154.99"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService | defined in framework.go:85&#10;at framework.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:96: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M234.41,-278C234.41,-278 37.38,-278 37.38,-278 31.38,-278 25.37,-272 25.37,-266 25.37,-266 25.37,-254 25.37,-254 25.37,-248 31.37,-242 37.37,-242 37.37,-242 234.41,-242 234.41,-242 240.41,-242 246.41,-248 246.41,-254 246.41,-254 246.41,-266 246.41,-266 246.41,-272 240.41,-278 234.41,-278"/>
+<text xml:space="preserve" text-anchor="middle" x="135.89" y="-255.32" font-family="Verdana" font-size="14.00">(*TestHarness).StartService</text>
 </a>
 </g>
 </g>
@@ -68,12 +48,12 @@
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge8" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge8"><a xlink:title="at framework.go:262: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:295: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M175.32,-174.17C200.25,-187.26 232.34,-206.69 255.79,-230 294.19,-268.16 276.84,-301.4 320.79,-333 344.8,-350.27 377.55,-357.67 403.24,-360.81"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="402.67,-364.27 412.98,-361.82 403.39,-357.31 402.67,-364.27"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge15"><a xlink:title="at framework.go:96: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M179.02,-278.66C215.9,-294.54 271.21,-317.2 320.79,-333 348.03,-341.68 379.34,-349.28 403.57,-354.65"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="402.51,-358 413.03,-356.71 404,-351.16 402.51,-358"/>
 </a>
 </g>
 </g>
@@ -86,12 +66,12 @@
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge13" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge13"><a xlink:title="at framework.go:263: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:296: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M212.87,-150.2C239.89,-151.5 269.39,-157.07 292.79,-172 310.73,-183.44 303.4,-200.25 319.7,-216.67"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="317.14,-219.1 327.1,-222.71 321.56,-213.68 317.14,-219.1"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge3" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge3"><a xlink:title="at framework.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M246.88,-253.19C269.58,-251.79 293.66,-250.3 316.91,-248.86"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="316.97,-252.36 326.73,-248.25 316.53,-245.38 316.97,-252.36"/>
 </a>
 </g>
 </g>
@@ -104,12 +84,21 @@
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge17" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge17"><a xlink:title="at framework.go:264: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:265: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:297: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:298: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M212.84,-162.56C240.81,-168.4 270.96,-179.19 292.79,-199 318.53,-222.35 294.71,-249.04 320.79,-272 325.12,-275.81 329.85,-279.15 334.86,-282.09"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="332.96,-285.05 343.45,-286.54 336.19,-278.83 332.96,-285.05"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge7"><a xlink:title="at framework.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M246.8,-273.86C262.25,-275.88 277.92,-277.96 292.79,-280 306.06,-281.82 319.97,-283.77 333.76,-285.74"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="332.89,-289.15 343.28,-287.11 333.88,-282.22 332.89,-289.15"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness -->
+<g id="node2" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness</title>
+<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness | defined in framework.go:75&#10;at framework.go:78: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M193.16,-113C193.16,-113 78.62,-113 78.62,-113 72.62,-113 66.62,-107 66.62,-101 66.62,-101 66.62,-89 66.62,-89 66.62,-83 72.62,-77 78.62,-77 78.62,-77 193.16,-77 193.16,-77 199.16,-77 205.16,-83 205.16,-89 205.16,-89 205.16,-101 205.16,-101 205.16,-107 199.16,-113 193.16,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="135.89" y="-90.33" font-family="Verdana" font-size="14.00">NewTestHarness</text>
 </a>
 </g>
 </g>
@@ -122,73 +111,102 @@
 </a>
 </g>
 </g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
+<g id="edge4" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
+<g id="a_edge4"><a xlink:title="at framework.go:78: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<path fill="none" stroke="saddlebrown" d="M205.57,-92.09C232.73,-91.24 264.23,-90.62 292.79,-91 323.47,-91.41 357.65,-92.28 385.73,-93.1"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="385.35,-96.59 395.45,-93.39 385.56,-89.59 385.35,-96.59"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest -->
+<g id="node3" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest</title>
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest | defined in framework.go:240&#10;at framework.go:241: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at framework.go:262: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:295: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:263: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:296: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:264: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:265: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:297: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:298: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:281: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M200.66,-174C200.66,-174 71.12,-174 71.12,-174 65.12,-174 59.12,-168 59.12,-162 59.12,-162 59.12,-150 59.12,-150 59.12,-144 65.12,-138 71.12,-138 71.12,-138 200.66,-138 200.66,-138 206.66,-138 212.66,-144 212.66,-150 212.66,-150 212.66,-162 212.66,-162 212.66,-168 206.66,-174 200.66,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="135.89" y="-151.32" font-family="Verdana" font-size="14.00">runIntegrationTest</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1 -->
+<g id="node4" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1</title>
+<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1 | defined in framework.go:281">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="530.7,-193 359.16,-193 359.16,-157 530.7,-157 530.7,-193"/>
+<text xml:space="preserve" text-anchor="middle" x="444.93" y="-170.32" font-family="Verdana" font-size="14.00">runIntegrationTest$1</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1 -->
+<g id="edge19" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1</title>
+<g id="a_edge19"><a xlink:title="at framework.go:281: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest$1]">
+<path fill="none" stroke="black" d="M212.84,-144.28C238.33,-142.04 266.86,-141.37 292.79,-145 305.61,-146.8 308.18,-150.08 320.79,-153 323.86,-153.71 326.97,-154.41 330.12,-155.1"/>
+<polygon fill="black" stroke="black" points="346.93,-162.1 357.43,-160.67 348.33,-155.24 346.93,-162.1"/>
+<polyline fill="none" stroke="black" points="347.14,-158.57 342.24,-157.57"/>
+<polygon fill="none" stroke="black" points="329.6,-154.99 336.28,-152.27 341.36,-157.39 334.68,-160.11 329.6,-154.99"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge9" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge9"><a xlink:title="at framework.go:262: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:295: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M175.32,-174.17C200.25,-187.26 232.34,-206.69 255.79,-230 294.19,-268.16 276.84,-301.4 320.79,-333 344.8,-350.27 377.55,-357.67 403.24,-360.81"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="402.67,-364.27 412.98,-361.82 403.39,-357.31 402.67,-364.27"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge10" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge10"><a xlink:title="at framework.go:263: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:296: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M212.87,-150.2C239.89,-151.5 269.39,-157.07 292.79,-172 310.73,-183.44 303.4,-200.25 319.7,-216.67"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="317.14,-219.1 327.1,-222.71 321.56,-213.68 317.14,-219.1"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge16" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge16"><a xlink:title="at framework.go:264: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:265: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:297: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:298: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M212.84,-162.56C240.81,-168.4 270.96,-179.19 292.79,-199 318.53,-222.35 294.71,-249.04 320.79,-272 325.12,-275.81 329.85,-279.15 334.86,-282.09"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="332.96,-285.05 343.45,-286.54 336.19,-278.83 332.96,-285.05"/>
+</a>
+</g>
+</g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge3" class="edge">
+<g id="edge8" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.runIntegrationTest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge3"><a xlink:title="at framework.go:241: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<g id="a_edge8"><a xlink:title="at framework.go:241: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
 <path fill="none" stroke="saddlebrown" d="M212.83,-139.32C245.94,-132.2 285.24,-123.94 320.79,-117 341.92,-112.87 365.16,-108.64 385.69,-105.01"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="386.06,-108.5 395.3,-103.32 384.85,-101.6 386.06,-108.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService | defined in framework.go:85&#10;at framework.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:96: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M234.41,-278C234.41,-278 37.38,-278 37.38,-278 31.38,-278 25.37,-272 25.37,-266 25.37,-266 25.37,-254 25.37,-254 25.37,-248 31.37,-242 37.37,-242 37.37,-242 234.41,-242 234.41,-242 240.41,-242 246.41,-248 246.41,-254 246.41,-254 246.41,-266 246.41,-266 246.41,-272 240.41,-278 234.41,-278"/>
-<text xml:space="preserve" text-anchor="middle" x="135.89" y="-255.32" font-family="Verdana" font-size="14.00">(*TestHarness).StartService</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge18" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge18"><a xlink:title="at framework.go:96: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M179.02,-278.66C215.9,-294.54 271.21,-317.2 320.79,-333 348.03,-341.68 379.34,-349.28 403.57,-354.65"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="402.51,-358 413.03,-356.71 404,-351.16 402.51,-358"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge5"><a xlink:title="at framework.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M246.88,-253.19C269.58,-251.79 293.66,-250.3 316.91,-248.86"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="316.97,-252.36 326.73,-248.25 316.53,-245.38 316.97,-252.36"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge9" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StartService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge9"><a xlink:title="at framework.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M246.8,-273.86C262.25,-275.88 277.92,-277.96 292.79,-280 306.06,-281.82 319.97,-283.77 333.76,-285.74"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="332.89,-289.15 343.28,-287.11 333.88,-282.22 332.89,-289.15"/>
-</a>
-</g>
-</g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite -->
-<g id="node4" class="node">
+<g id="node5" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite</title>
-<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite | defined in framework.go:197&#10;at framework.go:211: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1]&#10;at framework.go:199: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite | defined in framework.go:197&#10;at framework.go:199: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at framework.go:211: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M167.29,-52C167.29,-52 104.5,-52 104.5,-52 98.5,-52 92.5,-46 92.5,-40 92.5,-40 92.5,-28 92.5,-28 92.5,-22 98.5,-16 104.5,-16 104.5,-16 167.29,-16 167.29,-16 173.29,-16 179.29,-22 179.29,-28 179.29,-28 179.29,-40 179.29,-40 179.29,-46 173.29,-52 167.29,-52"/>
 <text xml:space="preserve" text-anchor="middle" x="135.89" y="-29.32" font-family="Verdana" font-size="14.00">RunSuite</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1 -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1</title>
-<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1 | defined in framework.go:211">
+<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1 | defined in framework.go:211">
 <polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="497.33,-52 392.54,-52 392.54,-16 497.33,-16 497.33,-52"/>
 <text xml:space="preserve" text-anchor="middle" x="444.93" y="-29.32" font-family="Verdana" font-size="14.00">RunSuite$1</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1 -->
-<g id="edge14" class="edge">
+<g id="edge11" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1</title>
-<g id="a_edge14"><a xlink:title="at framework.go:211: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1]">
+<g id="a_edge11"><a xlink:title="at framework.go:211: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite$1]">
 <path fill="none" stroke="black" d="M179.91,-34C227.24,-34 304.36,-34 363.07,-34"/>
 <polygon fill="black" stroke="black" points="380.73,-37.5 390.73,-34 380.73,-30.5 380.73,-37.5"/>
 <polyline fill="none" stroke="black" points="380.23,-34 375.23,-34"/>
@@ -197,47 +215,47 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge19" class="edge">
+<g id="edge5" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.RunSuite&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge19"><a xlink:title="at framework.go:199: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<g id="a_edge5"><a xlink:title="at framework.go:199: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
 <path fill="none" stroke="saddlebrown" d="M179.92,-43.53C217.13,-51.68 272.42,-63.55 320.79,-73 341.92,-77.13 365.16,-81.36 385.69,-84.99"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="384.85,-88.4 395.3,-86.68 386.06,-81.5 384.85,-88.4"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService -->
-<g id="node6" class="node">
+<g id="node7" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService | defined in framework.go:149&#10;at framework.go:157: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:162: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at framework.go:159: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:164: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:165: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:163: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M243.79,-372C243.79,-372 28,-372 28,-372 22,-372 16,-366 16,-360 16,-360 16,-348 16,-348 16,-342 22,-336 28,-336 28,-336 243.79,-336 243.79,-336 249.79,-336 255.79,-342 255.79,-348 255.79,-348 255.79,-360 255.79,-360 255.79,-366 249.79,-372 243.79,-372"/>
-<text xml:space="preserve" text-anchor="middle" x="135.89" y="-349.32" font-family="Verdana" font-size="14.00">(*TestHarness).WaitForService</text>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService | defined in framework.go:149&#10;at framework.go:159: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:164: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:165: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:157: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:162: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at framework.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:163: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M243.79,-480C243.79,-480 28,-480 28,-480 22,-480 16,-474 16,-468 16,-468 16,-456 16,-456 16,-450 22,-444 28,-444 28,-444 243.79,-444 243.79,-444 249.79,-444 255.79,-450 255.79,-456 255.79,-456 255.79,-468 255.79,-468 255.79,-474 249.79,-480 243.79,-480"/>
+<text xml:space="preserve" text-anchor="middle" x="135.89" y="-457.32" font-family="Verdana" font-size="14.00">(*TestHarness).WaitForService</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge1" class="edge">
+<g id="edge12" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge1"><a xlink:title="at framework.go:157: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M256.48,-357.51C308.29,-359.02 365.53,-360.7 402.96,-361.8"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="402.78,-365.29 412.88,-362.09 402.98,-358.3 402.78,-365.29"/>
+<g id="a_edge12"><a xlink:title="at framework.go:157: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M256.25,-471.11C269.27,-468.21 281.78,-463.41 292.79,-456 317.87,-439.11 297.6,-413.4 320.79,-394 343.67,-374.86 376.75,-367.3 402.87,-364.41"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="403.16,-367.9 412.81,-363.53 402.54,-360.93 403.16,-367.9"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge10" class="edge">
+<g id="edge17" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge10"><a xlink:title="at framework.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:163: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M173.81,-335.26C210.41,-317.23 268.43,-290.11 320.79,-272 330.28,-268.72 340.28,-265.62 350.33,-262.75"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="351.06,-266.18 359.76,-260.13 349.19,-259.44 351.06,-266.18"/>
+<g id="a_edge17"><a xlink:title="at framework.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:163: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M175.05,-443.4C200.18,-429.78 232.6,-409.44 255.79,-385 295.66,-342.97 274.59,-306.96 320.79,-272 324.15,-269.46 327.7,-267.12 331.39,-264.97"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="332.85,-268.16 340.09,-260.42 329.61,-261.95 332.85,-268.16"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge6" class="edge">
+<g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge6"><a xlink:title="at framework.go:159: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:164: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:165: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M247.31,-335.3C275.39,-330.54 305.56,-325.43 333.63,-320.68"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="333.93,-324.18 343.2,-319.06 332.76,-317.28 333.93,-324.18"/>
+<g id="a_edge1"><a xlink:title="at framework.go:159: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:164: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:165: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M256.4,-451.02C269.79,-445.81 282.34,-438.69 292.79,-429 325.38,-398.78 288.78,-363.84 320.79,-333 325.05,-328.9 329.76,-325.32 334.8,-322.19"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="336.39,-325.31 343.5,-317.44 333.04,-319.16 336.39,-325.31"/>
 </a>
 </g>
 </g>
@@ -251,74 +269,56 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge2" class="edge">
+<g id="edge13" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).WaitForService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge2"><a xlink:title="at framework.go:162: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M218.77,-372.67C279.7,-386.56 360.02,-404.87 406.43,-415.45"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="405.46,-418.82 415.98,-417.63 407.01,-411.99 405.46,-418.82"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness -->
-<g id="node7" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness</title>
-<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness | defined in framework.go:75&#10;at framework.go:78: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M193.16,-113C193.16,-113 78.62,-113 78.62,-113 72.62,-113 66.62,-107 66.62,-101 66.62,-101 66.62,-89 66.62,-89 66.62,-83 72.62,-77 78.62,-77 78.62,-77 193.16,-77 193.16,-77 199.16,-77 205.16,-83 205.16,-89 205.16,-89 205.16,-101 205.16,-101 205.16,-107 199.16,-113 193.16,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="135.89" y="-90.33" font-family="Verdana" font-size="14.00">NewTestHarness</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge15" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.NewTestHarness&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge15"><a xlink:title="at framework.go:78: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
-<path fill="none" stroke="saddlebrown" d="M205.57,-92.09C232.73,-91.24 264.23,-90.62 292.79,-91 323.47,-91.41 357.65,-92.28 385.73,-93.1"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="385.35,-96.59 395.45,-93.39 385.56,-89.59 385.35,-96.59"/>
+<g id="a_edge13"><a xlink:title="at framework.go:162: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M205.44,-480.7C232.72,-485.68 264.34,-488.36 292.79,-483 333.52,-475.33 377.37,-456.98 407.29,-442.77"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="408.43,-446.11 415.9,-438.6 405.38,-439.81 408.43,-446.11"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService -->
 <g id="node8" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService | defined in framework.go:115&#10;at framework.go:130: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:121: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at framework.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:132: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M233.29,-480C233.29,-480 38.5,-480 38.5,-480 32.5,-480 26.5,-474 26.5,-468 26.5,-468 26.5,-456 26.5,-456 26.5,-450 32.5,-444 38.5,-444 38.5,-444 233.29,-444 233.29,-444 239.29,-444 245.29,-450 245.29,-456 245.29,-456 245.29,-468 245.29,-468 245.29,-474 239.29,-480 233.29,-480"/>
-<text xml:space="preserve" text-anchor="middle" x="135.89" y="-457.32" font-family="Verdana" font-size="14.00">(*TestHarness).StopService</text>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService | defined in framework.go:115&#10;at framework.go:130: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at framework.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:132: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:121: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at framework.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M233.29,-372C233.29,-372 38.5,-372 38.5,-372 32.5,-372 26.5,-366 26.5,-360 26.5,-360 26.5,-348 26.5,-348 26.5,-342 32.5,-336 38.5,-336 38.5,-336 233.29,-336 233.29,-336 239.29,-336 245.29,-342 245.29,-348 245.29,-348 245.29,-360 245.29,-360 245.29,-366 239.29,-372 233.29,-372"/>
+<text xml:space="preserve" text-anchor="middle" x="135.89" y="-349.32" font-family="Verdana" font-size="14.00">(*TestHarness).StopService</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge7" class="edge">
+<g id="edge2" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge7"><a xlink:title="at framework.go:130: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M245.79,-473.04C262.53,-470.57 278.86,-465.38 292.79,-456 317.87,-439.11 297.6,-413.4 320.79,-394 343.67,-374.86 376.75,-367.3 402.87,-364.41"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="403.16,-367.9 412.81,-363.53 402.54,-360.93 403.16,-367.9"/>
+<g id="a_edge2"><a xlink:title="at framework.go:130: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M246.01,-357.2C300.49,-358.8 363.13,-360.63 403.09,-361.8"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="402.87,-365.3 412.97,-362.09 403.08,-358.3 402.87,-365.3"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge12" class="edge">
+<g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge12"><a xlink:title="at framework.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M175.05,-443.4C200.18,-429.78 232.6,-409.44 255.79,-385 295.66,-342.97 274.59,-306.96 320.79,-272 324.15,-269.46 327.7,-267.12 331.39,-264.97"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="332.85,-268.16 340.09,-260.42 329.61,-261.95 332.85,-268.16"/>
+<g id="a_edge18"><a xlink:title="at framework.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at framework.go:131: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M173.81,-335.26C210.41,-317.23 268.43,-290.11 320.79,-272 330.28,-268.72 340.28,-265.62 350.33,-262.75"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="351.06,-266.18 359.76,-260.13 349.19,-259.44 351.06,-266.18"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge16" class="edge">
+<g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge16"><a xlink:title="at framework.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:132: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M245.73,-454.72C263.07,-449.37 279.61,-441.23 292.79,-429 325.38,-398.78 288.78,-363.84 320.79,-333 325.05,-328.9 329.76,-325.32 334.8,-322.19"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="336.39,-325.31 343.5,-317.44 333.04,-319.16 336.39,-325.31"/>
+<g id="a_edge6"><a xlink:title="at framework.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at framework.go:132: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M246.01,-335.52C274.39,-330.71 304.98,-325.53 333.43,-320.71"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="333.87,-324.19 343.15,-319.07 332.7,-317.29 333.87,-324.19"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge11" class="edge">
+<g id="edge14" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/tests.TestHarness).StopService&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge11"><a xlink:title="at framework.go:121: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M205.44,-480.7C232.72,-485.68 264.34,-488.36 292.79,-483 333.52,-475.33 377.37,-456.98 407.29,-442.77"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="408.43,-446.11 415.9,-438.6 405.38,-439.81 408.43,-446.11"/>
+<g id="a_edge14"><a xlink:title="at framework.go:121: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M218.77,-372.67C279.7,-386.56 360.02,-404.87 406.43,-415.45"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="405.46,-418.82 415.98,-417.63 407.01,-411.99 405.46,-418.82"/>
 </a>
 </g>
 </g>

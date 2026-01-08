@@ -14,12 +14,12 @@
 <polygon fill="#e6ecfa" stroke="black" stroke-width="0.5" points="8,-8 8,-455 488.83,-455 488.83,-8 8,-8"/>
 <text xml:space="preserve" text-anchor="middle" x="248.41" y="-433.9" font-family="Arial" font-size="18.00">teatest</text>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalModel -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput | defined in teatest.go:232&#10;at teatest.go:233: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]&#10;at teatest.go:234: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M208.54,-113C208.54,-113 31.75,-113 31.75,-113 25.75,-113 19.75,-107 19.75,-101 19.75,-101 19.75,-89 19.75,-89 19.75,-83 25.75,-77 31.75,-77 31.75,-77 208.54,-77 208.54,-77 214.54,-77 220.54,-83 220.54,-89 220.54,-89 220.54,-101 220.54,-101 220.54,-107 214.54,-113 208.54,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="120.14" y="-90.33" font-family="Verdana" font-size="14.00">(*TestModel).FinalOutput</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalModel</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalModel | defined in teatest.go:217&#10;at teatest.go:218: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M204.79,-235C204.79,-235 35.5,-235 35.5,-235 29.5,-235 23.5,-229 23.5,-223 23.5,-223 23.5,-211 23.5,-211 23.5,-205 29.5,-199 35.5,-199 35.5,-199 204.79,-199 204.79,-199 210.79,-199 216.79,-205 216.79,-211 216.79,-211 216.79,-223 216.79,-223 216.79,-229 210.79,-235 204.79,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="120.14" y="-212.32" font-family="Verdana" font-size="14.00">(*TestModel).FinalModel</text>
 </a>
 </g>
 </g>
@@ -27,143 +27,35 @@
 <g id="node2" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone</title>
 <g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone | defined in teatest.go:165">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M468.83,-174C468.83,-174 309.29,-174 309.29,-174 303.29,-174 297.29,-168 297.29,-162 297.29,-162 297.29,-150 297.29,-150 297.29,-144 303.29,-138 309.29,-138 309.29,-138 468.83,-138 468.83,-138 474.83,-138 480.83,-144 480.83,-150 480.83,-150 480.83,-162 480.83,-162 480.83,-168 474.83,-174 468.83,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="389.06" y="-151.32" font-family="Verdana" font-size="14.00">(*TestModel).waitDone</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone</title>
-<g id="a_edge4"><a xlink:title="at teatest.go:233: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
-<path fill="none" stroke="black" d="M203.04,-113.72C232.93,-120.55 266.9,-128.31 297.5,-135.3"/>
-<polygon fill="black" stroke="black" points="296.6,-138.69 307.13,-137.5 298.16,-131.86 296.6,-138.69"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output | defined in teatest.go:238">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M460.95,-113C460.95,-113 317.16,-113 317.16,-113 311.16,-113 305.16,-107 305.16,-101 305.16,-101 305.16,-89 305.16,-89 305.16,-83 311.16,-77 317.16,-77 317.16,-77 460.95,-77 460.95,-77 466.95,-77 472.95,-83 472.95,-89 472.95,-89 472.95,-101 472.95,-101 472.95,-107 466.95,-113 460.95,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="389.06" y="-90.33" font-family="Verdana" font-size="14.00">(*TestModel).Output</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output -->
-<g id="edge9" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output</title>
-<g id="a_edge9"><a xlink:title="at teatest.go:234: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output]">
-<path fill="none" stroke="black" d="M220.91,-95C244.58,-95 269.76,-95 293.21,-95"/>
-<polygon fill="black" stroke="black" points="293.05,-98.5 303.05,-95 293.05,-91.5 293.05,-98.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type -->
-<g id="node4" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type | defined in teatest.go:254&#10;at teatest.go:256: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M184.16,-52C184.16,-52 56.12,-52 56.12,-52 50.13,-52 44.12,-46 44.12,-40 44.12,-40 44.12,-28 44.12,-28 44.12,-22 50.12,-16 56.12,-16 56.12,-16 184.16,-16 184.16,-16 190.16,-16 196.16,-22 196.16,-28 196.16,-28 196.16,-40 196.16,-40 196.16,-46 190.16,-52 184.16,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="120.14" y="-29.32" font-family="Verdana" font-size="14.00">(*TestModel).Type</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send | defined in teatest.go:243">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M454.58,-52C454.58,-52 323.54,-52 323.54,-52 317.54,-52 311.54,-46 311.54,-40 311.54,-40 311.54,-28 311.54,-28 311.54,-22 317.54,-16 323.54,-16 323.54,-16 454.58,-16 454.58,-16 460.58,-16 466.58,-22 466.58,-28 466.58,-28 466.58,-40 466.58,-40 466.58,-46 460.58,-52 454.58,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="389.06" y="-29.32" font-family="Verdana" font-size="14.00">(*TestModel).Send</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send</title>
-<g id="a_edge5"><a xlink:title="at teatest.go:256: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send]">
-<path fill="none" stroke="black" d="M196.56,-34C228.69,-34 266.4,-34 299.82,-34"/>
-<polygon fill="black" stroke="black" points="299.46,-37.5 309.46,-34 299.46,-30.5 299.46,-37.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished | defined in teatest.go:211&#10;at teatest.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M212.29,-235C212.29,-235 28,-235 28,-235 22,-235 16,-229 16,-223 16,-223 16,-211 16,-211 16,-205 22,-199 28,-199 28,-199 212.29,-199 212.29,-199 218.29,-199 224.29,-205 224.29,-211 224.29,-211 224.29,-223 224.29,-223 224.29,-229 218.29,-235 212.29,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="120.14" y="-212.32" font-family="Verdana" font-size="14.00">(*TestModel).WaitFinished</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone -->
-<g id="edge6" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone</title>
-<g id="a_edge6"><a xlink:title="at teatest.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
-<path fill="none" stroke="black" d="M203.04,-198.28C232.93,-191.45 266.9,-183.69 297.5,-176.7"/>
-<polygon fill="black" stroke="black" points="298.16,-180.14 307.13,-174.5 296.6,-173.31 298.16,-180.14"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor -->
-<g id="node7" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor</title>
-<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor | defined in teatest.go:71&#10;at teatest.go:78: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M146.29,-296C146.29,-296 94,-296 94,-296 88,-296 82,-290 82,-284 82,-284 82,-272 82,-272 82,-266 88,-260 94,-260 94,-260 146.29,-260 146.29,-260 152.29,-260 158.29,-266 158.29,-272 158.29,-272 158.29,-284 158.29,-284 158.29,-290 152.29,-296 146.29,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="120.14" y="-273.32" font-family="Verdana" font-size="14.00">WaitFor</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor -->
-<g id="node8" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor</title>
-<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor | defined in teatest.go:83">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M423.83,-235C423.83,-235 354.29,-235 354.29,-235 348.29,-235 342.29,-229 342.29,-223 342.29,-223 342.29,-211 342.29,-211 342.29,-205 348.29,-199 354.29,-199 354.29,-199 423.83,-199 423.83,-199 429.83,-199 435.83,-205 435.83,-211 435.83,-211 435.83,-223 435.83,-223 435.83,-229 429.83,-235 423.83,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="389.06" y="-212.32" font-family="Verdana" font-size="14.00">doWaitFor</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor -->
-<g id="edge1" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor</title>
-<g id="a_edge1"><a xlink:title="at teatest.go:78: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor]">
-<path fill="none" stroke="black" d="M158.82,-269.39C203.67,-259.14 279.02,-241.92 331.02,-230.03"/>
-<polygon fill="black" stroke="black" points="331.63,-233.49 340.6,-227.85 330.07,-226.66 331.63,-233.49"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalModel -->
-<g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalModel</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalModel | defined in teatest.go:217&#10;at teatest.go:218: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M204.79,-174C204.79,-174 35.5,-174 35.5,-174 29.5,-174 23.5,-168 23.5,-162 23.5,-162 23.5,-150 23.5,-150 23.5,-144 29.5,-138 35.5,-138 35.5,-138 204.79,-138 204.79,-138 210.79,-138 216.79,-144 216.79,-150 216.79,-150 216.79,-162 216.79,-162 216.79,-168 210.79,-174 204.79,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="120.14" y="-151.32" font-family="Verdana" font-size="14.00">(*TestModel).FinalModel</text>
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M468.83,-235C468.83,-235 309.29,-235 309.29,-235 303.29,-235 297.29,-229 297.29,-223 297.29,-223 297.29,-211 297.29,-211 297.29,-205 303.29,-199 309.29,-199 309.29,-199 468.83,-199 468.83,-199 474.83,-199 480.83,-205 480.83,-211 480.83,-211 480.83,-223 480.83,-223 480.83,-229 474.83,-235 468.83,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="389.06" y="-212.32" font-family="Verdana" font-size="14.00">(*TestModel).waitDone</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone -->
-<g id="edge7" class="edge">
+<g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone</title>
-<g id="a_edge7"><a xlink:title="at teatest.go:218: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
-<path fill="none" stroke="black" d="M217.51,-156C239.73,-156 263.45,-156 285.92,-156"/>
-<polygon fill="black" stroke="black" points="285.67,-159.5 295.67,-156 285.67,-152.5 285.67,-159.5"/>
+<g id="a_edge1"><a xlink:title="at teatest.go:218: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
+<path fill="none" stroke="black" d="M217.51,-217C239.73,-217 263.45,-217 285.92,-217"/>
+<polygon fill="black" stroke="black" points="285.67,-220.5 295.67,-217 285.67,-213.5 285.67,-220.5"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel -->
-<g id="node10" class="node">
+<g id="node3" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel</title>
-<g id="a_node10"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel | defined in teatest.go:122&#10;at teatest.go:125: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.safe]&#10;at teatest.go:139: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$1]&#10;at teatest.go:147: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M169.54,-357C169.54,-357 70.75,-357 70.75,-357 64.75,-357 58.75,-351 58.75,-345 58.75,-345 58.75,-333 58.75,-333 58.75,-327 64.75,-321 70.75,-321 70.75,-321 169.54,-321 169.54,-321 175.54,-321 181.54,-327 181.54,-333 181.54,-333 181.54,-345 181.54,-345 181.54,-351 175.54,-357 169.54,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="120.14" y="-334.32" font-family="Verdana" font-size="14.00">NewTestModel</text>
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel | defined in teatest.go:122&#10;at teatest.go:125: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.safe]&#10;at teatest.go:139: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$1]&#10;at teatest.go:147: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M169.54,-113C169.54,-113 70.75,-113 70.75,-113 64.75,-113 58.75,-107 58.75,-101 58.75,-101 58.75,-89 58.75,-89 58.75,-83 64.75,-77 70.75,-77 70.75,-77 169.54,-77 169.54,-77 175.54,-77 181.54,-83 181.54,-89 181.54,-89 181.54,-101 181.54,-101 181.54,-107 175.54,-113 169.54,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="120.14" y="-90.33" font-family="Verdana" font-size="14.00">NewTestModel</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.safe -->
-<g id="node11" class="node">
+<g id="node4" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.safe</title>
-<g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.safe | defined in teatest.go:279">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M404.06,-296C404.06,-296 374.06,-296 374.06,-296 368.06,-296 362.06,-290 362.06,-284 362.06,-284 362.06,-272 362.06,-272 362.06,-266 368.06,-260 374.06,-260 374.06,-260 404.06,-260 404.06,-260 410.06,-260 416.06,-266 416.06,-272 416.06,-272 416.06,-284 416.06,-284 416.06,-290 410.06,-296 404.06,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="389.06" y="-273.32" font-family="Verdana" font-size="14.00">safe</text>
+<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.safe | defined in teatest.go:279">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M404.06,-52C404.06,-52 374.06,-52 374.06,-52 368.06,-52 362.06,-46 362.06,-40 362.06,-40 362.06,-28 362.06,-28 362.06,-22 368.06,-16 374.06,-16 374.06,-16 404.06,-16 404.06,-16 410.06,-16 416.06,-22 416.06,-28 416.06,-28 416.06,-40 416.06,-40 416.06,-46 410.06,-52 404.06,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="389.06" y="-29.32" font-family="Verdana" font-size="14.00">safe</text>
 </a>
 </g>
 </g>
@@ -171,17 +63,17 @@
 <g id="edge2" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/teatest.safe</title>
 <g id="a_edge2"><a xlink:title="at teatest.go:125: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.safe]">
-<path fill="none" stroke="black" d="M182.05,-325.08C234.16,-313.17 307.49,-296.41 351.15,-286.43"/>
-<polygon fill="black" stroke="black" points="351.67,-289.91 360.64,-284.27 350.11,-283.08 351.67,-289.91"/>
+<path fill="none" stroke="black" d="M182.05,-81.08C234.16,-69.17 307.49,-52.41 351.15,-42.43"/>
+<polygon fill="black" stroke="black" points="351.67,-45.91 360.64,-40.27 350.11,-39.08 351.67,-45.91"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$1 -->
-<g id="node12" class="node">
+<g id="node5" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$1</title>
-<g id="a_node12"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$1 | defined in teatest.go:139">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="459.45,-357 318.66,-357 318.66,-321 459.45,-321 459.45,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="389.06" y="-334.32" font-family="Verdana" font-size="14.00">NewTestModel$1</text>
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$1 | defined in teatest.go:139">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="459.45,-113 318.66,-113 318.66,-77 459.45,-77 459.45,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="389.06" y="-90.33" font-family="Verdana" font-size="14.00">NewTestModel$1</text>
 </a>
 </g>
 </g>
@@ -189,30 +81,138 @@
 <g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$1</title>
 <g id="a_edge3"><a xlink:title="at teatest.go:139: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$1]">
-<path fill="none" stroke="black" d="M182.05,-339C214.89,-339 256.16,-339 293.12,-339"/>
-<polygon fill="black" stroke="black" points="306.96,-342.5 316.96,-339 306.96,-335.5 306.96,-342.5"/>
-<polyline fill="none" stroke="black" points="306.46,-339 301.46,-339"/>
-<ellipse fill="none" stroke="black" cx="296.96" cy="-339" rx="4" ry="4"/>
+<path fill="none" stroke="black" d="M182.05,-95C214.89,-95 256.16,-95 293.12,-95"/>
+<polygon fill="black" stroke="black" points="306.96,-98.5 316.96,-95 306.96,-91.5 306.96,-98.5"/>
+<polyline fill="none" stroke="black" points="306.46,-95 301.46,-95"/>
+<ellipse fill="none" stroke="black" cx="296.96" cy="-95" rx="4" ry="4"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2 -->
-<g id="node13" class="node">
+<g id="node6" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2</title>
-<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2 | defined in teatest.go:147">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="459.45,-418 318.66,-418 318.66,-382 459.45,-382 459.45,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="389.06" y="-395.32" font-family="Verdana" font-size="14.00">NewTestModel$2</text>
+<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2 | defined in teatest.go:147">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="459.45,-174 318.66,-174 318.66,-138 459.45,-138 459.45,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="389.06" y="-151.32" font-family="Verdana" font-size="14.00">NewTestModel$2</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2 -->
-<g id="edge8" class="edge">
+<g id="edge4" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2</title>
-<g id="a_edge8"><a xlink:title="at teatest.go:147: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2]">
-<path fill="none" stroke="black" d="M182.05,-352.92C215.05,-360.46 256.56,-369.95 293.65,-378.42"/>
-<polygon fill="black" stroke="black" points="306.47,-384.94 316.99,-383.76 308.03,-378.12 306.47,-384.94"/>
-<polyline fill="none" stroke="black" points="306.76,-381.42 301.88,-380.31"/>
-<ellipse fill="none" stroke="black" cx="297.5" cy="-379.3" rx="4" ry="4"/>
+<g id="a_edge4"><a xlink:title="at teatest.go:147: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.NewTestModel$2]">
+<path fill="none" stroke="black" d="M182.05,-108.92C215.05,-116.46 256.56,-125.95 293.65,-134.42"/>
+<polygon fill="black" stroke="black" points="306.47,-140.94 316.99,-139.76 308.03,-134.12 306.47,-140.94"/>
+<polyline fill="none" stroke="black" points="306.76,-137.42 301.88,-136.31"/>
+<ellipse fill="none" stroke="black" cx="297.5" cy="-135.3" rx="4" ry="4"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished -->
+<g id="node7" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished</title>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished | defined in teatest.go:211&#10;at teatest.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M212.29,-174C212.29,-174 28,-174 28,-174 22,-174 16,-168 16,-162 16,-162 16,-150 16,-150 16,-144 22,-138 28,-138 28,-138 212.29,-138 212.29,-138 218.29,-138 224.29,-144 224.29,-150 224.29,-150 224.29,-162 224.29,-162 224.29,-168 218.29,-174 212.29,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="120.14" y="-151.32" font-family="Verdana" font-size="14.00">(*TestModel).WaitFinished</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).WaitFinished&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone</title>
+<g id="a_edge8"><a xlink:title="at teatest.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
+<path fill="none" stroke="black" d="M203.04,-174.72C232.93,-181.55 266.9,-189.31 297.5,-196.3"/>
+<polygon fill="black" stroke="black" points="296.6,-199.69 307.13,-198.5 298.16,-192.86 296.6,-199.69"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor -->
+<g id="node8" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor</title>
+<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor | defined in teatest.go:71&#10;at teatest.go:78: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M146.29,-357C146.29,-357 94,-357 94,-357 88,-357 82,-351 82,-345 82,-345 82,-333 82,-333 82,-327 88,-321 94,-321 94,-321 146.29,-321 146.29,-321 152.29,-321 158.29,-327 158.29,-333 158.29,-333 158.29,-345 158.29,-345 158.29,-351 152.29,-357 146.29,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="120.14" y="-334.32" font-family="Verdana" font-size="14.00">WaitFor</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor -->
+<g id="node9" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor</title>
+<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor | defined in teatest.go:83">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M423.83,-357C423.83,-357 354.29,-357 354.29,-357 348.29,-357 342.29,-351 342.29,-345 342.29,-345 342.29,-333 342.29,-333 342.29,-327 348.29,-321 354.29,-321 354.29,-321 423.83,-321 423.83,-321 429.83,-321 435.83,-327 435.83,-333 435.83,-333 435.83,-345 435.83,-345 435.83,-351 429.83,-357 423.83,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="389.06" y="-334.32" font-family="Verdana" font-size="14.00">doWaitFor</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor -->
+<g id="edge5" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/internal/teatest.WaitFor&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor</title>
+<g id="a_edge5"><a xlink:title="at teatest.go:78: calling [github.com/guild&#45;framework/guild&#45;core/internal/teatest.doWaitFor]">
+<path fill="none" stroke="black" d="M158.82,-339C203.58,-339 278.71,-339 330.7,-339"/>
+<polygon fill="black" stroke="black" points="330.56,-342.5 340.56,-339 330.56,-335.5 330.56,-342.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type -->
+<g id="node10" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type</title>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type | defined in teatest.go:254&#10;at teatest.go:256: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M184.16,-418C184.16,-418 56.12,-418 56.12,-418 50.13,-418 44.12,-412 44.12,-406 44.12,-406 44.12,-394 44.12,-394 44.12,-388 50.12,-382 56.12,-382 56.12,-382 184.16,-382 184.16,-382 190.16,-382 196.16,-388 196.16,-394 196.16,-394 196.16,-406 196.16,-406 196.16,-412 190.16,-418 184.16,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="120.14" y="-395.32" font-family="Verdana" font-size="14.00">(*TestModel).Type</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send -->
+<g id="node11" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send</title>
+<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send | defined in teatest.go:243">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M454.58,-418C454.58,-418 323.54,-418 323.54,-418 317.54,-418 311.54,-412 311.54,-406 311.54,-406 311.54,-394 311.54,-394 311.54,-388 317.54,-382 323.54,-382 323.54,-382 454.58,-382 454.58,-382 460.58,-382 466.58,-388 466.58,-394 466.58,-394 466.58,-406 466.58,-406 466.58,-412 460.58,-418 454.58,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="389.06" y="-395.32" font-family="Verdana" font-size="14.00">(*TestModel).Send</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send -->
+<g id="edge6" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Type&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send</title>
+<g id="a_edge6"><a xlink:title="at teatest.go:256: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Send]">
+<path fill="none" stroke="black" d="M196.56,-400C228.69,-400 266.4,-400 299.82,-400"/>
+<polygon fill="black" stroke="black" points="299.46,-403.5 309.46,-400 299.46,-396.5 299.46,-403.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput -->
+<g id="node12" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput</title>
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput | defined in teatest.go:232&#10;at teatest.go:233: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]&#10;at teatest.go:234: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M208.54,-296C208.54,-296 31.75,-296 31.75,-296 25.75,-296 19.75,-290 19.75,-284 19.75,-284 19.75,-272 19.75,-272 19.75,-266 25.75,-260 31.75,-260 31.75,-260 208.54,-260 208.54,-260 214.54,-260 220.54,-266 220.54,-272 220.54,-272 220.54,-284 220.54,-284 220.54,-290 214.54,-296 208.54,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="120.14" y="-273.32" font-family="Verdana" font-size="14.00">(*TestModel).FinalOutput</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone</title>
+<g id="a_edge7"><a xlink:title="at teatest.go:233: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).waitDone]">
+<path fill="none" stroke="black" d="M203.04,-259.28C232.93,-252.45 266.9,-244.69 297.5,-237.7"/>
+<polygon fill="black" stroke="black" points="298.16,-241.14 307.13,-235.5 296.6,-234.31 298.16,-241.14"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output -->
+<g id="node13" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output</title>
+<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output | defined in teatest.go:238">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M460.95,-296C460.95,-296 317.16,-296 317.16,-296 311.16,-296 305.16,-290 305.16,-284 305.16,-284 305.16,-272 305.16,-272 305.16,-266 311.16,-260 317.16,-260 317.16,-260 460.95,-260 460.95,-260 466.95,-260 472.95,-266 472.95,-272 472.95,-272 472.95,-284 472.95,-284 472.95,-290 466.95,-296 460.95,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="389.06" y="-273.32" font-family="Verdana" font-size="14.00">(*TestModel).Output</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).FinalOutput&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output</title>
+<g id="a_edge9"><a xlink:title="at teatest.go:234: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/teatest.TestModel).Output]">
+<path fill="none" stroke="black" d="M220.91,-278C244.58,-278 269.76,-278 293.21,-278"/>
+<polygon fill="black" stroke="black" points="293.05,-281.5 303.05,-278 293.05,-274.5 293.05,-281.5"/>
 </a>
 </g>
 </g>

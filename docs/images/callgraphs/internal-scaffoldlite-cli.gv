@@ -14,57 +14,57 @@ digraph gocallvis {
     edge [minlen="2"]
 
     subgraph "cluster_focus" {
-        bgcolor="#e6ecfa";
+        fontsize="18";
+bgcolor="#e6ecfa";
 label="cli";
 labelloc="t";
 labeljust="c";
-fontsize="18";
         
-        "github.com/guild-framework/guild-core/internal/scaffoldlite/cli.ExecuteInit" [ label="ExecuteInit" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/scaffoldlite/cli.ExecuteInit | defined in init.go:15\nat init.go:17: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat init.go:20: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat init.go:23: calling [github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS]\nat init.go:25: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat init.go:51: calling [github.com/guild-framework/guild-core/internal/scaffoldlite.ScaffoldFromFS]" fillcolor="lightblue" ]
+        "github.com/guild-framework/guild-core/internal/scaffoldlite/cli.ExecuteInit" [ fillcolor="lightblue" label="ExecuteInit" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/scaffoldlite/cli.ExecuteInit | defined in init.go:15\nat init.go:17: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat init.go:20: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat init.go:23: calling [github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS]\nat init.go:25: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat init.go:51: calling [github.com/guild-framework/guild-core/internal/scaffoldlite.ScaffoldFromFS]" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/internal/scaffoldlite" {
         penwidth="0.8";
+label="scaffoldlite";
+URL="/?f=github.com/guild-framework/guild-core/internal/scaffoldlite";
+fontsize="16";
 style="filled";
+fillcolor="lightyellow";
 fontname="Tahoma bold";
 rank="sink";
-label="scaffoldlite";
 tooltip="package: github.com/guild-framework/guild-core/internal/scaffoldlite";
-fontsize="16";
-fillcolor="lightyellow";
-URL="/?f=github.com/guild-framework/guild-core/internal/scaffoldlite";
         
         "github.com/guild-framework/guild-core/internal/scaffoldlite.ScaffoldFromFS" [ fillcolor="moccasin" label="ScaffoldFromFS" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/scaffoldlite.ScaffoldFromFS | defined in engine.go:83" ]
         
     }
 
         subgraph "cluster_github.com/guild-framework/guild-core/internal/scaffoldlite/templates" {
-        fillcolor="lightyellow";
-label="templates";
-tooltip="package: github.com/guild-framework/guild-core/internal/scaffoldlite/templates";
-penwidth="0.8";
-style="filled";
+        penwidth="0.8";
 fontname="Tahoma bold";
 rank="sink";
-URL="/?f=github.com/guild-framework/guild-core/internal/scaffoldlite/templates";
+label="templates";
+tooltip="package: github.com/guild-framework/guild-core/internal/scaffoldlite/templates";
 fontsize="16";
+style="filled";
+fillcolor="lightyellow";
+URL="/?f=github.com/guild-framework/guild-core/internal/scaffoldlite/templates";
         
-        "github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS" [ fillcolor="moccasin" label="GetEmbeddedTemplatesFS" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS | defined in embed.go:16" ]
+        "github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS" [ tooltip="github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS | defined in embed.go:16" fillcolor="moccasin" label="GetEmbeddedTemplatesFS" penwidth="1.5" ]
         
     }
 
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
-        rank="sink";
-URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
-penwidth="0.8";
-style="filled";
-fontname="Tahoma bold";
-label="gerror";
-tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+        label="gerror";
 fontsize="16";
+style="filled";
 fillcolor="lightyellow";
+fontname="Tahoma bold";
+rank="sink";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
         
-        "github.com/guild-framework/guild-core/pkg/gerror.New" [ fillcolor="moccasin" label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" ]
-        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" fillcolor="moccasin" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" fillcolor="moccasin" ]
         
     }
 
@@ -73,5 +73,5 @@ fillcolor="lightyellow";
     "github.com/guild-framework/guild-core/internal/scaffoldlite/cli.ExecuteInit" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at init.go:17: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat init.go:20: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
     "github.com/guild-framework/guild-core/internal/scaffoldlite/cli.ExecuteInit" -> "github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS" [ color="saddlebrown" tooltip="at init.go:23: calling [github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS]" ]
     "github.com/guild-framework/guild-core/internal/scaffoldlite/cli.ExecuteInit" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at init.go:25: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
-    "github.com/guild-framework/guild-core/internal/scaffoldlite/cli.ExecuteInit" -> "github.com/guild-framework/guild-core/internal/scaffoldlite.ScaffoldFromFS" [ tooltip="at init.go:51: calling [github.com/guild-framework/guild-core/internal/scaffoldlite.ScaffoldFromFS]" color="saddlebrown" ]
+    "github.com/guild-framework/guild-core/internal/scaffoldlite/cli.ExecuteInit" -> "github.com/guild-framework/guild-core/internal/scaffoldlite.ScaffoldFromFS" [ color="saddlebrown" tooltip="at init.go:51: calling [github.com/guild-framework/guild-core/internal/scaffoldlite.ScaffoldFromFS]" ]
 }

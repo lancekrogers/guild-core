@@ -33,9 +33,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.ErrorHook).Process&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.ErrorHook).captureStackTrace -->
-<g id="edge1" class="edge">
+<g id="edge2" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.ErrorHook).Process&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.ErrorHook).captureStackTrace</title>
-<g id="a_edge1"><a xlink:title="at error.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.ErrorHook).captureStackTrace]">
+<g id="a_edge2"><a xlink:title="at error.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.ErrorHook).captureStackTrace]">
 <path fill="none" stroke="black" d="M226.15,-34C257.88,-34 294.64,-34 329.65,-34"/>
 <polygon fill="black" stroke="black" points="329.44,-37.5 339.44,-34 329.44,-30.5 329.44,-37.5"/>
 </a>
@@ -45,8 +45,8 @@
 <g id="node3" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop</title>
 <g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop | defined in metrics.go:95&#10;at metrics.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emit]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M553.2,-296C553.2,-296 378.66,-296 378.66,-296 372.66,-296 366.66,-290 366.66,-284 366.66,-284 366.66,-272 366.66,-272 366.66,-266 372.66,-260 378.66,-260 378.66,-260 553.2,-260 553.2,-260 559.2,-260 565.2,-266 565.2,-272 565.2,-272 565.2,-284 565.2,-284 565.2,-290 559.2,-296 553.2,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="465.93" y="-273.32" font-family="Verdana" font-size="14.00">(*MetricsHook).emitLoop</text>
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M553.2,-113C553.2,-113 378.66,-113 378.66,-113 372.66,-113 366.66,-107 366.66,-101 366.66,-101 366.66,-89 366.66,-89 366.66,-83 372.66,-77 378.66,-77 378.66,-77 553.2,-77 553.2,-77 559.2,-77 565.2,-83 565.2,-89 565.2,-89 565.2,-101 565.2,-101 565.2,-107 559.2,-113 553.2,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="465.93" y="-90.33" font-family="Verdana" font-size="14.00">(*MetricsHook).emitLoop</text>
 </a>
 </g>
 </g>
@@ -54,127 +54,127 @@
 <g id="node4" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emit</title>
 <g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emit | defined in metrics.go:110">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M823.62,-296C823.62,-296 682.08,-296 682.08,-296 676.08,-296 670.08,-290 670.08,-284 670.08,-284 670.08,-272 670.08,-272 670.08,-266 676.08,-260 682.08,-260 682.08,-260 823.62,-260 823.62,-260 829.62,-260 835.62,-266 835.62,-272 835.62,-272 835.62,-284 835.62,-284 835.62,-290 829.62,-296 823.62,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="752.85" y="-273.32" font-family="Verdana" font-size="14.00">(*MetricsHook).emit</text>
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M823.62,-113C823.62,-113 682.08,-113 682.08,-113 676.08,-113 670.08,-107 670.08,-101 670.08,-101 670.08,-89 670.08,-89 670.08,-83 676.08,-77 682.08,-77 682.08,-77 823.62,-77 823.62,-77 829.62,-77 835.62,-83 835.62,-89 835.62,-89 835.62,-101 835.62,-101 835.62,-107 829.62,-113 823.62,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="752.85" y="-90.33" font-family="Verdana" font-size="14.00">(*MetricsHook).emit</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emit -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emit</title>
-<g id="a_edge2"><a xlink:title="at metrics.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emit]">
-<path fill="none" stroke="black" d="M565.39,-278C595.62,-278 628.79,-278 658.66,-278"/>
-<polygon fill="black" stroke="black" points="658.43,-281.5 668.43,-278 658.43,-274.5 658.43,-281.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr | defined in sensitive.go:186&#10;at sensitive.go:188: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:193: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:202: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr]&#10;at sensitive.go:203: calling [github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual]&#10;at sensitive.go:208: calling [github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M249.79,-156C249.79,-156 28,-156 28,-156 22,-156 16,-150 16,-144 16,-144 16,-132 16,-132 16,-126 22,-120 28,-120 28,-120 249.79,-120 249.79,-120 255.79,-120 261.79,-126 261.79,-132 261.79,-132 261.79,-144 261.79,-144 261.79,-150 255.79,-156 249.79,-156"/>
-<text xml:space="preserve" text-anchor="middle" x="138.89" y="-133.32" font-family="Verdana" font-size="14.00">(*SensitiveDataHook).scrubAttr</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr</title>
-<g id="a_edge4"><a xlink:title="at sensitive.go:202: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr]">
-<path fill="none" stroke="black" d="M111.93,-156.12C103.75,-168.65 112.74,-181 138.89,-181 157.08,-181 166.96,-175.03 168.55,-167.18"/>
-<polygon fill="black" stroke="black" points="171.98,-166.48 166.22,-157.59 165.18,-168.13 171.98,-166.48"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString | defined in sensitive.go:177">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M585.08,-235C585.08,-235 346.79,-235 346.79,-235 340.79,-235 334.79,-229 334.79,-223 334.79,-223 334.79,-211 334.79,-211 334.79,-205 340.79,-199 346.79,-199 346.79,-199 585.08,-199 585.08,-199 591.08,-199 597.08,-205 597.08,-211 597.08,-211 597.08,-223 597.08,-223 597.08,-229 591.08,-235 585.08,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="465.93" y="-212.32" font-family="Verdana" font-size="14.00">(*SensitiveDataHook).scrubString</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString -->
 <g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString</title>
-<g id="a_edge3"><a xlink:title="at sensitive.go:188: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:193: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]">
-<path fill="none" stroke="black" d="M210.63,-156.14C247.59,-165.53 293.58,-177.07 334.79,-187 347.38,-190.03 360.68,-193.17 373.76,-196.22"/>
-<polygon fill="black" stroke="black" points="372.68,-199.57 383.22,-198.42 374.27,-192.75 372.68,-199.57"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual -->
-<g id="node7" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual</title>
-<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual | defined in sensitive.go:228">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M518.7,-113C518.7,-113 413.16,-113 413.16,-113 407.16,-113 401.16,-107 401.16,-101 401.16,-101 401.16,-89 401.16,-89 401.16,-83 407.16,-77 413.16,-77 413.16,-77 518.7,-77 518.7,-77 524.7,-77 530.7,-83 530.7,-89 530.7,-89 530.7,-101 530.7,-101 530.7,-107 524.7,-113 518.7,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="465.93" y="-90.33" font-family="Verdana" font-size="14.00">attributesEqual</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual</title>
-<g id="a_edge5"><a xlink:title="at sensitive.go:203: calling [github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual]">
-<path fill="none" stroke="black" d="M261.85,-121.87C304.97,-116.16 352.16,-109.92 390.19,-104.89"/>
-<polygon fill="black" stroke="black" points="390.22,-108.41 399.67,-103.63 389.3,-101.48 390.22,-108.41"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny -->
-<g id="node8" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny</title>
-<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny | defined in sensitive.go:236">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M502.95,-174C502.95,-174 428.91,-174 428.91,-174 422.91,-174 416.91,-168 416.91,-162 416.91,-162 416.91,-150 416.91,-150 416.91,-144 422.91,-138 428.91,-138 428.91,-138 502.95,-138 502.95,-138 508.95,-138 514.95,-144 514.95,-150 514.95,-150 514.95,-162 514.95,-162 514.95,-168 508.95,-174 502.95,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="465.93" y="-151.32" font-family="Verdana" font-size="14.00">attrsToAny</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny -->
-<g id="edge6" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny</title>
-<g id="a_edge6"><a xlink:title="at sensitive.go:208: calling [github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny]">
-<path fill="none" stroke="black" d="M261.85,-144.75C310.88,-147.47 365.16,-150.47 405.26,-152.7"/>
-<polygon fill="black" stroke="black" points="405.01,-156.19 415.19,-153.25 405.4,-149.2 405.01,-156.19"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emit</title>
+<g id="a_edge3"><a xlink:title="at metrics.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emit]">
+<path fill="none" stroke="black" d="M565.39,-95C595.62,-95 628.79,-95 658.66,-95"/>
+<polygon fill="black" stroke="black" points="658.43,-98.5 668.43,-95 658.43,-91.5 658.43,-98.5"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.NewMetricsHook -->
-<g id="node9" class="node">
+<g id="node5" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.NewMetricsHook</title>
-<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.NewMetricsHook | defined in metrics.go:27&#10;at metrics.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M196.16,-296C196.16,-296 81.62,-296 81.62,-296 75.62,-296 69.62,-290 69.62,-284 69.62,-284 69.62,-272 69.62,-272 69.62,-266 75.62,-260 81.62,-260 81.62,-260 196.16,-260 196.16,-260 202.16,-260 208.16,-266 208.16,-272 208.16,-272 208.16,-284 208.16,-284 208.16,-290 202.16,-296 196.16,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="138.89" y="-273.32" font-family="Verdana" font-size="14.00">NewMetricsHook</text>
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.NewMetricsHook | defined in metrics.go:27&#10;at metrics.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M196.16,-113C196.16,-113 81.62,-113 81.62,-113 75.62,-113 69.62,-107 69.62,-101 69.62,-101 69.62,-89 69.62,-89 69.62,-83 75.62,-77 81.62,-77 81.62,-77 196.16,-77 196.16,-77 202.16,-77 208.16,-83 208.16,-89 208.16,-89 208.16,-101 208.16,-101 208.16,-107 202.16,-113 196.16,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="138.89" y="-90.33" font-family="Verdana" font-size="14.00">NewMetricsHook</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.NewMetricsHook&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop -->
-<g id="edge7" class="edge">
+<g id="edge4" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.NewMetricsHook&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop</title>
-<g id="a_edge7"><a xlink:title="at metrics.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop]">
-<path fill="none" stroke="black" d="M208.83,-278C247.24,-278 296.23,-278 341.06,-278"/>
-<polygon fill="black" stroke="black" points="354.99,-281.5 364.99,-278 354.99,-274.5 354.99,-281.5"/>
-<polyline fill="none" stroke="black" points="354.49,-278 349.49,-278"/>
-<ellipse fill="none" stroke="black" cx="344.99" cy="-278" rx="4" ry="4"/>
+<g id="a_edge4"><a xlink:title="at metrics.go:37: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.MetricsHook).emitLoop]">
+<path fill="none" stroke="black" d="M208.83,-95C247.24,-95 296.23,-95 341.06,-95"/>
+<polygon fill="black" stroke="black" points="354.99,-98.5 364.99,-95 354.99,-91.5 354.99,-98.5"/>
+<polyline fill="none" stroke="black" points="354.49,-95 349.49,-95"/>
+<ellipse fill="none" stroke="black" cx="344.99" cy="-95" rx="4" ry="4"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).Process -->
-<g id="node10" class="node">
+<g id="node6" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).Process</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).Process | defined in sensitive.go:120&#10;at sensitive.go:125: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M243.79,-235C243.79,-235 34,-235 34,-235 28,-235 22,-229 22,-223 22,-223 22,-211 22,-211 22,-205 28,-199 34,-199 34,-199 243.79,-199 243.79,-199 249.79,-199 255.79,-205 255.79,-211 255.79,-211 255.79,-223 255.79,-223 255.79,-229 249.79,-235 243.79,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="138.89" y="-212.32" font-family="Verdana" font-size="14.00">(*SensitiveDataHook).Process</text>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).Process | defined in sensitive.go:120&#10;at sensitive.go:125: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M243.79,-174C243.79,-174 34,-174 34,-174 28,-174 22,-168 22,-162 22,-162 22,-150 22,-150 22,-144 28,-138 34,-138 34,-138 243.79,-138 243.79,-138 249.79,-138 255.79,-144 255.79,-150 255.79,-150 255.79,-162 255.79,-162 255.79,-168 249.79,-174 243.79,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="138.89" y="-151.32" font-family="Verdana" font-size="14.00">(*SensitiveDataHook).Process</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString -->
+<g id="node7" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString</title>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString | defined in sensitive.go:177">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M585.08,-174C585.08,-174 346.79,-174 346.79,-174 340.79,-174 334.79,-168 334.79,-162 334.79,-162 334.79,-150 334.79,-150 334.79,-144 340.79,-138 346.79,-138 346.79,-138 585.08,-138 585.08,-138 591.08,-138 597.08,-144 597.08,-150 597.08,-150 597.08,-162 597.08,-162 597.08,-168 591.08,-174 585.08,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="465.93" y="-151.32" font-family="Verdana" font-size="14.00">(*SensitiveDataHook).scrubString</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).Process&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString -->
-<g id="edge8" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).Process&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString</title>
-<g id="a_edge8"><a xlink:title="at sensitive.go:125: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]">
-<path fill="none" stroke="black" d="M256.32,-217C278.06,-217 301,-217 323.4,-217"/>
-<polygon fill="black" stroke="black" points="323.18,-220.5 333.18,-217 323.18,-213.5 323.18,-220.5"/>
+<g id="a_edge5"><a xlink:title="at sensitive.go:125: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]">
+<path fill="none" stroke="black" d="M256.32,-156C278.06,-156 301,-156 323.4,-156"/>
+<polygon fill="black" stroke="black" points="323.18,-159.5 333.18,-156 323.18,-152.5 323.18,-159.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr -->
+<g id="node8" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr</title>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr | defined in sensitive.go:186&#10;at sensitive.go:208: calling [github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny]&#10;at sensitive.go:188: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:193: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:202: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr]&#10;at sensitive.go:203: calling [github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M249.79,-235C249.79,-235 28,-235 28,-235 22,-235 16,-229 16,-223 16,-223 16,-211 16,-211 16,-205 22,-199 28,-199 28,-199 249.79,-199 249.79,-199 255.79,-199 261.79,-205 261.79,-211 261.79,-211 261.79,-223 261.79,-223 261.79,-229 255.79,-235 249.79,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="138.89" y="-212.32" font-family="Verdana" font-size="14.00">(*SensitiveDataHook).scrubAttr</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString -->
+<g id="edge6" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString</title>
+<g id="a_edge6"><a xlink:title="at sensitive.go:188: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:193: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]&#10;at sensitive.go:213: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubString]">
+<path fill="none" stroke="black" d="M236.98,-198.78C274.6,-191.72 317.85,-183.6 356.49,-176.35"/>
+<polygon fill="black" stroke="black" points="357.12,-179.79 366.3,-174.51 355.83,-172.91 357.12,-179.79"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr</title>
+<g id="a_edge7"><a xlink:title="at sensitive.go:202: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr]">
+<path fill="none" stroke="black" d="M111.93,-235.12C103.75,-247.65 112.74,-260 138.89,-260 157.08,-260 166.96,-254.03 168.55,-246.18"/>
+<polygon fill="black" stroke="black" points="171.98,-245.48 166.22,-236.59 165.18,-247.13 171.98,-245.48"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual -->
+<g id="node9" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual</title>
+<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual | defined in sensitive.go:228">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M518.7,-235C518.7,-235 413.16,-235 413.16,-235 407.16,-235 401.16,-229 401.16,-223 401.16,-223 401.16,-211 401.16,-211 401.16,-205 407.16,-199 413.16,-199 413.16,-199 518.7,-199 518.7,-199 524.7,-199 530.7,-205 530.7,-211 530.7,-211 530.7,-223 530.7,-223 530.7,-229 524.7,-235 518.7,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="465.93" y="-212.32" font-family="Verdana" font-size="14.00">attributesEqual</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual</title>
+<g id="a_edge8"><a xlink:title="at sensitive.go:203: calling [github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attributesEqual]">
+<path fill="none" stroke="black" d="M261.85,-217C304.79,-217 351.76,-217 389.7,-217"/>
+<polygon fill="black" stroke="black" points="389.66,-220.5 399.66,-217 389.66,-213.5 389.66,-220.5"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny -->
+<g id="node10" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny</title>
+<g id="a_node10"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny | defined in sensitive.go:236">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M502.95,-296C502.95,-296 428.91,-296 428.91,-296 422.91,-296 416.91,-290 416.91,-284 416.91,-284 416.91,-272 416.91,-272 416.91,-266 422.91,-260 428.91,-260 428.91,-260 502.95,-260 502.95,-260 508.95,-260 514.95,-266 514.95,-272 514.95,-272 514.95,-284 514.95,-284 514.95,-290 508.95,-296 502.95,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="465.93" y="-273.32" font-family="Verdana" font-size="14.00">attrsToAny</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.SensitiveDataHook).scrubAttr&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny</title>
+<g id="a_edge1"><a xlink:title="at sensitive.go:208: calling [github.com/guild&#45;framework/guild&#45;core/pkg/logging/hooks.attrsToAny]">
+<path fill="none" stroke="black" d="M236.98,-235.22C291.76,-245.5 358.45,-258.02 405.51,-266.85"/>
+<polygon fill="black" stroke="black" points="404.77,-270.27 415.24,-268.67 406.06,-263.39 404.77,-270.27"/>
 </a>
 </g>
 </g>

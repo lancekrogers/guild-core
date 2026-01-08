@@ -33,7 +33,7 @@
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard -->
 <g id="node1" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard</title>
-<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard | defined in main.go:174&#10;at main.go:195: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getTestStatus]&#10;at main.go:180: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.termSize]&#10;at main.go:186: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getLastCommit]&#10;at main.go:191: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getBuildStatus]&#10;at main.go:184: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getVersion]&#10;at main.go:185: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getGitBranch]&#10;at main.go:183: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:192: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:196: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:199: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]">
+<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard | defined in main.go:174&#10;at main.go:180: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.termSize]&#10;at main.go:195: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getTestStatus]&#10;at main.go:186: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getLastCommit]&#10;at main.go:183: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:192: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:196: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:199: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:191: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getBuildStatus]&#10;at main.go:184: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getVersion]&#10;at main.go:185: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getGitBranch]">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M269.33,-52C269.33,-52 158.54,-52 158.54,-52 152.54,-52 146.54,-46 146.54,-40 146.54,-40 146.54,-28 146.54,-28 146.54,-22 152.54,-16 158.54,-16 158.54,-16 269.33,-16 269.33,-16 275.33,-16 281.33,-22 281.33,-28 281.33,-28 281.33,-40 281.33,-40 281.33,-46 275.33,-52 269.33,-52"/>
 <text xml:space="preserve" text-anchor="middle" x="213.93" y="-29.32" font-family="Verdana" font-size="14.00">showDashboard</text>
 </a>
@@ -49,9 +49,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.termSize -->
-<g id="edge6" class="edge">
+<g id="edge7" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.termSize</title>
-<g id="a_edge6"><a xlink:title="at main.go:180: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.termSize]">
+<g id="a_edge7"><a xlink:title="at main.go:180: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.termSize]">
 <path fill="none" stroke="black" d="M281.49,-34C308.37,-34 338.96,-34 364.3,-34"/>
 <polygon fill="black" stroke="black" points="364.02,-37.5 374.02,-34 364.02,-30.5 364.02,-37.5"/>
 </a>
@@ -67,9 +67,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getVersion -->
-<g id="edge15" class="edge">
+<g id="edge20" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getVersion</title>
-<g id="a_edge15"><a xlink:title="at main.go:184: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getVersion]">
+<g id="a_edge20"><a xlink:title="at main.go:184: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getVersion]">
 <path fill="none" stroke="black" d="M275.39,-52.22C301.79,-60.18 332.63,-69.47 358.81,-77.36"/>
 <polygon fill="black" stroke="black" points="357.69,-80.68 368.27,-80.21 359.71,-73.97 357.69,-80.68"/>
 </a>
@@ -85,9 +85,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getGitBranch -->
-<g id="edge16" class="edge">
+<g id="edge21" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getGitBranch</title>
-<g id="a_edge16"><a xlink:title="at main.go:185: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getGitBranch]">
+<g id="a_edge21"><a xlink:title="at main.go:185: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getGitBranch]">
 <path fill="none" stroke="black" d="M263.96,-52.14C270.9,-55.39 277.81,-59.03 284.08,-63 319.52,-85.42 319.43,-102.75 354.33,-126 357.61,-128.18 361.07,-130.29 364.61,-132.32"/>
 <polygon fill="black" stroke="black" points="362.94,-135.39 373.4,-137.06 366.26,-129.23 362.94,-135.39"/>
 </a>
@@ -103,9 +103,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getLastCommit -->
-<g id="edge7" class="edge">
+<g id="edge15" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getLastCommit</title>
-<g id="a_edge7"><a xlink:title="at main.go:186: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getLastCommit]">
+<g id="a_edge15"><a xlink:title="at main.go:186: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getLastCommit]">
 <path fill="none" stroke="black" d="M268.45,-52.11C274.06,-55.24 279.41,-58.85 284.08,-63 331.44,-105.06 307.98,-143.83 354.33,-187 356.42,-188.95 358.67,-190.8 361.02,-192.54"/>
 <polygon fill="black" stroke="black" points="358.96,-195.38 369.24,-197.94 362.8,-189.52 358.96,-195.38"/>
 </a>
@@ -121,9 +121,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox -->
-<g id="edge17" class="edge">
+<g id="edge16" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox</title>
-<g id="a_edge17"><a xlink:title="at main.go:183: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:192: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:196: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:199: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]">
+<g id="a_edge16"><a xlink:title="at main.go:183: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:192: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:196: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]&#10;at main.go:199: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.drawBox]">
 <path fill="none" stroke="black" d="M270.13,-52.04C275.23,-55.16 280.01,-58.79 284.08,-63 345.2,-126.25 294.72,-183.33 354.33,-248 357.94,-251.91 362.16,-255.37 366.69,-258.41"/>
 <polygon fill="black" stroke="black" points="364.6,-261.24 374.99,-263.3 368.16,-255.21 364.6,-261.24"/>
 </a>
@@ -139,9 +139,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getBuildStatus -->
-<g id="edge8" class="edge">
+<g id="edge17" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getBuildStatus</title>
-<g id="a_edge8"><a xlink:title="at main.go:191: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getBuildStatus]">
+<g id="a_edge17"><a xlink:title="at main.go:191: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getBuildStatus]">
 <path fill="none" stroke="black" d="M271.17,-52.13C275.95,-55.22 280.36,-58.81 284.08,-63 321.82,-105.52 317.6,-265.6 354.33,-309 355.77,-310.7 357.32,-312.31 358.98,-313.83"/>
 <polygon fill="black" stroke="black" points="356.66,-316.47 366.7,-319.84 360.95,-310.94 356.66,-316.47"/>
 </a>
@@ -157,9 +157,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getTestStatus -->
-<g id="edge1" class="edge">
+<g id="edge8" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getTestStatus</title>
-<g id="a_edge1"><a xlink:title="at main.go:195: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getTestStatus]">
+<g id="a_edge8"><a xlink:title="at main.go:195: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.getTestStatus]">
 <path fill="none" stroke="black" d="M271.73,-52.14C276.34,-55.22 280.56,-58.82 284.08,-63 329.13,-116.56 310.56,-315.39 354.33,-370 355.69,-371.7 357.18,-373.31 358.76,-374.84"/>
 <polygon fill="black" stroke="black" points="356.19,-377.26 366.17,-380.81 360.58,-371.81 356.19,-377.26"/>
 </a>
@@ -168,16 +168,16 @@
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main -->
 <g id="node9" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main</title>
-<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main | defined in main.go:25&#10;at main.go:31: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init]&#10;at main.go:145: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init]&#10;at main.go:53: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.BuildOnly]&#10;at main.go:68: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy]&#10;at main.go:105: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy]&#10;at main.go:74: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean]&#10;at main.go:81: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean]&#10;at main.go:59: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration]&#10;at main.go:100: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration]&#10;at main.go:62: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.E2E]&#10;at main.go:71: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.ValidateDemo]&#10;at main.go:139: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.SummaryCard]&#10;at main.go:149: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Install]&#10;at main.go:56: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test]&#10;at main.go:94: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test]&#10;at main.go:41: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:123: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:164: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:50: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:146: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:86: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:152: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Uninstall]&#10;at main.go:156: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard]">
+<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main | defined in main.go:25&#10;at main.go:41: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:123: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:164: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:50: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:146: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:86: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:59: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration]&#10;at main.go:100: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration]&#10;at main.go:62: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.E2E]&#10;at main.go:68: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy]&#10;at main.go:105: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy]&#10;at main.go:71: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.ValidateDemo]&#10;at main.go:31: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init]&#10;at main.go:145: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init]&#10;at main.go:74: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean]&#10;at main.go:81: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean]&#10;at main.go:149: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Install]&#10;at main.go:139: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.SummaryCard]&#10;at main.go:152: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Uninstall]&#10;at main.go:156: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard]&#10;at main.go:53: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.BuildOnly]&#10;at main.go:56: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test]&#10;at main.go:94: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test]">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M61.54,-448C61.54,-448 28,-448 28,-448 22,-448 16,-442 16,-436 16,-436 16,-424 16,-424 16,-418 22,-412 28,-412 28,-412 61.54,-412 61.54,-412 67.54,-412 73.54,-418 73.54,-424 73.54,-424 73.54,-436 73.54,-436 73.54,-442 67.54,-448 61.54,-448"/>
 <text xml:space="preserve" text-anchor="middle" x="44.77" y="-425.32" font-family="Verdana" font-size="14.00">main</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard -->
-<g id="edge21" class="edge">
+<g id="edge14" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard</title>
-<g id="a_edge21"><a xlink:title="at main.go:156: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard]">
+<g id="a_edge14"><a xlink:title="at main.go:156: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil.showDashboard]">
 <path fill="none" stroke="black" d="M45.09,-411.98C43.87,-353.47 48.01,-166.66 143.79,-63 145.13,-61.55 146.55,-60.18 148.03,-58.87"/>
 <polygon fill="black" stroke="black" points="150.04,-61.73 156,-52.97 145.88,-56.11 150.04,-61.73"/>
 </a>
@@ -193,9 +193,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build -->
-<g id="edge19" class="edge">
+<g id="edge2" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build</title>
-<g id="a_edge19"><a xlink:title="at main.go:50: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:146: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:86: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]">
+<g id="a_edge2"><a xlink:title="at main.go:50: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:146: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]&#10;at main.go:86: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Build]">
 <path fill="none" stroke="saddlebrown" d="M46.55,-412.05C49.7,-360.77 65.48,-211.82 143.79,-126 151.77,-117.25 162.69,-110.83 173.49,-106.17"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="174.64,-109.47 182.72,-102.62 172.13,-102.94 174.64,-109.47"/>
 </a>
@@ -211,9 +211,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.BuildOnly -->
-<g id="edge3" class="edge">
+<g id="edge18" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.BuildOnly</title>
-<g id="a_edge3"><a xlink:title="at main.go:53: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.BuildOnly]">
+<g id="a_edge18"><a xlink:title="at main.go:53: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.BuildOnly]">
 <path fill="none" stroke="saddlebrown" d="M48.35,-411.95C55.52,-367.91 79.59,-253.69 143.79,-187 148.01,-182.62 152.96,-178.81 158.24,-175.5"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="159.64,-178.73 166.7,-170.82 156.25,-172.6 159.64,-178.73"/>
 </a>
@@ -229,9 +229,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test -->
-<g id="edge14" class="edge">
+<g id="edge19" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test</title>
-<g id="a_edge14"><a xlink:title="at main.go:56: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test]&#10;at main.go:94: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test]">
+<g id="a_edge19"><a xlink:title="at main.go:56: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test]&#10;at main.go:94: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Test]">
 <path fill="none" stroke="saddlebrown" d="M51.17,-411.77C62.65,-375.9 92.67,-295.54 143.79,-248 152.84,-239.58 164.57,-233.17 175.78,-228.42"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="176.79,-231.78 184.86,-224.91 174.27,-225.25 176.79,-231.78"/>
 </a>
@@ -247,9 +247,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration -->
-<g id="edge9" class="edge">
+<g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration</title>
-<g id="a_edge9"><a xlink:title="at main.go:59: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration]&#10;at main.go:100: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration]">
+<g id="a_edge3"><a xlink:title="at main.go:59: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration]&#10;at main.go:100: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Integration]">
 <path fill="none" stroke="saddlebrown" d="M56.63,-411.75C72.79,-385.91 105.43,-338.51 143.79,-309 146.91,-306.6 150.24,-304.34 153.7,-302.22"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="155.36,-305.29 162.36,-297.34 151.93,-299.19 155.36,-305.29"/>
 </a>
@@ -265,9 +265,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.E2E -->
-<g id="edge10" class="edge">
+<g id="edge4" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.E2E</title>
-<g id="a_edge10"><a xlink:title="at main.go:62: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.E2E]">
+<g id="a_edge4"><a xlink:title="at main.go:62: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.E2E]">
 <path fill="none" stroke="saddlebrown" d="M73.11,-411.97C92.47,-399.52 119.26,-382.94 143.79,-370 153.98,-364.62 165.29,-359.3 175.76,-354.62"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="177.15,-357.83 184.9,-350.61 174.34,-351.42 177.15,-357.83"/>
 </a>
@@ -283,9 +283,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy -->
-<g id="edge4" class="edge">
+<g id="edge5" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy</title>
-<g id="a_edge4"><a xlink:title="at main.go:68: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy]&#10;at main.go:105: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy]">
+<g id="a_edge5"><a xlink:title="at main.go:68: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy]&#10;at main.go:105: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Happy]">
 <path fill="none" stroke="saddlebrown" d="M73.75,-424.98C99.55,-420.35 138.27,-413.4 168.33,-408"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="168.67,-411.5 177.9,-406.29 167.43,-404.61 168.67,-411.5"/>
 </a>
@@ -301,9 +301,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.ValidateDemo -->
-<g id="edge11" class="edge">
+<g id="edge6" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.ValidateDemo</title>
-<g id="a_edge11"><a xlink:title="at main.go:71: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.ValidateDemo]">
+<g id="a_edge6"><a xlink:title="at main.go:71: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.ValidateDemo]">
 <path fill="none" stroke="saddlebrown" d="M73.75,-435.19C92.69,-438.7 118.6,-443.51 142.94,-448.02"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="142.02,-451.41 152.49,-449.79 143.3,-444.53 142.02,-451.41"/>
 </a>
@@ -319,9 +319,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean -->
-<g id="edge5" class="edge">
+<g id="edge10" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean</title>
-<g id="a_edge5"><a xlink:title="at main.go:74: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean]&#10;at main.go:81: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean]">
+<g id="a_edge10"><a xlink:title="at main.go:74: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean]&#10;at main.go:81: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Clean]">
 <path fill="none" stroke="saddlebrown" d="M71.74,-447.98C91.12,-461.01 118.52,-478.63 143.79,-492 152.78,-496.76 162.69,-501.39 172.13,-505.54"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="170.55,-508.67 181.12,-509.4 173.31,-502.24 170.55,-508.67"/>
 </a>
@@ -337,9 +337,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Install -->
-<g id="edge13" class="edge">
+<g id="edge11" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Install</title>
-<g id="a_edge13"><a xlink:title="at main.go:149: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Install]">
+<g id="a_edge11"><a xlink:title="at main.go:149: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Install]">
 <path fill="none" stroke="saddlebrown" d="M56.24,-448.18C72.16,-474.44 104.77,-523.11 143.79,-553 151.56,-558.95 160.68,-563.98 169.71,-568.12"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="168.21,-571.29 178.79,-571.99 170.96,-564.85 168.21,-571.29"/>
 </a>
@@ -355,9 +355,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Uninstall -->
-<g id="edge20" class="edge">
+<g id="edge13" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Uninstall</title>
-<g id="a_edge20"><a xlink:title="at main.go:152: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Uninstall]">
+<g id="a_edge13"><a xlink:title="at main.go:152: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/tasks.Uninstall]">
 <path fill="none" stroke="saddlebrown" d="M50.98,-448.21C62.2,-484.43 91.92,-566.13 143.79,-614 148.96,-618.78 155.02,-622.87 161.35,-626.36"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="159.58,-629.39 170.1,-630.68 162.68,-623.11 159.58,-629.39"/>
 </a>
@@ -373,9 +373,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init -->
-<g id="edge2" class="edge">
+<g id="edge9" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init</title>
-<g id="a_edge2"><a xlink:title="at main.go:31: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init]&#10;at main.go:145: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init]">
+<g id="a_edge9"><a xlink:title="at main.go:31: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init]&#10;at main.go:145: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.Init]">
 <path fill="none" stroke="saddlebrown" d="M47.21,-447.98C51.98,-495.97 71.38,-628.54 143.79,-704 152.35,-712.92 164.15,-719.08 175.57,-723.3"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="174.26,-726.56 184.85,-726.31 176.42,-719.9 174.26,-726.56"/>
 </a>
@@ -391,9 +391,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled -->
-<g id="edge18" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/buildutil.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled</title>
-<g id="a_edge18"><a xlink:title="at main.go:41: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:123: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:164: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]">
+<g id="a_edge1"><a xlink:title="at main.go:41: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:123: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]&#10;at main.go:164: calling [github.com/guild&#45;framework/guild&#45;core/internal/buildutil/ui.ColourEnabled]">
 <path fill="none" stroke="saddlebrown" d="M45.75,-448.24C46.67,-503.3 56.87,-669.78 143.79,-763 145.33,-764.65 146.98,-766.22 148.71,-767.7"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="146.6,-770.5 156.75,-773.55 150.72,-764.84 146.6,-770.5"/>
 </a>

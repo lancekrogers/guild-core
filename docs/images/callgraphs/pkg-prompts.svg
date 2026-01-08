@@ -17,8 +17,8 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="798.58,-530 798.58,-854 1046.87,-854 1046.87,-530 798.58,-530"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-834.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="798.58,-544 798.58,-868 1046.87,-868 1046.87,-544 798.58,-544"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-848.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
@@ -33,25 +33,25 @@
 <g id="clust4" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard</title>
 <g id="a_clust4"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/prompts/standard" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="832.7,-69 832.7,-149 1012.74,-149 1012.74,-69 832.7,-69"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-129.8" font-family="Tahoma bold" font-size="16.00">standard</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="832.7,-456 832.7,-536 1012.74,-536 1012.74,-456 832.7,-456"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-516.8" font-family="Tahoma bold" font-size="16.00">standard</text>
 </a>
 </g>
 </g>
 <g id="clust5" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission</title>
 <g id="a_clust5"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/prompts/standard/templates/commission" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="857.83,-1139 857.83,-1219 987.62,-1219 987.62,-1139 857.83,-1139"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-1199.8" font-family="Tahoma bold" font-size="16.00">commission</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="857.83,-1118 857.83,-1198 987.62,-1198 987.62,-1118 857.83,-1118"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-1178.8" font-family="Tahoma bold" font-size="16.00">commission</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager | defined in registry.go:88&#10;at registry.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at registry.go:95: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at registry.go:94: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M681.45,-429C681.45,-429 441.66,-429 441.66,-429 435.66,-429 429.66,-423 429.66,-417 429.66,-417 429.66,-405 429.66,-405 429.66,-399 435.66,-393 441.66,-393 441.66,-393 681.45,-393 681.45,-393 687.45,-393 693.45,-399 693.45,-405 693.45,-405 693.45,-417 693.45,-417 693.45,-423 687.45,-429 681.45,-429"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-406.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).CreateManager</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy | defined in registry.go:72&#10;at registry.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at registry.go:74: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at registry.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M721.58,-481C721.58,-481 401.54,-481 401.54,-481 395.54,-481 389.54,-475 389.54,-469 389.54,-469 389.54,-457 389.54,-457 389.54,-451 395.54,-445 401.54,-445 401.54,-445 721.58,-445 721.58,-445 727.58,-445 733.58,-451 733.58,-457 733.58,-457 733.58,-469 733.58,-469 733.58,-475 727.58,-481 721.58,-481"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-458.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).RegisterFormatterStrategy</text>
 </a>
 </g>
 </g>
@@ -59,17 +59,17 @@
 <g id="node23" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
 <g id="a_node23"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M937.72,-574C937.72,-574 907.72,-574 907.72,-574 901.72,-574 895.72,-568 895.72,-562 895.72,-562 895.72,-550 895.72,-550 895.72,-544 901.72,-538 907.72,-538 907.72,-538 937.72,-538 937.72,-538 943.72,-538 949.72,-544 949.72,-550 949.72,-550 949.72,-562 949.72,-562 949.72,-568 943.72,-574 937.72,-574"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-551.33" font-family="Verdana" font-size="14.00">New</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M937.72,-588C937.72,-588 907.72,-588 907.72,-588 901.72,-588 895.72,-582 895.72,-576 895.72,-576 895.72,-564 895.72,-564 895.72,-558 901.72,-552 907.72,-552 907.72,-552 937.72,-552 937.72,-552 943.72,-552 949.72,-558 949.72,-564 949.72,-564 949.72,-576 949.72,-576 949.72,-582 943.72,-588 937.72,-588"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-565.33" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge33" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge33"><a xlink:title="at registry.go:94: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M688.94,-392.38C705.6,-385.38 721.17,-375.88 733.58,-363 780.94,-313.88 713.41,-176.76 770.58,-214 880.39,-285.53 911,-456.92 919.04,-526.2"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="915.55,-526.45 920.09,-536.02 922.51,-525.71 915.55,-526.45"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge30" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge30"><a xlink:title="at registry.go:74: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M601.77,-444.36C647.15,-425.83 721.85,-405.04 770.58,-442 807.35,-469.89 765.15,-510.18 798.58,-542 821.13,-563.46 856.55,-569.73 883.62,-571.06"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="883.43,-574.55 893.51,-571.31 883.61,-567.55 883.43,-574.55"/>
 </a>
 </g>
 </g>
@@ -77,17 +77,17 @@
 <g id="node24" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1026.87,-696C1026.87,-696 818.58,-696 818.58,-696 812.58,-696 806.58,-690 806.58,-684 806.58,-684 806.58,-672 806.58,-672 806.58,-666 812.58,-660 818.58,-660 818.58,-660 1026.87,-660 1026.87,-660 1032.87,-660 1038.87,-666 1038.87,-672 1038.87,-672 1038.87,-684 1038.87,-684 1038.87,-690 1032.87,-696 1026.87,-696"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-673.33" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1026.87,-710C1026.87,-710 818.58,-710 818.58,-710 812.58,-710 806.58,-704 806.58,-698 806.58,-698 806.58,-686 806.58,-686 806.58,-680 812.58,-674 818.58,-674 818.58,-674 1026.87,-674 1026.87,-674 1032.87,-674 1038.87,-680 1038.87,-686 1038.87,-686 1038.87,-698 1038.87,-698 1038.87,-704 1032.87,-710 1026.87,-710"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-687.33" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge30" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge30"><a xlink:title="at registry.go:95: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M694.14,-419.38C708.57,-424.62 722.15,-431.93 733.58,-442 769.6,-473.73 763.52,-615.21 798.58,-648 800.47,-649.77 802.45,-651.44 804.51,-653.02"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="802.44,-655.85 812.7,-658.51 806.34,-650.03 802.44,-655.85"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge5" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge5"><a xlink:title="at registry.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M734.24,-471.63C747.66,-477.63 760.06,-485.58 770.58,-496 823.74,-548.65 747.61,-607.23 798.58,-662 800.1,-663.63 801.69,-665.18 803.34,-666.65"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="800.85,-669.15 810.92,-672.45 805.11,-663.59 800.85,-669.15"/>
 </a>
 </g>
 </g>
@@ -95,17 +95,17 @@
 <g id="node25" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1021.24,-757C1021.24,-757 824.2,-757 824.2,-757 818.2,-757 812.2,-751 812.2,-745 812.2,-745 812.2,-733 812.2,-733 812.2,-727 818.2,-721 824.2,-721 824.2,-721 1021.24,-721 1021.24,-721 1027.24,-721 1033.24,-727 1033.24,-733 1033.24,-733 1033.24,-745 1033.24,-745 1033.24,-751 1027.24,-757 1021.24,-757"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-734.33" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1021.24,-771C1021.24,-771 824.2,-771 824.2,-771 818.2,-771 812.2,-765 812.2,-759 812.2,-759 812.2,-747 812.2,-747 812.2,-741 818.2,-735 824.2,-735 824.2,-735 1021.24,-735 1021.24,-735 1027.24,-735 1033.24,-741 1033.24,-747 1033.24,-747 1033.24,-759 1033.24,-759 1033.24,-765 1027.24,-771 1021.24,-771"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-748.33" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge36" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge36"><a xlink:title="at registry.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M693.83,-416.16C708.86,-421.81 722.68,-430.1 733.58,-442 792.66,-506.51 704.96,-775.04 769.58,-834 792.65,-855.05 774.75,-790.18 798.58,-770 801.4,-767.61 804.38,-765.41 807.48,-763.37"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="808.95,-766.56 815.82,-758.5 805.42,-760.52 808.95,-766.56"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge37" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge37"><a xlink:title="at registry.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M634.93,-481.69C668.84,-493.69 707.42,-512.52 733.58,-541 791.68,-604.26 734.77,-665.51 798.58,-723 800.69,-724.9 802.9,-726.69 805.19,-728.36"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="802.86,-731.02 813.16,-733.49 806.65,-725.13 802.86,-731.02"/>
 </a>
 </g>
 </g>
@@ -113,134 +113,125 @@
 <g id="node26" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1010.37,-635C1010.37,-635 835.08,-635 835.08,-635 829.08,-635 823.08,-629 823.08,-623 823.08,-623 823.08,-611 823.08,-611 823.08,-605 829.08,-599 835.08,-599 835.08,-599 1010.37,-599 1010.37,-599 1016.37,-599 1022.37,-605 1022.37,-611 1022.37,-611 1022.37,-623 1022.37,-623 1022.37,-629 1016.37,-635 1010.37,-635"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-612.33" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1010.37,-649C1010.37,-649 835.08,-649 835.08,-649 829.08,-649 823.08,-643 823.08,-637 823.08,-637 823.08,-625 823.08,-625 823.08,-619 829.08,-613 835.08,-613 835.08,-613 1010.37,-613 1010.37,-613 1016.37,-613 1022.37,-619 1022.37,-625 1022.37,-625 1022.37,-637 1022.37,-637 1022.37,-643 1016.37,-649 1010.37,-649"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-626.33" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge13"><a xlink:title="at registry.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M662.35,-392.25C700.46,-390.84 741.66,-397.14 770.58,-423 825.7,-472.29 748.15,-532.92 798.58,-587 802.8,-591.53 807.58,-595.42 812.75,-598.77"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="810.67,-601.61 821.1,-603.47 814.11,-595.52 810.67,-601.61"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager -->
-<g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager | defined in registry.go:120&#10;at registry.go:129: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M300.41,-429C300.41,-429 32.12,-429 32.12,-429 26.12,-429 20.12,-423 20.12,-417 20.12,-417 20.12,-405 20.12,-405 20.12,-399 26.12,-393 32.12,-393 32.12,-393 300.41,-393 300.41,-393 306.41,-393 312.41,-399 312.41,-405 312.41,-405 312.41,-417 312.41,-417 312.41,-423 306.41,-429 300.41,-429"/>
-<text xml:space="preserve" text-anchor="middle" x="166.27" y="-406.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).GetDefaultManager</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
-<g id="edge41" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
-<g id="a_edge41"><a xlink:title="at registry.go:129: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
-<path fill="none" stroke="black" d="M313.16,-411C347.33,-411 383.7,-411 417.74,-411"/>
-<polygon fill="black" stroke="black" points="417.67,-414.5 427.67,-411 417.67,-407.5 417.67,-414.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge54" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge54"><a xlink:title="at registry.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M636.42,-444.28C680.21,-437.81 734.1,-438.56 770.58,-469 816.63,-507.42 756.81,-557.96 798.58,-601 802.74,-605.28 807.39,-608.99 812.4,-612.21"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="810.65,-615.24 821.09,-617.06 814.06,-609.13 810.65,-615.24"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry -->
-<g id="node3" class="node">
+<g id="node2" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry | defined in registry.go:30&#10;at registry.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M991.24,-52C991.24,-52 854.2,-52 854.2,-52 848.2,-52 842.2,-46 842.2,-40 842.2,-40 842.2,-28 842.2,-28 842.2,-22 848.2,-16 854.2,-16 854.2,-16 991.24,-16 991.24,-16 997.24,-16 1003.24,-22 1003.24,-28 1003.24,-28 1003.24,-40 1003.24,-40 1003.24,-46 997.24,-52 991.24,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-29.32" font-family="Verdana" font-size="14.00">NewPromptRegistry</text>
+<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry | defined in registry.go:30&#10;at registry.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M991.24,-57C991.24,-57 854.2,-57 854.2,-57 848.2,-57 842.2,-51 842.2,-45 842.2,-45 842.2,-33 842.2,-33 842.2,-27 848.2,-21 854.2,-21 854.2,-21 991.24,-21 991.24,-21 997.24,-21 1003.24,-27 1003.24,-33 1003.24,-33 1003.24,-45 1003.24,-45 1003.24,-51 997.24,-57 991.24,-57"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-34.33" font-family="Verdana" font-size="14.00">NewPromptRegistry</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults -->
-<g id="node4" class="node">
+<g id="node3" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults | defined in registry.go:45">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1368.91,-52C1368.91,-52 1123.87,-52 1123.87,-52 1117.87,-52 1111.87,-46 1111.87,-40 1111.87,-40 1111.87,-28 1111.87,-28 1111.87,-22 1117.87,-16 1123.87,-16 1123.87,-16 1368.91,-16 1368.91,-16 1374.91,-16 1380.91,-22 1380.91,-28 1380.91,-28 1380.91,-40 1380.91,-40 1380.91,-46 1374.91,-52 1368.91,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="1246.39" y="-29.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).registerDefaults</text>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults | defined in registry.go:45">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1368.91,-57C1368.91,-57 1123.87,-57 1123.87,-57 1117.87,-57 1111.87,-51 1111.87,-45 1111.87,-45 1111.87,-33 1111.87,-33 1111.87,-27 1117.87,-21 1123.87,-21 1123.87,-21 1368.91,-21 1368.91,-21 1374.91,-21 1380.91,-27 1380.91,-33 1380.91,-33 1380.91,-45 1380.91,-45 1380.91,-51 1374.91,-57 1368.91,-57"/>
+<text xml:space="preserve" text-anchor="middle" x="1246.39" y="-34.33" font-family="Verdana" font-size="14.00">(*PromptRegistry).registerDefaults</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults -->
-<g id="edge42" class="edge">
+<g id="edge49" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults</title>
-<g id="a_edge42"><a xlink:title="at registry.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults]">
-<path fill="none" stroke="black" d="M1003.65,-34C1032.99,-34 1067.18,-34 1100.46,-34"/>
-<polygon fill="black" stroke="black" points="1100.19,-37.5 1110.19,-34 1100.19,-30.5 1100.19,-37.5"/>
+<g id="a_edge49"><a xlink:title="at registry.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).registerDefaults]">
+<path fill="none" stroke="black" d="M1003.65,-39C1032.99,-39 1067.18,-39 1100.46,-39"/>
+<polygon fill="black" stroke="black" points="1100.19,-42.5 1110.19,-39 1100.19,-35.5 1100.19,-42.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1 -->
+<g id="node4" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1</title>
+<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1 | defined in registry.go:304&#10;at registry.go:305: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M582.08,-52C582.08,-52 541.04,-52 541.04,-52 535.04,-52 529.04,-46 529.04,-40 529.04,-40 529.04,-28 529.04,-28 529.04,-22 535.04,-16 541.04,-16 541.04,-16 582.08,-16 582.08,-16 588.08,-16 594.08,-22 594.08,-28 594.08,-28 594.08,-40 594.08,-40 594.08,-46 588.08,-52 582.08,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-29.32" font-family="Verdana" font-size="14.00">init#1</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry -->
+<g id="edge41" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry</title>
+<g id="a_edge41"><a xlink:title="at registry.go:305: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry]">
+<path fill="none" stroke="black" d="M594.12,-34.44C646.41,-35.17 752.92,-36.65 830.34,-37.73"/>
+<polygon fill="black" stroke="black" points="829.98,-41.22 840.03,-37.86 830.08,-34.22 829.98,-41.22"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init -->
 <g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter | defined in registry.go:104&#10;at registry.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at registry.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at registry.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M685.58,-350C685.58,-350 437.54,-350 437.54,-350 431.54,-350 425.54,-344 425.54,-338 425.54,-338 425.54,-326 425.54,-326 425.54,-320 431.54,-314 437.54,-314 437.54,-314 685.58,-314 685.58,-314 691.58,-314 697.58,-320 697.58,-326 697.58,-326 697.58,-338 697.58,-338 697.58,-344 691.58,-350 685.58,-350"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-327.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).CreateFormatter</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init</title>
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init | defined in .:0&#10;at .:0: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M181.27,-52C181.27,-52 151.27,-52 151.27,-52 145.27,-52 139.27,-46 139.27,-40 139.27,-40 139.27,-28 139.27,-28 139.27,-22 145.27,-16 151.27,-16 151.27,-16 181.27,-16 181.27,-16 187.27,-16 193.27,-22 193.27,-28 193.27,-28 193.27,-40 193.27,-40 193.27,-46 187.27,-52 181.27,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="166.27" y="-29.32" font-family="Verdana" font-size="14.00">init</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge34" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge34"><a xlink:title="at registry.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M575.46,-313.57C608.47,-268.68 698.51,-160.73 770.58,-208 882.03,-281.1 911.73,-456.06 919.28,-526.19"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="915.79,-526.53 920.26,-536.13 922.76,-525.84 915.79,-526.53"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1 -->
+<g id="edge31" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1</title>
+<g id="a_edge31"><a xlink:title="at .:0: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1]">
+<path fill="none" stroke="black" d="M193.38,-34C259.77,-34 435.55,-34 517.44,-34"/>
+<polygon fill="black" stroke="black" points="517.31,-37.5 527.31,-34 517.31,-30.5 517.31,-37.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge37" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge37"><a xlink:title="at registry.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M687.23,-350.68C704.53,-357.84 720.74,-367.64 733.58,-381 754.73,-403.02 776.99,-626.41 798.58,-648 800.21,-649.63 801.92,-651.18 803.69,-652.66"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="801.65,-655.5 811.81,-658.48 805.73,-649.81 801.65,-655.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge24" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge24"><a xlink:title="at registry.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M689.03,-350.75C705.78,-357.92 721.35,-367.7 733.58,-381 783.89,-435.69 747.19,-655.33 798.58,-709 800.15,-710.64 801.79,-712.19 803.5,-713.67"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="801.22,-716.34 811.33,-719.51 805.4,-710.72 801.22,-716.34"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge11" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge11"><a xlink:title="at registry.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M658.69,-350.63C684.07,-357.89 710.73,-367.76 733.58,-381 753.43,-392.51 759.96,-396.66 770.58,-417 806.02,-484.88 746.52,-530.84 798.58,-587 802.79,-591.54 807.56,-595.44 812.71,-598.8"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="810.63,-601.64 821.06,-603.51 814.07,-595.54 810.63,-601.64"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory -->
 <g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts | defined in manager.go:91&#10;at manager.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:95: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at manager.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M685.58,-1165C685.58,-1165 437.54,-1165 437.54,-1165 431.54,-1165 425.54,-1159 425.54,-1153 425.54,-1153 425.54,-1141 425.54,-1141 425.54,-1135 431.54,-1129 437.54,-1129 437.54,-1129 685.58,-1129 685.58,-1129 691.58,-1129 697.58,-1135 697.58,-1141 697.58,-1141 697.58,-1153 697.58,-1153 697.58,-1159 691.58,-1165 685.58,-1165"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-1142.33" font-family="Verdana" font-size="14.00">(*PromptManager).RefreshPrompts</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory</title>
+<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory | defined in registry.go:314&#10;at registry.go:315: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M665.7,-113C665.7,-113 457.41,-113 457.41,-113 451.41,-113 445.41,-107 445.41,-101 445.41,-101 445.41,-89 445.41,-89 445.41,-83 451.41,-77 457.41,-77 457.41,-77 665.7,-77 665.7,-77 671.7,-77 677.7,-83 677.7,-89 677.7,-89 677.7,-101 677.7,-101 677.7,-107 671.7,-113 665.7,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-90.33" font-family="Verdana" font-size="14.00">DefaultPromptRegistryFactory</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge3"><a xlink:title="at manager.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M591.13,-1128.46C630.04,-1101.59 698.81,-1047.97 733.58,-984 763.57,-928.83 752.31,-751.46 798.58,-709 801.02,-706.76 803.59,-704.68 806.28,-702.75"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="807.96,-705.83 814.53,-697.52 804.21,-699.91 807.96,-705.83"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry -->
+<g id="edge55" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry</title>
+<g id="a_edge55"><a xlink:title="at registry.go:315: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry]">
+<path fill="none" stroke="black" d="M678.18,-76.97C727.44,-69.29 784.08,-60.46 830.33,-53.25"/>
+<polygon fill="black" stroke="black" points="830.72,-56.73 840.06,-51.73 829.64,-49.82 830.72,-56.73"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge21" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge21"><a xlink:title="at manager.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M617.71,-1128.34C666.54,-1108.72 735.37,-1072.84 770.58,-1017 829.51,-923.55 725.85,-853.17 798.58,-770 800.26,-768.08 802.04,-766.27 803.91,-764.56"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="805.72,-767.59 811.43,-758.66 801.4,-762.08 805.72,-767.59"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager -->
+<g id="node7" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager</title>
+<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager | defined in manager.go:22&#10;at manager.go:28: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts]&#10;at manager.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at manager.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:32: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M631.58,-1209C631.58,-1209 491.54,-1209 491.54,-1209 485.54,-1209 479.54,-1203 479.54,-1197 479.54,-1197 479.54,-1185 479.54,-1185 479.54,-1179 485.54,-1173 491.54,-1173 491.54,-1173 631.58,-1173 631.58,-1173 637.58,-1173 643.58,-1179 643.58,-1185 643.58,-1185 643.58,-1197 643.58,-1197 643.58,-1203 637.58,-1209 631.58,-1209"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-1186.33" font-family="Verdana" font-size="14.00">NewPromptManager</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge44" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge44"><a xlink:title="at manager.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M632.78,-1172.38C666.77,-1160.39 706.06,-1141.74 733.58,-1114 762.31,-1085.04 760.37,-1069.5 770.58,-1030 787.72,-963.67 754.05,-775.06 798.58,-723 800.24,-721.06 802,-719.23 803.85,-717.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="805.67,-720.53 811.31,-711.56 801.31,-715.06 805.67,-720.53"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge50" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge50"><a xlink:title="at manager.go:32: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M644.09,-1200.33C687.89,-1200.52 739.19,-1192.1 770.58,-1158 827.03,-1096.68 744.92,-847.77 798.58,-784 800.07,-782.23 801.65,-780.55 803.3,-778.96"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="805.44,-781.73 810.96,-772.69 801.01,-776.31 805.44,-781.73"/>
 </a>
 </g>
 </g>
@@ -248,17 +239,17 @@
 <g id="node27" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node27"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M940.62,-818C940.62,-818 904.83,-818 904.83,-818 898.83,-818 892.83,-812 892.83,-806 892.83,-806 892.83,-794 892.83,-794 892.83,-788 898.83,-782 904.83,-782 904.83,-782 940.62,-782 940.62,-782 946.62,-782 952.62,-788 952.62,-794 952.62,-794 952.62,-806 952.62,-806 952.62,-812 946.62,-818 940.62,-818"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-795.33" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M940.62,-832C940.62,-832 904.83,-832 904.83,-832 898.83,-832 892.83,-826 892.83,-820 892.83,-820 892.83,-808 892.83,-808 892.83,-802 898.83,-796 904.83,-796 904.83,-796 940.62,-796 940.62,-796 946.62,-796 952.62,-802 952.62,-808 952.62,-808 952.62,-820 952.62,-820 952.62,-826 946.62,-832 940.62,-832"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-809.33" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge35" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge35"><a xlink:title="at manager.go:95: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M590.76,-1165.64C633.38,-1191.25 715.13,-1230.05 770.58,-1192 778.58,-1186.51 877.81,-919.05 910.99,-829.13"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="914.18,-830.62 914.35,-820.02 907.61,-828.19 914.18,-830.62"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge38" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge38"><a xlink:title="at manager.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M644.32,-1208.74C685.69,-1213.05 734.62,-1210.49 770.58,-1185 798.93,-1164.9 785.72,-1144.28 798.58,-1112 838.13,-1012.71 887.18,-895.77 909.56,-842.73"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="912.67,-844.38 913.33,-833.81 906.22,-841.66 912.67,-844.38"/>
 </a>
 </g>
 </g>
@@ -266,206 +257,188 @@
 <g id="node31" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts</title>
 <g id="a_node31"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts | defined in commission.go:21">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M967.62,-1183C967.62,-1183 877.83,-1183 877.83,-1183 871.83,-1183 865.83,-1177 865.83,-1171 865.83,-1171 865.83,-1159 865.83,-1159 865.83,-1153 871.83,-1147 877.83,-1147 877.83,-1147 967.62,-1147 967.62,-1147 973.62,-1147 979.62,-1153 979.62,-1159 979.62,-1159 979.62,-1171 979.62,-1171 979.62,-1177 973.62,-1183 967.62,-1183"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-1160.33" font-family="Verdana" font-size="14.00">LoadPrompts</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M967.62,-1162C967.62,-1162 877.83,-1162 877.83,-1162 871.83,-1162 865.83,-1156 865.83,-1150 865.83,-1150 865.83,-1138 865.83,-1138 865.83,-1132 871.83,-1126 877.83,-1126 877.83,-1126 967.62,-1126 967.62,-1126 973.62,-1126 979.62,-1132 979.62,-1138 979.62,-1138 979.62,-1150 979.62,-1150 979.62,-1156 973.62,-1162 967.62,-1162"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-1139.33" font-family="Verdana" font-size="14.00">LoadPrompts</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts -->
-<g id="edge46" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts</title>
-<g id="a_edge46"><a xlink:title="at manager.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts]">
-<path fill="none" stroke="saddlebrown" d="M622.95,-1165.62C658.39,-1178.89 702.22,-1199.62 733.58,-1229 757.4,-1251.31 741.41,-1276.52 769.58,-1293 799.36,-1310.42 774.88,-1246.07 798.58,-1221 813.83,-1204.87 834.61,-1193.02 854.75,-1184.48"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="855.8,-1187.83 863.79,-1180.88 853.21,-1181.33 855.8,-1187.83"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts -->
+<g id="edge9" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts</title>
+<g id="a_edge9"><a xlink:title="at manager.go:28: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts]">
+<path fill="none" stroke="saddlebrown" d="M637.31,-1209.7C677.2,-1216.89 726.93,-1221.37 770.58,-1212 809.84,-1203.58 851.21,-1184.13 880.72,-1168.18"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="882.25,-1171.34 889.32,-1163.44 878.87,-1165.21 882.25,-1171.34"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType -->
-<g id="node7" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType | defined in registry.go:158&#10;at registry.go:167: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at registry.go:164: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:165: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at registry.go:166: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M715.95,-551C715.95,-551 407.16,-551 407.16,-551 401.16,-551 395.16,-545 395.16,-539 395.16,-539 395.16,-527 395.16,-527 395.16,-521 401.16,-515 407.16,-515 407.16,-515 715.95,-515 715.95,-515 721.95,-515 727.95,-521 727.95,-527 727.95,-527 727.95,-539 727.95,-539 727.95,-545 721.95,-551 715.95,-551"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-528.33" font-family="Verdana" font-size="14.00">(*PromptRegistry).SetDefaultFormatterType</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge14"><a xlink:title="at registry.go:164: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M720.35,-514.37C725.08,-511.02 729.52,-507.25 733.58,-503 776.51,-458.12 718.32,-192.45 770.58,-226 877.14,-294.4 909.54,-458.73 918.54,-526.26"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="915.03,-526.34 919.74,-535.83 921.97,-525.48 915.03,-526.34"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge22"><a xlink:title="at registry.go:165: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M708.57,-551.66C717.29,-555.14 725.71,-559.22 733.58,-564 773.93,-588.5 758.98,-622.3 798.58,-648 802.26,-650.39 806.12,-652.59 810.11,-654.62"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="808.32,-657.64 818.86,-658.66 811.25,-651.29 808.32,-657.64"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge31" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge31"><a xlink:title="at registry.go:166: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M719.38,-551.7C724.49,-555.29 729.26,-559.37 733.58,-564 783.02,-616.95 715.6,-839.69 769.58,-888 809.82,-924.02 760.65,-808.45 798.58,-770 800.65,-767.91 802.83,-765.95 805.12,-764.11"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="806.95,-767.1 813.16,-758.51 802.95,-761.35 806.95,-767.1"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge5"><a xlink:title="at registry.go:167: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M714.49,-514.38C721.19,-511.1 727.59,-507.33 733.58,-503 761.15,-483.08 744.43,-414.25 770.58,-436 823.06,-479.64 751.68,-537.41 798.58,-587 802.83,-591.5 807.64,-595.37 812.82,-598.69"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="810.77,-601.56 821.2,-603.38 814.18,-595.44 810.77,-601.56"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager -->
 <g id="node8" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType | defined in registry.go:138&#10;at registry.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at registry.go:147: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at registry.go:144: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:146: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M711.83,-910C711.83,-910 411.29,-910 411.29,-910 405.29,-910 399.29,-904 399.29,-898 399.29,-898 399.29,-886 399.29,-886 399.29,-880 405.29,-874 411.29,-874 411.29,-874 711.83,-874 711.83,-874 717.83,-874 723.83,-880 723.83,-886 723.83,-886 723.83,-898 723.83,-898 723.83,-904 717.83,-910 711.83,-910"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-887.33" font-family="Verdana" font-size="14.00">(*PromptRegistry).SetDefaultManagerType</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager</title>
+<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager | defined in factory.go:109&#10;at factory.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]&#10;at factory.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M243.41,-338C243.41,-338 89.12,-338 89.12,-338 83.12,-338 77.12,-332 77.12,-326 77.12,-326 77.12,-314 77.12,-314 77.12,-308 83.12,-302 89.12,-302 89.12,-302 243.41,-302 243.41,-302 249.41,-302 255.41,-308 255.41,-314 255.41,-314 255.41,-326 255.41,-326 255.41,-332 249.41,-338 243.41,-338"/>
+<text xml:space="preserve" text-anchor="middle" x="166.27" y="-315.32" font-family="Verdana" font-size="14.00">NewStandardManager</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge56" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge56"><a xlink:title="at registry.go:144: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M721.08,-873.45C725.57,-870.07 729.76,-866.27 733.58,-862 819.94,-765.39 675.17,-368.75 769.58,-280 853.73,-200.9 902.54,-439.86 917.09,-526.17"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="913.59,-526.49 918.67,-535.8 920.5,-525.36 913.59,-526.49"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge28" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge28"><a xlink:title="at registry.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M718.01,-873.48C723.52,-870.13 728.75,-866.32 733.58,-862 776.03,-824.02 740.95,-788.24 769.58,-739 778.9,-722.97 782.53,-718.29 798.58,-709 803.77,-706 809.24,-703.28 814.89,-700.83"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="815.82,-704.23 823.79,-697.26 813.21,-697.73 815.82,-704.23"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge57" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge57"><a xlink:title="at registry.go:146: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M714.09,-910.61C720.97,-914.16 727.52,-918.26 733.58,-923 764.44,-947.13 741.27,-1029 770.58,-1003 848.61,-933.79 729.66,-848.28 798.58,-770 800.3,-768.05 802.12,-766.21 804.02,-764.49"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="805.98,-767.4 811.73,-758.51 801.69,-761.87 805.98,-767.4"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge47" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge47"><a xlink:title="at registry.go:147: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M720.92,-873.3C725.45,-869.97 729.7,-866.21 733.58,-862 792.99,-797.49 704.8,-528.12 769.58,-469 809.47,-432.6 760.51,-548.7 798.58,-587 802.79,-591.23 807.48,-594.9 812.52,-598.09"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="810.81,-601.14 821.26,-602.9 814.18,-595.01 810.81,-601.14"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry -->
 <g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy | defined in registry.go:72&#10;at registry.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at registry.go:74: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at registry.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M721.58,-971C721.58,-971 401.54,-971 401.54,-971 395.54,-971 389.54,-965 389.54,-959 389.54,-959 389.54,-947 389.54,-947 389.54,-941 395.54,-935 401.54,-935 401.54,-935 721.58,-935 721.58,-935 727.58,-935 733.58,-941 733.58,-947 733.58,-947 733.58,-959 733.58,-959 733.58,-965 727.58,-971 721.58,-971"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-948.33" font-family="Verdana" font-size="14.00">(*PromptRegistry).RegisterFormatterStrategy</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry</title>
+<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry | defined in registry.go:309">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M601.95,-373C601.95,-373 521.16,-373 521.16,-373 515.16,-373 509.16,-367 509.16,-361 509.16,-361 509.16,-349 509.16,-349 509.16,-343 515.16,-337 521.16,-337 521.16,-337 601.95,-337 601.95,-337 607.95,-337 613.95,-343 613.95,-349 613.95,-349 613.95,-361 613.95,-361 613.95,-367 607.95,-373 601.95,-373"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-350.32" font-family="Verdana" font-size="14.00">GetRegistry</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge48" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge48"><a xlink:title="at registry.go:74: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M719.68,-934.33C724.63,-931 729.29,-927.24 733.58,-923 787.64,-869.51 746.07,-642.01 798.58,-587 820.42,-564.12 856.47,-557.15 883.94,-555.44"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="883.75,-558.95 893.6,-555.06 883.47,-551.96 883.75,-558.95"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry -->
+<g id="edge59" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry</title>
+<g id="a_edge59"><a xlink:title="at factory.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]">
+<path fill="none" stroke="black" d="M256.02,-327.9C329.44,-334.43 431.91,-343.55 497.25,-349.37"/>
+<polygon fill="black" stroke="black" points="496.83,-352.84 507.1,-350.24 497.45,-345.87 496.83,-352.84"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge58" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge58"><a xlink:title="at registry.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M719.09,-934.35C724.24,-931.02 729.1,-927.26 733.58,-923 805.66,-854.55 720.88,-770.99 798.58,-709 801.69,-706.52 804.97,-704.23 808.39,-702.13"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="809.94,-705.27 817.02,-697.39 806.57,-699.14 809.94,-705.27"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge55" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge55"><a xlink:title="at registry.go:76: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M585.98,-971.6C628.12,-1002.71 717.3,-1057.43 770.58,-1010 810.69,-974.3 763.17,-810.36 798.58,-770 800.26,-768.08 802.05,-766.27 803.92,-764.57"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="805.73,-767.6 811.44,-758.68 801.41,-762.08 805.73,-767.6"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge32" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterFormatterStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge32"><a xlink:title="at registry.go:77: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M719.64,-934.29C724.6,-930.97 729.28,-927.22 733.58,-923 793.36,-864.32 748.7,-819.12 769.58,-738 780.06,-697.3 767.91,-676.73 798.58,-648 802.84,-644 807.55,-640.5 812.55,-637.44"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="814.04,-640.61 821.17,-632.78 810.71,-634.45 814.04,-640.61"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
 <g id="node10" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory</title>
-<g id="a_node10"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory | defined in registry.go:314&#10;at registry.go:315: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M665.7,-52C665.7,-52 457.41,-52 457.41,-52 451.41,-52 445.41,-46 445.41,-40 445.41,-40 445.41,-28 445.41,-28 445.41,-22 451.41,-16 457.41,-16 457.41,-16 665.7,-16 665.7,-16 671.7,-16 677.7,-22 677.7,-28 677.7,-28 677.7,-40 677.7,-40 677.7,-46 671.7,-52 665.7,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-29.32" font-family="Verdana" font-size="14.00">DefaultPromptRegistryFactory</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager | defined in registry.go:88&#10;at registry.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at registry.go:94: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at registry.go:95: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M681.45,-251C681.45,-251 441.66,-251 441.66,-251 435.66,-251 429.66,-245 429.66,-239 429.66,-239 429.66,-227 429.66,-227 429.66,-221 435.66,-215 441.66,-215 441.66,-215 681.45,-215 681.45,-215 687.45,-215 693.45,-221 693.45,-227 693.45,-227 693.45,-239 693.45,-239 693.45,-245 687.45,-251 681.45,-251"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-228.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).CreateManager</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry -->
-<g id="edge38" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.DefaultPromptRegistryFactory&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry</title>
-<g id="a_edge38"><a xlink:title="at registry.go:315: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry]">
-<path fill="none" stroke="black" d="M678.18,-34C727.44,-34 784.08,-34 830.33,-34"/>
-<polygon fill="black" stroke="black" points="830.04,-37.5 840.04,-34 830.04,-30.5 830.04,-37.5"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
+<g id="edge12" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
+<g id="a_edge12"><a xlink:title="at factory.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
+<path fill="none" stroke="black" d="M255.78,-304.4C275.88,-300.25 297.05,-295.4 316.54,-290 349.73,-280.81 356.26,-272.88 389.54,-264 403.25,-260.34 417.69,-256.98 432.13,-253.94"/>
+<polygon fill="black" stroke="black" points="432.59,-257.41 441.68,-251.97 431.18,-250.56 432.59,-257.41"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge23" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge23"><a xlink:title="at registry.go:94: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M618.04,-214.26C671.99,-197.69 748.89,-179 770.58,-199 826.81,-250.83 748.48,-484.22 798.58,-542 819.32,-565.92 855.83,-571.76 883.73,-572.31"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="883.59,-575.81 893.58,-572.27 883.56,-568.81 883.59,-575.81"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge39" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge39"><a xlink:title="at registry.go:95: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M694.17,-218.93C722.78,-222.56 750.47,-232.33 770.58,-253 834.11,-318.3 739.88,-592.33 798.58,-662 799.71,-663.34 800.89,-664.63 802.11,-665.86"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="799.76,-668.46 809.64,-672.29 804.31,-663.13 799.76,-668.46"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge14" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge14"><a xlink:title="at registry.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M694.13,-238.98C708.93,-244.55 722.6,-252.58 733.58,-264 769.29,-301.12 763.99,-684.83 798.58,-723 799.93,-724.49 801.33,-725.9 802.79,-727.26"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="800.51,-729.91 810.52,-733.38 804.85,-724.42 800.51,-729.91"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge32" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge32"><a xlink:title="at registry.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M610.06,-214.33C657.1,-199.32 728.07,-186.55 770.58,-226 831.83,-282.85 744.54,-537.26 798.58,-601 802.72,-605.88 807.5,-610.04 812.73,-613.57"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="810.87,-616.54 821.28,-618.53 814.38,-610.49 810.87,-616.54"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager -->
+<g id="node11" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager</title>
+<g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager | defined in factory.go:117&#10;at factory.go:129: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at factory.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]&#10;at factory.go:128: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at factory.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:119: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M238.91,-417C238.91,-417 93.62,-417 93.62,-417 87.62,-417 81.62,-411 81.62,-405 81.62,-405 81.62,-393 81.62,-393 81.62,-387 87.62,-381 93.62,-381 93.62,-381 238.91,-381 238.91,-381 244.91,-381 250.91,-387 250.91,-393 250.91,-393 250.91,-405 250.91,-405 250.91,-411 244.91,-417 238.91,-417"/>
+<text xml:space="preserve" text-anchor="middle" x="166.27" y="-394.32" font-family="Verdana" font-size="14.00">NewLayeredManager</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry -->
+<g id="edge6" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry</title>
+<g id="a_edge6"><a xlink:title="at factory.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]">
+<path fill="none" stroke="black" d="M251.64,-389.56C325.36,-381.31 430.73,-369.52 497.38,-362.07"/>
+<polygon fill="black" stroke="black" points="497.49,-365.58 507.04,-360.99 496.71,-358.62 497.49,-365.58"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
+<g id="edge58" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
+<g id="a_edge58"><a xlink:title="at factory.go:119: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
+<path fill="none" stroke="black" d="M251.62,-380.89C273.89,-373.76 297.11,-364.06 316.54,-351 358.43,-322.84 345.89,-289.34 389.54,-264 398.64,-258.72 408.44,-254.3 418.57,-250.6"/>
+<polygon fill="black" stroke="black" points="419.45,-254 427.81,-247.49 417.21,-247.37 419.45,-254"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge24" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge24"><a xlink:title="at factory.go:128: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M251.54,-398.72C408.14,-398.97 731.72,-403.49 770.58,-436 807.95,-467.27 763.53,-508.15 798.58,-542 821.04,-563.69 856.62,-569.92 883.78,-571.17"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="883.62,-574.66 893.7,-571.39 883.78,-567.67 883.62,-574.66"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge2" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge2"><a xlink:title="at factory.go:129: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M170.09,-417.74C184.55,-510.95 253.48,-923.02 352.54,-996 490.4,-1097.57 584.16,-1022.63 733.58,-939 821.06,-890.04 730.78,-796.85 798.58,-723 800.37,-721.05 802.26,-719.22 804.24,-717.5"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="806.32,-720.31 812.23,-711.52 802.12,-714.71 806.32,-720.31"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge33" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge33"><a xlink:title="at factory.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M168.05,-417.6C172.52,-497.52 201.91,-813.33 389.54,-939 516.58,-1024.09 584.21,-971.67 733.58,-939 751.26,-935.13 759.34,-936.18 770.58,-922 809.45,-872.95 755.37,-829.27 798.58,-784 800.58,-781.91 802.69,-779.95 804.91,-778.11"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="806.62,-781.19 812.71,-772.52 802.54,-775.51 806.62,-781.19"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager -->
-<g id="node11" class="node">
+<g id="node12" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager</title>
-<g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager | defined in factory.go:79&#10;at factory.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at factory.go:99: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at factory.go:85: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.NewLayeredPromptManager]&#10;at factory.go:89: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.DefaultManager).SetLayer]&#10;at factory.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.DefaultManager).SetLayer]&#10;at factory.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at factory.go:100: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M633.45,-1277C633.45,-1277 489.66,-1277 489.66,-1277 483.66,-1277 477.66,-1271 477.66,-1265 477.66,-1265 477.66,-1253 477.66,-1253 477.66,-1247 483.66,-1241 489.66,-1241 489.66,-1241 633.45,-1241 633.45,-1241 639.45,-1241 645.45,-1247 645.45,-1253 645.45,-1253 645.45,-1265 645.45,-1265 645.45,-1271 639.45,-1277 633.45,-1277"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-1254.33" font-family="Verdana" font-size="14.00">newLayeredManager</text>
+<g id="a_node12"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager | defined in factory.go:79&#10;at factory.go:85: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.NewLayeredPromptManager]&#10;at factory.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at factory.go:99: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at factory.go:89: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.DefaultManager).SetLayer]&#10;at factory.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.DefaultManager).SetLayer]&#10;at factory.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at factory.go:100: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M633.45,-1331C633.45,-1331 489.66,-1331 489.66,-1331 483.66,-1331 477.66,-1325 477.66,-1319 477.66,-1319 477.66,-1307 477.66,-1307 477.66,-1301 483.66,-1295 489.66,-1295 489.66,-1295 633.45,-1295 633.45,-1295 639.45,-1295 645.45,-1301 645.45,-1307 645.45,-1307 645.45,-1319 645.45,-1319 645.45,-1325 639.45,-1331 633.45,-1331"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-1308.33" font-family="Verdana" font-size="14.00">newLayeredManager</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge49" class="edge">
+<g id="edge51" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge49"><a xlink:title="at factory.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at factory.go:100: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M638.51,-1240.85C672.84,-1228.74 710.74,-1209.12 733.58,-1178 764.71,-1135.59 763.46,-748.17 798.58,-709 800.31,-707.07 802.15,-705.24 804.07,-703.53"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="806.02,-706.45 811.83,-697.59 801.76,-700.89 806.02,-706.45"/>
+<g id="a_edge51"><a xlink:title="at factory.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at factory.go:100: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M624.98,-1294.85C662.08,-1280.86 706.96,-1257.74 733.58,-1222 783.4,-1155.1 758.65,-1120.56 770.58,-1038 780.63,-968.45 752.96,-776.46 798.58,-723 800.24,-721.06 802,-719.23 803.84,-717.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="805.67,-720.53 811.3,-711.55 801.3,-715.06 805.67,-720.53"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge39" class="edge">
+<g id="edge15" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge39"><a xlink:title="at factory.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M634.6,-1240.77C669.27,-1228.48 708.62,-1208.73 733.58,-1178 777.96,-1123.36 758.48,-1093.34 770.58,-1024 780.34,-968.06 761.26,-812.8 798.58,-770 800.26,-768.08 802.03,-766.26 803.9,-764.55"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="805.71,-767.58 811.41,-758.65 801.39,-762.08 805.71,-767.58"/>
+<g id="a_edge15"><a xlink:title="at factory.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M645.67,-1316.48C689.54,-1313.52 740.41,-1301.58 770.58,-1266 839.97,-1184.17 730.19,-866.67 798.58,-784 800.06,-782.22 801.62,-780.53 803.26,-778.93"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="805.41,-781.69 810.87,-772.62 800.94,-776.3 805.41,-781.69"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge15" class="edge">
+<g id="edge16" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge15"><a xlink:title="at factory.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at factory.go:99: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M645.65,-1252.53C687.64,-1245.29 736.73,-1230.21 770.58,-1199 777.84,-1192.31 877.78,-920.19 911.04,-829.25"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="914.26,-830.63 914.41,-820.03 907.69,-828.22 914.26,-830.63"/>
+<g id="a_edge16"><a xlink:title="at factory.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at factory.go:99: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M645.61,-1327.18C688.24,-1329.52 737.93,-1323.82 770.58,-1293 800.18,-1265.06 787.62,-1151.2 798.58,-1112 827.22,-1009.58 881.18,-895.05 907.1,-842.79"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="910.17,-844.48 911.51,-833.97 903.9,-841.35 910.17,-844.48"/>
 </a>
 </g>
 </g>
@@ -473,17 +446,17 @@
 <g id="node28" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.NewLayeredPromptManager</title>
 <g id="a_node28"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.NewLayeredPromptManager | defined in default_manager.go:30">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1020.49,-1271C1020.49,-1271 824.95,-1271 824.95,-1271 818.95,-1271 812.95,-1265 812.95,-1259 812.95,-1259 812.95,-1247 812.95,-1247 812.95,-1241 818.95,-1235 824.95,-1235 824.95,-1235 1020.49,-1235 1020.49,-1235 1026.49,-1235 1032.49,-1241 1032.49,-1247 1032.49,-1247 1032.49,-1259 1032.49,-1259 1032.49,-1265 1026.49,-1271 1020.49,-1271"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-1248.33" font-family="Verdana" font-size="14.00">NewLayeredPromptManager</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1020.49,-1332C1020.49,-1332 824.95,-1332 824.95,-1332 818.95,-1332 812.95,-1326 812.95,-1320 812.95,-1320 812.95,-1308 812.95,-1308 812.95,-1302 818.95,-1296 824.95,-1296 824.95,-1296 1020.49,-1296 1020.49,-1296 1026.49,-1296 1032.49,-1302 1032.49,-1308 1032.49,-1308 1032.49,-1320 1032.49,-1320 1032.49,-1326 1026.49,-1332 1020.49,-1332"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-1309.33" font-family="Verdana" font-size="14.00">NewLayeredPromptManager</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.NewLayeredPromptManager -->
-<g id="edge16" class="edge">
+<g id="edge7" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.NewLayeredPromptManager</title>
-<g id="a_edge16"><a xlink:title="at factory.go:85: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.NewLayeredPromptManager]">
-<path fill="none" stroke="saddlebrown" d="M586.61,-1277.09C626.38,-1304.62 707.7,-1350.76 770.58,-1320 788.79,-1311.09 781.6,-1295.08 798.58,-1284 802.85,-1281.21 807.35,-1278.68 812.01,-1276.37"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="813.37,-1279.6 821.05,-1272.3 810.5,-1273.21 813.37,-1279.6"/>
+<g id="a_edge7"><a xlink:title="at factory.go:85: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.NewLayeredPromptManager]">
+<path fill="none" stroke="saddlebrown" d="M621.51,-1331.23C663.03,-1341.96 720.01,-1352.46 770.58,-1347 793.31,-1344.55 817.63,-1340.08 839.98,-1335.2"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="840.65,-1338.64 849.64,-1333.04 839.12,-1331.81 840.65,-1338.64"/>
 </a>
 </g>
 </g>
@@ -491,8 +464,8 @@
 <g id="node29" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.DefaultManager).SetLayer</title>
 <g id="a_node29"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.DefaultManager).SetLayer | defined in default_manager.go:199">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1021.62,-1332C1021.62,-1332 823.83,-1332 823.83,-1332 817.83,-1332 811.83,-1326 811.83,-1320 811.83,-1320 811.83,-1308 811.83,-1308 811.83,-1302 817.83,-1296 823.83,-1296 823.83,-1296 1021.62,-1296 1021.62,-1296 1027.62,-1296 1033.62,-1302 1033.62,-1308 1033.62,-1308 1033.62,-1320 1033.62,-1320 1033.62,-1326 1027.62,-1332 1021.62,-1332"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-1309.33" font-family="Verdana" font-size="14.00">(*DefaultManager).SetLayer</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1021.62,-1271C1021.62,-1271 823.83,-1271 823.83,-1271 817.83,-1271 811.83,-1265 811.83,-1259 811.83,-1259 811.83,-1247 811.83,-1247 811.83,-1241 817.83,-1235 823.83,-1235 823.83,-1235 1021.62,-1235 1021.62,-1235 1027.62,-1235 1033.62,-1241 1033.62,-1247 1033.62,-1247 1033.62,-1259 1033.62,-1259 1033.62,-1265 1027.62,-1271 1021.62,-1271"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-1248.33" font-family="Verdana" font-size="14.00">(*DefaultManager).SetLayer</text>
 </a>
 </g>
 </g>
@@ -500,242 +473,197 @@
 <g id="edge25" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.DefaultManager).SetLayer</title>
 <g id="a_edge25"><a xlink:title="at factory.go:89: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.DefaultManager).SetLayer]&#10;at factory.go:98: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/layered.DefaultManager).SetLayer]">
-<path fill="none" stroke="saddlebrown" d="M594.31,-1277.25C634.24,-1298.33 705.48,-1329.79 770.58,-1327 780.14,-1326.59 790.03,-1326.03 799.96,-1325.38"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="799.94,-1328.89 809.67,-1324.71 799.46,-1321.91 799.94,-1328.89"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager -->
-<g id="node12" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager</title>
-<g id="a_node12"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager | defined in factory.go:109&#10;at factory.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]&#10;at factory.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M243.41,-813C243.41,-813 89.12,-813 89.12,-813 83.12,-813 77.12,-807 77.12,-801 77.12,-801 77.12,-789 77.12,-789 77.12,-783 83.12,-777 89.12,-777 89.12,-777 243.41,-777 243.41,-777 249.41,-777 255.41,-783 255.41,-789 255.41,-789 255.41,-801 255.41,-801 255.41,-807 249.41,-813 243.41,-813"/>
-<text xml:space="preserve" text-anchor="middle" x="166.27" y="-790.33" font-family="Verdana" font-size="14.00">NewStandardManager</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
-<g id="edge23" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
-<g id="a_edge23"><a xlink:title="at factory.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
-<path fill="none" stroke="black" d="M256.14,-786.16C278.43,-779.95 300.53,-769.73 316.54,-753 365.63,-701.72 338.07,-490.89 389.54,-442 398.08,-433.89 407.99,-427.53 418.65,-422.58"/>
-<polygon fill="black" stroke="black" points="419.79,-425.89 427.69,-418.83 417.11,-419.43 419.79,-425.89"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry -->
-<g id="node13" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry</title>
-<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry | defined in registry.go:309">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M601.95,-849C601.95,-849 521.16,-849 521.16,-849 515.16,-849 509.16,-843 509.16,-837 509.16,-837 509.16,-825 509.16,-825 509.16,-819 515.16,-813 521.16,-813 521.16,-813 601.95,-813 601.95,-813 607.95,-813 613.95,-819 613.95,-825 613.95,-825 613.95,-837 613.95,-837 613.95,-843 607.95,-849 601.95,-849"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-826.33" font-family="Verdana" font-size="14.00">GetRegistry</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry -->
-<g id="edge60" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewStandardManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry</title>
-<g id="a_edge60"><a xlink:title="at factory.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]">
-<path fill="none" stroke="black" d="M256.02,-803.12C329.44,-809.84 431.91,-819.22 497.25,-825.2"/>
-<polygon fill="black" stroke="black" points="496.82,-828.68 507.1,-826.11 497.46,-821.71 496.82,-828.68"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager -->
-<g id="node14" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager</title>
-<g id="a_node14"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager | defined in factory.go:117&#10;at factory.go:129: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at factory.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]&#10;at factory.go:128: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at factory.go:119: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M238.91,-656C238.91,-656 93.62,-656 93.62,-656 87.62,-656 81.62,-650 81.62,-644 81.62,-644 81.62,-632 81.62,-632 81.62,-626 87.62,-620 93.62,-620 93.62,-620 238.91,-620 238.91,-620 244.91,-620 250.91,-626 250.91,-632 250.91,-632 250.91,-644 250.91,-644 250.91,-650 244.91,-656 238.91,-656"/>
-<text xml:space="preserve" text-anchor="middle" x="166.27" y="-633.33" font-family="Verdana" font-size="14.00">NewLayeredManager</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
-<g id="edge59" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
-<g id="a_edge59"><a xlink:title="at factory.go:119: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
-<path fill="none" stroke="black" d="M181.96,-619.51C214.61,-579.84 297.63,-486.51 389.54,-442 398.71,-437.56 408.45,-433.75 418.43,-430.48"/>
-<polygon fill="black" stroke="black" points="419.35,-433.86 427.89,-427.59 417.31,-427.16 419.35,-433.86"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry -->
-<g id="edge50" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry</title>
-<g id="a_edge50"><a xlink:title="at factory.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]">
-<path fill="none" stroke="black" d="M247.59,-656.72C271.41,-664.89 296.46,-676.29 316.54,-692 362.46,-727.93 340.68,-769.19 389.54,-801 421.2,-821.61 462.85,-829.24 497.12,-831.64"/>
-<polygon fill="black" stroke="black" points="496.75,-835.13 506.93,-832.19 497.13,-828.14 496.75,-835.13"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge52" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge52"><a xlink:title="at factory.go:128: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M183.23,-619.31C211.85,-585.34 272.98,-510.6 316.54,-442 354.16,-382.76 334.7,-345.78 389.54,-302 526.03,-193.03 596.37,-224.41 769.58,-202 909.93,-183.84 922.21,-437.44 922.25,-526.05"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="918.75,-525.88 922.2,-535.9 925.75,-525.92 918.75,-525.88"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge12" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge12"><a xlink:title="at factory.go:129: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M251.38,-637.13C362.12,-636.66 562.77,-638.13 733.58,-652 753.41,-653.61 774.34,-655.9 794.75,-658.47"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="794.16,-661.93 804.53,-659.73 795.06,-654.98 794.16,-661.93"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge17" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewLayeredManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge17"><a xlink:title="at factory.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M217.6,-656.6C272.29,-676.52 356.32,-706.2 389.54,-713 427.11,-720.69 705.25,-714.17 733.58,-740 803.23,-803.51 697.5,-888.27 769.58,-949 831.22,-1000.93 744.26,-829.53 798.58,-770 800.36,-768.05 802.24,-766.21 804.22,-764.48"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="806.3,-767.29 812.19,-758.49 802.1,-761.7 806.3,-767.29"/>
+<path fill="none" stroke="saddlebrown" d="M632.02,-1331.17C674.17,-1338.46 727.89,-1340.88 770.58,-1320 788.79,-1311.09 781.6,-1295.08 798.58,-1284 802.85,-1281.21 807.35,-1278.68 812.01,-1276.37"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="813.37,-1279.6 821.05,-1272.3 810.5,-1273.21 813.37,-1279.6"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager -->
-<g id="node15" class="node">
+<g id="node13" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager</title>
-<g id="a_node15"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager | defined in factory.go:50&#10;at factory.go:51: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]&#10;at factory.go:52: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M211.16,-740C211.16,-740 121.37,-740 121.37,-740 115.37,-740 109.37,-734 109.37,-728 109.37,-728 109.37,-716 109.37,-716 109.37,-710 115.37,-704 121.37,-704 121.37,-704 211.16,-704 211.16,-704 217.16,-704 223.16,-710 223.16,-716 223.16,-716 223.16,-728 223.16,-728 223.16,-734 217.16,-740 211.16,-740"/>
-<text xml:space="preserve" text-anchor="middle" x="166.27" y="-717.33" font-family="Verdana" font-size="14.00">NewManager</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
-<g id="edge51" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
-<g id="a_edge51"><a xlink:title="at factory.go:52: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
-<path fill="none" stroke="black" d="M223.89,-714.36C255,-707.41 292.12,-694.16 316.54,-669 390.34,-592.95 309.83,-511.84 389.54,-442 398.14,-434.47 407.93,-428.49 418.38,-423.76"/>
-<polygon fill="black" stroke="black" points="419.68,-427.01 427.63,-420.01 417.05,-420.53 419.68,-427.01"/>
+<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager | defined in factory.go:50&#10;at factory.go:51: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]&#10;at factory.go:52: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M211.16,-277C211.16,-277 121.37,-277 121.37,-277 115.37,-277 109.37,-271 109.37,-265 109.37,-265 109.37,-253 109.37,-253 109.37,-247 115.37,-241 121.37,-241 121.37,-241 211.16,-241 211.16,-241 217.16,-241 223.16,-247 223.16,-253 223.16,-253 223.16,-265 223.16,-265 223.16,-271 217.16,-277 211.16,-277"/>
+<text xml:space="preserve" text-anchor="middle" x="166.27" y="-254.32" font-family="Verdana" font-size="14.00">NewManager</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry -->
-<g id="edge19" class="edge">
+<g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry</title>
-<g id="a_edge19"><a xlink:title="at factory.go:51: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]">
-<path fill="none" stroke="black" d="M223.69,-735.72C251.96,-743.22 286.49,-753.37 316.54,-765 350.28,-778.06 355.15,-789.76 389.54,-801 424.4,-812.39 464.75,-819.73 497.5,-824.3"/>
-<polygon fill="black" stroke="black" points="496.87,-827.75 507.24,-825.6 497.79,-820.81 496.87,-827.75"/>
+<g id="a_edge3"><a xlink:title="at factory.go:51: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.GetRegistry]">
+<path fill="none" stroke="black" d="M223.77,-267.4C252.06,-272.45 286.58,-279.87 316.54,-290 350.63,-301.52 355.28,-314.01 389.54,-325 424.46,-336.2 464.81,-343.53 497.55,-348.14"/>
+<polygon fill="black" stroke="black" points="496.91,-351.58 507.29,-349.45 497.85,-344.65 496.91,-351.58"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1 -->
-<g id="node16" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1</title>
-<g id="a_node16"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1 | defined in registry.go:304&#10;at registry.go:305: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M582.08,-113C582.08,-113 541.04,-113 541.04,-113 535.04,-113 529.04,-107 529.04,-101 529.04,-101 529.04,-89 529.04,-89 529.04,-83 535.04,-77 541.04,-77 541.04,-77 582.08,-77 582.08,-77 588.08,-77 594.08,-83 594.08,-89 594.08,-89 594.08,-101 594.08,-101 594.08,-107 588.08,-113 582.08,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-90.33" font-family="Verdana" font-size="14.00">init#1</text>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
+<g id="edge10" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
+<g id="a_edge10"><a xlink:title="at factory.go:52: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
+<path fill="none" stroke="black" d="M223.62,-255.27C274.22,-251.93 350.68,-246.87 417.98,-242.43"/>
+<polygon fill="black" stroke="black" points="417.87,-245.94 427.62,-241.79 417.41,-238.96 417.87,-245.94"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry -->
-<g id="edge6" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry</title>
-<g id="a_edge6"><a xlink:title="at registry.go:305: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptRegistry]">
-<path fill="none" stroke="black" d="M594.12,-89.64C646.41,-80.76 752.92,-62.67 830.34,-49.52"/>
-<polygon fill="black" stroke="black" points="830.78,-53 840.05,-47.87 829.61,-46.1 830.78,-53"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter -->
+<g id="node14" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter</title>
+<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter | defined in registry.go:104&#10;at registry.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at registry.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at registry.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M685.58,-174C685.58,-174 437.54,-174 437.54,-174 431.54,-174 425.54,-168 425.54,-162 425.54,-162 425.54,-150 425.54,-150 425.54,-144 431.54,-138 437.54,-138 437.54,-138 685.58,-138 685.58,-138 691.58,-138 697.58,-144 697.58,-150 697.58,-150 697.58,-162 697.58,-162 697.58,-168 691.58,-174 685.58,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-151.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).CreateFormatter</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init -->
-<g id="node17" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init</title>
-<g id="a_node17"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init | defined in .:0&#10;at .:0: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M181.27,-113C181.27,-113 151.27,-113 151.27,-113 145.27,-113 139.27,-107 139.27,-101 139.27,-101 139.27,-89 139.27,-89 139.27,-83 145.27,-77 151.27,-77 151.27,-77 181.27,-77 181.27,-77 187.27,-77 193.27,-83 193.27,-89 193.27,-89 193.27,-101 193.27,-101 193.27,-107 187.27,-113 181.27,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="166.27" y="-90.33" font-family="Verdana" font-size="14.00">init</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge40" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge40"><a xlink:title="at registry.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M698.09,-140.1C710.42,-136.33 722.44,-131.69 733.58,-126 753.74,-115.7 754.09,-75.5 770.58,-91 843.75,-159.77 733.54,-465.5 798.58,-542 819.08,-566.12 855.63,-571.94 883.6,-572.43"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="883.5,-575.93 893.48,-572.36 883.45,-568.93 883.5,-575.93"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1 -->
-<g id="edge53" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1</title>
-<g id="a_edge53"><a xlink:title="at .:0: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts.init#1]">
-<path fill="none" stroke="black" d="M193.38,-95C259.77,-95 435.55,-95 517.44,-95"/>
-<polygon fill="black" stroke="black" points="517.31,-98.5 527.31,-95 517.31,-91.5 517.31,-98.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge13"><a xlink:title="at registry.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M663.54,-137.28C708.52,-131.55 754.89,-130.14 770.58,-145 812.34,-184.56 761.83,-617.74 798.58,-662 799.7,-663.35 800.87,-664.64 802.09,-665.88"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="799.72,-668.46 809.57,-672.34 804.29,-663.16 799.72,-668.46"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy -->
-<g id="node18" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy</title>
-<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy | defined in registry.go:56&#10;at registry.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at registry.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at registry.go:58: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M717.45,-490C717.45,-490 405.66,-490 405.66,-490 399.66,-490 393.66,-484 393.66,-478 393.66,-478 393.66,-466 393.66,-466 393.66,-460 399.66,-454 405.66,-454 405.66,-454 717.45,-454 717.45,-454 723.45,-454 729.45,-460 729.45,-466 729.45,-466 729.45,-478 729.45,-478 729.45,-484 723.45,-490 717.45,-490"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-467.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).RegisterManagerStrategy</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge34" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge34"><a xlink:title="at registry.go:112: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M694.9,-174.71C709.57,-181.59 723,-190.78 733.58,-203 752.63,-225.01 779.21,-701.27 798.58,-723 799.91,-724.5 801.31,-725.92 802.76,-727.29"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="800.45,-729.92 810.44,-733.45 804.83,-724.46 800.45,-729.92"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge44" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge44"><a xlink:title="at registry.go:58: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M719.81,-453.46C724.73,-450.09 729.34,-446.29 733.58,-442 803.85,-370.82 686.59,-165.68 770.58,-220 878.76,-289.96 910.27,-457.81 918.79,-526.22"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="915.29,-526.39 919.92,-535.92 922.24,-525.58 915.29,-526.39"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
 <g id="edge45" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge45"><a xlink:title="at registry.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M714.09,-490.6C720.97,-494.15 727.52,-498.26 733.58,-503 789.18,-546.54 744.3,-602.82 798.58,-648 800.96,-649.98 803.44,-651.83 806.02,-653.56"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="804.03,-656.45 814.41,-658.55 807.6,-650.43 804.03,-656.45"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge45"><a xlink:title="at registry.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M673.55,-137.28C693.56,-133.69 714.21,-129.85 733.58,-126 750.08,-122.72 758.34,-106.45 770.58,-118 848.77,-191.79 729.74,-518.41 798.58,-601 802.67,-605.91 807.43,-610.1 812.63,-613.65"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="810.75,-616.61 821.15,-618.64 814.29,-610.56 810.75,-616.61"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge8" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge8"><a xlink:title="at registry.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M719.45,-490.64C724.53,-494.25 729.28,-498.35 733.58,-503 787.84,-561.73 710.28,-807.36 769.58,-861 801.06,-889.47 767.8,-799.23 798.58,-770 800.86,-767.83 803.27,-765.81 805.79,-763.93"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="807.62,-766.91 814.07,-758.5 803.78,-761.06 807.62,-766.91"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter -->
+<g id="node15" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter</title>
+<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter | defined in registry.go:133&#10;at registry.go:134: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M304.54,-155C304.54,-155 28,-155 28,-155 22,-155 16,-149 16,-143 16,-143 16,-131 16,-131 16,-125 22,-119 28,-119 28,-119 304.54,-119 304.54,-119 310.54,-119 316.54,-125 316.54,-131 316.54,-131 316.54,-143 316.54,-143 316.54,-149 310.54,-155 304.54,-155"/>
+<text xml:space="preserve" text-anchor="middle" x="166.27" y="-132.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).GetDefaultFormatter</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge43" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge43"><a xlink:title="at registry.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M682.64,-453.26C699.83,-449.9 717.21,-446.14 733.58,-442 750.34,-437.76 757.33,-418.9 770.58,-430 824.92,-475.51 750.05,-535.34 798.58,-587 802.82,-591.51 807.61,-595.39 812.78,-598.73"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="810.72,-601.58 821.15,-603.42 814.14,-595.48 810.72,-601.58"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter -->
+<g id="edge35" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter</title>
+<g id="a_edge35"><a xlink:title="at registry.go:134: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter]">
+<path fill="none" stroke="black" d="M317.08,-144.24C348.83,-145.77 382.31,-147.39 413.93,-148.92"/>
+<polygon fill="black" stroke="black" points="413.37,-152.39 423.53,-149.38 413.71,-145.4 413.37,-152.39"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType -->
+<g id="node16" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType</title>
+<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType | defined in registry.go:138&#10;at registry.go:146: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at registry.go:147: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at registry.go:144: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M711.83,-312C711.83,-312 411.29,-312 411.29,-312 405.29,-312 399.29,-306 399.29,-300 399.29,-300 399.29,-288 399.29,-288 399.29,-282 405.29,-276 411.29,-276 411.29,-276 711.83,-276 711.83,-276 717.83,-276 723.83,-282 723.83,-288 723.83,-288 723.83,-300 723.83,-300 723.83,-306 717.83,-312 711.83,-312"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-289.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).SetDefaultManagerType</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge26" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge26"><a xlink:title="at registry.go:144: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M724.33,-281.56C741.49,-286.5 757.43,-294.57 770.58,-307 847.02,-379.26 728.21,-463.82 798.58,-542 819.69,-565.46 855.99,-571.39 883.73,-572.08"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="883.5,-575.58 893.51,-572.1 883.51,-568.58 883.5,-575.58"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge52" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge52"><a xlink:title="at registry.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M718.64,-312.72C740.87,-323.13 759.82,-338.49 770.58,-361 799.55,-421.61 754.67,-611.16 798.58,-662 799.87,-663.49 801.21,-664.91 802.61,-666.27"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="800.08,-668.72 810.02,-672.39 804.54,-663.32 800.08,-668.72"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge19" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge19"><a xlink:title="at registry.go:146: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M718.72,-312.73C724.04,-316.3 729.03,-320.37 733.58,-325 796.39,-388.92 737.7,-657.24 798.58,-723 800.09,-724.63 801.68,-726.19 803.33,-727.66"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="800.83,-730.15 810.89,-733.47 805.1,-724.6 800.83,-730.15"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge20" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultManagerType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge20"><a xlink:title="at registry.go:147: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M724.34,-302.29C741.94,-309.4 757.99,-319.6 770.58,-334 849.11,-423.83 720.07,-511.15 798.58,-601 802.74,-605.76 807.52,-609.84 812.73,-613.31"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="810.8,-616.24 821.21,-618.19 814.29,-610.17 810.8,-616.24"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager -->
+<g id="node17" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager</title>
+<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager | defined in registry.go:120&#10;at registry.go:129: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M300.41,-216C300.41,-216 32.12,-216 32.12,-216 26.12,-216 20.12,-210 20.12,-204 20.12,-204 20.12,-192 20.12,-192 20.12,-186 26.12,-180 32.12,-180 32.12,-180 300.41,-180 300.41,-180 306.41,-180 312.41,-186 312.41,-192 312.41,-192 312.41,-204 312.41,-204 312.41,-210 306.41,-216 300.41,-216"/>
+<text xml:space="preserve" text-anchor="middle" x="166.27" y="-193.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).GetDefaultManager</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager -->
+<g id="edge46" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager</title>
+<g id="a_edge46"><a xlink:title="at registry.go:129: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateManager]">
+<path fill="none" stroke="black" d="M313.16,-210.98C347.33,-214.02 383.7,-217.26 417.74,-220.29"/>
+<polygon fill="black" stroke="black" points="417.41,-223.77 427.68,-221.17 418.03,-216.8 417.41,-223.77"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager -->
-<g id="node19" class="node">
+<g id="node18" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager</title>
-<g id="a_node19"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager | defined in factory.go:56&#10;at factory.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:59: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at factory.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at factory.go:57: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard.NewPromptManager]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M637.95,-700C637.95,-700 485.16,-700 485.16,-700 479.16,-700 473.16,-694 473.16,-688 473.16,-688 473.16,-676 473.16,-676 473.16,-670 479.16,-664 485.16,-664 485.16,-664 637.95,-664 637.95,-664 643.95,-664 649.95,-670 649.95,-676 649.95,-676 649.95,-688 649.95,-688 649.95,-694 643.95,-700 637.95,-700"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-677.33" font-family="Verdana" font-size="14.00">newStandardManager</text>
+<g id="a_node18"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager | defined in factory.go:56&#10;at factory.go:59: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at factory.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at factory.go:57: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard.NewPromptManager]&#10;at factory.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M637.95,-804C637.95,-804 485.16,-804 485.16,-804 479.16,-804 473.16,-798 473.16,-792 473.16,-792 473.16,-780 473.16,-780 473.16,-774 479.16,-768 485.16,-768 485.16,-768 637.95,-768 637.95,-768 643.95,-768 649.95,-774 649.95,-780 649.95,-780 649.95,-792 649.95,-792 649.95,-798 643.95,-804 637.95,-804"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-781.33" font-family="Verdana" font-size="14.00">newStandardManager</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge29" class="edge">
+<g id="edge60" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge29"><a xlink:title="at factory.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M649.96,-681.03C693.41,-680.54 746.73,-679.95 794.6,-679.42"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="794.52,-682.92 804.48,-679.31 794.44,-675.92 794.52,-682.92"/>
+<g id="a_edge60"><a xlink:title="at factory.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M650.1,-784.82C688.89,-781.17 733.93,-772.48 770.58,-753 786.68,-744.44 782.87,-732.27 798.58,-723 803.55,-720.06 808.8,-717.4 814.21,-714.99"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="815.46,-718.26 823.39,-711.24 812.81,-711.79 815.46,-718.26"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge4" class="edge">
+<g id="edge28" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge4"><a xlink:title="at factory.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M650.17,-681.59C680.47,-685.97 712.15,-696.41 733.58,-719 802.66,-791.85 693.14,-876.91 769.58,-942 828.6,-992.26 746.15,-827.1 798.58,-770 800.37,-768.05 802.26,-766.22 804.24,-764.5"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="806.32,-767.31 812.23,-758.52 802.12,-761.71 806.32,-767.31"/>
+<g id="a_edge28"><a xlink:title="at factory.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M650.04,-786.35C687.28,-785.75 731.14,-784.07 770.58,-780 786.09,-778.4 802.41,-776.12 818.35,-773.56"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="818.52,-777.08 827.82,-771.99 817.38,-770.17 818.52,-777.08"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge20" class="edge">
+<g id="edge27" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge20"><a xlink:title="at factory.go:59: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M650.12,-691.81C681.16,-699.82 713.37,-714.22 733.58,-740 791.1,-813.37 700.88,-1094.97 769.58,-1158 796.04,-1182.28 883.54,-919.13 912.4,-829.37"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="915.67,-830.64 915.39,-820.05 909,-828.51 915.67,-830.64"/>
+<g id="a_edge27"><a xlink:title="at factory.go:59: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M650.1,-795.96C686.95,-799.87 730.31,-804.11 769.58,-807 807.34,-809.78 850.47,-811.64 881.14,-812.74"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="880.62,-816.22 890.73,-813.07 880.86,-809.23 880.62,-816.22"/>
 </a>
 </g>
 </g>
@@ -743,134 +671,206 @@
 <g id="node30" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard.NewPromptManager</title>
 <g id="a_node30"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard.NewPromptManager | defined in loader.go:16">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M992.74,-113C992.74,-113 852.7,-113 852.7,-113 846.7,-113 840.7,-107 840.7,-101 840.7,-101 840.7,-89 840.7,-89 840.7,-83 846.7,-77 852.7,-77 852.7,-77 992.74,-77 992.74,-77 998.74,-77 1004.74,-83 1004.74,-89 1004.74,-89 1004.74,-101 1004.74,-101 1004.74,-107 998.74,-113 992.74,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="922.72" y="-90.33" font-family="Verdana" font-size="14.00">NewPromptManager</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M992.74,-500C992.74,-500 852.7,-500 852.7,-500 846.7,-500 840.7,-494 840.7,-488 840.7,-488 840.7,-476 840.7,-476 840.7,-470 846.7,-464 852.7,-464 852.7,-464 992.74,-464 992.74,-464 998.74,-464 1004.74,-470 1004.74,-476 1004.74,-476 1004.74,-488 1004.74,-488 1004.74,-494 998.74,-500 992.74,-500"/>
+<text xml:space="preserve" text-anchor="middle" x="922.72" y="-477.32" font-family="Verdana" font-size="14.00">NewPromptManager</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard.NewPromptManager -->
-<g id="edge61" class="edge">
+<g id="edge47" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.newStandardManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard.NewPromptManager</title>
-<g id="a_edge61"><a xlink:title="at factory.go:57: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard.NewPromptManager]">
-<path fill="none" stroke="saddlebrown" d="M649.86,-672.55C680.87,-664.7 713.13,-650.52 733.58,-625 782.62,-563.82 738.8,-346.12 769.58,-274 796.59,-210.72 854.07,-153.1 890.14,-121.17"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="892.43,-123.82 897.67,-114.61 887.83,-118.54 892.43,-123.82"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter -->
-<g id="node20" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter</title>
-<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter | defined in registry.go:133&#10;at registry.go:134: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M304.54,-350C304.54,-350 28,-350 28,-350 22,-350 16,-344 16,-338 16,-338 16,-326 16,-326 16,-320 22,-314 28,-314 28,-314 304.54,-314 304.54,-314 310.54,-314 316.54,-320 316.54,-326 316.54,-326 316.54,-338 316.54,-338 316.54,-344 310.54,-350 304.54,-350"/>
-<text xml:space="preserve" text-anchor="middle" x="166.27" y="-327.32" font-family="Verdana" font-size="14.00">(*PromptRegistry).GetDefaultFormatter</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).GetDefaultFormatter&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter</title>
-<g id="a_edge1"><a xlink:title="at registry.go:134: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).CreateFormatter]">
-<path fill="none" stroke="black" d="M317.08,-332C348.83,-332 382.31,-332 413.93,-332"/>
-<polygon fill="black" stroke="black" points="413.53,-335.5 423.53,-332 413.53,-328.5 413.53,-335.5"/>
+<g id="a_edge47"><a xlink:title="at factory.go:57: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard.NewPromptManager]">
+<path fill="none" stroke="saddlebrown" d="M633.82,-767.83C667.86,-755.98 706.9,-737.32 733.58,-709 789.33,-649.82 742.94,-597.29 798.58,-538 811.61,-524.11 828.74,-513.4 846.07,-505.26"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="847.15,-508.6 854.88,-501.36 844.32,-502.2 847.15,-508.6"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt -->
-<g id="node21" class="node">
+<g id="node19" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt</title>
-<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt | defined in manager.go:47&#10;at manager.go:53: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at manager.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at manager.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at manager.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M679.95,-612C679.95,-612 443.16,-612 443.16,-612 437.16,-612 431.16,-606 431.16,-600 431.16,-600 431.16,-588 431.16,-588 431.16,-582 437.16,-576 443.16,-576 443.16,-576 679.95,-576 679.95,-576 685.95,-576 691.95,-582 691.95,-588 691.95,-588 691.95,-600 691.95,-600 691.95,-606 685.95,-612 679.95,-612"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-589.33" font-family="Verdana" font-size="14.00">(*PromptManager).RenderPrompt</text>
+<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt | defined in manager.go:47&#10;at manager.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at manager.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at manager.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at manager.go:53: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at manager.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M679.95,-926C679.95,-926 443.16,-926 443.16,-926 437.16,-926 431.16,-920 431.16,-914 431.16,-914 431.16,-902 431.16,-902 431.16,-896 437.16,-890 443.16,-890 443.16,-890 679.95,-890 679.95,-890 685.95,-890 691.95,-896 691.95,-902 691.95,-902 691.95,-914 691.95,-914 691.95,-920 685.95,-926 679.95,-926"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-903.33" font-family="Verdana" font-size="14.00">(*PromptManager).RenderPrompt</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge2" class="edge">
+<g id="edge29" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge2"><a xlink:title="at manager.go:53: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M692.68,-589.71C708.08,-584.17 722.31,-575.95 733.58,-564 781.32,-513.39 717.63,-299.28 769.58,-253 863.17,-169.62 906.33,-434.59 918.2,-526.09"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="914.71,-526.33 919.43,-535.81 921.65,-525.46 914.71,-526.33"/>
+<g id="a_edge29"><a xlink:title="at manager.go:53: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M623,-889.28C659.82,-874.97 705.1,-851.71 733.58,-817 797.17,-739.49 726.09,-670.25 798.58,-601 821.21,-579.38 856.62,-572.2 883.67,-570.1"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="883.76,-573.6 893.55,-569.56 883.38,-566.61 883.76,-573.6"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge9" class="edge">
+<g id="edge36" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge9"><a xlink:title="at manager.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M692.45,-609.47C718.79,-614.72 745.96,-621.71 770.58,-631 784.2,-636.14 785.13,-642.43 798.58,-648 805.48,-650.85 812.71,-653.48 820.07,-655.89"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="818.88,-659.18 829.47,-658.81 820.96,-652.5 818.88,-659.18"/>
+<g id="a_edge36"><a xlink:title="at manager.go:54: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:62: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M692.47,-920.64C721.22,-917.08 749.39,-907.71 770.58,-888 825.04,-837.34 748.09,-777.62 798.58,-723 800.37,-721.06 802.27,-719.23 804.25,-717.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="806.33,-720.33 812.26,-711.55 802.15,-714.71 806.33,-720.33"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge10" class="edge">
+<g id="edge42" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge10"><a xlink:title="at manager.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M675.26,-612.61C697.46,-621.21 718.51,-633.74 733.58,-652 808.67,-743 680.68,-837.44 769.58,-915 819.1,-958.21 753.42,-817.75 798.58,-770 800.57,-767.9 802.68,-765.93 804.89,-764.09"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="806.6,-767.17 812.66,-758.47 802.5,-761.49 806.6,-767.17"/>
+<g id="a_edge42"><a xlink:title="at manager.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:63: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M613.37,-926.73C659.53,-940.16 726.89,-950.34 770.58,-915 816.87,-877.56 757.25,-826.85 798.58,-784 800.59,-781.92 802.72,-779.97 804.94,-778.14"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="806.65,-781.22 812.76,-772.57 802.58,-775.52 806.65,-781.22"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge54" class="edge">
+<g id="edge4" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge54"><a xlink:title="at manager.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at manager.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M692.57,-587.25C707.62,-582.02 721.77,-574.54 733.58,-564 775.85,-526.27 726.88,-405.93 770.58,-442 821.2,-483.78 753.3,-539.48 798.58,-587 802.85,-591.48 807.67,-595.34 812.86,-598.66"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="810.82,-601.52 821.26,-603.33 814.22,-595.41 810.82,-601.52"/>
+<g id="a_edge4"><a xlink:title="at manager.go:56: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at manager.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M692.53,-903.13C721.81,-895.95 750.2,-883.13 770.58,-861 831.08,-795.3 738.89,-728.44 798.58,-662 802.77,-657.34 807.55,-653.33 812.73,-649.88"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="814.24,-653.06 821.15,-645.03 810.74,-646.99 814.24,-653.06"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge18" class="edge">
+<g id="edge21" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RenderPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge18"><a xlink:title="at manager.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M675.75,-612.74C697.78,-621.34 718.65,-633.84 733.58,-652 810.47,-745.51 678.49,-842.25 769.58,-922 817.99,-964.39 878.38,-876.6 906.28,-828.55"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="909.24,-830.43 911.13,-820 903.15,-826.97 909.24,-830.43"/>
+<g id="a_edge21"><a xlink:title="at manager.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M603.59,-926.64C646.4,-943.37 714.92,-962.4 770.58,-942 825.24,-921.97 873.7,-872.45 900.26,-841.21"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="902.8,-843.63 906.5,-833.7 897.42,-839.16 902.8,-843.63"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType -->
+<g id="node20" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType</title>
+<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType | defined in registry.go:158&#10;at registry.go:165: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at registry.go:166: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at registry.go:164: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:167: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M715.95,-696C715.95,-696 407.16,-696 407.16,-696 401.16,-696 395.16,-690 395.16,-684 395.16,-684 395.16,-672 395.16,-672 395.16,-666 401.16,-660 407.16,-660 407.16,-660 715.95,-660 715.95,-660 721.95,-660 727.95,-666 727.95,-672 727.95,-672 727.95,-684 727.95,-684 727.95,-690 721.95,-696 715.95,-696"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-673.33" font-family="Verdana" font-size="14.00">(*PromptRegistry).SetDefaultFormatterType</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge48" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge48"><a xlink:title="at registry.go:164: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M616.13,-659.36C663.76,-643.06 735.43,-619.23 798.58,-601 827.11,-592.77 859.7,-584.62 884.18,-578.74"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="884.77,-582.2 893.69,-576.48 883.15,-575.39 884.77,-582.2"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge17"><a xlink:title="at registry.go:165: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M728.48,-684.47C750.68,-685.33 773.16,-686.21 794.55,-687.04"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="794.33,-690.54 804.46,-687.43 794.61,-683.54 794.33,-690.54"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge43" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge43"><a xlink:title="at registry.go:166: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M652.27,-696.73C703.57,-707.45 768.07,-720.91 821.1,-731.99"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="820.24,-735.38 830.75,-734 821.67,-728.53 820.24,-735.38"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge56" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).SetDefaultFormatterType&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge56"><a xlink:title="at registry.go:167: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M705.8,-659.26C740.93,-654.66 778,-649.81 811.32,-645.45"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="811.5,-648.95 820.96,-644.19 810.59,-642.01 811.5,-648.95"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts -->
+<g id="node21" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts</title>
+<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts | defined in manager.go:91&#10;at manager.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts]&#10;at manager.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:95: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at manager.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M685.58,-1101C685.58,-1101 437.54,-1101 437.54,-1101 431.54,-1101 425.54,-1095 425.54,-1089 425.54,-1089 425.54,-1077 425.54,-1077 425.54,-1071 431.54,-1065 437.54,-1065 437.54,-1065 685.58,-1065 685.58,-1065 691.58,-1065 697.58,-1071 697.58,-1077 697.58,-1077 697.58,-1089 697.58,-1089 697.58,-1095 691.58,-1101 685.58,-1101"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-1078.33" font-family="Verdana" font-size="14.00">(*PromptManager).RefreshPrompts</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge53" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge53"><a xlink:title="at manager.go:96: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M698.1,-1068.81C725.78,-1059.7 752.06,-1045.37 770.58,-1023 813.28,-971.43 755.01,-773.84 798.58,-723 800.24,-721.06 802,-719.24 803.86,-717.52"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="805.68,-720.54 811.32,-711.57 801.32,-715.06 805.68,-720.54"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge8"><a xlink:title="at manager.go:97: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M698.09,-1086.9C725.35,-1081.26 751.45,-1070.16 770.58,-1050 852.4,-963.77 720.69,-873.8 798.58,-784 800.25,-782.07 802.03,-780.25 803.89,-778.54"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="805.7,-781.57 811.39,-772.63 801.37,-776.07 805.7,-781.57"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge22" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge22"><a xlink:title="at manager.go:95: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M698.32,-1098.63C723.67,-1096.27 748.95,-1089.94 770.58,-1077 858.13,-1024.63 899.73,-900.92 914.79,-843.83"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="918.17,-844.72 917.23,-834.17 911.38,-843 918.17,-844.72"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptManager).RefreshPrompts&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts</title>
+<g id="a_edge1"><a xlink:title="at manager.go:93: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts]">
+<path fill="none" stroke="saddlebrown" d="M672.76,-1101.72C732,-1111.78 803.14,-1123.86 854.18,-1132.53"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="853.46,-1135.96 863.91,-1134.18 854.63,-1129.06 853.46,-1135.96"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy -->
 <g id="node22" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager</title>
-<g id="a_node22"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager | defined in manager.go:22&#10;at manager.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at manager.go:28: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts]&#10;at manager.go:32: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at manager.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M631.58,-788C631.58,-788 491.54,-788 491.54,-788 485.54,-788 479.54,-782 479.54,-776 479.54,-776 479.54,-764 479.54,-764 479.54,-758 485.54,-752 491.54,-752 491.54,-752 631.58,-752 631.58,-752 637.58,-752 643.58,-758 643.58,-764 643.58,-764 643.58,-776 643.58,-776 643.58,-782 637.58,-788 631.58,-788"/>
-<text xml:space="preserve" text-anchor="middle" x="561.56" y="-765.33" font-family="Verdana" font-size="14.00">NewPromptManager</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy</title>
+<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy | defined in registry.go:56&#10;at registry.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at registry.go:58: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at registry.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at registry.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M717.45,-589C717.45,-589 405.66,-589 405.66,-589 399.66,-589 393.66,-583 393.66,-577 393.66,-577 393.66,-565 393.66,-565 393.66,-559 399.66,-553 405.66,-553 405.66,-553 717.45,-553 717.45,-553 723.45,-553 729.45,-559 729.45,-565 729.45,-565 729.45,-577 729.45,-577 729.45,-583 723.45,-589 717.45,-589"/>
+<text xml:space="preserve" text-anchor="middle" x="561.56" y="-566.33" font-family="Verdana" font-size="14.00">(*PromptRegistry).RegisterManagerStrategy</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge7" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge7"><a xlink:title="at manager.go:31: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M625.75,-751.35C666.63,-739.52 721.08,-724.2 769.58,-712 786.86,-707.65 805.31,-703.29 823.2,-699.21"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="823.79,-702.67 832.77,-697.05 822.24,-695.84 823.79,-702.67"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge18" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge18"><a xlink:title="at registry.go:58: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M680.15,-552.27C709.64,-549.46 741.24,-548.07 770.58,-550 809.46,-552.56 853.6,-558.79 884.09,-563.62"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="883.15,-567.01 893.58,-565.15 884.27,-560.1 883.15,-567.01"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge27" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge27"><a xlink:title="at manager.go:32: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M643.93,-765.96C675.82,-768.71 710.29,-777.78 733.58,-801 796.06,-863.27 704.48,-1054.42 770.58,-996 846.42,-928.98 731.56,-845.84 798.58,-770 800.3,-768.05 802.12,-766.22 804.03,-764.5"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="805.99,-767.41 811.75,-758.52 801.7,-761.87 805.99,-767.41"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge11" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge11"><a xlink:title="at registry.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M730.04,-582.52C744.54,-587.88 758.33,-594.89 770.58,-604 793.55,-621.08 776.32,-644 798.58,-662 801.02,-663.97 803.57,-665.82 806.22,-667.55"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="804.43,-670.56 814.84,-672.55 807.94,-664.51 804.43,-670.56"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge40" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge40"><a xlink:title="at manager.go:30: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M644.09,-764.88C676.41,-767.38 711.14,-776.54 733.58,-801 791.53,-864.15 706.21,-1127.29 769.58,-1185 769.91,-1185.3 770.21,-1185.25 770.58,-1185 786.3,-1174.28 879.6,-917.38 911.24,-829.31"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="914.44,-830.76 914.52,-820.16 907.85,-828.39 914.44,-830.76"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge57" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge57"><a xlink:title="at registry.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M619.8,-589.63C654.71,-602.67 699.1,-622.34 733.58,-648 768.96,-674.34 760.93,-700.03 798.58,-723 802.6,-725.45 806.8,-727.7 811.13,-729.77"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="809.49,-732.87 820.06,-733.66 812.29,-726.45 809.49,-732.87"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts -->
-<g id="edge26" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts.NewPromptManager&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts</title>
-<g id="a_edge26"><a xlink:title="at manager.go:28: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/commission.LoadPrompts]">
-<path fill="none" stroke="saddlebrown" d="M644.11,-764.87C676.43,-767.36 711.16,-776.53 733.58,-801 792.52,-865.34 705.11,-1133.2 769.58,-1192 799.49,-1219.28 847,-1205.02 880.97,-1188.71"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="882.34,-1191.94 889.69,-1184.31 879.18,-1185.69 882.34,-1191.94"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge61" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts.PromptRegistry).RegisterManagerStrategy&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge61"><a xlink:title="at registry.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M730.06,-565.83C744.01,-568.39 757.69,-572.02 770.58,-577 785.87,-582.91 784,-593.52 798.58,-601 803.9,-603.73 809.49,-606.22 815.21,-608.49"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="813.63,-611.63 824.23,-611.81 816.05,-605.07 813.63,-611.63"/>
 </a>
 </g>
 </g>

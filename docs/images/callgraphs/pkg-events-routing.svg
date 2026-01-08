@@ -22,95 +22,39 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute | defined in router.go:184&#10;at router.go:194: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M904.99,-326C904.99,-326 733.45,-326 733.45,-326 727.45,-326 721.45,-320 721.45,-314 721.45,-314 721.45,-302 721.45,-302 721.45,-296 727.45,-290 733.45,-290 733.45,-290 904.99,-290 904.99,-290 910.99,-290 916.99,-296 916.99,-302 916.99,-302 916.99,-314 916.99,-314 916.99,-320 910.99,-326 904.99,-326"/>
-<text xml:space="preserve" text-anchor="middle" x="819.22" y="-303.32" font-family="Verdana" font-size="14.00">(*Router).matchesRoute</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow | defined in middleware.go:46&#10;at middleware.go:56: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M216.41,-52C216.41,-52 78.62,-52 78.62,-52 72.62,-52 66.62,-46 66.62,-40 66.62,-40 66.62,-28 66.62,-28 66.62,-22 72.62,-16 78.62,-16 78.62,-16 216.41,-16 216.41,-16 222.41,-16 228.41,-22 228.41,-28 228.41,-28 228.41,-40 228.41,-40 228.41,-46 222.41,-52 216.41,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-29.32" font-family="Verdana" font-size="14.00">(*rateLimiter).Allow</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min -->
 <g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss | defined in router.go:210">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1164.91,-326C1164.91,-326 1017.37,-326 1017.37,-326 1011.37,-326 1005.37,-320 1005.37,-314 1005.37,-314 1005.37,-302 1005.37,-302 1005.37,-296 1011.37,-290 1017.37,-290 1017.37,-290 1164.91,-290 1164.91,-290 1170.91,-290 1176.91,-296 1176.91,-302 1176.91,-302 1176.91,-314 1176.91,-314 1176.91,-320 1170.91,-326 1164.91,-326"/>
-<text xml:space="preserve" text-anchor="middle" x="1091.14" y="-303.32" font-family="Verdana" font-size="14.00">(*Router).recordMiss</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min</title>
+<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min | defined in middleware.go:345">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M507.56,-52C507.56,-52 477.56,-52 477.56,-52 471.56,-52 465.56,-46 465.56,-40 465.56,-40 465.56,-28 465.56,-28 465.56,-22 471.56,-16 477.56,-16 477.56,-16 507.56,-16 507.56,-16 513.56,-16 519.56,-22 519.56,-28 519.56,-28 519.56,-40 519.56,-40 519.56,-46 513.56,-52 507.56,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-29.32" font-family="Verdana" font-size="14.00">min</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss -->
-<g id="edge41" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss</title>
-<g id="a_edge41"><a xlink:title="at router.go:194: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss]">
-<path fill="none" stroke="black" d="M916.91,-308C941.96,-308 968.94,-308 993.97,-308"/>
-<polygon fill="black" stroke="black" points="993.8,-311.5 1003.8,-308 993.8,-304.5 993.8,-311.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min</title>
+<g id="a_edge7"><a xlink:title="at middleware.go:56: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min]">
+<path fill="none" stroke="black" d="M228.95,-34C300.01,-34 400.47,-34 454.21,-34"/>
+<polygon fill="black" stroke="black" points="454.05,-37.5 464.05,-34 454.05,-30.5 454.05,-37.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches -->
 <g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes | defined in router.go:169&#10;at router.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority]&#10;at router.go:173: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M595.58,-357C595.58,-357 389.54,-357 389.54,-357 383.54,-357 377.54,-351 377.54,-345 377.54,-345 377.54,-333 377.54,-333 377.54,-327 383.54,-321 389.54,-321 389.54,-321 595.58,-321 595.58,-321 601.58,-321 607.58,-327 607.58,-333 607.58,-333 607.58,-345 607.58,-345 607.58,-351 601.58,-357 595.58,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-334.32" font-family="Verdana" font-size="14.00">(*Router).getMatchingRoutes</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute -->
-<g id="edge42" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute</title>
-<g id="a_edge42"><a xlink:title="at router.go:173: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute]">
-<path fill="none" stroke="black" d="M607.57,-328.11C640.97,-324.92 677.38,-321.45 710.39,-318.3"/>
-<polygon fill="black" stroke="black" points="710.32,-321.82 719.94,-317.38 709.65,-314.85 710.32,-321.82"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority -->
-<g id="node4" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority</title>
-<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority | defined in router.go:242">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M889.99,-387C889.99,-387 748.45,-387 748.45,-387 742.45,-387 736.45,-381 736.45,-375 736.45,-375 736.45,-363 736.45,-363 736.45,-357 742.45,-351 748.45,-351 748.45,-351 889.99,-351 889.99,-351 895.99,-351 901.99,-357 901.99,-363 901.99,-363 901.99,-375 901.99,-375 901.99,-381 895.99,-387 889.99,-387"/>
-<text xml:space="preserve" text-anchor="middle" x="819.22" y="-364.32" font-family="Verdana" font-size="14.00">sortRoutesByPriority</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority -->
-<g id="edge26" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority</title>
-<g id="a_edge26"><a xlink:title="at router.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority]">
-<path fill="none" stroke="black" d="M607.57,-349.53C646.07,-353.09 688.55,-357.02 725.23,-360.41"/>
-<polygon fill="black" stroke="black" points="724.63,-363.87 734.91,-361.3 725.27,-356.9 724.63,-363.87"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform | defined in transformers.go:272&#10;at transformers.go:288: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1]&#10;at transformers.go:274: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M267.04,-418C267.04,-418 28,-418 28,-418 22,-418 16,-412 16,-406 16,-406 16,-394 16,-394 16,-388 22,-382 28,-382 28,-382 267.04,-382 267.04,-382 273.04,-382 279.04,-388 279.04,-394 279.04,-394 279.04,-406 279.04,-406 279.04,-412 273.04,-418 267.04,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-395.32" font-family="Verdana" font-size="14.00">(*AggregateTransform).Transform</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1 -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1 | defined in transformers.go:288&#10;at transformers.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush]">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="633.08,-479 352.04,-479 352.04,-443 633.08,-443 633.08,-479"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-456.32" font-family="Verdana" font-size="14.00">(*AggregateTransform).Transform$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1 -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1</title>
-<g id="a_edge1"><a xlink:title="at transformers.go:288: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1]">
-<path fill="none" stroke="black" d="M225.88,-381.26C255.22,-377.84 288.24,-378.62 316.04,-391 337.89,-400.73 331.34,-419.01 352.04,-431 352.52,-431.28 353.01,-431.56 353.49,-431.83"/>
-<polygon fill="black" stroke="black" points="364.72,-440.87 375.27,-441.88 367.66,-434.51 364.72,-440.87"/>
-<polyline fill="none" stroke="black" points="365.73,-437.48 361.2,-435.39"/>
-<ellipse fill="none" stroke="black" cx="357.11" cy="-433.5" rx="4" ry="4"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches</title>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches | defined in rules.go:241&#10;at rules.go:243: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M249.04,-464C249.04,-464 46,-464 46,-464 40,-464 34,-458 34,-452 34,-452 34,-440 34,-440 34,-434 40,-428 46,-428 46,-428 249.04,-428 249.04,-428 255.04,-428 261.04,-434 261.04,-440 261.04,-440 261.04,-452 261.04,-452 261.04,-458 255.04,-464 249.04,-464"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-441.32" font-family="Verdana" font-size="14.00">(*TimeWindowRule).Matches</text>
 </a>
 </g>
 </g>
@@ -123,167 +67,219 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge27" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge27"><a xlink:title="at transformers.go:274: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M247.74,-418.75C258.54,-422.2 269.18,-426.25 279.04,-431 297.86,-440.07 300.77,-445.74 316.04,-460 333.52,-476.33 331.02,-488.59 352.04,-500 382.35,-516.45 421.46,-521.46 450.56,-522.64"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="450.36,-526.14 460.45,-522.9 450.54,-519.14 450.36,-526.14"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush -->
-<g id="node7" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush | defined in transformers.go:299">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M920.37,-479C920.37,-479 718.08,-479 718.08,-479 712.08,-479 706.08,-473 706.08,-467 706.08,-467 706.08,-455 706.08,-455 706.08,-449 712.08,-443 718.08,-443 718.08,-443 920.37,-443 920.37,-443 926.37,-443 932.37,-449 932.37,-455 932.37,-455 932.37,-467 932.37,-467 932.37,-473 926.37,-479 920.37,-479"/>
-<text xml:space="preserve" text-anchor="middle" x="819.22" y="-456.32" font-family="Verdana" font-size="14.00">(*AggregateTransform).flush</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush -->
-<g id="edge28" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush</title>
-<g id="a_edge28"><a xlink:title="at transformers.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush]">
-<path fill="none" stroke="black" d="M633.13,-461C653.63,-461 674.62,-461 694.76,-461"/>
-<polygon fill="black" stroke="black" points="694.67,-464.5 704.67,-461 694.67,-457.5 694.67,-464.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge29" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge29"><a xlink:title="at rules.go:243: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M261.58,-464C280.05,-468.35 298.78,-473.63 316.04,-480 333.21,-486.34 334.73,-494.04 352.04,-500 384.24,-511.09 422.56,-516.62 450.88,-519.36"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="450.2,-522.82 460.47,-520.21 450.82,-515.84 450.2,-522.82"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.EventTypeRule).Matches -->
-<g id="node8" class="node">
+<g id="node4" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.EventTypeRule).Matches</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.EventTypeRule).Matches | defined in rules.go:25&#10;at rules.go:27: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:41: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M240.79,-296C240.79,-296 54.25,-296 54.25,-296 48.25,-296 42.25,-290 42.25,-284 42.25,-284 42.25,-272 42.25,-272 42.25,-266 48.25,-260 54.25,-260 54.25,-260 240.79,-260 240.79,-260 246.79,-260 252.79,-266 252.79,-272 252.79,-272 252.79,-284 252.79,-284 252.79,-290 246.79,-296 240.79,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-273.32" font-family="Verdana" font-size="14.00">(*EventTypeRule).Matches</text>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.EventTypeRule).Matches | defined in rules.go:25&#10;at rules.go:41: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern]&#10;at rules.go:27: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M240.79,-178C240.79,-178 54.25,-178 54.25,-178 48.25,-178 42.25,-172 42.25,-166 42.25,-166 42.25,-154 42.25,-154 42.25,-148 48.25,-142 54.25,-142 54.25,-142 240.79,-142 240.79,-142 246.79,-142 252.79,-148 252.79,-154 252.79,-154 252.79,-166 252.79,-166 252.79,-172 246.79,-178 240.79,-178"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-155.32" font-family="Verdana" font-size="14.00">(*EventTypeRule).Matches</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern -->
-<g id="node9" class="node">
+<g id="node5" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern</title>
-<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern | defined in rules.go:297">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M546.83,-418C546.83,-418 438.29,-418 438.29,-418 432.29,-418 426.29,-412 426.29,-406 426.29,-406 426.29,-394 426.29,-394 426.29,-388 432.29,-382 438.29,-382 438.29,-382 546.83,-382 546.83,-382 552.83,-382 558.83,-388 558.83,-394 558.83,-394 558.83,-406 558.83,-406 558.83,-412 552.83,-418 546.83,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-395.32" font-family="Verdana" font-size="14.00">matchesPattern</text>
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern | defined in rules.go:297">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M546.83,-113C546.83,-113 438.29,-113 438.29,-113 432.29,-113 426.29,-107 426.29,-101 426.29,-101 426.29,-89 426.29,-89 426.29,-83 432.29,-77 438.29,-77 438.29,-77 546.83,-77 546.83,-77 552.83,-77 558.83,-83 558.83,-89 558.83,-89 558.83,-101 558.83,-101 558.83,-107 552.83,-113 546.83,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-90.33" font-family="Verdana" font-size="14.00">matchesPattern</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.EventTypeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern -->
-<g id="edge29" class="edge">
+<g id="edge13" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.EventTypeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern</title>
-<g id="a_edge29"><a xlink:title="at rules.go:41: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern]">
-<path fill="none" stroke="black" d="M253.52,-263.31C275.68,-264.89 297.84,-270.44 316.04,-283 350.48,-306.77 319.9,-343.2 352.04,-370 369.62,-384.66 392.68,-392.65 414.98,-396.87"/>
-<polygon fill="black" stroke="black" points="414.26,-400.3 424.69,-398.45 415.39,-393.39 414.26,-400.3"/>
+<g id="a_edge13"><a xlink:title="at rules.go:41: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern]">
+<path fill="none" stroke="black" d="M234.73,-141.3C249.7,-137.18 264.97,-132.4 279.04,-127 295.93,-120.51 297.65,-112.99 315.04,-108 347,-98.82 383.48,-95.08 414.95,-93.82"/>
+<polygon fill="black" stroke="black" points="414.9,-97.32 424.79,-93.51 414.68,-90.33 414.9,-97.32"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.EventTypeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge9" class="edge">
+<g id="edge44" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.EventTypeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge9"><a xlink:title="at rules.go:27: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M253.26,-292.82C262.62,-297.02 271.42,-302.32 279.04,-309 347.39,-368.89 281.44,-442.78 352.04,-500 379.45,-522.22 420.13,-526.41 450.5,-525.82"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="450.63,-529.32 460.48,-525.42 450.35,-522.32 450.63,-529.32"/>
+<g id="a_edge44"><a xlink:title="at rules.go:27: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M253.29,-174.19C262.82,-178.73 271.64,-184.55 279.04,-192 328.59,-241.93 300.44,-452.2 352.04,-500 378.28,-524.31 419.91,-528.06 450.88,-526.79"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="450.9,-530.29 460.66,-526.18 450.46,-523.3 450.9,-530.29"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow -->
-<g id="node10" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow | defined in middleware.go:46&#10;at middleware.go:56: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M216.41,-52C216.41,-52 78.62,-52 78.62,-52 72.62,-52 66.62,-46 66.62,-40 66.62,-40 66.62,-28 66.62,-28 66.62,-22 72.62,-16 78.62,-16 78.62,-16 216.41,-16 216.41,-16 222.41,-16 228.41,-22 228.41,-28 228.41,-28 228.41,-40 228.41,-40 228.41,-46 222.41,-52 216.41,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-29.32" font-family="Verdana" font-size="14.00">(*rateLimiter).Allow</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches -->
+<g id="node6" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches</title>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches | defined in rules.go:56&#10;at rules.go:58: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:72: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M228.79,-114C228.79,-114 66.25,-114 66.25,-114 60.25,-114 54.25,-108 54.25,-102 54.25,-102 54.25,-90 54.25,-90 54.25,-84 60.25,-78 66.25,-78 66.25,-78 228.79,-78 228.79,-78 234.79,-78 240.79,-84 240.79,-90 240.79,-90 240.79,-102 240.79,-102 240.79,-108 234.79,-114 228.79,-114"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-91.33" font-family="Verdana" font-size="14.00">(*SourceRule).Matches</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min -->
-<g id="node11" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min</title>
-<g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min | defined in middleware.go:345">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M507.56,-52C507.56,-52 477.56,-52 477.56,-52 471.56,-52 465.56,-46 465.56,-40 465.56,-40 465.56,-28 465.56,-28 465.56,-22 471.56,-16 477.56,-16 477.56,-16 507.56,-16 507.56,-16 513.56,-16 519.56,-22 519.56,-28 519.56,-28 519.56,-40 519.56,-40 519.56,-46 513.56,-52 507.56,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-29.32" font-family="Verdana" font-size="14.00">min</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern -->
+<g id="edge37" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern</title>
+<g id="a_edge37"><a xlink:title="at rules.go:72: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern]">
+<path fill="none" stroke="black" d="M241.34,-86.15C265.32,-84.02 291.12,-82.08 315.04,-81 347.86,-79.52 384.05,-81.72 415.06,-84.78"/>
+<polygon fill="black" stroke="black" points="414.43,-88.23 424.73,-85.79 415.15,-81.27 414.43,-88.23"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min -->
-<g id="edge43" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.rateLimiter).Allow&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min</title>
-<g id="a_edge43"><a xlink:title="at middleware.go:56: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.min]">
-<path fill="none" stroke="black" d="M228.95,-34C300.01,-34 400.47,-34 454.21,-34"/>
-<polygon fill="black" stroke="black" points="454.05,-37.5 464.05,-34 454.05,-30.5 454.05,-37.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge8"><a xlink:title="at rules.go:58: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M241.31,-106.28C255.47,-111.51 268.77,-119.09 279.04,-130 307.77,-160.51 321.85,-470.94 352.04,-500 377.81,-524.8 419.51,-528.48 450.62,-527.06"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="450.72,-530.56 460.46,-526.4 450.25,-523.58 450.72,-530.56"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.FrequencyRule).Matches -->
-<g id="node12" class="node">
+<g id="node7" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.FrequencyRule).Matches</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.FrequencyRule).Matches | defined in rules.go:260&#10;at rules.go:262: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M241.16,-479C241.16,-479 53.88,-479 53.88,-479 47.88,-479 41.87,-473 41.87,-467 41.87,-467 41.87,-455 41.87,-455 41.87,-449 47.87,-443 53.87,-443 53.87,-443 241.16,-443 241.16,-443 247.16,-443 253.16,-449 253.16,-455 253.16,-455 253.16,-467 253.16,-467 253.16,-473 247.16,-479 241.16,-479"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-456.32" font-family="Verdana" font-size="14.00">(*FrequencyRule).Matches</text>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.FrequencyRule).Matches | defined in rules.go:260&#10;at rules.go:262: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M241.16,-403C241.16,-403 53.88,-403 53.88,-403 47.88,-403 41.87,-397 41.87,-391 41.87,-391 41.87,-379 41.87,-379 41.87,-373 47.87,-367 53.87,-367 53.87,-367 241.16,-367 241.16,-367 247.16,-367 253.16,-373 253.16,-379 253.16,-379 253.16,-391 253.16,-391 253.16,-397 247.16,-403 241.16,-403"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-380.32" font-family="Verdana" font-size="14.00">(*FrequencyRule).Matches</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.FrequencyRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge25" class="edge">
+<g id="edge22" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.FrequencyRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge25"><a xlink:title="at rules.go:262: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M253.75,-452.59C274.97,-454.06 296.69,-457.97 316.04,-466 336.37,-474.43 332.29,-490.3 352.04,-500 382.89,-515.16 421.79,-520.31 450.68,-521.87"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="450.35,-525.36 460.48,-522.27 450.63,-518.37 450.35,-525.36"/>
+<g id="a_edge22"><a xlink:title="at rules.go:262: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M253.45,-403.66C262.4,-407.1 271.07,-411.18 279.04,-416 321.35,-441.61 308.77,-476.03 352.04,-500 382.3,-516.76 421.57,-521.73 450.74,-522.81"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="450.58,-526.31 460.66,-523.03 450.74,-519.31 450.58,-526.31"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware -->
-<g id="node13" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware</title>
-<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware | defined in middleware.go:281&#10;at middleware.go:288: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M220.54,-113C220.54,-113 74.5,-113 74.5,-113 68.5,-113 62.5,-107 62.5,-101 62.5,-101 62.5,-89 62.5,-89 62.5,-83 68.5,-77 74.5,-77 74.5,-77 220.54,-77 220.54,-77 226.54,-77 232.54,-83 232.54,-89 232.54,-89 232.54,-101 232.54,-101 232.54,-107 226.54,-113 220.54,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-90.33" font-family="Verdana" font-size="14.00">DedupingMiddleware</text>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess -->
+<g id="node8" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess</title>
+<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess | defined in rules.go:370&#10;at rules.go:371: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:372: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M537.83,-235C537.83,-235 447.29,-235 447.29,-235 441.29,-235 435.29,-229 435.29,-223 435.29,-223 435.29,-211 435.29,-211 435.29,-205 441.29,-199 447.29,-199 447.29,-199 537.83,-199 537.83,-199 543.83,-199 549.83,-205 549.83,-211 549.83,-211 549.83,-223 549.83,-223 549.83,-229 543.83,-235 537.83,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-212.32" font-family="Verdana" font-size="14.00">compareLess</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64 -->
+<g id="node9" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64</title>
+<g id="a_node9"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64 | defined in rules.go:385">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M851.37,-296C851.37,-296 787.08,-296 787.08,-296 781.08,-296 775.08,-290 775.08,-284 775.08,-284 775.08,-272 775.08,-272 775.08,-266 781.08,-260 787.08,-260 787.08,-260 851.37,-260 851.37,-260 857.37,-260 863.37,-266 863.37,-272 863.37,-272 863.37,-284 863.37,-284 863.37,-290 857.37,-296 851.37,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="819.22" y="-273.32" font-family="Verdana" font-size="14.00">toFloat64</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64 -->
+<g id="edge14" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64</title>
+<g id="a_edge14"><a xlink:title="at rules.go:371: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:372: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
+<path fill="none" stroke="black" d="M549.74,-227.56C609.93,-238.86 704.78,-256.69 764.15,-267.84"/>
+<polygon fill="black" stroke="black" points="763.2,-271.22 773.68,-269.63 764.5,-264.34 763.2,-271.22"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches -->
+<g id="node10" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches</title>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches | defined in rules.go:89&#10;at rules.go:112: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess]&#10;at rules.go:114: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess]&#10;at rules.go:99: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField]&#10;at rules.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater]&#10;at rules.go:116: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater]&#10;at rules.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains]&#10;at rules.go:106: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:108: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:137: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:91: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:138: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M220.54,-240C220.54,-240 74.5,-240 74.5,-240 68.5,-240 62.5,-234 62.5,-228 62.5,-228 62.5,-216 62.5,-216 62.5,-210 68.5,-204 74.5,-204 74.5,-204 220.54,-204 220.54,-204 226.54,-204 232.54,-210 232.54,-216 232.54,-216 232.54,-228 232.54,-228 232.54,-234 226.54,-240 220.54,-240"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-217.32" font-family="Verdana" font-size="14.00">(*DataRule).Matches</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess</title>
+<g id="a_edge1"><a xlink:title="at rules.go:112: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess]&#10;at rules.go:114: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess]">
+<path fill="none" stroke="black" d="M232.95,-207.77C248.71,-203.5 264.71,-198.02 279.04,-191 297.49,-181.96 295.66,-168.83 315.04,-162 333.76,-155.4 333.83,-179.1 352.04,-187 374.6,-196.79 400.64,-203.5 424.07,-208.04"/>
+<polygon fill="black" stroke="black" points="423.38,-211.47 433.85,-209.83 424.64,-204.59 423.38,-211.47"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField -->
+<g id="node11" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField</title>
+<g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField | defined in rules.go:313">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M544.2,-174C544.2,-174 440.91,-174 440.91,-174 434.91,-174 428.91,-168 428.91,-162 428.91,-162 428.91,-150 428.91,-150 428.91,-144 434.91,-138 440.91,-138 440.91,-138 544.2,-138 544.2,-138 550.2,-138 556.2,-144 556.2,-150 556.2,-150 556.2,-162 556.2,-162 556.2,-168 550.2,-174 544.2,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-151.32" font-family="Verdana" font-size="14.00">getNestedField</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField</title>
+<g id="a_edge17"><a xlink:title="at rules.go:99: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField]">
+<path fill="none" stroke="black" d="M233.16,-208.93C248.98,-204.55 264.95,-198.74 279.04,-191 298.6,-180.26 294.36,-164.39 315.04,-156 347.04,-143.01 385.08,-141.45 417.64,-143.79"/>
+<polygon fill="black" stroke="black" points="417.14,-147.26 427.4,-144.63 417.74,-140.28 417.14,-147.26"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual -->
+<g id="node12" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual</title>
+<g id="a_node12"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual | defined in rules.go:339&#10;at rules.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]&#10;at rules.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]&#10;at rules.go:351: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:352: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M541.95,-418C541.95,-418 443.16,-418 443.16,-418 437.16,-418 431.16,-412 431.16,-406 431.16,-406 431.16,-394 431.16,-394 431.16,-388 437.16,-382 443.16,-382 443.16,-382 541.95,-382 541.95,-382 547.95,-382 553.95,-388 553.95,-394 553.95,-394 553.95,-406 553.95,-406 553.95,-412 547.95,-418 541.95,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-395.32" font-family="Verdana" font-size="14.00">compareEqual</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual -->
+<g id="edge30" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual</title>
+<g id="a_edge30"><a xlink:title="at rules.go:106: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:108: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]">
+<path fill="none" stroke="black" d="M217.22,-240.7C250.29,-252.48 288.62,-270.58 316.04,-297 342.09,-322.1 323.51,-347.76 352.04,-370 371.18,-384.92 396.11,-392.82 419.58,-396.88"/>
+<polygon fill="black" stroke="black" points="419.06,-400.34 429.46,-398.36 420.09,-393.42 419.06,-400.34"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater -->
 <g id="node14" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup | defined in middleware.go:327">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M576.08,-113C576.08,-113 409.04,-113 409.04,-113 403.04,-113 397.04,-107 397.04,-101 397.04,-101 397.04,-89 397.04,-89 397.04,-83 403.04,-77 409.04,-77 409.04,-77 576.08,-77 576.08,-77 582.08,-77 588.08,-83 588.08,-89 588.08,-89 588.08,-101 588.08,-101 588.08,-107 582.08,-113 576.08,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-90.33" font-family="Verdana" font-size="14.00">(*dedupCache).cleanup</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater</title>
+<g id="a_node14"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater | defined in rules.go:361&#10;at rules.go:362: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:363: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M548.7,-296C548.7,-296 436.41,-296 436.41,-296 430.41,-296 424.41,-290 424.41,-284 424.41,-284 424.41,-272 424.41,-272 424.41,-266 430.41,-260 436.41,-260 436.41,-260 548.7,-260 548.7,-260 554.7,-260 560.7,-266 560.7,-272 560.7,-272 560.7,-284 560.7,-284 560.7,-290 554.7,-296 548.7,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-273.32" font-family="Verdana" font-size="14.00">compareGreater</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup -->
-<g id="edge18" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup</title>
-<g id="a_edge18"><a xlink:title="at middleware.go:288: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup]">
-<path fill="none" stroke="black" d="M233.23,-94.39C259.46,-94.23 288.44,-94.08 315.04,-94 333.37,-93.94 352.77,-93.97 371.74,-94.04"/>
-<polygon fill="black" stroke="black" points="385.67,-97.61 395.69,-94.16 385.71,-90.61 385.67,-97.61"/>
-<polyline fill="none" stroke="black" points="385.19,-94.11 380.19,-94.08"/>
-<ellipse fill="none" stroke="black" cx="375.69" cy="-94.06" rx="4" ry="4"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater -->
+<g id="edge23" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater</title>
+<g id="a_edge23"><a xlink:title="at rules.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater]&#10;at rules.go:116: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater]">
+<path fill="none" stroke="black" d="M231.09,-203.35C271.32,-194.67 311.97,-186.71 316.04,-189 342.83,-204.04 326.99,-230.22 352.04,-248 369.85,-260.64 391.93,-268.13 413.23,-272.52"/>
+<polygon fill="black" stroke="black" points="412.32,-275.92 422.79,-274.28 413.58,-269.03 412.32,-275.92"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains -->
 <g id="node15" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute</title>
-<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute | defined in router.go:69&#10;at router.go:75: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID]&#10;at router.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:79: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:86: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:87: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M217.54,-845C217.54,-845 77.5,-845 77.5,-845 71.5,-845 65.5,-839 65.5,-833 65.5,-833 65.5,-821 65.5,-821 65.5,-815 71.5,-809 77.5,-809 77.5,-809 217.54,-809 217.54,-809 223.54,-809 229.54,-815 229.54,-821 229.54,-821 229.54,-833 229.54,-833 229.54,-839 223.54,-845 217.54,-845"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-822.33" font-family="Verdana" font-size="14.00">(*Router).AddRoute</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains</title>
+<g id="a_node15"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains | defined in rules.go:379&#10;at rules.go:380: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]&#10;at rules.go:381: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M552.83,-357C552.83,-357 432.29,-357 432.29,-357 426.29,-357 420.29,-351 420.29,-345 420.29,-345 420.29,-333 420.29,-333 420.29,-327 426.29,-321 432.29,-321 432.29,-321 552.83,-321 552.83,-321 558.83,-321 564.83,-327 564.83,-333 564.83,-333 564.83,-345 564.83,-345 564.83,-351 558.83,-357 552.83,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-334.32" font-family="Verdana" font-size="14.00">compareContains</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID -->
-<g id="node16" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID</title>
-<g id="a_node16"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID | defined in router.go:238">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M551.7,-742C551.7,-742 433.41,-742 433.41,-742 427.41,-742 421.41,-736 421.41,-730 421.41,-730 421.41,-718 421.41,-718 421.41,-712 427.41,-706 433.41,-706 433.41,-706 551.7,-706 551.7,-706 557.7,-706 563.7,-712 563.7,-718 563.7,-718 563.7,-730 563.7,-730 563.7,-736 557.7,-742 551.7,-742"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-719.33" font-family="Verdana" font-size="14.00">generateRouteID</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains -->
+<g id="edge25" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains</title>
+<g id="a_edge25"><a xlink:title="at rules.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains]">
+<path fill="none" stroke="black" d="M208.83,-203.29C243.1,-196.46 285.19,-194.86 316.04,-216 352.6,-241.05 318.33,-280.22 352.04,-309 368.01,-322.64 388.7,-330.53 409.24,-334.99"/>
+<polygon fill="black" stroke="black" points="408.3,-338.38 418.78,-336.8 409.6,-331.5 408.3,-338.38"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID -->
-<g id="edge15" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID</title>
-<g id="a_edge15"><a xlink:title="at router.go:75: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID]">
-<path fill="none" stroke="black" d="M230.22,-832.74C259.1,-831.28 290.69,-825.41 316.04,-810 341,-794.82 328.01,-771.61 352.04,-755 369.09,-743.21 389.87,-735.82 410.12,-731.2"/>
-<polygon fill="black" stroke="black" points="410.72,-734.65 419.81,-729.22 409.32,-727.8 410.72,-734.65"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge38" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge38"><a xlink:title="at rules.go:91: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M201.58,-240.74C228.01,-252.45 258.61,-269.93 279.04,-294 310.46,-331.03 314.69,-468.96 352.04,-500 379.38,-522.72 420.5,-526.76 451.03,-526"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="450.81,-529.51 460.64,-525.56 450.5,-522.52 450.81,-529.51"/>
 </a>
 </g>
 </g>
@@ -291,17 +287,17 @@
 <g id="node37" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
 <g id="a_node37"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M507.56,-662C507.56,-662 477.56,-662 477.56,-662 471.56,-662 465.56,-656 465.56,-650 465.56,-650 465.56,-638 465.56,-638 465.56,-632 471.56,-626 477.56,-626 477.56,-626 507.56,-626 507.56,-626 513.56,-626 519.56,-632 519.56,-638 519.56,-638 519.56,-650 519.56,-650 519.56,-656 513.56,-662 507.56,-662"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-639.33" font-family="Verdana" font-size="14.00">New</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M507.56,-601C507.56,-601 477.56,-601 477.56,-601 471.56,-601 465.56,-595 465.56,-589 465.56,-589 465.56,-577 465.56,-577 465.56,-571 471.56,-565 477.56,-565 477.56,-565 507.56,-565 507.56,-565 513.56,-565 519.56,-571 519.56,-577 519.56,-577 519.56,-589 519.56,-589 519.56,-595 513.56,-601 507.56,-601"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-578.33" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge19" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge19"><a xlink:title="at router.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:79: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:86: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M229.9,-823.55C260.83,-818.1 293.92,-806.57 316.04,-783 353.28,-743.33 310.94,-701.64 352.04,-666 379.8,-641.93 422.87,-638.5 453.81,-639.79"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="453.31,-643.27 463.51,-640.4 453.74,-636.28 453.31,-643.27"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge32" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge32"><a xlink:title="at rules.go:137: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M203.22,-240.63C229.6,-252.19 259.66,-269.57 279.04,-294 353.37,-387.69 264.85,-471.14 352.04,-553 379.19,-578.49 422.55,-584.39 453.73,-584.92"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="453.52,-588.42 463.51,-584.89 453.5,-581.42 453.52,-588.42"/>
 </a>
 </g>
 </g>
@@ -309,487 +305,491 @@
 <g id="node38" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_node38"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M580.2,-601C580.2,-601 404.91,-601 404.91,-601 398.91,-601 392.91,-595 392.91,-589 392.91,-589 392.91,-577 392.91,-577 392.91,-571 398.91,-565 404.91,-565 404.91,-565 580.2,-565 580.2,-565 586.2,-565 592.2,-571 592.2,-577 592.2,-577 592.2,-589 592.2,-589 592.2,-595 586.2,-601 580.2,-601"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-578.33" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge20" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge20"><a xlink:title="at router.go:87: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M230.1,-820.77C247.77,-816.2 265.27,-808.8 279.04,-797 345.53,-740.02 285.35,-670.74 352.04,-614 360.85,-606.51 371.07,-600.71 381.91,-596.25"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="382.86,-599.63 391.03,-592.89 380.44,-593.06 382.86,-599.63"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform -->
-<g id="node17" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform</title>
-<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform | defined in transformers.go:31&#10;at transformers.go:41: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transformers.go:33: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transformers.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M238.54,-601C238.54,-601 56.5,-601 56.5,-601 50.5,-601 44.5,-595 44.5,-589 44.5,-589 44.5,-577 44.5,-577 44.5,-571 50.5,-565 56.5,-565 56.5,-565 238.54,-565 238.54,-565 244.54,-565 250.54,-571 250.54,-577 250.54,-577 250.54,-589 250.54,-589 250.54,-595 244.54,-601 238.54,-601"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-578.33" font-family="Verdana" font-size="14.00">(*Transformer).Transform</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge13"><a xlink:title="at transformers.go:33: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transformers.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M229.17,-564.34C256.37,-558.37 286.94,-552.02 315.04,-547 361.5,-538.7 415.25,-531.42 451.11,-526.88"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="451.11,-530.41 460.6,-525.7 450.24,-523.47 451.11,-530.41"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge10" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge10"><a xlink:title="at transformers.go:41: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M235.41,-564.33C260.94,-559.66 289,-555.33 315.04,-553 331.03,-551.57 362.87,-556.18 395.16,-562.19"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="394.14,-565.56 404.62,-563.99 395.45,-558.68 394.14,-565.56"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater -->
-<g id="node18" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater</title>
-<g id="a_node18"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater | defined in rules.go:361&#10;at rules.go:362: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:363: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M548.7,-1047C548.7,-1047 436.41,-1047 436.41,-1047 430.41,-1047 424.41,-1041 424.41,-1035 424.41,-1035 424.41,-1023 424.41,-1023 424.41,-1017 430.41,-1011 436.41,-1011 436.41,-1011 548.7,-1011 548.7,-1011 554.7,-1011 560.7,-1017 560.7,-1023 560.7,-1023 560.7,-1035 560.7,-1035 560.7,-1041 554.7,-1047 548.7,-1047"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-1024.33" font-family="Verdana" font-size="14.00">compareGreater</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64 -->
-<g id="node19" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64</title>
-<g id="a_node19"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64 | defined in rules.go:385">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M851.37,-986C851.37,-986 787.08,-986 787.08,-986 781.08,-986 775.08,-980 775.08,-974 775.08,-974 775.08,-962 775.08,-962 775.08,-956 781.08,-950 787.08,-950 787.08,-950 851.37,-950 851.37,-950 857.37,-950 863.37,-956 863.37,-962 863.37,-962 863.37,-974 863.37,-974 863.37,-980 857.37,-986 851.37,-986"/>
-<text xml:space="preserve" text-anchor="middle" x="819.22" y="-963.33" font-family="Verdana" font-size="14.00">toFloat64</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64 -->
-<g id="edge30" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64</title>
-<g id="a_edge30"><a xlink:title="at rules.go:362: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:363: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
-<path fill="none" stroke="black" d="M560.83,-1016.36C620.95,-1005.06 707.94,-988.72 763.78,-978.23"/>
-<polygon fill="black" stroke="black" points="764.2,-981.71 773.38,-976.43 762.9,-974.83 764.2,-981.71"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware -->
-<g id="node20" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware</title>
-<g id="a_node20"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware | defined in middleware.go:104&#10;at middleware.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M214.91,-174C214.91,-174 80.12,-174 80.12,-174 74.12,-174 68.12,-168 68.12,-162 68.12,-162 68.12,-150 68.12,-150 68.12,-144 74.12,-138 80.12,-138 80.12,-138 214.91,-138 214.91,-138 220.91,-138 226.91,-144 226.91,-150 226.91,-150 226.91,-162 226.91,-162 226.91,-168 220.91,-174 214.91,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-151.32" font-family="Verdana" font-size="14.00">CachingMiddleware</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup -->
-<g id="node21" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup</title>
-<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup | defined in middleware.go:175">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M573.45,-174C573.45,-174 411.66,-174 411.66,-174 405.66,-174 399.66,-168 399.66,-162 399.66,-162 399.66,-150 399.66,-150 399.66,-144 405.66,-138 411.66,-138 411.66,-138 573.45,-138 573.45,-138 579.45,-138 585.45,-144 585.45,-150 585.45,-150 585.45,-162 585.45,-162 585.45,-168 579.45,-174 573.45,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-151.32" font-family="Verdana" font-size="14.00">(*eventCache).cleanup</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup -->
-<g id="edge33" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup</title>
-<g id="a_edge33"><a xlink:title="at middleware.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup]">
-<path fill="none" stroke="black" d="M227.28,-137.83C261.59,-130.25 297.85,-122.79 315.04,-121 318.99,-120.59 347.71,-126.04 380.88,-132.75"/>
-<polygon fill="black" stroke="black" points="393.54,-138.92 404.04,-137.5 394.94,-132.06 393.54,-138.92"/>
-<polyline fill="none" stroke="black" points="393.75,-135.39 388.85,-134.39"/>
-<ellipse fill="none" stroke="black" cx="384.44" cy="-133.48" rx="4" ry="4"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess -->
-<g id="node22" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess</title>
-<g id="a_node22"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess | defined in rules.go:370&#10;at rules.go:371: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:372: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M537.83,-986C537.83,-986 447.29,-986 447.29,-986 441.29,-986 435.29,-980 435.29,-974 435.29,-974 435.29,-962 435.29,-962 435.29,-956 441.29,-950 447.29,-950 447.29,-950 537.83,-950 537.83,-950 543.83,-950 549.83,-956 549.83,-962 549.83,-962 549.83,-974 549.83,-974 549.83,-980 543.83,-986 537.83,-986"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-963.33" font-family="Verdana" font-size="14.00">compareLess</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64 -->
-<g id="edge21" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64</title>
-<g id="a_edge21"><a xlink:title="at rules.go:371: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:372: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
-<path fill="none" stroke="black" d="M549.74,-968C609.8,-968 704.39,-968 763.78,-968"/>
-<polygon fill="black" stroke="black" points="763.65,-971.5 773.65,-968 763.65,-964.5 763.65,-971.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route -->
-<g id="node23" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route</title>
-<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route | defined in router.go:116&#10;at router.go:162: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch]&#10;at router.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes]&#10;at router.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at router.go:143: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at router.go:158: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at router.go:144: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at router.go:159: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at router.go:142: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError]&#10;at router.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M203.66,-235C203.66,-235 91.38,-235 91.38,-235 85.38,-235 79.37,-229 79.37,-223 79.37,-223 79.37,-211 79.37,-211 79.37,-205 85.37,-199 91.37,-199 91.37,-199 203.66,-199 203.66,-199 209.66,-199 215.66,-205 215.66,-211 215.66,-211 215.66,-223 215.66,-223 215.66,-229 209.66,-235 203.66,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-212.32" font-family="Verdana" font-size="14.00">(*Router).Route</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes</title>
-<g id="a_edge22"><a xlink:title="at router.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes]">
-<path fill="none" stroke="black" d="M216.01,-202.17C255.34,-195.19 300.21,-190.63 316.04,-202 356.79,-231.28 314.62,-275.58 352.04,-309 356.72,-313.18 361.83,-316.82 367.26,-320"/>
-<polygon fill="black" stroke="black" points="365.49,-323.02 375.98,-324.53 368.72,-316.81 365.49,-323.02"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError -->
-<g id="node24" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError</title>
-<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError | defined in router.go:217">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M568.58,-235C568.58,-235 416.54,-235 416.54,-235 410.54,-235 404.54,-229 404.54,-223 404.54,-223 404.54,-211 404.54,-211 404.54,-205 410.54,-199 416.54,-199 416.54,-199 568.58,-199 568.58,-199 574.58,-199 580.58,-205 580.58,-211 580.58,-211 580.58,-223 580.58,-223 580.58,-229 574.58,-235 568.58,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-212.32" font-family="Verdana" font-size="14.00">(*Router).recordError</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError -->
-<g id="edge44" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError</title>
-<g id="a_edge44"><a xlink:title="at router.go:142: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError]&#10;at router.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError]">
-<path fill="none" stroke="black" d="M216.12,-209.41C237.28,-205 260.03,-198.02 279.04,-187 299.44,-175.16 293.43,-157.46 315.04,-148 336.93,-138.42 331.29,-175.16 352.04,-187 364.73,-194.24 378.98,-199.74 393.39,-203.91"/>
-<polygon fill="black" stroke="black" points="392.39,-207.27 402.96,-206.46 394.19,-200.5 392.39,-207.27"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch -->
-<g id="node25" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch</title>
-<g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch | defined in router.go:203">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M571.95,-296C571.95,-296 413.16,-296 413.16,-296 407.16,-296 401.16,-290 401.16,-284 401.16,-284 401.16,-272 401.16,-272 401.16,-266 407.16,-260 413.16,-260 413.16,-260 571.95,-260 571.95,-260 577.95,-260 583.95,-266 583.95,-272 583.95,-272 583.95,-284 583.95,-284 583.95,-290 577.95,-296 571.95,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-273.32" font-family="Verdana" font-size="14.00">(*Router).recordMatch</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch</title>
-<g id="a_edge14"><a xlink:title="at router.go:162: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch]">
-<path fill="none" stroke="black" d="M216.24,-202.73C236.54,-198.11 258.78,-192.69 279.04,-187 295.68,-182.32 301.36,-165.87 316.04,-175 346.76,-194.1 323.51,-225.76 352.04,-248 363.33,-256.8 376.63,-263.16 390.45,-267.72"/>
-<polygon fill="black" stroke="black" points="389.07,-270.97 399.66,-270.45 391.06,-264.25 389.07,-270.97"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge31" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge31"><a xlink:title="at router.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at router.go:143: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at router.go:158: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M216.04,-203.45C250.23,-200.69 289.92,-204.42 316.04,-229 404.52,-312.27 267.18,-413.05 352.04,-500 377.1,-525.68 419.09,-529.19 450.47,-527.49"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="450.7,-530.98 460.41,-526.73 450.17,-524 450.7,-530.98"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge32" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge32"><a xlink:title="at router.go:144: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at router.go:159: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M216.15,-219.11C238.8,-223.13 262.47,-231.46 279.04,-248 377.68,-346.47 252.35,-455.59 352.04,-553 360.5,-561.27 370.66,-567.49 381.58,-572.15"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="380.26,-575.39 390.85,-575.63 382.71,-568.84 380.26,-575.39"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches -->
-<g id="node26" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches</title>
-<g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches | defined in rules.go:185&#10;at rules.go:227: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:221: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:228: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at rules.go:187: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M241.16,-662C241.16,-662 53.88,-662 53.88,-662 47.88,-662 41.87,-656 41.87,-650 41.87,-650 41.87,-638 41.87,-638 41.87,-632 47.87,-626 53.87,-626 53.87,-626 241.16,-626 241.16,-626 247.16,-626 253.16,-632 253.16,-638 253.16,-638 253.16,-650 253.16,-650 253.16,-656 247.16,-662 241.16,-662"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-639.33" font-family="Verdana" font-size="14.00">(*CompositeRule).Matches</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge34" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge34"><a xlink:title="at rules.go:187: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M251.32,-625.26C260.9,-622.07 270.29,-618.34 279.04,-614 316.91,-595.19 314.1,-571.67 352.04,-553 383.25,-537.64 422.12,-529.81 450.89,-525.86"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="451.18,-529.35 460.67,-524.63 450.31,-522.41 451.18,-529.35"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge23"><a xlink:title="at rules.go:227: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:221: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M253.74,-636.72C274.07,-635.59 295.21,-634.59 315.04,-634 362.87,-632.57 417.9,-636.59 453.62,-639.95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="453.16,-643.42 463.46,-640.91 453.84,-636.45 453.16,-643.42"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge24" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge24"><a xlink:title="at rules.go:228: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M253.77,-625.28C294.19,-618.1 340.4,-609.88 381.27,-602.61"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="381.64,-606.1 390.88,-600.9 380.42,-599.21 381.64,-606.1"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute -->
-<g id="node27" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute</title>
-<g id="a_node27"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute | defined in router.go:95&#10;at router.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M231.79,-723C231.79,-723 63.25,-723 63.25,-723 57.25,-723 51.25,-717 51.25,-711 51.25,-711 51.25,-699 51.25,-699 51.25,-693 57.25,-687 63.25,-687 63.25,-687 231.79,-687 231.79,-687 237.79,-687 243.79,-693 243.79,-699 243.79,-699 243.79,-711 243.79,-711 243.79,-717 237.79,-723 231.79,-723"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-700.33" font-family="Verdana" font-size="14.00">(*Router).RemoveRoute</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge35" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge35"><a xlink:title="at router.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M242.63,-686.3C277.02,-679.64 316.25,-672.25 352.04,-666 386.39,-660 425.62,-653.88 453.72,-649.62"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="454.17,-653.09 463.53,-648.14 453.12,-646.17 454.17,-653.09"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge45" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge45"><a xlink:title="at router.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M244.44,-688.46C256.4,-684.81 268.21,-680.38 279.04,-675 316.91,-656.19 314.1,-632.67 352.04,-614 361.38,-609.41 371.4,-605.48 381.63,-602.14"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="382.36,-605.58 390.9,-599.3 380.31,-598.88 382.36,-605.58"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches -->
-<g id="node28" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches</title>
-<g id="a_node28"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches | defined in rules.go:89&#10;at rules.go:99: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField]&#10;at rules.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater]&#10;at rules.go:116: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater]&#10;at rules.go:112: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess]&#10;at rules.go:114: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess]&#10;at rules.go:91: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:106: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:108: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains]&#10;at rules.go:138: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at rules.go:137: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M220.54,-969C220.54,-969 74.5,-969 74.5,-969 68.5,-969 62.5,-963 62.5,-957 62.5,-957 62.5,-945 62.5,-945 62.5,-939 68.5,-933 74.5,-933 74.5,-933 220.54,-933 220.54,-933 226.54,-933 232.54,-939 232.54,-945 232.54,-945 232.54,-957 232.54,-957 232.54,-963 226.54,-969 220.54,-969"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-946.33" font-family="Verdana" font-size="14.00">(*DataRule).Matches</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater</title>
-<g id="a_edge3"><a xlink:title="at rules.go:110: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater]&#10;at rules.go:116: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater]">
-<path fill="none" stroke="black" d="M197.01,-969.72C229.87,-981.73 274.52,-996.76 315.04,-1006 346.84,-1013.25 382.42,-1018.44 413.26,-1022.02"/>
-<polygon fill="black" stroke="black" points="412.56,-1025.47 422.89,-1023.1 413.34,-1018.51 412.56,-1025.47"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess</title>
-<g id="a_edge4"><a xlink:title="at rules.go:112: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess]&#10;at rules.go:114: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareLess]">
-<path fill="none" stroke="black" d="M199.46,-969.72C232.02,-980.67 275.42,-993.4 315.04,-999 335.74,-1001.92 383.34,-993.24 423.9,-984.32"/>
-<polygon fill="black" stroke="black" points="424.65,-987.74 433.65,-982.14 423.12,-980.91 424.65,-987.74"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField -->
-<g id="node29" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField</title>
-<g id="a_node29"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField | defined in rules.go:313">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M544.2,-925C544.2,-925 440.91,-925 440.91,-925 434.91,-925 428.91,-919 428.91,-913 428.91,-913 428.91,-901 428.91,-901 428.91,-895 434.91,-889 440.91,-889 440.91,-889 544.2,-889 544.2,-889 550.2,-889 556.2,-895 556.2,-901 556.2,-901 556.2,-913 556.2,-913 556.2,-919 550.2,-925 544.2,-925"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-902.33" font-family="Verdana" font-size="14.00">getNestedField</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField</title>
-<g id="a_edge2"><a xlink:title="at rules.go:99: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.getNestedField]">
-<path fill="none" stroke="black" d="M198.16,-969.69C232.38,-979.62 278.32,-987 316.04,-972 336.49,-963.87 332.6,-948.31 352.04,-938 372.2,-927.31 395.88,-920.3 417.95,-915.7"/>
-<polygon fill="black" stroke="black" points="418.33,-919.19 427.49,-913.86 417,-912.32 418.33,-919.19"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual -->
-<g id="node30" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual</title>
-<g id="a_node30"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual | defined in rules.go:339&#10;at rules.go:351: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:352: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]&#10;at rules.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M541.95,-864C541.95,-864 443.16,-864 443.16,-864 437.16,-864 431.16,-858 431.16,-852 431.16,-852 431.16,-840 431.16,-840 431.16,-834 437.16,-828 443.16,-828 443.16,-828 541.95,-828 541.95,-828 547.95,-828 553.95,-834 553.95,-840 553.95,-840 553.95,-852 553.95,-852 553.95,-858 547.95,-864 541.95,-864"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-841.33" font-family="Verdana" font-size="14.00">compareEqual</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual -->
-<g id="edge38" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual</title>
-<g id="a_edge38"><a xlink:title="at rules.go:106: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:108: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]">
-<path fill="none" stroke="black" d="M233.14,-964.27C261.35,-964.62 291.75,-960.22 316.04,-945 345.02,-926.84 324.84,-897.73 352.04,-877 371.37,-862.26 396.34,-854.27 419.8,-850.01"/>
-<polygon fill="black" stroke="black" points="420.34,-853.47 429.67,-848.44 419.25,-846.55 420.34,-853.47"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains -->
-<g id="node32" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains</title>
-<g id="a_node32"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains | defined in rules.go:379&#10;at rules.go:380: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]&#10;at rules.go:381: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M552.83,-803C552.83,-803 432.29,-803 432.29,-803 426.29,-803 420.29,-797 420.29,-791 420.29,-791 420.29,-779 420.29,-779 420.29,-773 426.29,-767 432.29,-767 432.29,-767 552.83,-767 552.83,-767 558.83,-767 564.83,-773 564.83,-779 564.83,-779 564.83,-791 564.83,-791 564.83,-797 558.83,-803 552.83,-803"/>
-<text xml:space="preserve" text-anchor="middle" x="492.56" y="-780.33" font-family="Verdana" font-size="14.00">compareContains</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains -->
-<g id="edge39" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains</title>
-<g id="a_edge39"><a xlink:title="at rules.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains]">
-<path fill="none" stroke="black" d="M233.05,-950.95C262.24,-946.94 293.28,-937.68 316.04,-918 352.4,-886.55 316.06,-847.88 352.04,-816 367.86,-801.98 388.6,-793.86 409.24,-789.26"/>
-<polygon fill="black" stroke="black" points="409.69,-792.74 418.84,-787.4 408.35,-785.87 409.69,-792.74"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge11" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge11"><a xlink:title="at rules.go:91: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:127: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M188.44,-932.41C217.87,-916.67 256.56,-891.33 279.04,-858 318.01,-800.22 302.36,-601.88 352.04,-553 377.84,-527.62 419.54,-521.1 450.64,-520.18"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="450.5,-523.68 460.47,-520.09 450.44,-516.68 450.5,-523.68"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge46" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge46"><a xlink:title="at rules.go:137: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M232.99,-939.05C263.42,-930.54 295.32,-915.96 316.04,-891 380.72,-813.07 280.35,-737.53 352.04,-666 378.21,-639.89 421.93,-636.9 453.47,-638.86"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="453.13,-642.34 463.39,-639.69 453.71,-635.37 453.13,-642.34"/>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M580.2,-662C580.2,-662 404.91,-662 404.91,-662 398.91,-662 392.91,-656 392.91,-650 392.91,-650 392.91,-638 392.91,-638 392.91,-632 398.91,-626 404.91,-626 404.91,-626 580.2,-626 580.2,-626 586.2,-626 592.2,-632 592.2,-638 592.2,-638 592.2,-650 592.2,-650 592.2,-656 586.2,-662 580.2,-662"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-639.33" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge40" class="edge">
+<g id="edge45" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DataRule).Matches&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge40"><a xlink:title="at rules.go:138: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M216.17,-932.37C251.5,-919.1 292.23,-897.54 316.04,-864 381.03,-772.47 275.72,-696.32 352.04,-614 360.37,-605.01 370.68,-598.34 381.89,-593.42"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="382.92,-596.78 391,-589.93 380.41,-590.24 382.92,-596.78"/>
+<g id="a_edge45"><a xlink:title="at rules.go:138: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M206.31,-240.67C232.46,-252.03 261.41,-269.23 279.04,-294 363.64,-412.84 243.38,-516.67 352.04,-614 360.71,-621.77 370.9,-627.69 381.75,-632.19"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="380.33,-635.4 390.92,-635.56 382.74,-628.83 380.33,-635.4"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64 -->
-<g id="edge36" class="edge">
+<g id="edge39" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64</title>
-<g id="a_edge36"><a xlink:title="at rules.go:351: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:352: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
-<path fill="none" stroke="black" d="M554.18,-856.2C579.01,-861.22 607.8,-868.12 633.08,-877 684.66,-895.12 740.56,-923.98 777.28,-944.34"/>
-<polygon fill="black" stroke="black" points="775.36,-947.27 785.79,-949.1 778.78,-941.16 775.36,-947.27"/>
+<g id="a_edge39"><a xlink:title="at rules.go:351: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:352: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
+<path fill="none" stroke="black" d="M553.87,-390.44C578.78,-385.62 607.71,-378.88 633.08,-370 685.11,-351.8 741.34,-322.33 778.01,-301.66"/>
+<polygon fill="black" stroke="black" points="779.54,-304.82 786.5,-296.83 776.07,-298.74 779.54,-304.82"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString -->
-<g id="node31" class="node">
+<g id="node13" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString</title>
-<g id="a_node31"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString | defined in rules.go:408">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M846.87,-834C846.87,-834 791.58,-834 791.58,-834 785.58,-834 779.58,-828 779.58,-822 779.58,-822 779.58,-810 779.58,-810 779.58,-804 785.58,-798 791.58,-798 791.58,-798 846.87,-798 846.87,-798 852.87,-798 858.87,-804 858.87,-810 858.87,-810 858.87,-822 858.87,-822 858.87,-828 852.87,-834 846.87,-834"/>
-<text xml:space="preserve" text-anchor="middle" x="819.22" y="-811.33" font-family="Verdana" font-size="14.00">toString</text>
+<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString | defined in rules.go:408">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M846.87,-388C846.87,-388 791.58,-388 791.58,-388 785.58,-388 779.58,-382 779.58,-376 779.58,-376 779.58,-364 779.58,-364 779.58,-358 785.58,-352 791.58,-352 791.58,-352 846.87,-352 846.87,-352 852.87,-352 858.87,-358 858.87,-364 858.87,-364 858.87,-376 858.87,-376 858.87,-382 852.87,-388 846.87,-388"/>
+<text xml:space="preserve" text-anchor="middle" x="819.22" y="-365.32" font-family="Verdana" font-size="14.00">toString</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString -->
-<g id="edge37" class="edge">
+<g id="edge15" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString</title>
-<g id="a_edge37"><a xlink:title="at rules.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]&#10;at rules.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]">
-<path fill="none" stroke="black" d="M553.87,-840.43C615.63,-834.72 710.53,-825.95 768.24,-820.62"/>
-<polygon fill="black" stroke="black" points="768.47,-824.11 778.11,-819.71 767.83,-817.14 768.47,-824.11"/>
+<g id="a_edge15"><a xlink:title="at rules.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]&#10;at rules.go:358: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]">
+<path fill="none" stroke="black" d="M553.87,-394.43C615.63,-388.72 710.53,-379.95 768.24,-374.62"/>
+<polygon fill="black" stroke="black" points="768.47,-378.11 778.11,-373.71 767.83,-371.14 768.47,-378.11"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64 -->
+<g id="edge31" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareGreater&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64</title>
+<g id="a_edge31"><a xlink:title="at rules.go:362: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]&#10;at rules.go:363: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toFloat64]">
+<path fill="none" stroke="black" d="M560.83,-278C620.83,-278 707.57,-278 763.43,-278"/>
+<polygon fill="black" stroke="black" points="763.35,-281.5 773.35,-278 763.35,-274.5 763.35,-281.5"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString -->
-<g id="edge16" class="edge">
+<g id="edge24" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareContains&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString</title>
-<g id="a_edge16"><a xlink:title="at rules.go:380: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]&#10;at rules.go:381: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]">
-<path fill="none" stroke="black" d="M564.81,-791.8C626.37,-797.68 713.77,-806.03 768.18,-811.22"/>
-<polygon fill="black" stroke="black" points="767.8,-814.7 778.09,-812.17 768.47,-807.73 767.8,-814.7"/>
+<g id="a_edge24"><a xlink:title="at rules.go:380: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]&#10;at rules.go:381: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.toString]">
+<path fill="none" stroke="black" d="M564.81,-345.8C626.37,-351.68 713.77,-360.03 768.18,-365.22"/>
+<polygon fill="black" stroke="black" points="767.8,-368.7 778.09,-366.17 768.47,-361.73 767.8,-368.7"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches -->
+<g id="node16" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches</title>
+<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches | defined in rules.go:185&#10;at rules.go:227: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:221: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:187: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:228: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M241.16,-647C241.16,-647 53.88,-647 53.88,-647 47.88,-647 41.87,-641 41.87,-635 41.87,-635 41.87,-623 41.87,-623 41.87,-617 47.87,-611 53.87,-611 53.87,-611 241.16,-611 241.16,-611 247.16,-611 253.16,-617 253.16,-623 253.16,-623 253.16,-635 253.16,-635 253.16,-641 247.16,-647 241.16,-647"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-624.33" font-family="Verdana" font-size="14.00">(*CompositeRule).Matches</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge18" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge18"><a xlink:title="at rules.go:187: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M246.59,-610.26C257.71,-607.02 268.74,-603.29 279.04,-599 314.45,-584.27 316.58,-567.6 352.04,-553 384,-539.84 422.5,-531.83 450.94,-527.25"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="451.23,-530.75 460.59,-525.78 450.18,-523.83 451.23,-530.75"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge2"><a xlink:title="at rules.go:227: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:221: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M253.77,-614.89C321.68,-605.78 405.96,-594.48 453.77,-588.07"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="454.16,-591.55 463.6,-586.75 453.23,-584.61 454.16,-591.55"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge40" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CompositeRule).Matches&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge40"><a xlink:title="at rules.go:228: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M183.12,-647.62C229.8,-672.65 307.97,-714.26 315.04,-716 341.89,-722.59 328.49,-680.49 352.04,-666 361.11,-660.42 371.11,-656.1 381.48,-652.77"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="382.28,-656.19 390.93,-650.07 380.35,-649.46 382.28,-656.19"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute -->
+<g id="node17" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute</title>
+<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute | defined in router.go:184&#10;at router.go:194: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M904.99,-960C904.99,-960 733.45,-960 733.45,-960 727.45,-960 721.45,-954 721.45,-948 721.45,-948 721.45,-936 721.45,-936 721.45,-930 727.45,-924 733.45,-924 733.45,-924 904.99,-924 904.99,-924 910.99,-924 916.99,-930 916.99,-936 916.99,-936 916.99,-948 916.99,-948 916.99,-954 910.99,-960 904.99,-960"/>
+<text xml:space="preserve" text-anchor="middle" x="819.22" y="-937.33" font-family="Verdana" font-size="14.00">(*Router).matchesRoute</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss -->
+<g id="node18" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss</title>
+<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss | defined in router.go:210">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1164.91,-960C1164.91,-960 1017.37,-960 1017.37,-960 1011.37,-960 1005.37,-954 1005.37,-948 1005.37,-948 1005.37,-936 1005.37,-936 1005.37,-930 1011.37,-924 1017.37,-924 1017.37,-924 1164.91,-924 1164.91,-924 1170.91,-924 1176.91,-930 1176.91,-936 1176.91,-936 1176.91,-948 1176.91,-948 1176.91,-954 1170.91,-960 1164.91,-960"/>
+<text xml:space="preserve" text-anchor="middle" x="1091.14" y="-937.33" font-family="Verdana" font-size="14.00">(*Router).recordMiss</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss -->
+<g id="edge33" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss</title>
+<g id="a_edge33"><a xlink:title="at router.go:194: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMiss]">
+<path fill="none" stroke="black" d="M916.91,-942C941.96,-942 968.94,-942 993.97,-942"/>
+<polygon fill="black" stroke="black" points="993.8,-945.5 1003.8,-942 993.8,-938.5 993.8,-945.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute -->
+<g id="node19" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute</title>
+<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute | defined in router.go:95&#10;at router.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at router.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M231.79,-747C231.79,-747 63.25,-747 63.25,-747 57.25,-747 51.25,-741 51.25,-735 51.25,-735 51.25,-723 51.25,-723 51.25,-717 57.25,-711 63.25,-711 63.25,-711 231.79,-711 231.79,-711 237.79,-711 243.79,-717 243.79,-723 243.79,-723 243.79,-735 243.79,-735 243.79,-741 237.79,-747 231.79,-747"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-724.33" font-family="Verdana" font-size="14.00">(*Router).RemoveRoute</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge41" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge41"><a xlink:title="at router.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M185.78,-710.26C212.11,-696.78 248.09,-677.9 279.04,-660 312.24,-640.8 316.58,-628.6 352.04,-614 385.11,-600.39 425.17,-592.28 453.87,-587.79"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="454.16,-591.28 463.54,-586.35 453.13,-584.36 454.16,-591.28"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge3" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).RemoveRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge3"><a xlink:title="at router.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M244.19,-741.04C268.92,-740.13 294.59,-735.33 316.04,-723 342.02,-708.07 327.01,-682.47 352.04,-666 361.01,-660.1 370.99,-655.57 381.38,-652.12"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="382.27,-655.51 390.88,-649.33 380.29,-648.79 382.27,-655.51"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1 -->
+<g id="node20" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1</title>
+<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1 | defined in transformers.go:288&#10;at transformers.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush]">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="633.08,-479 352.04,-479 352.04,-443 633.08,-443 633.08,-479"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-456.32" font-family="Verdana" font-size="14.00">(*AggregateTransform).Transform$1</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush -->
+<g id="node21" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush</title>
+<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush | defined in transformers.go:299">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M920.37,-479C920.37,-479 718.08,-479 718.08,-479 712.08,-479 706.08,-473 706.08,-467 706.08,-467 706.08,-455 706.08,-455 706.08,-449 712.08,-443 718.08,-443 718.08,-443 920.37,-443 920.37,-443 926.37,-443 932.37,-449 932.37,-455 932.37,-455 932.37,-467 932.37,-467 932.37,-473 926.37,-479 920.37,-479"/>
+<text xml:space="preserve" text-anchor="middle" x="819.22" y="-456.32" font-family="Verdana" font-size="14.00">(*AggregateTransform).flush</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush -->
+<g id="edge19" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush</title>
+<g id="a_edge19"><a xlink:title="at transformers.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).flush]">
+<path fill="none" stroke="black" d="M633.13,-461C653.63,-461 674.62,-461 694.76,-461"/>
+<polygon fill="black" stroke="black" points="694.67,-464.5 704.67,-461 694.67,-457.5 694.67,-464.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform -->
+<g id="node22" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform</title>
+<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform | defined in transformers.go:272&#10;at transformers.go:274: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transformers.go:288: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M267.04,-342C267.04,-342 28,-342 28,-342 22,-342 16,-336 16,-330 16,-330 16,-318 16,-318 16,-312 22,-306 28,-306 28,-306 267.04,-306 267.04,-306 273.04,-306 279.04,-312 279.04,-318 279.04,-318 279.04,-330 279.04,-330 279.04,-336 273.04,-342 267.04,-342"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-319.32" font-family="Verdana" font-size="14.00">(*AggregateTransform).Transform</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1 -->
+<g id="edge20" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1</title>
+<g id="a_edge20"><a xlink:title="at transformers.go:288: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform$1]">
+<path fill="none" stroke="black" d="M279.62,-331.91C292.72,-336.47 305.17,-342.67 316.04,-351 341.91,-370.83 328.5,-396.28 351.52,-425.16"/>
+<polygon fill="black" stroke="black" points="359.09,-437.17 368.75,-441.51 363.91,-432.09 359.09,-437.17"/>
+<polyline fill="none" stroke="black" points="361.13,-434.28 357.51,-430.84"/>
+<ellipse fill="none" stroke="black" cx="354.24" cy="-427.75" rx="4" ry="4"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge16" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.AggregateTransform).Transform&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge16"><a xlink:title="at transformers.go:274: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M259.37,-342.74C266.37,-346.18 273.01,-350.23 279.04,-355 335.65,-399.74 293.76,-457.47 352.04,-500 380.37,-520.67 420.59,-525.11 450.57,-525.01"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="450.49,-528.51 460.41,-524.79 450.33,-521.51 450.49,-528.51"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute -->
+<g id="node23" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute</title>
+<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute | defined in router.go:69&#10;at router.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:79: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:86: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:75: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID]&#10;at router.go:87: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M217.54,-844C217.54,-844 77.5,-844 77.5,-844 71.5,-844 65.5,-838 65.5,-832 65.5,-832 65.5,-820 65.5,-820 65.5,-814 71.5,-808 77.5,-808 77.5,-808 217.54,-808 217.54,-808 223.54,-808 229.54,-814 229.54,-820 229.54,-820 229.54,-832 229.54,-832 229.54,-838 223.54,-844 217.54,-844"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-821.33" font-family="Verdana" font-size="14.00">(*Router).AddRoute</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID -->
+<g id="node24" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID</title>
+<g id="a_node24"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID | defined in router.go:238">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M551.7,-742C551.7,-742 433.41,-742 433.41,-742 427.41,-742 421.41,-736 421.41,-730 421.41,-730 421.41,-718 421.41,-718 421.41,-712 427.41,-706 433.41,-706 433.41,-706 551.7,-706 551.7,-706 557.7,-706 563.7,-712 563.7,-718 563.7,-718 563.7,-730 563.7,-730 563.7,-736 557.7,-742 551.7,-742"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-719.33" font-family="Verdana" font-size="14.00">generateRouteID</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID -->
+<g id="edge34" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID</title>
+<g id="a_edge34"><a xlink:title="at router.go:75: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.generateRouteID]">
+<path fill="none" stroke="black" d="M213.17,-844.73C253.01,-854.56 299.54,-862.43 316.04,-851 353.49,-825.04 317.64,-784.89 352.04,-755 368.16,-741 389.2,-732.91 410.03,-728.33"/>
+<polygon fill="black" stroke="black" points="410.57,-731.8 419.73,-726.48 409.25,-724.92 410.57,-731.8"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge4"><a xlink:title="at router.go:71: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:79: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at router.go:86: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M203.63,-807.38C229.02,-796.65 258.08,-781.05 279.04,-760 330.22,-708.58 294.86,-658.65 352.04,-614 380.96,-591.42 423.02,-584.58 453.39,-582.83"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="453.45,-586.34 463.3,-582.44 453.17,-579.34 453.45,-586.34"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge35" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).AddRoute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge35"><a xlink:title="at router.go:87: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M230.23,-829.42C260.48,-826.53 292.98,-817.93 316.04,-797 360.75,-756.42 307.03,-706.24 352.04,-666 360.7,-658.26 370.93,-652.63 381.85,-648.6"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="382.6,-652.03 391.07,-645.66 380.48,-645.36 382.6,-652.03"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes -->
+<g id="node25" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes</title>
+<g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes | defined in router.go:169&#10;at router.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority]&#10;at router.go:173: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M595.58,-986C595.58,-986 389.54,-986 389.54,-986 383.54,-986 377.54,-980 377.54,-974 377.54,-974 377.54,-962 377.54,-962 377.54,-956 383.54,-950 389.54,-950 389.54,-950 595.58,-950 595.58,-950 601.58,-950 607.58,-956 607.58,-962 607.58,-962 607.58,-974 607.58,-974 607.58,-980 601.58,-986 595.58,-986"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-963.33" font-family="Verdana" font-size="14.00">(*Router).getMatchingRoutes</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute -->
+<g id="edge36" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute</title>
+<g id="a_edge36"><a xlink:title="at router.go:173: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).matchesRoute]">
+<path fill="none" stroke="black" d="M607.57,-958.87C640.97,-956.19 677.38,-953.28 710.39,-950.64"/>
+<polygon fill="black" stroke="black" points="710.25,-954.16 719.94,-949.87 709.69,-947.18 710.25,-954.16"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority -->
+<g id="node26" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority</title>
+<g id="a_node26"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority | defined in router.go:242">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M889.99,-1021C889.99,-1021 748.45,-1021 748.45,-1021 742.45,-1021 736.45,-1015 736.45,-1009 736.45,-1009 736.45,-997 736.45,-997 736.45,-991 742.45,-985 748.45,-985 748.45,-985 889.99,-985 889.99,-985 895.99,-985 901.99,-991 901.99,-997 901.99,-997 901.99,-1009 901.99,-1009 901.99,-1015 895.99,-1021 889.99,-1021"/>
+<text xml:space="preserve" text-anchor="middle" x="819.22" y="-998.33" font-family="Verdana" font-size="14.00">sortRoutesByPriority</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority</title>
+<g id="a_edge9"><a xlink:title="at router.go:179: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.sortRoutesByPriority]">
+<path fill="none" stroke="black" d="M607.57,-980.29C646.07,-984.44 688.55,-989.02 725.23,-992.97"/>
+<polygon fill="black" stroke="black" points="724.59,-996.43 734.91,-994.02 725.34,-989.47 724.59,-996.43"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware -->
+<g id="node27" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware</title>
+<g id="a_node27"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware | defined in middleware.go:281&#10;at middleware.go:288: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M220.54,-905C220.54,-905 74.5,-905 74.5,-905 68.5,-905 62.5,-899 62.5,-893 62.5,-893 62.5,-881 62.5,-881 62.5,-875 68.5,-869 74.5,-869 74.5,-869 220.54,-869 220.54,-869 226.54,-869 232.54,-875 232.54,-881 232.54,-881 232.54,-893 232.54,-893 232.54,-899 226.54,-905 220.54,-905"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-882.33" font-family="Verdana" font-size="14.00">DedupingMiddleware</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup -->
+<g id="node28" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup</title>
+<g id="a_node28"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup | defined in middleware.go:327">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M576.08,-803C576.08,-803 409.04,-803 409.04,-803 403.04,-803 397.04,-797 397.04,-791 397.04,-791 397.04,-779 397.04,-779 397.04,-773 403.04,-767 409.04,-767 409.04,-767 576.08,-767 576.08,-767 582.08,-767 588.08,-773 588.08,-779 588.08,-779 588.08,-791 588.08,-791 588.08,-797 582.08,-803 576.08,-803"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-780.33" font-family="Verdana" font-size="14.00">(*dedupCache).cleanup</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup -->
+<g id="edge26" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.DedupingMiddleware&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup</title>
+<g id="a_edge26"><a xlink:title="at middleware.go:288: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.dedupCache).cleanup]">
+<path fill="none" stroke="black" d="M232.94,-897.98C261.13,-897.76 291.57,-892.98 316.04,-878 343.22,-861.37 326.32,-834.82 352.04,-816 358.54,-811.24 365.65,-807.19 373.09,-803.74"/>
+<polygon fill="black" stroke="black" points="387.34,-802.19 395.5,-795.43 384.91,-795.62 387.34,-802.19"/>
+<polyline fill="none" stroke="black" points="385.66,-799.08 380.97,-800.82"/>
+<ellipse fill="none" stroke="black" cx="376.75" cy="-802.38" rx="4" ry="4"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware -->
+<g id="node29" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware</title>
+<g id="a_node29"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware | defined in middleware.go:104&#10;at middleware.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M214.91,-966C214.91,-966 80.12,-966 80.12,-966 74.12,-966 68.12,-960 68.12,-954 68.12,-954 68.12,-942 68.12,-942 68.12,-936 74.12,-930 80.12,-930 80.12,-930 214.91,-930 214.91,-930 220.91,-930 226.91,-936 226.91,-942 226.91,-942 226.91,-954 226.91,-954 226.91,-960 220.91,-966 214.91,-966"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-943.33" font-family="Verdana" font-size="14.00">CachingMiddleware</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup -->
+<g id="node30" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup</title>
+<g id="a_node30"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup | defined in middleware.go:175">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M573.45,-864C573.45,-864 411.66,-864 411.66,-864 405.66,-864 399.66,-858 399.66,-852 399.66,-852 399.66,-840 399.66,-840 399.66,-834 405.66,-828 411.66,-828 411.66,-828 573.45,-828 573.45,-828 579.45,-828 585.45,-834 585.45,-840 585.45,-840 585.45,-852 585.45,-852 585.45,-858 579.45,-864 573.45,-864"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-841.33" font-family="Verdana" font-size="14.00">(*eventCache).cleanup</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup -->
+<g id="edge46" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.CachingMiddleware&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup</title>
+<g id="a_edge46"><a xlink:title="at middleware.go:111: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.eventCache).cleanup]">
+<path fill="none" stroke="black" d="M227.6,-933.64C244.84,-929.46 262.77,-924.29 279.04,-918 313.75,-904.58 317.28,-890.29 352.04,-877 359.45,-874.17 367.2,-871.55 375.06,-869.16"/>
+<polygon fill="black" stroke="black" points="389.44,-868.83 398.15,-862.8 387.58,-862.08 389.44,-868.83"/>
+<polyline fill="none" stroke="black" points="388.03,-865.59 383.21,-866.91"/>
+<ellipse fill="none" stroke="black" cx="378.87" cy="-868.11" rx="4" ry="4"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route -->
+<g id="node31" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route</title>
+<g id="a_node31"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route | defined in router.go:116&#10;at router.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes]&#10;at router.go:144: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at router.go:159: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at router.go:142: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError]&#10;at router.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError]&#10;at router.go:162: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch]&#10;at router.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at router.go:143: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at router.go:158: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M203.66,-1027C203.66,-1027 91.38,-1027 91.38,-1027 85.38,-1027 79.37,-1021 79.37,-1015 79.37,-1015 79.37,-1003 79.37,-1003 79.37,-997 85.37,-991 91.37,-991 91.37,-991 203.66,-991 203.66,-991 209.66,-991 215.66,-997 215.66,-1003 215.66,-1003 215.66,-1015 215.66,-1015 215.66,-1021 209.66,-1027 203.66,-1027"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-1004.33" font-family="Verdana" font-size="14.00">(*Router).Route</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes -->
+<g id="edge10" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes</title>
+<g id="a_edge10"><a xlink:title="at router.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).getMatchingRoutes]">
+<path fill="none" stroke="black" d="M216.29,-1000.9C258.95,-995.8 315.33,-989.06 365.94,-983.01"/>
+<polygon fill="black" stroke="black" points="366.3,-986.5 375.82,-981.83 365.47,-979.54 366.3,-986.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError -->
+<g id="node32" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError</title>
+<g id="a_node32"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError | defined in router.go:217">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M568.58,-1047C568.58,-1047 416.54,-1047 416.54,-1047 410.54,-1047 404.54,-1041 404.54,-1035 404.54,-1035 404.54,-1023 404.54,-1023 404.54,-1017 410.54,-1011 416.54,-1011 416.54,-1011 568.58,-1011 568.58,-1011 574.58,-1011 580.58,-1017 580.58,-1023 580.58,-1023 580.58,-1035 580.58,-1035 580.58,-1041 574.58,-1047 568.58,-1047"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-1024.33" font-family="Verdana" font-size="14.00">(*Router).recordError</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError -->
+<g id="edge42" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError</title>
+<g id="a_edge42"><a xlink:title="at router.go:142: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError]&#10;at router.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordError]">
+<path fill="none" stroke="black" d="M216.29,-1012.95C266.82,-1015.9 336.58,-1019.96 393.23,-1023.27"/>
+<polygon fill="black" stroke="black" points="392.67,-1026.74 402.86,-1023.83 393.08,-1019.75 392.67,-1026.74"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch -->
 <g id="node33" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches</title>
-<g id="a_node33"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches | defined in rules.go:241&#10;at rules.go:243: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M249.04,-540C249.04,-540 46,-540 46,-540 40,-540 34,-534 34,-528 34,-528 34,-516 34,-516 34,-510 40,-504 46,-504 46,-504 249.04,-504 249.04,-504 255.04,-504 261.04,-510 261.04,-516 261.04,-516 261.04,-528 261.04,-528 261.04,-534 255.04,-540 249.04,-540"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-517.33" font-family="Verdana" font-size="14.00">(*TimeWindowRule).Matches</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch</title>
+<g id="a_node33"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch | defined in router.go:203">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M571.95,-925C571.95,-925 413.16,-925 413.16,-925 407.16,-925 401.16,-919 401.16,-913 401.16,-913 401.16,-901 401.16,-901 401.16,-895 407.16,-889 413.16,-889 413.16,-889 571.95,-889 571.95,-889 577.95,-889 583.95,-895 583.95,-901 583.95,-901 583.95,-913 583.95,-913 583.95,-919 577.95,-925 571.95,-925"/>
+<text xml:space="preserve" text-anchor="middle" x="492.56" y="-902.33" font-family="Verdana" font-size="14.00">(*Router).recordMatch</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.TimeWindowRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge5"><a xlink:title="at rules.go:243: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M244.27,-503.27C256.13,-500 267.97,-496.25 279.04,-492 296.13,-485.44 297.32,-476.59 315.04,-472 335,-466.83 333.12,-491.8 352.04,-500 383.49,-513.62 422.17,-518.93 450.83,-520.94"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="450.36,-524.41 460.55,-521.5 450.77,-517.43 450.36,-524.41"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch -->
+<g id="edge43" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch</title>
+<g id="a_edge43"><a xlink:title="at router.go:162: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).recordMatch]">
+<path fill="none" stroke="black" d="M216.28,-997.06C236.78,-992.48 259.14,-986.51 279.04,-979 296.53,-972.4 299.74,-968.16 316.04,-959 332.19,-949.93 334.79,-944.76 352.04,-938 364.13,-933.26 377.11,-929.17 390.11,-925.65"/>
+<polygon fill="black" stroke="black" points="390.75,-929.1 399.55,-923.21 389,-922.32 390.75,-929.1"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge47" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge47"><a xlink:title="at router.go:118: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at router.go:143: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at router.go:158: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M216.38,-1008.09C239.19,-1004.33 262.91,-996.07 279.04,-979 345.02,-909.2 285.81,-622.56 352.04,-553 377.15,-526.63 419.32,-520.31 450.74,-519.71"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="450.68,-523.21 460.68,-519.73 450.69,-516.21 450.68,-523.21"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge27" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Router).Route&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge27"><a xlink:title="at router.go:144: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at router.go:159: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M216.17,-1007.5C238.82,-1003.66 262.49,-995.5 279.04,-979 329.62,-928.58 299.73,-714.63 352.04,-666 360.55,-658.09 370.68,-652.36 381.55,-648.26"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="382.29,-651.7 390.73,-645.29 380.13,-645.04 382.29,-651.7"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches -->
 <g id="node34" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches</title>
-<g id="a_node34"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches | defined in rules.go:150&#10;at rules.go:152: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:169: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:171: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M236.66,-784C236.66,-784 58.38,-784 58.38,-784 52.37,-784 46.37,-778 46.37,-772 46.37,-772 46.37,-760 46.37,-760 46.37,-754 52.37,-748 58.37,-748 58.37,-748 236.66,-748 236.66,-748 242.66,-748 248.66,-754 248.66,-760 248.66,-760 248.66,-772 248.66,-772 248.66,-778 242.66,-784 236.66,-784"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-761.33" font-family="Verdana" font-size="14.00">(*MetadataRule).Matches</text>
+<g id="a_node34"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches | defined in rules.go:150&#10;at rules.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at rules.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at rules.go:169: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:171: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:152: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M236.66,-525C236.66,-525 58.38,-525 58.38,-525 52.37,-525 46.37,-519 46.37,-513 46.37,-513 46.37,-501 46.37,-501 46.37,-495 52.37,-489 58.37,-489 58.37,-489 236.66,-489 236.66,-489 242.66,-489 248.66,-495 248.66,-501 248.66,-501 248.66,-513 248.66,-513 248.66,-519 242.66,-525 236.66,-525"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-502.32" font-family="Verdana" font-size="14.00">(*MetadataRule).Matches</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual -->
-<g id="edge7" class="edge">
+<g id="edge21" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual</title>
-<g id="a_edge7"><a xlink:title="at rules.go:169: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:171: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]">
-<path fill="none" stroke="black" d="M228.66,-784.75C245.32,-788.73 262.77,-792.95 279.04,-797 311.57,-805.1 319.42,-808.25 352.04,-816 374,-821.22 398.01,-826.52 419.82,-831.19"/>
-<polygon fill="black" stroke="black" points="419.01,-834.6 429.52,-833.25 420.47,-827.75 419.01,-834.6"/>
+<g id="a_edge21"><a xlink:title="at rules.go:169: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]&#10;at rules.go:171: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.compareEqual]">
+<path fill="none" stroke="black" d="M246.59,-488.26C257.71,-485.02 268.74,-481.29 279.04,-477 314.45,-462.27 316.58,-445.6 352.04,-431 373.44,-422.19 397.76,-415.69 420.03,-410.98"/>
+<polygon fill="black" stroke="black" points="420.53,-414.45 429.64,-409.04 419.14,-407.59 420.53,-414.45"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge6" class="edge">
+<g id="edge28" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge6"><a xlink:title="at rules.go:152: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M249.23,-753.55C260.06,-749.2 270.3,-743.49 279.04,-736 345.53,-679.02 285.35,-609.74 352.04,-553 379.44,-529.69 420.55,-522.84 451.06,-521.28"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="450.79,-524.79 460.67,-520.97 450.56,-517.8 450.79,-524.79"/>
+<g id="a_edge28"><a xlink:title="at rules.go:152: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M249.15,-492.25C270.84,-489.65 293.67,-487.34 315.04,-486 332.59,-484.9 335.07,-495.42 352.04,-500 384.67,-508.81 422.6,-514.51 450.67,-517.89"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="450.21,-521.36 460.55,-519.03 451.01,-514.41 450.21,-521.36"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge8" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge8"><a xlink:title="at rules.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M249.15,-748.5C259.52,-745.05 269.68,-740.93 279.04,-736 298.8,-725.6 299.92,-717.45 316.04,-702 332.37,-686.34 331.88,-676.27 352.04,-666 383.73,-649.87 424.29,-644.95 453.5,-643.72"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="453.46,-647.23 463.36,-643.45 453.27,-640.23 453.46,-647.23"/>
+<g id="a_edge5"><a xlink:title="at rules.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M230.18,-525.66C267.34,-534.1 311.89,-544.15 352.04,-553 386.6,-560.62 426.02,-569.08 454.12,-575.06"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="453.06,-578.41 463.57,-577.07 454.52,-571.57 453.06,-578.41"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge47" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.MetadataRule).Matches&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge47"><a xlink:title="at rules.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M249.41,-751.59C259.97,-747.57 270.09,-742.47 279.04,-736 304.74,-717.43 299.76,-702.21 316.04,-675 332.2,-647.99 326.57,-632.5 352.04,-614 361,-607.49 371.07,-602.31 381.6,-598.19"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="382.58,-601.56 390.83,-594.93 380.24,-594.96 382.58,-601.56"/>
+<g id="a_edge11"><a xlink:title="at rules.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M249.34,-519.18C260.28,-523.78 270.52,-529.89 279.04,-538 320.61,-577.56 269.15,-627.54 315.04,-662 321.15,-666.59 349.08,-664.91 380.98,-661.14"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="381.4,-664.61 390.9,-659.91 380.54,-657.67 381.4,-664.61"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform -->
 <g id="node35" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches</title>
-<g id="a_node35"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches | defined in rules.go:56&#10;at rules.go:58: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at rules.go:72: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M228.79,-357C228.79,-357 66.25,-357 66.25,-357 60.25,-357 54.25,-351 54.25,-345 54.25,-345 54.25,-333 54.25,-333 54.25,-327 60.25,-321 66.25,-321 66.25,-321 228.79,-321 228.79,-321 234.79,-321 240.79,-327 240.79,-333 240.79,-333 240.79,-345 240.79,-345 240.79,-351 234.79,-357 228.79,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="147.52" y="-334.32" font-family="Verdana" font-size="14.00">(*SourceRule).Matches</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform</title>
+<g id="a_node35"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform | defined in transformers.go:31&#10;at transformers.go:41: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at transformers.go:33: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transformers.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M238.54,-586C238.54,-586 56.5,-586 56.5,-586 50.5,-586 44.5,-580 44.5,-574 44.5,-574 44.5,-562 44.5,-562 44.5,-556 50.5,-550 56.5,-550 56.5,-550 238.54,-550 238.54,-550 244.54,-550 250.54,-556 250.54,-562 250.54,-562 250.54,-574 250.54,-574 250.54,-580 244.54,-586 238.54,-586"/>
+<text xml:space="preserve" text-anchor="middle" x="147.52" y="-563.33" font-family="Verdana" font-size="14.00">(*Transformer).Transform</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern</title>
-<g id="a_edge17"><a xlink:title="at rules.go:72: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.matchesPattern]">
-<path fill="none" stroke="black" d="M241.19,-325.53C266.17,-325.18 292.73,-327.93 316.04,-337 336.27,-344.87 332.76,-360.04 352.04,-370 371.35,-379.98 393.81,-386.64 415,-391.09"/>
-<polygon fill="black" stroke="black" points="414.3,-394.52 424.78,-392.99 415.63,-387.64 414.3,-394.52"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
 <g id="edge12" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.SourceRule).Matches&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge12"><a xlink:title="at rules.go:58: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M241.27,-350.89C254.79,-355.41 267.88,-361.59 279.04,-370 331.95,-409.9 297.64,-462.16 352.04,-500 380.83,-520.03 421,-524.54 450.84,-524.63"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="450.67,-528.13 460.62,-524.48 450.57,-521.13 450.67,-528.13"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge12"><a xlink:title="at transformers.go:33: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at transformers.go:40: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M250.98,-554.26C317.92,-545.28 401.7,-534.05 450.66,-527.48"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="451.09,-530.96 460.54,-526.16 450.16,-524.02 451.09,-530.96"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge6" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/events/routing.Transformer).Transform&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge6"><a xlink:title="at transformers.go:41: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M251.21,-582.09C261.31,-586.4 270.84,-591.93 279.04,-599 311.66,-627.14 279.37,-664.85 315.04,-689 331.07,-699.86 333.94,-672.87 352.04,-666 361.39,-662.46 371.29,-659.48 381.34,-656.99"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="381.85,-660.46 390.81,-654.81 380.28,-653.64 381.85,-660.46"/>
 </a>
 </g>
 </g>
