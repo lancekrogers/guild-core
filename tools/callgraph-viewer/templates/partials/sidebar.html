@@ -1,0 +1,31 @@
+{{define "sidebar"}}
+<nav id="navigation" class="sidebar">
+    <div class="navigation-tree">
+        {{range $category, $graphs := .Categories}}
+        <details class="category" open>
+            <summary class="category-title">{{$category}} ({{len $graphs}})</summary>
+            <div class="domain-list">
+                {{$domains := groupByDomain $graphs}}
+                {{range $domain, $domainGraphs := $domains}}
+                <details class="domain" open>
+                    <summary class="domain-title">{{$domain}} ({{len $domainGraphs}})</summary>
+                    <ul class="graph-list">
+                        {{range $domainGraphs}}
+                        <li>
+                            <a href="#{{.ID}}" class="graph-link" data-graph-id="{{.ID}}" data-graph-path="{{.FilePath}}">
+                                <span class="graph-title">{{.Title}}</span>
+                                <span class="size-indicator size-{{.SizeCategory}}">
+                                    {{if eq .SizeCategory "small"}}○{{else if eq .SizeCategory "medium"}}◐{{else}}●{{end}}
+                                </span>
+                            </a>
+                        </li>
+                        {{end}}
+                    </ul>
+                </details>
+                {{end}}
+            </div>
+        </details>
+        {{end}}
+    </div>
+</nav>
+{{end}}

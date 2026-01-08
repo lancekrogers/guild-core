@@ -1,0 +1,14 @@
+{{define "header"}}
+<header class="header">
+    <div class="header-content">
+        <h1 class="header-title">Guild-Core Callgraph Viewer</h1>
+        <div class="header-meta">
+            <span class="graph-count">{{len .Graphs}} graphs</span>
+            <span class="generated-time">Generated: {{.GeneratedAt.Format "2006-01-02 15:04:05"}}</span>
+        </div>
+    </div>
+    <div class="header-search">
+        <input type="text" id="search" placeholder="Search graphs..." autocomplete="off">
+    </div>
+</header>
+{{end}}

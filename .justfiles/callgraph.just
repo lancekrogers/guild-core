@@ -46,3 +46,38 @@ non-ui: setup
 # Generate all standard callgraphs
 [no-cd]
 all: cli-daemon daemon-lifecycle integration-services
+
+# Generate static HTML viewer for callgraphs
+[no-cd]
+viewer:
+    @echo "Generating callgraph viewer..."
+    go run ./tools/callgraph-viewer
+    @echo "✓ Viewer generated at docs/callgraphs/viewer/index.html"
+
+# Regenerate callgraphs and viewer
+[no-cd]
+refresh: non-ui viewer
+
+# Serve viewer with local HTTP server (required for ES modules)
+[no-cd]
+serve-viewer:
+    @echo "Starting viewer at http://localhost:9000"
+    @echo "Press Ctrl+C to stop"
+    cd docs/callgraphs/viewer && python3 -m http.server 9000
+
+# Open viewer in default browser (deprecated - use serve-viewer instead)
+[no-cd]
+open-viewer:
+    @echo "Warning: Opening file:// may not work due to CORS restrictions"
+    @echo "Use 'just callgraph serve-viewer' instead"
+    open docs/callgraphs/viewer/index.html
+
+# Watch for SVG changes and regenerate viewer
+[no-cd]
+viewer-watch:
+    watchexec -w docs/images/callgraphs -e svg -- just callgraph viewer
+
+# Clean generated viewer files
+[no-cd]
+clean-viewer:
+    rm -rf docs/callgraphs/viewer
