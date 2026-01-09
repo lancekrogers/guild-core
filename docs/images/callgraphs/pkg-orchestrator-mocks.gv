@@ -14,28 +14,28 @@ digraph gocallvis {
     edge [minlen="2"]
 
     subgraph "cluster_focus" {
-        bgcolor="#e6ecfa";
+        fontsize="18";
+bgcolor="#e6ecfa";
 label="mocks";
 labelloc="t";
 labeljust="c";
-fontsize="18";
         
-        "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgentFactory).RegisterAgent" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgentFactory).RegisterAgent | defined in mock_agent_factory.go:48\nat mock_agent_factory.go:52: calling [(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID]" fillcolor="lightblue" label="(*MockAgentFactory).RegisterAgent" ]
-        "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID" [ fillcolor="lightblue" label="(*MockAgent).GetID" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID | defined in mock_agent.go:42" ]
-        "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockKanbanManager).UpdateTaskStatus" [ label="(*MockKanbanManager).UpdateTaskStatus" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockKanbanManager).UpdateTaskStatus | defined in mock_kanban.go:60\nat mock_kanban.go:85: calling [(*github.com/guild-framework/guild-core/pkg/kanban.Task).UpdateStatus]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockKanbanManager).UpdateTaskStatus" [ tooltip="(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockKanbanManager).UpdateTaskStatus | defined in mock_kanban.go:60\nat mock_kanban.go:85: calling [(*github.com/guild-framework/guild-core/pkg/kanban.Task).UpdateStatus]" fillcolor="lightblue" label="(*MockKanbanManager).UpdateTaskStatus" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgentFactory).RegisterAgent" [ fillcolor="lightblue" label="(*MockAgentFactory).RegisterAgent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgentFactory).RegisterAgent | defined in mock_agent_factory.go:48\nat mock_agent_factory.go:52: calling [(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID]" ]
+        "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID" [ tooltip="(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID | defined in mock_agent.go:42" fillcolor="lightblue" label="(*MockAgent).GetID" penwidth="1.5" ]
         "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgentFactory).CreateAgent" [ fillcolor="lightblue" label="(*MockAgentFactory).CreateAgent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgentFactory).CreateAgent | defined in mock_agent_factory.go:27\nat mock_agent_factory.go:39: calling [github.com/guild-framework/guild-core/pkg/orchestrator/mocks.NewMockAgent]" ]
         "github.com/guild-framework/guild-core/pkg/orchestrator/mocks.NewMockAgent" [ fillcolor="lightblue" label="NewMockAgent" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/orchestrator/mocks.NewMockAgent | defined in mock_agent.go:22" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/kanban" {
         fontsize="16";
 style="filled";
-fillcolor="lightyellow";
 fontname="Tahoma bold";
-rank="sink";
-tooltip="package: github.com/guild-framework/guild-core/pkg/kanban";
-penwidth="0.8";
 label="kanban";
 URL="/?f=github.com/guild-framework/guild-core/pkg/kanban";
+tooltip="package: github.com/guild-framework/guild-core/pkg/kanban";
+fillcolor="lightyellow";
+rank="sink";
+penwidth="0.8";
         
         "(*github.com/guild-framework/guild-core/pkg/kanban.Task).UpdateStatus" [ fillcolor="moccasin" label="(*Task).UpdateStatus" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/kanban.Task).UpdateStatus | defined in taskmodel.go:143" ]
         
@@ -43,7 +43,7 @@ URL="/?f=github.com/guild-framework/guild-core/pkg/kanban";
 
     }
 
-    "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgentFactory).RegisterAgent" -> "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID" [ tooltip="at mock_agent_factory.go:52: calling [(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID]" ]
-    "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockKanbanManager).UpdateTaskStatus" -> "(*github.com/guild-framework/guild-core/pkg/kanban.Task).UpdateStatus" [ color="saddlebrown" tooltip="at mock_kanban.go:85: calling [(*github.com/guild-framework/guild-core/pkg/kanban.Task).UpdateStatus]" ]
     "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgentFactory).CreateAgent" -> "github.com/guild-framework/guild-core/pkg/orchestrator/mocks.NewMockAgent" [ tooltip="at mock_agent_factory.go:39: calling [github.com/guild-framework/guild-core/pkg/orchestrator/mocks.NewMockAgent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockKanbanManager).UpdateTaskStatus" -> "(*github.com/guild-framework/guild-core/pkg/kanban.Task).UpdateStatus" [ color="saddlebrown" tooltip="at mock_kanban.go:85: calling [(*github.com/guild-framework/guild-core/pkg/kanban.Task).UpdateStatus]" ]
+    "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgentFactory).RegisterAgent" -> "(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID" [ tooltip="at mock_agent_factory.go:52: calling [(*github.com/guild-framework/guild-core/pkg/orchestrator/mocks.MockAgent).GetID]" ]
 }

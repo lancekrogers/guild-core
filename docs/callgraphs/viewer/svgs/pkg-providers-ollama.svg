@@ -22,12 +22,12 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest | defined in client.go:377&#10;at client.go:407: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:408: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:409: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:406: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:404: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf]&#10;at client.go:405: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M760.24,-202C760.24,-202 599.95,-202 599.95,-202 593.95,-202 587.95,-196 587.95,-190 587.95,-190 587.95,-178 587.95,-178 587.95,-172 593.95,-166 599.95,-166 599.95,-166 760.24,-166 760.24,-166 766.24,-166 772.24,-172 772.24,-178 772.24,-178 772.24,-190 772.24,-190 772.24,-196 766.24,-202 760.24,-202"/>
-<text xml:space="preserve" text-anchor="middle" x="680.1" y="-179.32" font-family="Verdana" font-size="14.00">(*Client).makeRequest</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion | defined in client.go:197&#10;at client.go:236: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:234: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf]&#10;at client.go:235: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:238: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M793.62,-155C793.62,-155 566.58,-155 566.58,-155 560.58,-155 554.58,-149 554.58,-143 554.58,-143 554.58,-131 554.58,-131 554.58,-125 560.58,-119 566.58,-119 566.58,-119 793.62,-119 793.62,-119 799.62,-119 805.62,-125 805.62,-131 805.62,-131 805.62,-143 805.62,-143 805.62,-149 799.62,-155 793.62,-155"/>
+<text xml:space="preserve" text-anchor="middle" x="680.1" y="-132.32" font-family="Verdana" font-size="14.00">(*Client).StreamChatCompletion</text>
 </a>
 </g>
 </g>
@@ -40,12 +40,12 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf</title>
-<g id="a_edge22"><a xlink:title="at client.go:404: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf]">
-<path fill="none" stroke="saddlebrown" d="M772.38,-186.34C832.44,-187.87 908.1,-189.81 953.61,-190.97"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="953.45,-194.47 963.54,-191.23 953.63,-187.47 953.45,-194.47"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf</title>
+<g id="a_edge9"><a xlink:title="at client.go:234: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf]">
+<path fill="none" stroke="saddlebrown" d="M787.39,-155.7C844.71,-165.78 912.07,-177.63 953.85,-184.98"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="953.23,-188.42 963.69,-186.71 954.45,-181.53 953.23,-188.42"/>
 </a>
 </g>
 </g>
@@ -53,17 +53,17 @@
 <g id="node13" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1098.91,-332C1098.91,-332 890.62,-332 890.62,-332 884.62,-332 878.62,-326 878.62,-320 878.62,-320 878.62,-308 878.62,-308 878.62,-302 884.62,-296 890.62,-296 890.62,-296 1098.91,-296 1098.91,-296 1104.91,-296 1110.91,-302 1110.91,-308 1110.91,-308 1110.91,-320 1110.91,-320 1110.91,-326 1104.91,-332 1098.91,-332"/>
-<text xml:space="preserve" text-anchor="middle" x="994.76" y="-309.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1098.91,-149C1098.91,-149 890.62,-149 890.62,-149 884.62,-149 878.62,-143 878.62,-137 878.62,-137 878.62,-125 878.62,-125 878.62,-119 884.62,-113 890.62,-113 890.62,-113 1098.91,-113 1098.91,-113 1104.91,-113 1110.91,-119 1110.91,-125 1110.91,-125 1110.91,-137 1110.91,-137 1110.91,-143 1104.91,-149 1098.91,-149"/>
+<text xml:space="preserve" text-anchor="middle" x="994.76" y="-126.33" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge23"><a xlink:title="at client.go:405: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M765.52,-202.21C779.41,-206.93 793.29,-212.78 805.62,-220 840.61,-240.48 835.2,-264.27 870.62,-284 875.3,-286.61 880.2,-288.99 885.24,-291.17"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="883.77,-294.35 894.35,-294.79 886.36,-287.84 883.77,-294.35"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge13"><a xlink:title="at client.go:235: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M806.17,-118.3C818.46,-117.66 830.77,-117.49 842.62,-118 850.4,-118.33 858.4,-118.76 866.46,-119.26"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="866.17,-122.75 876.38,-119.91 866.63,-115.77 866.17,-122.75"/>
 </a>
 </g>
 </g>
@@ -76,12 +76,12 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge17"><a xlink:title="at client.go:406: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M763.66,-202.22C804.85,-211.31 854.91,-222.36 897.81,-231.82"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="896.84,-235.19 907.36,-233.93 898.35,-228.36 896.84,-235.19"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge1"><a xlink:title="at client.go:236: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M743.07,-155.7C763.42,-162.68 785.86,-171.29 805.62,-181 836.49,-196.17 839.03,-209.41 870.62,-223 877.26,-225.86 884.23,-228.48 891.33,-230.87"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="890.15,-234.17 900.74,-233.87 892.28,-227.5 890.15,-234.17"/>
 </a>
 </g>
 </g>
@@ -89,62 +89,134 @@
 <g id="node15" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1082.41,-149C1082.41,-149 907.12,-149 907.12,-149 901.12,-149 895.12,-143 895.12,-137 895.12,-137 895.12,-125 895.12,-125 895.12,-119 901.12,-113 907.12,-113 907.12,-113 1082.41,-113 1082.41,-113 1088.41,-113 1094.41,-119 1094.41,-125 1094.41,-125 1094.41,-137 1094.41,-137 1094.41,-143 1088.41,-149 1082.41,-149"/>
-<text xml:space="preserve" text-anchor="middle" x="994.76" y="-126.33" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1082.41,-332C1082.41,-332 907.12,-332 907.12,-332 901.12,-332 895.12,-326 895.12,-320 895.12,-320 895.12,-308 895.12,-308 895.12,-302 901.12,-296 907.12,-296 907.12,-296 1082.41,-296 1082.41,-296 1088.41,-296 1094.41,-302 1094.41,-308 1094.41,-308 1094.41,-320 1094.41,-320 1094.41,-326 1088.41,-332 1082.41,-332"/>
+<text xml:space="preserve" text-anchor="middle" x="994.76" y="-309.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge14" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge14"><a xlink:title="at client.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:238: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M759.34,-155.67C775.71,-161.94 792.09,-170.2 805.62,-181 847.92,-214.77 826.67,-252.4 870.62,-284 874.97,-287.13 879.6,-289.93 884.43,-292.44"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="882.67,-295.49 893.21,-296.56 885.65,-289.15 882.67,-295.49"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next -->
+<g id="node2" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next | defined in client.go:421&#10;at client.go:449: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M182.29,-72C182.29,-72 28,-72 28,-72 22,-72 16,-66 16,-60 16,-60 16,-48 16,-48 16,-42 22,-36 28,-36 28,-36 182.29,-36 182.29,-36 188.29,-36 194.29,-42 194.29,-48 194.29,-48 194.29,-60 194.29,-60 194.29,-66 188.29,-72 182.29,-72"/>
+<text xml:space="preserve" text-anchor="middle" x="105.14" y="-49.33" font-family="Verdana" font-size="14.00">(*ollamaStream).Next</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1 -->
+<g id="node3" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1</title>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1 | defined in client.go:444">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="472.58,-72 276.29,-72 276.29,-36 472.58,-36 472.58,-72"/>
+<text xml:space="preserve" text-anchor="middle" x="374.43" y="-49.33" font-family="Verdana" font-size="14.00">(*ollamaStream).Next$1</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1 -->
+<g id="edge10" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1</title>
+<g id="a_edge10"><a xlink:title="at client.go:449: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1]">
+<path fill="none" stroke="black" d="M194.78,-54C217.11,-54 241.34,-54 264.54,-54"/>
+<polygon fill="black" stroke="black" points="264.32,-57.5 274.32,-54 264.32,-50.5 264.32,-57.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest -->
+<g id="node4" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest</title>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest | defined in client.go:377&#10;at client.go:405: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:404: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf]&#10;at client.go:406: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:407: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:408: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:409: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M760.24,-229C760.24,-229 599.95,-229 599.95,-229 593.95,-229 587.95,-223 587.95,-217 587.95,-217 587.95,-205 587.95,-205 587.95,-199 593.95,-193 599.95,-193 599.95,-193 760.24,-193 760.24,-193 766.24,-193 772.24,-199 772.24,-205 772.24,-205 772.24,-217 772.24,-217 772.24,-223 766.24,-229 760.24,-229"/>
+<text xml:space="preserve" text-anchor="middle" x="680.1" y="-206.32" font-family="Verdana" font-size="14.00">(*Client).makeRequest</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf -->
+<g id="edge11" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf</title>
+<g id="a_edge11"><a xlink:title="at client.go:404: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf]">
+<path fill="none" stroke="saddlebrown" d="M772.38,-205.45C832.44,-201.8 908.1,-197.21 953.61,-194.44"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="953.77,-197.94 963.54,-193.84 953.35,-190.95 953.77,-197.94"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge2"><a xlink:title="at client.go:405: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M750.83,-192.86C786.62,-183.57 830.94,-172.12 870.62,-162 882.76,-158.9 895.59,-155.65 908.19,-152.47"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="908.88,-155.9 917.72,-150.06 907.16,-149.12 908.88,-155.9"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge15"><a xlink:title="at client.go:406: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M772.38,-223.26C803.63,-227.46 839.11,-232.23 872.36,-236.69"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="871.67,-240.13 882.05,-237.99 872.6,-233.19 871.67,-240.13"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge1" class="edge">
+<g id="edge16" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge1"><a xlink:title="at client.go:407: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:408: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:409: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M746.64,-165.77C775.56,-158.33 810.08,-150.25 841.62,-145 855.04,-142.76 869.19,-140.86 883.24,-139.25"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="883.4,-142.75 892.96,-138.18 882.64,-135.8 883.4,-142.75"/>
+<g id="a_edge16"><a xlink:title="at client.go:407: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:408: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:409: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M708.81,-229.13C739.82,-248.51 792.23,-278.51 841.62,-294 854.86,-298.15 869.01,-301.44 883.15,-304.05"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="882.53,-307.5 892.98,-305.74 883.72,-300.6 882.53,-307.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion -->
-<g id="node2" class="node">
+<g id="node5" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion | defined in client.go:109&#10;at client.go:171: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:169: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest]&#10;at client.go:170: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:168: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M462.45,-89C462.45,-89 286.41,-89 286.41,-89 280.41,-89 274.41,-83 274.41,-77 274.41,-77 274.41,-65 274.41,-65 274.41,-59 280.41,-53 286.41,-53 286.41,-53 462.45,-53 462.45,-53 468.45,-53 474.45,-59 474.45,-65 474.45,-65 474.45,-77 474.45,-77 474.45,-83 468.45,-89 462.45,-89"/>
-<text xml:space="preserve" text-anchor="middle" x="374.43" y="-66.33" font-family="Verdana" font-size="14.00">(*Client).ChatCompletion</text>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion | defined in client.go:109&#10;at client.go:170: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:171: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:168: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:169: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M462.45,-389C462.45,-389 286.41,-389 286.41,-389 280.41,-389 274.41,-383 274.41,-377 274.41,-377 274.41,-365 274.41,-365 274.41,-359 280.41,-353 286.41,-353 286.41,-353 462.45,-353 462.45,-353 468.45,-353 474.45,-359 474.45,-365 474.45,-365 474.45,-377 474.45,-377 474.45,-383 468.45,-389 462.45,-389"/>
+<text xml:space="preserve" text-anchor="middle" x="374.43" y="-366.32" font-family="Verdana" font-size="14.00">(*Client).ChatCompletion</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest -->
-<g id="edge11" class="edge">
+<g id="edge21" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest</title>
-<g id="a_edge11"><a xlink:title="at client.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest]">
-<path fill="none" stroke="black" d="M425.58,-89.66C478.91,-109.51 563.22,-140.88 619.81,-161.94"/>
-<polygon fill="black" stroke="black" points="618.38,-165.14 628.97,-165.35 620.82,-158.58 618.38,-165.14"/>
+<g id="a_edge21"><a xlink:title="at client.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest]">
+<path fill="none" stroke="black" d="M417.9,-352.33C437.47,-343.49 460.88,-332.57 481.58,-322 537.01,-293.69 599.37,-257.97 638.93,-234.82"/>
+<polygon fill="black" stroke="black" points="640.56,-237.92 647.41,-229.84 637.02,-231.88 640.56,-237.92"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge7" class="edge">
+<g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge7"><a xlink:title="at client.go:169: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M426.31,-89.75C445.93,-99.19 467.09,-112.44 481.58,-130 533.13,-192.48 484.16,-256.97 554.58,-297 659.6,-356.69 802.69,-349.06 896.6,-334.54"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="896.99,-338.02 906.31,-332.98 895.88,-331.11 896.99,-338.02"/>
+<g id="a_edge18"><a xlink:title="at client.go:169: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M437.69,-352.29C453.72,-344.99 469.77,-335.13 481.58,-322 549.09,-246.99 472.55,-165.78 554.58,-107 606.02,-70.14 774.92,-91.07 887.64,-110.4"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="886.77,-113.81 897.22,-112.07 887.97,-106.91 886.77,-113.81"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge12" class="edge">
+<g id="edge3" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge12"><a xlink:title="at client.go:170: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M423.02,-89.71C443.02,-99.39 465.37,-112.83 481.58,-130 532.77,-184.19 491.43,-241.39 554.58,-281 608.08,-314.56 775.64,-293.1 887.63,-273.68"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="888.23,-277.13 897.48,-271.95 887.02,-270.24 888.23,-277.13"/>
+<g id="a_edge3"><a xlink:title="at client.go:170: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M473.41,-352.3C585.41,-330.93 768.23,-296.04 884.68,-273.82"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="885.08,-277.3 894.25,-271.99 883.77,-270.43 885.08,-277.3"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge2" class="edge">
+<g id="edge4" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge2"><a xlink:title="at client.go:171: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M474.88,-66.7C570.15,-64.58 717.53,-66.57 842.62,-91 855.59,-93.53 857.96,-97.21 870.62,-101 880.3,-103.9 890.46,-106.72 900.63,-109.4"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="899.61,-112.76 910.17,-111.87 901.37,-105.98 899.61,-112.76"/>
+<g id="a_edge4"><a xlink:title="at client.go:171: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M430.26,-389.68C456.68,-396.92 488.98,-403.23 518.58,-402 662.97,-395.99 712.58,-438.05 842.62,-375 859.03,-367.04 854.91,-354.27 870.62,-345 875.59,-342.06 880.84,-339.4 886.25,-336.99"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="887.5,-340.26 895.43,-333.24 884.85,-333.79 887.5,-340.26"/>
 </a>
 </g>
 </g>
@@ -152,190 +224,71 @@
 <g id="node16" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node16"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1012.66,-88C1012.66,-88 976.87,-88 976.87,-88 970.87,-88 964.87,-82 964.87,-76 964.87,-76 964.87,-64 964.87,-64 964.87,-58 970.87,-52 976.87,-52 976.87,-52 1012.66,-52 1012.66,-52 1018.66,-52 1024.66,-58 1024.66,-64 1024.66,-64 1024.66,-76 1024.66,-76 1024.66,-82 1018.66,-88 1012.66,-88"/>
-<text xml:space="preserve" text-anchor="middle" x="994.76" y="-65.33" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1012.66,-393C1012.66,-393 976.87,-393 976.87,-393 970.87,-393 964.87,-387 964.87,-381 964.87,-381 964.87,-369 964.87,-369 964.87,-363 970.87,-357 976.87,-357 976.87,-357 1012.66,-357 1012.66,-357 1018.66,-357 1024.66,-363 1024.66,-369 1024.66,-369 1024.66,-381 1024.66,-381 1024.66,-387 1018.66,-393 1012.66,-393"/>
+<text xml:space="preserve" text-anchor="middle" x="994.76" y="-370.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge18" class="edge">
+<g id="edge17" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge18"><a xlink:title="at client.go:168: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M439.61,-52.27C463.82,-46.1 491.75,-40.05 517.58,-37 661.05,-20.08 698.99,-21.5 842.62,-37 880.62,-41.1 923.09,-50.84 953.3,-58.68"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="952.22,-62.02 962.79,-61.19 954.01,-55.25 952.22,-62.02"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete | defined in client.go:476&#10;at client.go:484: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M170.66,-89C170.66,-89 39.62,-89 39.62,-89 33.62,-89 27.62,-83 27.62,-77 27.62,-77 27.62,-65 27.62,-65 27.62,-59 33.62,-53 39.62,-53 39.62,-53 170.66,-53 170.66,-53 176.66,-53 182.66,-59 182.66,-65 182.66,-65 182.66,-77 182.66,-77 182.66,-83 176.66,-89 170.66,-89"/>
-<text xml:space="preserve" text-anchor="middle" x="105.14" y="-66.33" font-family="Verdana" font-size="14.00">(*Client).Complete</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion</title>
-<g id="a_edge13"><a xlink:title="at client.go:484: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion]">
-<path fill="none" stroke="black" d="M183.1,-71C207.93,-71 235.96,-71 262.73,-71"/>
-<polygon fill="black" stroke="black" points="262.6,-74.5 272.6,-71 262.6,-67.5 262.6,-74.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next -->
-<g id="node4" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next | defined in client.go:421&#10;at client.go:449: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M182.29,-178C182.29,-178 28,-178 28,-178 22,-178 16,-172 16,-166 16,-166 16,-154 16,-154 16,-148 22,-142 28,-142 28,-142 182.29,-142 182.29,-142 188.29,-142 194.29,-148 194.29,-154 194.29,-154 194.29,-166 194.29,-166 194.29,-172 188.29,-178 182.29,-178"/>
-<text xml:space="preserve" text-anchor="middle" x="105.14" y="-155.32" font-family="Verdana" font-size="14.00">(*ollamaStream).Next</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1 -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1 | defined in client.go:444">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="472.58,-178 276.29,-178 276.29,-142 472.58,-142 472.58,-178"/>
-<text xml:space="preserve" text-anchor="middle" x="374.43" y="-155.32" font-family="Verdana" font-size="14.00">(*ollamaStream).Next$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1 -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1</title>
-<g id="a_edge14"><a xlink:title="at client.go:449: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.ollamaStream).Next$1]">
-<path fill="none" stroke="black" d="M194.78,-160C217.11,-160 241.34,-160 264.54,-160"/>
-<polygon fill="black" stroke="black" points="264.32,-163.5 274.32,-160 264.32,-156.5 264.32,-163.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion | defined in client.go:197&#10;at client.go:236: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:234: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf]&#10;at client.go:235: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:238: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M793.62,-268C793.62,-268 566.58,-268 566.58,-268 560.58,-268 554.58,-262 554.58,-256 554.58,-256 554.58,-244 554.58,-244 554.58,-238 560.58,-232 566.58,-232 566.58,-232 793.62,-232 793.62,-232 799.62,-232 805.62,-238 805.62,-244 805.62,-244 805.62,-256 805.62,-256 805.62,-262 799.62,-268 793.62,-268"/>
-<text xml:space="preserve" text-anchor="middle" x="680.1" y="-245.32" font-family="Verdana" font-size="14.00">(*Client).StreamChatCompletion</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf -->
-<g id="edge19" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf</title>
-<g id="a_edge19"><a xlink:title="at client.go:234: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Newf]">
-<path fill="none" stroke="saddlebrown" d="M781.75,-231.33C840.29,-220.47 910.82,-207.39 953.96,-199.38"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="954.42,-202.86 963.62,-197.59 953.15,-195.97 954.42,-202.86"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge20" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge20"><a xlink:title="at client.go:235: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M741.61,-268.69C771.48,-277.38 808.2,-287.26 841.62,-294 849.79,-295.65 858.24,-297.19 866.77,-298.63"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="866.09,-302.07 876.53,-300.23 867.22,-295.16 866.09,-302.07"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge3"><a xlink:title="at client.go:236: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M806.02,-251.2C827.89,-251.41 850.62,-251.63 872.39,-251.84"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="872.14,-255.33 882.17,-251.93 872.21,-248.33 872.14,-255.33"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge21" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge21"><a xlink:title="at client.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:238: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M765.63,-231.33C779.37,-226.87 793.16,-221.47 805.62,-215 838.7,-197.82 837.31,-178.73 870.62,-162 876.83,-158.88 883.37,-156.07 890.07,-153.52"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="891.04,-156.89 899.29,-150.24 888.69,-150.29 891.04,-156.89"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel -->
-<g id="node7" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel | defined in client.go:303&#10;at client.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M170.66,-269C170.66,-269 39.62,-269 39.62,-269 33.62,-269 27.62,-263 27.62,-257 27.62,-257 27.62,-245 27.62,-245 27.62,-239 33.62,-233 39.62,-233 39.62,-233 170.66,-233 170.66,-233 176.66,-233 182.66,-239 182.66,-245 182.66,-245 182.66,-257 182.66,-257 182.66,-263 176.66,-269 170.66,-269"/>
-<text xml:space="preserve" text-anchor="middle" x="105.14" y="-246.32" font-family="Verdana" font-size="14.00">(*Client).PullModel</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1 -->
-<g id="node8" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1 | defined in client.go:318">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="460.95,-269 287.91,-269 287.91,-233 460.95,-233 460.95,-269"/>
-<text xml:space="preserve" text-anchor="middle" x="374.43" y="-246.32" font-family="Verdana" font-size="14.00">(*Client).PullModel$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1 -->
-<g id="edge8" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1</title>
-<g id="a_edge8"><a xlink:title="at client.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1]">
-<path fill="none" stroke="black" d="M183.1,-251C206.6,-251 232.97,-251 258.42,-251"/>
-<polygon fill="black" stroke="black" points="276.13,-254.5 286.13,-251 276.13,-247.5 276.13,-254.5"/>
-<polyline fill="none" stroke="black" points="275.63,-251 270.63,-251"/>
-<polygon fill="none" stroke="black" points="257.73,-251 263.73,-247 269.73,-251 263.73,-255 257.73,-251"/>
+<g id="a_edge17"><a xlink:title="at client.go:168: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M451.8,-389.68C462.04,-393.23 472.22,-397.32 481.58,-402 499.47,-410.95 498.61,-422.68 517.58,-429 654.63,-474.68 700.28,-453.66 842.62,-429 881.62,-422.24 923.88,-406.36 953.77,-393.55"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="955.04,-396.82 962.81,-389.61 952.24,-390.4 955.04,-396.82"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding -->
-<g id="node9" class="node">
+<g id="node6" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding | defined in client.go:248&#10;at client.go:252: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:276: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:265: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest]&#10;at client.go:275: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:251: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at client.go:253: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:277: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:254: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:278: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M469.58,-387C469.58,-387 279.29,-387 279.29,-387 273.29,-387 267.29,-381 267.29,-375 267.29,-375 267.29,-363 267.29,-363 267.29,-357 273.29,-351 279.29,-351 279.29,-351 469.58,-351 469.58,-351 475.58,-351 481.58,-357 481.58,-363 481.58,-363 481.58,-375 481.58,-375 481.58,-381 475.58,-387 469.58,-387"/>
-<text xml:space="preserve" text-anchor="middle" x="374.43" y="-364.32" font-family="Verdana" font-size="14.00">(*Client).CreateEmbedding</text>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding | defined in client.go:248&#10;at client.go:251: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at client.go:252: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:276: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:253: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:277: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:275: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at client.go:265: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest]&#10;at client.go:254: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:278: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M469.58,-210C469.58,-210 279.29,-210 279.29,-210 273.29,-210 267.29,-204 267.29,-198 267.29,-198 267.29,-186 267.29,-186 267.29,-180 273.29,-174 279.29,-174 279.29,-174 469.58,-174 469.58,-174 475.58,-174 481.58,-180 481.58,-186 481.58,-186 481.58,-198 481.58,-198 481.58,-204 475.58,-210 469.58,-210"/>
+<text xml:space="preserve" text-anchor="middle" x="374.43" y="-187.32" font-family="Verdana" font-size="14.00">(*Client).CreateEmbedding</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest -->
-<g id="edge5" class="edge">
+<g id="edge19" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest</title>
-<g id="a_edge5"><a xlink:title="at client.go:265: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest]">
-<path fill="none" stroke="black" d="M398.31,-350.45C419.87,-332.91 453.04,-305.81 481.58,-282 514.26,-254.73 517.08,-240.14 554.58,-220 564.65,-214.59 575.62,-209.92 586.74,-205.89"/>
-<polygon fill="black" stroke="black" points="587.67,-209.27 595.99,-202.72 585.4,-202.65 587.67,-209.27"/>
+<g id="a_edge19"><a xlink:title="at client.go:265: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).makeRequest]">
+<path fill="none" stroke="black" d="M482.07,-198.67C512.68,-200.59 545.99,-202.67 576.36,-204.57"/>
+<polygon fill="black" stroke="black" points="576.13,-208.06 586.33,-205.2 576.57,-201.08 576.13,-208.06"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge4" class="edge">
+<g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge4"><a xlink:title="at client.go:252: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:276: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M441.77,-387.7C465.49,-393.51 492.54,-399.13 517.58,-402 589.34,-410.22 781.31,-440.19 842.62,-402 866.58,-387.08 848.68,-362.76 870.62,-345 873.67,-342.53 876.89,-340.26 880.24,-338.16"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="881.65,-341.38 888.68,-333.45 878.25,-335.27 881.65,-341.38"/>
+<g id="a_edge6"><a xlink:title="at client.go:252: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at client.go:276: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M394.29,-173.3C424.84,-144.44 488.46,-90.15 554.58,-69 676.53,-30 727.98,-6.99 842.62,-64 861.09,-73.18 853.38,-89.68 870.62,-101 874.29,-103.41 878.14,-105.63 882.11,-107.67"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="880.31,-110.69 890.85,-111.74 883.27,-104.34 880.31,-110.69"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge10" class="edge">
+<g id="edge7" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge10"><a xlink:title="at client.go:253: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:277: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M482.1,-376.89C601.67,-383.56 786.23,-386.72 842.62,-348 868.22,-330.43 846.92,-304.06 870.62,-284 873.44,-281.61 876.42,-279.41 879.52,-277.37"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="880.99,-280.56 887.86,-272.5 877.46,-274.52 880.99,-280.56"/>
+<g id="a_edge7"><a xlink:title="at client.go:253: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at client.go:277: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M428.77,-210.63C464.01,-221.99 511.47,-235.55 554.58,-242 661.17,-257.96 783.9,-259.65 872.48,-257.96"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="872.48,-261.46 882.41,-257.76 872.34,-254.47 872.48,-261.46"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge15" class="edge">
+<g id="edge22" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge15"><a xlink:title="at client.go:254: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:278: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M403.56,-350.33C426.48,-334.15 458.67,-309.12 481.58,-282 523.83,-231.96 498.83,-188.37 554.58,-154 657.01,-90.86 799.76,-96.74 894.38,-110.59"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="893.76,-114.04 904.17,-112.09 894.82,-107.12 893.76,-114.04"/>
+<g id="a_edge22"><a xlink:title="at client.go:254: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at client.go:278: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M419.22,-210.62C455.03,-225.18 507.3,-244.92 554.58,-257 679.63,-288.94 713.46,-285.72 841.62,-301 855.12,-302.61 869.32,-304.1 883.39,-305.44"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="882.85,-308.91 893.13,-306.35 883.5,-301.94 882.85,-308.91"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge6" class="edge">
+<g id="edge8" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge6"><a xlink:title="at client.go:275: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M405.6,-350.54C429.09,-334.84 461.04,-310.37 481.58,-282 533.67,-210.07 482.6,-148.01 554.58,-96 676.24,-8.1 869.9,-39.83 953.34,-59.32"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="952.35,-62.68 962.9,-61.62 953.99,-55.88 952.35,-62.68"/>
+<g id="a_edge8"><a xlink:title="at client.go:275: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M405.37,-210.58C440.06,-231.33 499.52,-264.56 554.58,-284 696.36,-334.05 874.11,-360.37 952.92,-370.28"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="952.4,-373.74 962.75,-371.49 953.25,-366.8 952.4,-373.74"/>
 </a>
 </g>
 </g>
@@ -343,17 +296,64 @@
 <g id="node17" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
 <g id="a_node17"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1009.76,-393C1009.76,-393 979.76,-393 979.76,-393 973.76,-393 967.76,-387 967.76,-381 967.76,-381 967.76,-369 967.76,-369 967.76,-363 973.76,-357 979.76,-357 979.76,-357 1009.76,-357 1009.76,-357 1015.76,-357 1021.76,-363 1021.76,-369 1021.76,-369 1021.76,-381 1021.76,-381 1021.76,-387 1015.76,-393 1009.76,-393"/>
-<text xml:space="preserve" text-anchor="middle" x="994.76" y="-370.32" font-family="Verdana" font-size="14.00">New</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1009.76,-88C1009.76,-88 979.76,-88 979.76,-88 973.76,-88 967.76,-82 967.76,-76 967.76,-76 967.76,-64 967.76,-64 967.76,-58 973.76,-52 979.76,-52 979.76,-52 1009.76,-52 1009.76,-52 1015.76,-52 1021.76,-58 1021.76,-64 1021.76,-64 1021.76,-76 1021.76,-76 1021.76,-82 1015.76,-88 1009.76,-88"/>
+<text xml:space="preserve" text-anchor="middle" x="994.76" y="-65.33" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge9" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).CreateEmbedding&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge9"><a xlink:title="at client.go:251: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M450.19,-387.72C460.98,-391.51 471.75,-395.92 481.58,-401 499.59,-410.3 498.41,-422.42 517.58,-429 654.22,-475.88 700.28,-453.66 842.62,-429 882.97,-422.01 926.8,-405.25 956.82,-392.24"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="958.1,-395.5 965.84,-388.26 955.27,-389.1 958.1,-395.5"/>
+<g id="a_edge5"><a xlink:title="at client.go:251: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M393.62,-173.47C435.09,-131.45 534.61,-31.9 554.58,-24 694.72,31.43 878.61,-25.39 956.42,-54.76"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="955.11,-58 965.7,-58.33 957.62,-51.47 955.11,-58"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel -->
+<g id="node7" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel</title>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel | defined in client.go:303&#10;at client.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M170.66,-309C170.66,-309 39.62,-309 39.62,-309 33.62,-309 27.62,-303 27.62,-297 27.62,-297 27.62,-285 27.62,-285 27.62,-279 33.62,-273 39.62,-273 39.62,-273 170.66,-273 170.66,-273 176.66,-273 182.66,-279 182.66,-285 182.66,-285 182.66,-297 182.66,-297 182.66,-303 176.66,-309 170.66,-309"/>
+<text xml:space="preserve" text-anchor="middle" x="105.14" y="-286.32" font-family="Verdana" font-size="14.00">(*Client).PullModel</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1 -->
+<g id="node8" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1</title>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1 | defined in client.go:318">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="460.95,-309 287.91,-309 287.91,-273 460.95,-273 460.95,-309"/>
+<text xml:space="preserve" text-anchor="middle" x="374.43" y="-286.32" font-family="Verdana" font-size="14.00">(*Client).PullModel$1</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1 -->
+<g id="edge20" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1</title>
+<g id="a_edge20"><a xlink:title="at client.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).PullModel$1]">
+<path fill="none" stroke="black" d="M183.1,-291C206.6,-291 232.97,-291 258.42,-291"/>
+<polygon fill="black" stroke="black" points="276.13,-294.5 286.13,-291 276.13,-287.5 276.13,-294.5"/>
+<polyline fill="none" stroke="black" points="275.63,-291 270.63,-291"/>
+<polygon fill="none" stroke="black" points="257.73,-291 263.73,-287 269.73,-291 263.73,-295 257.73,-291"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete -->
+<g id="node9" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete</title>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete | defined in client.go:476&#10;at client.go:484: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M170.66,-389C170.66,-389 39.62,-389 39.62,-389 33.62,-389 27.62,-383 27.62,-377 27.62,-377 27.62,-365 27.62,-365 27.62,-359 33.62,-353 39.62,-353 39.62,-353 170.66,-353 170.66,-353 176.66,-353 182.66,-359 182.66,-365 182.66,-365 182.66,-377 182.66,-377 182.66,-383 176.66,-389 170.66,-389"/>
+<text xml:space="preserve" text-anchor="middle" x="105.14" y="-366.32" font-family="Verdana" font-size="14.00">(*Client).Complete</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion -->
+<g id="edge12" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion</title>
+<g id="a_edge12"><a xlink:title="at client.go:484: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ChatCompletion]">
+<path fill="none" stroke="black" d="M183.1,-371C207.93,-371 235.96,-371 262.73,-371"/>
+<polygon fill="black" stroke="black" points="262.6,-374.5 272.6,-371 262.6,-367.5 262.6,-374.5"/>
 </a>
 </g>
 </g>
@@ -361,8 +361,8 @@
 <g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels</title>
 <g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels | defined in client.go:341&#10;at client.go:351: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M174.04,-449C174.04,-449 36.25,-449 36.25,-449 30.25,-449 24.25,-443 24.25,-437 24.25,-437 24.25,-425 24.25,-425 24.25,-419 30.25,-413 36.25,-413 36.25,-413 174.04,-413 174.04,-413 180.04,-413 186.04,-419 186.04,-425 186.04,-425 186.04,-437 186.04,-437 186.04,-443 180.04,-449 174.04,-449"/>
-<text xml:space="preserve" text-anchor="middle" x="105.14" y="-426.32" font-family="Verdana" font-size="14.00">(*Client).ListModels</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M174.04,-450C174.04,-450 36.25,-450 36.25,-450 30.25,-450 24.25,-444 24.25,-438 24.25,-438 24.25,-426 24.25,-426 24.25,-420 30.25,-414 36.25,-414 36.25,-414 174.04,-414 174.04,-414 180.04,-414 186.04,-420 186.04,-426 186.04,-426 186.04,-438 186.04,-438 186.04,-444 180.04,-450 174.04,-450"/>
+<text xml:space="preserve" text-anchor="middle" x="105.14" y="-427.32" font-family="Verdana" font-size="14.00">(*Client).ListModels</text>
 </a>
 </g>
 </g>
@@ -370,19 +370,19 @@
 <g id="node11" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels$1</title>
 <g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels$1 | defined in client.go:351">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="464.33,-449 284.54,-449 284.54,-413 464.33,-413 464.33,-449"/>
-<text xml:space="preserve" text-anchor="middle" x="374.43" y="-426.32" font-family="Verdana" font-size="14.00">(*Client).ListModels$1</text>
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="464.33,-450 284.54,-450 284.54,-414 464.33,-414 464.33,-450"/>
+<text xml:space="preserve" text-anchor="middle" x="374.43" y="-427.32" font-family="Verdana" font-size="14.00">(*Client).ListModels$1</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels$1 -->
-<g id="edge16" class="edge">
+<g id="edge23" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels$1</title>
-<g id="a_edge16"><a xlink:title="at client.go:351: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels$1]">
-<path fill="none" stroke="black" d="M186.7,-431C208.2,-431 231.88,-431 254.96,-431"/>
-<polygon fill="black" stroke="black" points="272.66,-434.5 282.66,-431 272.66,-427.5 272.66,-434.5"/>
-<polyline fill="none" stroke="black" points="272.16,-431 267.16,-431"/>
-<polygon fill="none" stroke="black" points="254.26,-431 260.26,-427 266.26,-431 260.26,-435 254.26,-431"/>
+<g id="a_edge23"><a xlink:title="at client.go:351: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/ollama.Client).ListModels$1]">
+<path fill="none" stroke="black" d="M186.7,-432C208.2,-432 231.88,-432 254.96,-432"/>
+<polygon fill="black" stroke="black" points="272.66,-435.5 282.66,-432 272.66,-428.5 272.66,-435.5"/>
+<polyline fill="none" stroke="black" points="272.16,-432 267.16,-432"/>
+<polygon fill="none" stroke="black" points="254.26,-432 260.26,-428 266.26,-432 260.26,-436 254.26,-432"/>
 </a>
 </g>
 </g>

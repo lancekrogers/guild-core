@@ -17,53 +17,107 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="674.08,-69 674.08,-393 922.37,-393 922.37,-69 674.08,-69"/>
-<text xml:space="preserve" text-anchor="middle" x="798.22" y="-373.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="674.08,-180 674.08,-504 922.37,-504 922.37,-180 674.08,-180"/>
+<text xml:space="preserve" text-anchor="middle" x="798.22" y="-484.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion | defined in provider.go:154&#10;at provider.go:156: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at provider.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at provider.go:203: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse]&#10;at provider.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M579.08,-113C579.08,-113 385.04,-113 385.04,-113 379.04,-113 373.04,-107 373.04,-101 373.04,-101 373.04,-89 373.04,-89 373.04,-83 379.04,-77 385.04,-77 385.04,-77 579.08,-77 579.08,-77 585.08,-77 591.08,-83 591.08,-89 591.08,-89 591.08,-101 591.08,-101 591.08,-107 585.08,-113 579.08,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="482.06" y="-90.33" font-family="Verdana" font-size="14.00">(*Provider).ChatCompletion</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError | defined in provider.go:447&#10;at provider.go:448: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M221.29,-52C221.29,-52 79.75,-52 79.75,-52 73.75,-52 67.75,-46 67.75,-40 67.75,-40 67.75,-28 67.75,-28 67.75,-22 73.75,-16 79.75,-16 79.75,-16 221.29,-16 221.29,-16 227.29,-16 233.29,-22 233.29,-28 233.29,-28 233.29,-40 233.29,-40 233.29,-46 227.29,-52 221.29,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="150.52" y="-29.32" font-family="Verdana" font-size="14.00">(*Builder).WithError</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError -->
 <g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse | defined in provider.go:263">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M905.37,-52C905.37,-52 691.08,-52 691.08,-52 685.08,-52 679.08,-46 679.08,-40 679.08,-40 679.08,-28 679.08,-28 679.08,-22 685.08,-16 691.08,-16 691.08,-16 905.37,-16 905.37,-16 911.37,-16 917.37,-22 917.37,-28 917.37,-28 917.37,-40 917.37,-40 917.37,-46 911.37,-52 905.37,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="798.22" y="-29.32" font-family="Verdana" font-size="14.00">(*Provider).findYAMLResponse</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError | defined in provider.go:110">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M552.83,-52C552.83,-52 411.29,-52 411.29,-52 405.29,-52 399.29,-46 399.29,-40 399.29,-40 399.29,-28 399.29,-28 399.29,-22 405.29,-16 411.29,-16 411.29,-16 552.83,-16 552.83,-16 558.83,-16 564.83,-22 564.83,-28 564.83,-28 564.83,-40 564.83,-40 564.83,-46 558.83,-52 552.83,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="482.06" y="-29.32" font-family="Verdana" font-size="14.00">(*Provider).SetError</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse -->
-<g id="edge18" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse</title>
-<g id="a_edge18"><a xlink:title="at provider.go:203: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse]">
-<path fill="none" stroke="black" d="M579.45,-76.28C615.17,-69.35 655.83,-61.45 692.27,-54.38"/>
-<polygon fill="black" stroke="black" points="692.8,-57.84 701.95,-52.5 691.47,-50.97 692.8,-57.84"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError -->
+<g id="edge16" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError</title>
+<g id="a_edge16"><a xlink:title="at provider.go:448: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError]">
+<path fill="none" stroke="black" d="M233.83,-34C280.42,-34 338.87,-34 387.23,-34"/>
+<polygon fill="black" stroke="black" points="387.15,-37.5 397.15,-34 387.15,-30.5 387.15,-37.5"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse -->
+<g id="node3" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse</title>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse | defined in provider.go:453&#10;at provider.go:454: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M262.54,-113C262.54,-113 38.5,-113 38.5,-113 32.5,-113 26.5,-107 26.5,-101 26.5,-101 26.5,-89 26.5,-89 26.5,-83 32.5,-77 38.5,-77 38.5,-77 262.54,-77 262.54,-77 268.54,-77 274.54,-83 274.54,-89 274.54,-89 274.54,-101 274.54,-101 274.54,-107 268.54,-113 262.54,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="150.52" y="-90.33" font-family="Verdana" font-size="14.00">(*Builder).WithDefaultResponse</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse -->
+<g id="node4" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse</title>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse | defined in provider.go:117">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M594.08,-113C594.08,-113 370.04,-113 370.04,-113 364.04,-113 358.04,-107 358.04,-101 358.04,-101 358.04,-89 358.04,-89 358.04,-83 364.04,-77 370.04,-77 370.04,-77 594.08,-77 594.08,-77 600.08,-77 606.08,-83 606.08,-89 606.08,-89 606.08,-101 606.08,-101 606.08,-107 600.08,-113 594.08,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="482.06" y="-90.33" font-family="Verdana" font-size="14.00">(*Provider).SetDefaultResponse</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse -->
+<g id="edge22" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse</title>
+<g id="a_edge22"><a xlink:title="at provider.go:454: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse]">
+<path fill="none" stroke="black" d="M275.17,-95C298.32,-95 322.62,-95 346.1,-95"/>
+<polygon fill="black" stroke="black" points="346.03,-98.5 356.03,-95 346.03,-91.5 346.03,-98.5"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider -->
+<g id="node5" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider</title>
+<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider | defined in provider.go:42&#10;at provider.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at provider.go:92: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at provider.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at provider.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M525.45,-404C525.45,-404 438.66,-404 438.66,-404 432.66,-404 426.66,-398 426.66,-392 426.66,-392 426.66,-380 426.66,-380 426.66,-374 432.66,-368 438.66,-368 438.66,-368 525.45,-368 525.45,-368 531.45,-368 537.45,-374 537.45,-380 537.45,-380 537.45,-392 537.45,-392 537.45,-398 531.45,-404 525.45,-404"/>
+<text xml:space="preserve" text-anchor="middle" x="482.06" y="-381.32" font-family="Verdana" font-size="14.00">NewProvider</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses -->
+<g id="node6" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses</title>
+<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses | defined in loader.go:32">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M849.87,-548C849.87,-548 746.58,-548 746.58,-548 740.58,-548 734.58,-542 734.58,-536 734.58,-536 734.58,-524 734.58,-524 734.58,-518 740.58,-512 746.58,-512 746.58,-512 849.87,-512 849.87,-512 855.87,-512 861.87,-518 861.87,-524 861.87,-524 861.87,-536 861.87,-536 861.87,-542 855.87,-548 849.87,-548"/>
+<text xml:space="preserve" text-anchor="middle" x="798.22" y="-525.33" font-family="Verdana" font-size="14.00">loadResponses</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses -->
+<g id="edge17" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses</title>
+<g id="a_edge17"><a xlink:title="at provider.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses]">
+<path fill="none" stroke="black" d="M538.1,-391.69C560.6,-396.02 586.01,-403.62 606.08,-417 648.09,-445 631.11,-481.48 674.08,-508 688.79,-517.08 706.25,-522.63 723.33,-525.99"/>
+<polygon fill="black" stroke="black" points="722.53,-529.4 732.98,-527.63 723.71,-522.5 722.53,-529.4"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
 <g id="node19" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_node19"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M813.22,-113C813.22,-113 783.22,-113 783.22,-113 777.22,-113 771.22,-107 771.22,-101 771.22,-101 771.22,-89 771.22,-89 771.22,-83 777.22,-77 783.22,-77 783.22,-77 813.22,-77 813.22,-77 819.22,-77 825.22,-83 825.22,-89 825.22,-89 825.22,-101 825.22,-101 825.22,-107 819.22,-113 813.22,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="798.22" y="-90.33" font-family="Verdana" font-size="14.00">New</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_node19"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M816.12,-468C816.12,-468 780.33,-468 780.33,-468 774.33,-468 768.33,-462 768.33,-456 768.33,-456 768.33,-444 768.33,-444 768.33,-438 774.33,-432 780.33,-432 780.33,-432 816.12,-432 816.12,-432 822.12,-432 828.12,-438 828.12,-444 828.12,-444 828.12,-456 828.12,-456 828.12,-462 822.12,-468 816.12,-468"/>
+<text xml:space="preserve" text-anchor="middle" x="798.22" y="-445.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge10" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge10"><a xlink:title="at provider.go:156: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M591.62,-95C649.73,-95 717.67,-95 759.06,-95"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="758.99,-98.5 768.99,-95 758.99,-91.5 758.99,-98.5"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge11" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge11"><a xlink:title="at provider.go:92: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M538.14,-397.22C600.57,-409.94 700.88,-430.37 756.59,-441.72"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="755.8,-445.13 766.29,-443.7 757.19,-438.27 755.8,-445.13"/>
 </a>
 </g>
 </g>
@@ -71,17 +125,17 @@
 <g id="node20" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M902.37,-296C902.37,-296 694.08,-296 694.08,-296 688.08,-296 682.08,-290 682.08,-284 682.08,-284 682.08,-272 682.08,-272 682.08,-266 688.08,-260 694.08,-260 694.08,-260 902.37,-260 902.37,-260 908.37,-260 914.37,-266 914.37,-272 914.37,-272 914.37,-284 914.37,-284 914.37,-290 908.37,-296 902.37,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="798.22" y="-273.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M902.37,-407C902.37,-407 694.08,-407 694.08,-407 688.08,-407 682.08,-401 682.08,-395 682.08,-395 682.08,-383 682.08,-383 682.08,-377 688.08,-371 694.08,-371 694.08,-371 902.37,-371 902.37,-371 908.37,-371 914.37,-377 914.37,-383 914.37,-383 914.37,-395 914.37,-395 914.37,-401 908.37,-407 902.37,-407"/>
+<text xml:space="preserve" text-anchor="middle" x="798.22" y="-384.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge22"><a xlink:title="at provider.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M500.66,-113.67C532.24,-146.05 602.02,-212.55 674.08,-248 679.57,-250.7 685.32,-253.17 691.21,-255.42"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="689.92,-258.68 700.52,-258.75 692.28,-252.09 689.92,-258.68"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge1" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge1"><a xlink:title="at provider.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M538.11,-395.99C568.91,-400.53 608.05,-404.59 643.08,-403 651.95,-402.6 661.11,-402.07 670.32,-401.44"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="670.33,-404.95 680.06,-400.75 669.84,-397.97 670.33,-404.95"/>
 </a>
 </g>
 </g>
@@ -89,341 +143,287 @@
 <g id="node21" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M896.74,-174C896.74,-174 699.7,-174 699.7,-174 693.7,-174 687.7,-168 687.7,-162 687.7,-162 687.7,-150 687.7,-150 687.7,-144 693.7,-138 699.7,-138 699.7,-138 896.74,-138 896.74,-138 902.74,-138 908.74,-144 908.74,-150 908.74,-150 908.74,-162 908.74,-162 908.74,-168 902.74,-174 896.74,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="798.22" y="-151.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge17"><a xlink:title="at provider.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M579.45,-113.72C614.35,-120.49 653.98,-128.19 689.77,-135.14"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="688.77,-138.51 699.26,-136.98 690.11,-131.64 688.77,-138.51"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete | defined in provider.go:353&#10;at provider.go:363: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion]&#10;at provider.go:369: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at provider.go:370: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at provider.go:371: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at provider.go:372: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M225.04,-184C225.04,-184 76,-184 76,-184 70,-184 64,-178 64,-172 64,-172 64,-160 64,-160 64,-154 70,-148 76,-148 76,-148 225.04,-148 225.04,-148 231.04,-148 237.04,-154 237.04,-160 237.04,-160 237.04,-172 237.04,-172 237.04,-178 231.04,-184 225.04,-184"/>
-<text xml:space="preserve" text-anchor="middle" x="150.52" y="-161.32" font-family="Verdana" font-size="14.00">(*Provider).Complete</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion</title>
-<g id="a_edge1"><a xlink:title="at provider.go:363: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion]">
-<path fill="none" stroke="black" d="M237.67,-147.44C282.24,-137.84 336.84,-126.07 383.02,-116.12"/>
-<polygon fill="black" stroke="black" points="383.75,-119.55 392.79,-114.02 382.27,-112.7 383.75,-119.55"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge2"><a xlink:title="at provider.go:369: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M237.59,-160.31C329.16,-153.81 478.14,-141.98 606.08,-126 659.59,-119.32 721.09,-108.84 759.56,-101.94"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="760.01,-105.42 769.23,-100.2 758.77,-98.53 760.01,-105.42"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge11" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge11"><a xlink:title="at provider.go:370: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M237.63,-180.12C274.66,-186.1 318.45,-193.04 358.04,-199 468.13,-215.56 496.61,-213.72 606.08,-234 640.82,-240.44 678.81,-248.89 711.7,-256.66"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="710.63,-260 721.17,-258.91 712.25,-253.19 710.63,-260"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge12" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge12"><a xlink:title="at provider.go:371: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M237.6,-164.67C350.17,-162.92 548.04,-159.86 675.81,-157.88"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="675.73,-161.38 685.67,-157.73 675.62,-154.38 675.73,-161.38"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="node22" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M885.87,-235C885.87,-235 710.58,-235 710.58,-235 704.58,-235 698.58,-229 698.58,-223 698.58,-223 698.58,-211 698.58,-211 698.58,-205 704.58,-199 710.58,-199 710.58,-199 885.87,-199 885.87,-199 891.87,-199 897.87,-205 897.87,-211 897.87,-211 897.87,-223 897.87,-223 897.87,-229 891.87,-235 885.87,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="798.22" y="-212.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge13"><a xlink:title="at provider.go:372: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M237.6,-172.8C353.42,-181.95 559.54,-198.23 686.7,-208.27"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="686.24,-211.74 696.48,-209.04 686.79,-204.77 686.24,-211.74"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError -->
-<g id="node4" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError | defined in provider.go:447&#10;at provider.go:448: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M221.29,-404C221.29,-404 79.75,-404 79.75,-404 73.75,-404 67.75,-398 67.75,-392 67.75,-392 67.75,-380 67.75,-380 67.75,-374 73.75,-368 79.75,-368 79.75,-368 221.29,-368 221.29,-368 227.29,-368 233.29,-374 233.29,-380 233.29,-380 233.29,-392 233.29,-392 233.29,-398 227.29,-404 221.29,-404"/>
-<text xml:space="preserve" text-anchor="middle" x="150.52" y="-381.32" font-family="Verdana" font-size="14.00">(*Builder).WithError</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError | defined in provider.go:110">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M552.83,-404C552.83,-404 411.29,-404 411.29,-404 405.29,-404 399.29,-398 399.29,-392 399.29,-392 399.29,-380 399.29,-380 399.29,-374 405.29,-368 411.29,-368 411.29,-368 552.83,-368 552.83,-368 558.83,-368 564.83,-374 564.83,-380 564.83,-380 564.83,-392 564.83,-392 564.83,-398 558.83,-404 552.83,-404"/>
-<text xml:space="preserve" text-anchor="middle" x="482.06" y="-381.32" font-family="Verdana" font-size="14.00">(*Provider).SetError</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithError&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError</title>
-<g id="a_edge3"><a xlink:title="at provider.go:448: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetError]">
-<path fill="none" stroke="black" d="M233.83,-386C280.42,-386 338.87,-386 387.23,-386"/>
-<polygon fill="black" stroke="black" points="387.15,-389.5 397.15,-386 387.15,-382.5 387.15,-389.5"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider -->
-<g id="node6" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider</title>
-<g id="a_node6"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider | defined in provider.go:42&#10;at provider.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at provider.go:92: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at provider.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses]&#10;at provider.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M525.45,-282C525.45,-282 438.66,-282 438.66,-282 432.66,-282 426.66,-276 426.66,-270 426.66,-270 426.66,-258 426.66,-258 426.66,-252 432.66,-246 438.66,-246 438.66,-246 525.45,-246 525.45,-246 531.45,-246 537.45,-252 537.45,-258 537.45,-258 537.45,-270 537.45,-270 537.45,-276 531.45,-282 525.45,-282"/>
-<text xml:space="preserve" text-anchor="middle" x="482.06" y="-259.32" font-family="Verdana" font-size="14.00">NewProvider</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses -->
-<g id="node7" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses</title>
-<g id="a_node7"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses | defined in loader.go:32">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M849.87,-512C849.87,-512 746.58,-512 746.58,-512 740.58,-512 734.58,-506 734.58,-500 734.58,-500 734.58,-488 734.58,-488 734.58,-482 740.58,-476 746.58,-476 746.58,-476 849.87,-476 849.87,-476 855.87,-476 861.87,-482 861.87,-488 861.87,-488 861.87,-500 861.87,-500 861.87,-506 855.87,-512 849.87,-512"/>
-<text xml:space="preserve" text-anchor="middle" x="798.22" y="-489.32" font-family="Verdana" font-size="14.00">loadResponses</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses -->
-<g id="edge19" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses</title>
-<g id="a_edge19"><a xlink:title="at provider.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses]">
-<path fill="none" stroke="black" d="M537.9,-268.97C560.63,-273.17 586.26,-280.87 606.08,-295 651.05,-327.06 636.58,-358.46 674.08,-399 699.36,-426.33 733.13,-451.78 758.92,-469.45"/>
-<polygon fill="black" stroke="black" points="756.87,-472.29 767.12,-474.98 760.78,-466.48 756.87,-472.29"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge21" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge21"><a xlink:title="at provider.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M538.08,-273.01C568.88,-277.26 608.02,-281.34 643.08,-281 651.93,-280.91 661.06,-280.8 670.26,-280.67"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="670.04,-284.17 679.98,-280.52 669.93,-277.17 670.04,-284.17"/>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M896.74,-285C896.74,-285 699.7,-285 699.7,-285 693.7,-285 687.7,-279 687.7,-273 687.7,-273 687.7,-261 687.7,-261 687.7,-255 693.7,-249 699.7,-249 699.7,-249 896.74,-249 896.74,-249 902.74,-249 908.74,-255 908.74,-261 908.74,-261 908.74,-273 908.74,-273 908.74,-279 902.74,-285 896.74,-285"/>
+<text xml:space="preserve" text-anchor="middle" x="798.22" y="-262.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge7" class="edge">
+<g id="edge12" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge7"><a xlink:title="at provider.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M524.56,-245.35C562.85,-228.61 621.55,-204.11 674.08,-187 684.11,-183.73 694.7,-180.6 705.29,-177.67"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="706.09,-181.08 714.83,-175.09 704.26,-174.32 706.09,-181.08"/>
+<g id="a_edge12"><a xlink:title="at provider.go:94: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M518.5,-367.26C556.24,-347.88 618.13,-317.74 674.08,-298 683.47,-294.69 693.38,-291.58 703.33,-288.71"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="703.99,-292.16 712.67,-286.09 702.1,-285.42 703.99,-292.16"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion -->
+<g id="node7" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion</title>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion | defined in provider.go:154&#10;at provider.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at provider.go:203: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse]&#10;at provider.go:156: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at provider.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M579.08,-235C579.08,-235 385.04,-235 385.04,-235 379.04,-235 373.04,-229 373.04,-223 373.04,-223 373.04,-211 373.04,-211 373.04,-205 379.04,-199 385.04,-199 385.04,-199 579.08,-199 579.08,-199 585.08,-199 591.08,-205 591.08,-211 591.08,-211 591.08,-223 591.08,-223 591.08,-229 585.08,-235 579.08,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="482.06" y="-212.32" font-family="Verdana" font-size="14.00">(*Provider).ChatCompletion</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse -->
+<g id="node8" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse</title>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse | defined in provider.go:263">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M905.37,-163C905.37,-163 691.08,-163 691.08,-163 685.08,-163 679.08,-157 679.08,-151 679.08,-151 679.08,-139 679.08,-139 679.08,-133 685.08,-127 691.08,-127 691.08,-127 905.37,-127 905.37,-127 911.37,-127 917.37,-133 917.37,-139 917.37,-139 917.37,-151 917.37,-151 917.37,-157 911.37,-163 905.37,-163"/>
+<text xml:space="preserve" text-anchor="middle" x="798.22" y="-140.32" font-family="Verdana" font-size="14.00">(*Provider).findYAMLResponse</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse -->
+<g id="edge3" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse</title>
+<g id="a_edge3"><a xlink:title="at provider.go:203: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).findYAMLResponse]">
+<path fill="none" stroke="black" d="M564.78,-198.27C608.28,-188.3 661.87,-176.02 706.63,-165.76"/>
+<polygon fill="black" stroke="black" points="707.37,-169.18 716.34,-163.54 705.81,-162.36 707.37,-169.18"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge2"><a xlink:title="at provider.go:157: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M502.49,-235.72C535.2,-266.17 604.51,-326.32 674.08,-359 680.01,-361.79 686.23,-364.33 692.59,-366.65"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="691.37,-369.93 701.97,-369.86 693.64,-363.31 691.37,-369.93"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge8"><a xlink:title="at provider.go:158: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M591.62,-234.28C618.74,-238.59 648.01,-243.25 675.71,-247.66"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="675.14,-251.11 685.57,-249.23 676.24,-244.2 675.14,-251.11"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="node22" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_node22"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M813.22,-224C813.22,-224 783.22,-224 783.22,-224 777.22,-224 771.22,-218 771.22,-212 771.22,-212 771.22,-200 771.22,-200 771.22,-194 777.22,-188 783.22,-188 783.22,-188 813.22,-188 813.22,-188 819.22,-188 825.22,-194 825.22,-200 825.22,-200 825.22,-212 825.22,-212 825.22,-218 819.22,-224 813.22,-224"/>
+<text xml:space="preserve" text-anchor="middle" x="798.22" y="-201.32" font-family="Verdana" font-size="14.00">New</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge7"><a xlink:title="at provider.go:156: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M591.62,-213.2C649.73,-211.16 717.67,-208.79 759.06,-207.34"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="759.12,-210.84 768.99,-206.99 758.87,-203.84 759.12,-210.84"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete -->
+<g id="node9" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete</title>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete | defined in provider.go:353&#10;at provider.go:363: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion]&#10;at provider.go:369: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at provider.go:371: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at provider.go:370: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at provider.go:372: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M225.04,-306C225.04,-306 76,-306 76,-306 70,-306 64,-300 64,-294 64,-294 64,-282 64,-282 64,-276 70,-270 76,-270 76,-270 225.04,-270 225.04,-270 231.04,-270 237.04,-276 237.04,-282 237.04,-282 237.04,-294 237.04,-294 237.04,-300 231.04,-306 225.04,-306"/>
+<text xml:space="preserve" text-anchor="middle" x="150.52" y="-283.32" font-family="Verdana" font-size="14.00">(*Provider).Complete</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion</title>
+<g id="a_edge4"><a xlink:title="at provider.go:363: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion]">
+<path fill="none" stroke="black" d="M237.67,-269.44C282.24,-259.84 336.84,-248.07 383.02,-238.12"/>
+<polygon fill="black" stroke="black" points="383.75,-241.55 392.79,-236.02 382.27,-234.7 383.75,-241.55"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge18" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge18"><a xlink:title="at provider.go:370: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M237.48,-300.27C328.96,-313.47 477.87,-335.35 606.08,-356 630.15,-359.88 655.9,-364.2 680.45,-368.41"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="679.7,-371.83 690.14,-370.08 680.88,-364.93 679.7,-371.83"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge14" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge14"><a xlink:title="at provider.go:371: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M237.6,-285.2C350.17,-281.54 548.04,-275.1 675.81,-270.95"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="675.79,-274.45 685.67,-270.63 675.56,-267.46 675.79,-274.45"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge13"><a xlink:title="at provider.go:369: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M237.64,-278.76C274.67,-274.91 318.46,-270.53 358.04,-267 468.17,-257.18 496.7,-264.13 606.08,-248 659.85,-240.07 721.05,-225.66 759.4,-215.95"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="760.25,-219.35 769.07,-213.48 758.52,-212.57 760.25,-219.35"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
 <g id="node23" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_node23"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M816.12,-357C816.12,-357 780.33,-357 780.33,-357 774.33,-357 768.33,-351 768.33,-345 768.33,-345 768.33,-333 768.33,-333 768.33,-327 774.33,-321 780.33,-321 780.33,-321 816.12,-321 816.12,-321 822.12,-321 828.12,-327 828.12,-333 828.12,-333 828.12,-345 828.12,-345 828.12,-351 822.12,-357 816.12,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="798.22" y="-334.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M885.87,-346C885.87,-346 710.58,-346 710.58,-346 704.58,-346 698.58,-340 698.58,-334 698.58,-334 698.58,-322 698.58,-322 698.58,-316 704.58,-310 710.58,-310 710.58,-310 885.87,-310 885.87,-310 891.87,-310 897.87,-316 897.87,-322 897.87,-322 897.87,-334 897.87,-334 897.87,-340 891.87,-346 885.87,-346"/>
+<text xml:space="preserve" text-anchor="middle" x="798.22" y="-323.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge9" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge9"><a xlink:title="at provider.go:92: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M538.14,-277.15C600.57,-292.05 700.88,-316 756.59,-329.3"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="755.77,-332.7 766.31,-331.62 757.39,-325.89 755.77,-332.7"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge19" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Complete&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge19"><a xlink:title="at provider.go:372: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M237.6,-293.33C353.42,-300.51 559.54,-313.28 686.7,-321.15"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="686.28,-324.63 696.48,-321.76 686.72,-317.65 686.28,-324.63"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewBuilder -->
-<g id="node8" class="node">
+<g id="node10" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewBuilder</title>
-<g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewBuilder | defined in provider.go:428&#10;at provider.go:434: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable]&#10;at provider.go:429: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M189.79,-313C189.79,-313 111.25,-313 111.25,-313 105.25,-313 99.25,-307 99.25,-301 99.25,-301 99.25,-289 99.25,-289 99.25,-283 105.25,-277 111.25,-277 111.25,-277 189.79,-277 189.79,-277 195.79,-277 201.79,-283 201.79,-289 201.79,-289 201.79,-301 201.79,-301 201.79,-307 195.79,-313 189.79,-313"/>
-<text xml:space="preserve" text-anchor="middle" x="150.52" y="-290.32" font-family="Verdana" font-size="14.00">NewBuilder</text>
+<g id="a_node10"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewBuilder | defined in provider.go:428&#10;at provider.go:429: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider]&#10;at provider.go:434: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M189.79,-434C189.79,-434 111.25,-434 111.25,-434 105.25,-434 99.25,-428 99.25,-422 99.25,-422 99.25,-410 99.25,-410 99.25,-404 105.25,-398 111.25,-398 111.25,-398 189.79,-398 189.79,-398 195.79,-398 201.79,-404 201.79,-410 201.79,-410 201.79,-422 201.79,-422 201.79,-428 195.79,-434 189.79,-434"/>
+<text xml:space="preserve" text-anchor="middle" x="150.52" y="-411.32" font-family="Verdana" font-size="14.00">NewBuilder</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider -->
-<g id="edge8" class="edge">
+<g id="edge5" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider</title>
-<g id="a_edge8"><a xlink:title="at provider.go:429: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider]">
-<path fill="none" stroke="black" d="M202.29,-290.22C259.31,-284.86 352.07,-276.13 414.77,-270.24"/>
-<polygon fill="black" stroke="black" points="414.98,-273.73 424.6,-269.31 414.32,-266.76 414.98,-273.73"/>
+<g id="a_edge5"><a xlink:title="at provider.go:429: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProvider]">
+<path fill="none" stroke="black" d="M202.29,-411.38C259.31,-406.19 352.07,-397.74 414.77,-392.03"/>
+<polygon fill="black" stroke="black" points="414.96,-395.53 424.6,-391.14 414.33,-388.56 414.96,-395.53"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable -->
-<g id="node9" class="node">
+<g id="node11" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable | defined in provider.go:145">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M547.2,-343C547.2,-343 416.91,-343 416.91,-343 410.91,-343 404.91,-337 404.91,-331 404.91,-331 404.91,-319 404.91,-319 404.91,-313 410.91,-307 416.91,-307 416.91,-307 547.2,-307 547.2,-307 553.2,-307 559.2,-313 559.2,-319 559.2,-319 559.2,-331 559.2,-331 559.2,-337 553.2,-343 547.2,-343"/>
-<text xml:space="preserve" text-anchor="middle" x="482.06" y="-320.32" font-family="Verdana" font-size="14.00">(*Provider).Enable</text>
+<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable | defined in provider.go:145">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M547.2,-465C547.2,-465 416.91,-465 416.91,-465 410.91,-465 404.91,-459 404.91,-453 404.91,-453 404.91,-441 404.91,-441 404.91,-435 410.91,-429 416.91,-429 416.91,-429 547.2,-429 547.2,-429 553.2,-429 559.2,-435 559.2,-441 559.2,-441 559.2,-453 559.2,-453 559.2,-459 553.2,-465 547.2,-465"/>
+<text xml:space="preserve" text-anchor="middle" x="482.06" y="-442.32" font-family="Verdana" font-size="14.00">(*Provider).Enable</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable -->
-<g id="edge4" class="edge">
+<g id="edge6" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable</title>
-<g id="a_edge4"><a xlink:title="at provider.go:434: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable]">
-<path fill="none" stroke="black" d="M202.29,-299.62C253.02,-304.24 332.04,-311.43 393.01,-316.98"/>
-<polygon fill="black" stroke="black" points="392.4,-320.44 402.67,-317.86 393.03,-313.47 392.4,-320.44"/>
+<g id="a_edge6"><a xlink:title="at provider.go:434: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).Enable]">
+<path fill="none" stroke="black" d="M202.29,-420.78C253.02,-425.55 332.04,-432.98 393.01,-438.72"/>
+<polygon fill="black" stroke="black" points="392.39,-442.17 402.67,-439.63 393.04,-435.2 392.39,-442.17"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).StreamChatCompletion -->
-<g id="node10" class="node">
+<g id="node12" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).StreamChatCompletion</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).StreamChatCompletion | defined in provider.go:292&#10;at provider.go:302: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks]&#10;at provider.go:294: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M273.04,-68C273.04,-68 28,-68 28,-68 22,-68 16,-62 16,-56 16,-56 16,-44 16,-44 16,-38 22,-32 28,-32 28,-32 273.04,-32 273.04,-32 279.04,-32 285.04,-38 285.04,-44 285.04,-44 285.04,-56 285.04,-56 285.04,-62 279.04,-68 273.04,-68"/>
-<text xml:space="preserve" text-anchor="middle" x="150.52" y="-45.33" font-family="Verdana" font-size="14.00">(*Provider).StreamChatCompletion</text>
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).StreamChatCompletion | defined in provider.go:292&#10;at provider.go:294: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion]&#10;at provider.go:302: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M273.04,-195C273.04,-195 28,-195 28,-195 22,-195 16,-189 16,-183 16,-183 16,-171 16,-171 16,-165 22,-159 28,-159 28,-159 273.04,-159 273.04,-159 279.04,-159 285.04,-165 285.04,-171 285.04,-171 285.04,-183 285.04,-183 285.04,-189 279.04,-195 273.04,-195"/>
+<text xml:space="preserve" text-anchor="middle" x="150.52" y="-172.32" font-family="Verdana" font-size="14.00">(*Provider).StreamChatCompletion</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion -->
-<g id="edge14" class="edge">
+<g id="edge9" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).StreamChatCompletion&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion</title>
-<g id="a_edge14"><a xlink:title="at provider.go:294: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion]">
-<path fill="none" stroke="black" d="M285.56,-68.3C310.59,-71.72 336.6,-75.27 361.18,-78.63"/>
-<polygon fill="black" stroke="black" points="360.48,-82.07 370.86,-79.95 361.42,-75.13 360.48,-82.07"/>
+<g id="a_edge9"><a xlink:title="at provider.go:294: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).ChatCompletion]">
+<path fill="none" stroke="black" d="M285.56,-193.27C310.59,-196.31 336.6,-199.47 361.18,-202.45"/>
+<polygon fill="black" stroke="black" points="360.51,-205.89 370.85,-203.62 361.35,-198.94 360.51,-205.89"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks -->
-<g id="node11" class="node">
+<g id="node13" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks</title>
-<g id="a_node11"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks | defined in provider.go:410">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M536.7,-52C536.7,-52 427.41,-52 427.41,-52 421.41,-52 415.41,-46 415.41,-40 415.41,-40 415.41,-28 415.41,-28 415.41,-22 421.41,-16 427.41,-16 427.41,-16 536.7,-16 536.7,-16 542.7,-16 548.7,-22 548.7,-28 548.7,-28 548.7,-40 548.7,-40 548.7,-46 542.7,-52 536.7,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="482.06" y="-29.32" font-family="Verdana" font-size="14.00">splitIntoChunks</text>
+<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks | defined in provider.go:410">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M536.7,-174C536.7,-174 427.41,-174 427.41,-174 421.41,-174 415.41,-168 415.41,-162 415.41,-162 415.41,-150 415.41,-150 415.41,-144 421.41,-138 427.41,-138 427.41,-138 536.7,-138 536.7,-138 542.7,-138 548.7,-144 548.7,-150 548.7,-150 548.7,-162 548.7,-162 548.7,-168 542.7,-174 536.7,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="482.06" y="-151.32" font-family="Verdana" font-size="14.00">splitIntoChunks</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).StreamChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).StreamChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks</title>
-<g id="a_edge5"><a xlink:title="at provider.go:302: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks]">
-<path fill="none" stroke="black" d="M285.56,-43.49C325.92,-41.53 368.82,-39.45 404.13,-37.74"/>
-<polygon fill="black" stroke="black" points="403.98,-41.25 413.8,-37.27 403.64,-34.25 403.98,-41.25"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay -->
-<g id="node12" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay | defined in provider.go:459&#10;at provider.go:460: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M223.16,-465C223.16,-465 77.88,-465 77.88,-465 71.88,-465 65.87,-459 65.87,-453 65.87,-453 65.87,-441 65.87,-441 65.87,-435 71.87,-429 77.87,-429 77.87,-429 223.16,-429 223.16,-429 229.16,-429 235.16,-435 235.16,-441 235.16,-441 235.16,-453 235.16,-453 235.16,-459 229.16,-465 223.16,-465"/>
-<text xml:space="preserve" text-anchor="middle" x="150.52" y="-442.32" font-family="Verdana" font-size="14.00">(*Builder).WithDelay</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay -->
-<g id="node13" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay</title>
-<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay | defined in provider.go:124">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M554.7,-465C554.7,-465 409.41,-465 409.41,-465 403.41,-465 397.41,-459 397.41,-453 397.41,-453 397.41,-441 397.41,-441 397.41,-435 403.41,-429 409.41,-429 409.41,-429 554.7,-429 554.7,-429 560.7,-429 566.7,-435 566.7,-441 566.7,-441 566.7,-453 566.7,-453 566.7,-459 560.7,-465 554.7,-465"/>
-<text xml:space="preserve" text-anchor="middle" x="482.06" y="-442.32" font-family="Verdana" font-size="14.00">(*Provider).SetDelay</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay -->
-<g id="edge6" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay</title>
-<g id="a_edge6"><a xlink:title="at provider.go:460: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay]">
-<path fill="none" stroke="black" d="M235.53,-447C281.34,-447 338.22,-447 385.69,-447"/>
-<polygon fill="black" stroke="black" points="385.4,-450.5 395.4,-447 385.4,-443.5 385.4,-450.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse -->
-<g id="node14" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse | defined in provider.go:453&#10;at provider.go:454: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M262.54,-526C262.54,-526 38.5,-526 38.5,-526 32.5,-526 26.5,-520 26.5,-514 26.5,-514 26.5,-502 26.5,-502 26.5,-496 32.5,-490 38.5,-490 38.5,-490 262.54,-490 262.54,-490 268.54,-490 274.54,-496 274.54,-502 274.54,-502 274.54,-514 274.54,-514 274.54,-520 268.54,-526 262.54,-526"/>
-<text xml:space="preserve" text-anchor="middle" x="150.52" y="-503.32" font-family="Verdana" font-size="14.00">(*Builder).WithDefaultResponse</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse -->
-<g id="node15" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse</title>
-<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse | defined in provider.go:117">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M594.08,-526C594.08,-526 370.04,-526 370.04,-526 364.04,-526 358.04,-520 358.04,-514 358.04,-514 358.04,-502 358.04,-502 358.04,-496 364.04,-490 370.04,-490 370.04,-490 594.08,-490 594.08,-490 600.08,-490 606.08,-496 606.08,-502 606.08,-502 606.08,-514 606.08,-514 606.08,-520 600.08,-526 594.08,-526"/>
-<text xml:space="preserve" text-anchor="middle" x="482.06" y="-503.32" font-family="Verdana" font-size="14.00">(*Provider).SetDefaultResponse</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse -->
 <g id="edge15" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDefaultResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse</title>
-<g id="a_edge15"><a xlink:title="at provider.go:454: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDefaultResponse]">
-<path fill="none" stroke="black" d="M275.17,-508C298.32,-508 322.62,-508 346.1,-508"/>
-<polygon fill="black" stroke="black" points="346.03,-511.5 356.03,-508 346.03,-504.5 346.03,-511.5"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).StreamChatCompletion&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks</title>
+<g id="a_edge15"><a xlink:title="at provider.go:302: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.splitIntoChunks]">
+<path fill="none" stroke="black" d="M285.56,-168.46C325.92,-165.89 368.82,-163.15 404.13,-160.9"/>
+<polygon fill="black" stroke="black" points="404.05,-164.41 413.8,-160.29 403.6,-157.43 404.05,-164.41"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProviderForTesting -->
-<g id="node16" class="node">
+<g id="node14" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProviderForTesting</title>
-<g id="a_node16"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProviderForTesting | defined in provider.go:470&#10;at provider.go:499: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M561.83,-587C561.83,-587 402.29,-587 402.29,-587 396.29,-587 390.29,-581 390.29,-575 390.29,-575 390.29,-563 390.29,-563 390.29,-557 396.29,-551 402.29,-551 402.29,-551 561.83,-551 561.83,-551 567.83,-551 573.83,-557 573.83,-563 573.83,-563 573.83,-575 573.83,-575 573.83,-581 567.83,-587 561.83,-587"/>
-<text xml:space="preserve" text-anchor="middle" x="482.06" y="-564.33" font-family="Verdana" font-size="14.00">NewProviderForTesting</text>
+<g id="a_node14"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProviderForTesting | defined in provider.go:470&#10;at provider.go:499: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M561.83,-526C561.83,-526 402.29,-526 402.29,-526 396.29,-526 390.29,-520 390.29,-514 390.29,-514 390.29,-502 390.29,-502 390.29,-496 396.29,-490 402.29,-490 402.29,-490 561.83,-490 561.83,-490 567.83,-490 573.83,-496 573.83,-502 573.83,-502 573.83,-514 573.83,-514 573.83,-520 567.83,-526 561.83,-526"/>
+<text xml:space="preserve" text-anchor="middle" x="482.06" y="-503.32" font-family="Verdana" font-size="14.00">NewProviderForTesting</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProviderForTesting&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses -->
-<g id="edge16" class="edge">
+<g id="edge20" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.NewProviderForTesting&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses</title>
-<g id="a_edge16"><a xlink:title="at provider.go:499: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses]">
-<path fill="none" stroke="black" d="M561.53,-550.27C611.1,-538.43 674.74,-523.24 723.4,-511.62"/>
-<polygon fill="black" stroke="black" points="724.1,-515.06 733.01,-509.33 722.47,-508.25 724.1,-515.06"/>
+<g id="a_edge20"><a xlink:title="at provider.go:499: calling [github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.loadResponses]">
+<path fill="none" stroke="black" d="M574.35,-514.39C621.68,-517.71 678.74,-521.7 723.28,-524.82"/>
+<polygon fill="black" stroke="black" points="722.88,-528.3 733.1,-525.51 723.37,-521.32 722.88,-528.3"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithResponse -->
-<g id="node17" class="node">
+<g id="node15" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithResponse</title>
-<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithResponse | defined in provider.go:441&#10;at provider.go:442: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M237.41,-648C237.41,-648 63.62,-648 63.62,-648 57.62,-648 51.62,-642 51.62,-636 51.62,-636 51.62,-624 51.62,-624 51.62,-618 57.62,-612 63.62,-612 63.62,-612 237.41,-612 237.41,-612 243.41,-612 249.41,-618 249.41,-624 249.41,-624 249.41,-636 249.41,-636 249.41,-642 243.41,-648 237.41,-648"/>
-<text xml:space="preserve" text-anchor="middle" x="150.52" y="-625.33" font-family="Verdana" font-size="14.00">(*Builder).WithResponse</text>
+<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithResponse | defined in provider.go:441&#10;at provider.go:442: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M237.41,-587C237.41,-587 63.62,-587 63.62,-587 57.62,-587 51.62,-581 51.62,-575 51.62,-575 51.62,-563 51.62,-563 51.62,-557 57.62,-551 63.62,-551 63.62,-551 237.41,-551 237.41,-551 243.41,-551 249.41,-557 249.41,-563 249.41,-563 249.41,-575 249.41,-575 249.41,-581 243.41,-587 237.41,-587"/>
+<text xml:space="preserve" text-anchor="middle" x="150.52" y="-564.33" font-family="Verdana" font-size="14.00">(*Builder).WithResponse</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse -->
-<g id="node18" class="node">
+<g id="node16" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse</title>
-<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse | defined in provider.go:103">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M568.95,-648C568.95,-648 395.16,-648 395.16,-648 389.16,-648 383.16,-642 383.16,-636 383.16,-636 383.16,-624 383.16,-624 383.16,-618 389.16,-612 395.16,-612 395.16,-612 568.95,-612 568.95,-612 574.95,-612 580.95,-618 580.95,-624 580.95,-624 580.95,-636 580.95,-636 580.95,-642 574.95,-648 568.95,-648"/>
-<text xml:space="preserve" text-anchor="middle" x="482.06" y="-625.33" font-family="Verdana" font-size="14.00">(*Provider).SetResponse</text>
+<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse | defined in provider.go:103">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M568.95,-587C568.95,-587 395.16,-587 395.16,-587 389.16,-587 383.16,-581 383.16,-575 383.16,-575 383.16,-563 383.16,-563 383.16,-557 389.16,-551 395.16,-551 395.16,-551 568.95,-551 568.95,-551 574.95,-551 580.95,-557 580.95,-563 580.95,-563 580.95,-575 580.95,-575 580.95,-581 574.95,-587 568.95,-587"/>
+<text xml:space="preserve" text-anchor="middle" x="482.06" y="-564.33" font-family="Verdana" font-size="14.00">(*Provider).SetResponse</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse -->
-<g id="edge20" class="edge">
+<g id="edge21" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse</title>
-<g id="a_edge20"><a xlink:title="at provider.go:442: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse]">
-<path fill="none" stroke="black" d="M249.95,-630C288.09,-630 331.94,-630 371.12,-630"/>
-<polygon fill="black" stroke="black" points="371.06,-633.5 381.06,-630 371.06,-626.5 371.06,-633.5"/>
+<g id="a_edge21"><a xlink:title="at provider.go:442: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetResponse]">
+<path fill="none" stroke="black" d="M249.95,-569C288.09,-569 331.94,-569 371.12,-569"/>
+<polygon fill="black" stroke="black" points="371.06,-572.5 381.06,-569 371.06,-565.5 371.06,-572.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay -->
+<g id="node17" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay</title>
+<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay | defined in provider.go:459&#10;at provider.go:460: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M223.16,-648C223.16,-648 77.88,-648 77.88,-648 71.88,-648 65.87,-642 65.87,-636 65.87,-636 65.87,-624 65.87,-624 65.87,-618 71.87,-612 77.87,-612 77.87,-612 223.16,-612 223.16,-612 229.16,-612 235.16,-618 235.16,-624 235.16,-624 235.16,-636 235.16,-636 235.16,-642 229.16,-648 223.16,-648"/>
+<text xml:space="preserve" text-anchor="middle" x="150.52" y="-625.33" font-family="Verdana" font-size="14.00">(*Builder).WithDelay</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay -->
+<g id="node18" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay</title>
+<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay | defined in provider.go:124">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M554.7,-648C554.7,-648 409.41,-648 409.41,-648 403.41,-648 397.41,-642 397.41,-636 397.41,-636 397.41,-624 397.41,-624 397.41,-618 403.41,-612 409.41,-612 409.41,-612 554.7,-612 554.7,-612 560.7,-612 566.7,-618 566.7,-624 566.7,-624 566.7,-636 566.7,-636 566.7,-642 560.7,-648 554.7,-648"/>
+<text xml:space="preserve" text-anchor="middle" x="482.06" y="-625.33" font-family="Verdana" font-size="14.00">(*Provider).SetDelay</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay -->
+<g id="edge10" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Builder).WithDelay&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay</title>
+<g id="a_edge10"><a xlink:title="at provider.go:460: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/providers/mock.Provider).SetDelay]">
+<path fill="none" stroke="black" d="M235.53,-630C281.34,-630 338.22,-630 385.69,-630"/>
+<polygon fill="black" stroke="black" points="385.4,-633.5 395.4,-630 385.4,-626.5 385.4,-633.5"/>
 </a>
 </g>
 </g>

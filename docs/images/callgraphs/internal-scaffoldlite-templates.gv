@@ -14,24 +14,24 @@ digraph gocallvis {
     edge [minlen="2"]
 
     subgraph "cluster_focus" {
-        label="templates";
-labelloc="t";
+        labelloc="t";
 labeljust="c";
 fontsize="18";
 bgcolor="#e6ecfa";
+label="templates";
         
-        "github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS | defined in embed.go:16\nat embed.go:19: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" fillcolor="lightblue" label="GetEmbeddedTemplatesFS" ]
+        "github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS" [ fillcolor="lightblue" label="GetEmbeddedTemplatesFS" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS | defined in embed.go:16\nat embed.go:19: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
-        URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+        penwidth="0.8";
+rank="sink";
 tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
-penwidth="0.8";
-fillcolor="lightyellow";
 fontsize="16";
 style="filled";
+fillcolor="lightyellow";
 fontname="Tahoma bold";
-rank="sink";
 label="gerror";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
         
         "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
         

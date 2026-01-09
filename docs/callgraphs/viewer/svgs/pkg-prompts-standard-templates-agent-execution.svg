@@ -17,71 +17,35 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1220.12,-59 1220.12,-383 1468.41,-383 1468.41,-59 1220.12,-59"/>
-<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-363.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1220.12,-143 1220.12,-467 1468.41,-467 1468.41,-143 1220.12,-143"/>
+<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-447.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt -->
 <g id="node1" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder</title>
-<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder | defined in builder.go:34&#10;at builder.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:68: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt]&#10;at builder.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:69: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:35: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader]&#10;at builder.go:57: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at builder.go:66: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at builder.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M748.2,-52C748.2,-52 619.41,-52 619.41,-52 613.41,-52 607.41,-46 607.41,-40 607.41,-40 607.41,-28 607.41,-28 607.41,-22 613.41,-16 619.41,-16 619.41,-16 748.2,-16 748.2,-16 754.2,-16 760.2,-22 760.2,-28 760.2,-28 760.2,-40 760.2,-40 760.2,-46 754.2,-52 748.2,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="683.81" y="-29.32" font-family="Verdana" font-size="14.00">NewPromptBuilder</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt | defined in builder.go:79&#10;at builder.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:106: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:103: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at builder.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at builder.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:105: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1143.12,-496C1143.12,-496 932.58,-496 932.58,-496 926.58,-496 920.58,-490 920.58,-484 920.58,-484 920.58,-472 920.58,-472 920.58,-466 926.58,-460 932.58,-460 932.58,-460 1143.12,-460 1143.12,-460 1149.12,-460 1155.12,-466 1155.12,-472 1155.12,-472 1155.12,-484 1155.12,-484 1155.12,-490 1149.12,-496 1143.12,-496"/>
+<text xml:space="preserve" text-anchor="middle" x="1037.85" y="-473.32" font-family="Verdana" font-size="14.00">(*PromptBuilder).BuildPrompt</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader -->
-<g id="node2" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader</title>
-<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader | defined in loader.go:22">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1075.99,-52C1075.99,-52 999.7,-52 999.7,-52 993.7,-52 987.7,-46 987.7,-40 987.7,-40 987.7,-28 987.7,-28 987.7,-22 993.7,-16 999.7,-16 999.7,-16 1075.99,-16 1075.99,-16 1081.99,-16 1087.99,-22 1087.99,-28 1087.99,-28 1087.99,-40 1087.99,-40 1087.99,-46 1081.99,-52 1075.99,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="1037.85" y="-29.32" font-family="Verdana" font-size="14.00">NewLoader</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader -->
-<g id="edge20" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader</title>
-<g id="a_edge20"><a xlink:title="at builder.go:35: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader]">
-<path fill="none" stroke="black" d="M760.76,-34C825,-34 915.87,-34 975.55,-34"/>
-<polygon fill="black" stroke="black" points="975.54,-37.5 985.54,-34 975.54,-30.5 975.54,-37.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt | defined in loader.go:29&#10;at loader.go:42: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at loader.go:41: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at loader.go:39: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at loader.go:40: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1115.74,-167C1115.74,-167 959.95,-167 959.95,-167 953.95,-167 947.95,-161 947.95,-155 947.95,-155 947.95,-143 947.95,-143 947.95,-137 953.95,-131 959.95,-131 959.95,-131 1115.74,-131 1115.74,-131 1121.74,-131 1127.74,-137 1127.74,-143 1127.74,-143 1127.74,-155 1127.74,-155 1127.74,-161 1121.74,-167 1115.74,-167"/>
-<text xml:space="preserve" text-anchor="middle" x="1037.85" y="-144.32" font-family="Verdana" font-size="14.00">(*Loader).LoadPrompt</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt -->
-<g id="edge13" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt</title>
-<g id="a_edge13"><a xlink:title="at builder.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt]">
-<path fill="none" stroke="black" d="M760.65,-37.03C789.57,-41 821.75,-49.07 847.58,-65 869.98,-78.81 861.53,-97.65 883.58,-112 899.5,-122.36 918.05,-129.82 936.63,-135.2"/>
-<polygon fill="black" stroke="black" points="935.53,-138.53 946.09,-137.74 937.34,-131.76 935.53,-138.53"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
 <g id="node20" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_node20"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1362.16,-225C1362.16,-225 1326.37,-225 1326.37,-225 1320.37,-225 1314.37,-219 1314.37,-213 1314.37,-213 1314.37,-201 1314.37,-201 1314.37,-195 1320.37,-189 1326.37,-189 1326.37,-189 1362.16,-189 1362.16,-189 1368.16,-189 1374.16,-195 1374.16,-201 1374.16,-201 1374.16,-213 1374.16,-213 1374.16,-219 1368.16,-225 1362.16,-225"/>
-<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-202.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_node20"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1359.26,-431C1359.26,-431 1329.26,-431 1329.26,-431 1323.26,-431 1317.26,-425 1317.26,-419 1317.26,-419 1317.26,-407 1317.26,-407 1317.26,-401 1323.26,-395 1329.26,-395 1329.26,-395 1359.26,-395 1359.26,-395 1365.26,-395 1371.26,-401 1371.26,-407 1371.26,-407 1371.26,-419 1371.26,-419 1371.26,-425 1365.26,-431 1359.26,-431"/>
+<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-408.32" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge27" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge27"><a xlink:title="at builder.go:57: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at builder.go:66: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M760.58,-35.76C789.81,-39.53 822.24,-47.78 847.58,-65 897.66,-99.02 868.48,-149.16 920.58,-180 1043.46,-252.74 1223.15,-230.66 1302.74,-215.76"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1303.11,-219.25 1312.26,-213.91 1301.77,-212.38 1303.11,-219.25"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge23" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge23"><a xlink:title="at builder.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M1155.37,-459.29C1167.8,-456.98 1180.24,-454.54 1192.12,-452 1231.13,-443.67 1275.25,-432.03 1305.71,-423.63"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1306.51,-427.04 1315.21,-420.99 1304.64,-420.3 1306.51,-427.04"/>
 </a>
 </g>
 </g>
@@ -89,17 +53,17 @@
 <g id="node21" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1448.41,-103C1448.41,-103 1240.12,-103 1240.12,-103 1234.12,-103 1228.12,-97 1228.12,-91 1228.12,-91 1228.12,-79 1228.12,-79 1228.12,-73 1234.12,-67 1240.12,-67 1240.12,-67 1448.41,-67 1448.41,-67 1454.41,-67 1460.41,-73 1460.41,-79 1460.41,-79 1460.41,-91 1460.41,-91 1460.41,-97 1454.41,-103 1448.41,-103"/>
-<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-80.33" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1448.41,-370C1448.41,-370 1240.12,-370 1240.12,-370 1234.12,-370 1228.12,-364 1228.12,-358 1228.12,-358 1228.12,-346 1228.12,-346 1228.12,-340 1234.12,-334 1240.12,-334 1240.12,-334 1448.41,-334 1448.41,-334 1454.41,-334 1460.41,-340 1460.41,-346 1460.41,-346 1460.41,-358 1460.41,-358 1460.41,-364 1454.41,-370 1448.41,-370"/>
+<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-347.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge28" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge28"><a xlink:title="at builder.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M760.82,-45.63C806.93,-52.28 867.02,-60.22 920.58,-65 1019.57,-73.83 1131.98,-78.92 1215.97,-81.75"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1215.75,-85.24 1225.86,-82.07 1215.98,-78.24 1215.75,-85.24"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge8"><a xlink:title="at builder.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M1125.09,-459.3C1135.39,-456.04 1145.62,-452.28 1155.12,-448 1173.21,-439.85 1177.97,-436.92 1192.12,-423 1207.59,-407.78 1202.25,-395.31 1220.12,-383 1224.05,-380.29 1228.2,-377.82 1232.5,-375.56"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1233.88,-378.78 1241.41,-371.33 1230.87,-372.46 1233.88,-378.78"/>
 </a>
 </g>
 </g>
@@ -107,17 +71,17 @@
 <g id="node22" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1442.78,-164C1442.78,-164 1245.74,-164 1245.74,-164 1239.74,-164 1233.74,-158 1233.74,-152 1233.74,-152 1233.74,-140 1233.74,-140 1233.74,-134 1239.74,-128 1245.74,-128 1245.74,-128 1442.78,-128 1442.78,-128 1448.78,-128 1454.78,-134 1454.78,-140 1454.78,-140 1454.78,-152 1454.78,-152 1454.78,-158 1448.78,-164 1442.78,-164"/>
-<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-141.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1442.78,-187C1442.78,-187 1245.74,-187 1245.74,-187 1239.74,-187 1233.74,-181 1233.74,-175 1233.74,-175 1233.74,-163 1233.74,-163 1233.74,-157 1239.74,-151 1245.74,-151 1245.74,-151 1442.78,-151 1442.78,-151 1448.78,-151 1454.78,-157 1454.78,-163 1454.78,-163 1454.78,-175 1454.78,-175 1454.78,-181 1448.78,-187 1442.78,-187"/>
+<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-164.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge6" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge6"><a xlink:title="at builder.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:68: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M760.59,-48.41C788,-53.63 819.18,-59.57 847.58,-65 880.03,-71.2 888.04,-73.3 920.58,-79 1021.96,-96.75 1137.4,-114.91 1221.99,-127.84"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1221.28,-131.27 1231.69,-129.32 1222.33,-124.35 1221.28,-131.27"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge25" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge25"><a xlink:title="at builder.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:105: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M1140.61,-459.3C1145.87,-456.08 1150.76,-452.34 1155.12,-448 1235.85,-367.58 1139.16,-280.18 1220.12,-200 1222.32,-197.82 1224.65,-195.79 1227.09,-193.89"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1228.79,-196.96 1235.1,-188.45 1224.86,-191.17 1228.79,-196.96"/>
 </a>
 </g>
 </g>
@@ -125,44 +89,152 @@
 <g id="node23" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1431.91,-286C1431.91,-286 1256.62,-286 1256.62,-286 1250.62,-286 1244.62,-280 1244.62,-274 1244.62,-274 1244.62,-262 1244.62,-262 1244.62,-256 1250.62,-250 1256.62,-250 1256.62,-250 1431.91,-250 1431.91,-250 1437.91,-250 1443.91,-256 1443.91,-262 1443.91,-262 1443.91,-274 1443.91,-274 1443.91,-280 1437.91,-286 1431.91,-286"/>
-<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-263.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1431.91,-309C1431.91,-309 1256.62,-309 1256.62,-309 1250.62,-309 1244.62,-303 1244.62,-297 1244.62,-297 1244.62,-285 1244.62,-285 1244.62,-279 1250.62,-273 1256.62,-273 1256.62,-273 1431.91,-273 1431.91,-273 1437.91,-273 1443.91,-279 1443.91,-285 1443.91,-285 1443.91,-297 1443.91,-297 1443.91,-303 1437.91,-309 1431.91,-309"/>
+<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-286.32" font-family="Verdana" font-size="14.00">(*GuildError).WithDetails</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
+<g id="a_edge9"><a xlink:title="at builder.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:106: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M1137.3,-459.28C1143.64,-456.09 1149.66,-452.36 1155.12,-448 1179.75,-428.35 1195.44,-341.58 1220.12,-322 1224.38,-318.62 1228.95,-315.61 1233.75,-312.92"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1235.15,-316.13 1242.52,-308.52 1232.02,-309.88 1235.15,-316.13"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="node24" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_node24"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1362.16,-248C1362.16,-248 1326.37,-248 1326.37,-248 1320.37,-248 1314.37,-242 1314.37,-236 1314.37,-236 1314.37,-224 1314.37,-224 1314.37,-218 1320.37,-212 1326.37,-212 1326.37,-212 1362.16,-212 1362.16,-212 1368.16,-212 1374.16,-218 1374.16,-224 1374.16,-224 1374.16,-236 1374.16,-236 1374.16,-242 1368.16,-248 1362.16,-248"/>
+<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-225.32" font-family="Verdana" font-size="14.00">Wrap</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge14" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge14"><a xlink:title="at builder.go:103: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M1139.4,-459.35C1145.05,-456.13 1150.36,-452.38 1155.12,-448 1191.84,-414.22 1175.75,-389.14 1192.12,-342 1204.62,-306.02 1192.05,-286.75 1220.12,-261 1242.34,-240.62 1275.96,-233.17 1302.47,-230.65"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1302.48,-234.15 1312.19,-229.94 1301.97,-227.17 1302.48,-234.15"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt -->
+<g id="node2" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt | defined in builder.go:176&#10;at builder.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M819.08,-296C819.08,-296 548.54,-296 548.54,-296 542.54,-296 536.54,-290 536.54,-284 536.54,-284 536.54,-272 536.54,-272 536.54,-266 542.54,-260 548.54,-260 548.54,-260 819.08,-260 819.08,-260 825.08,-260 831.08,-266 831.08,-272 831.08,-272 831.08,-284 831.08,-284 831.08,-290 825.08,-296 819.08,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="683.81" y="-273.32" font-family="Verdana" font-size="14.00">(*PromptBuilder).BuildPlanningPrompt</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt -->
+<g id="edge26" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt</title>
+<g id="a_edge26"><a xlink:title="at builder.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
+<path fill="none" stroke="black" d="M827.24,-296.64C834.42,-300.15 841.26,-304.24 847.58,-309 875.86,-330.27 867.12,-348.68 883.58,-380 899.58,-410.46 893.45,-426.84 920.58,-448 923.2,-450.04 925.94,-451.95 928.79,-453.73"/>
+<polygon fill="black" stroke="black" points="927.03,-456.75 937.47,-458.55 930.43,-450.63 927.03,-456.75"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder -->
+<g id="node3" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder</title>
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder | defined in builder.go:34&#10;at builder.go:57: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at builder.go:66: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at builder.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:69: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt]&#10;at builder.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:68: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:35: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M748.2,-235C748.2,-235 619.41,-235 619.41,-235 613.41,-235 607.41,-229 607.41,-223 607.41,-223 607.41,-211 607.41,-211 607.41,-205 613.41,-199 619.41,-199 619.41,-199 748.2,-199 748.2,-199 754.2,-199 760.2,-205 760.2,-211 760.2,-211 760.2,-223 760.2,-223 760.2,-229 754.2,-235 748.2,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="683.81" y="-212.32" font-family="Verdana" font-size="14.00">NewPromptBuilder</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader -->
+<g id="node4" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader</title>
+<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader | defined in loader.go:22">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1075.99,-343C1075.99,-343 999.7,-343 999.7,-343 993.7,-343 987.7,-337 987.7,-331 987.7,-331 987.7,-319 987.7,-319 987.7,-313 993.7,-307 999.7,-307 999.7,-307 1075.99,-307 1075.99,-307 1081.99,-307 1087.99,-313 1087.99,-319 1087.99,-319 1087.99,-331 1087.99,-331 1087.99,-337 1081.99,-343 1075.99,-343"/>
+<text xml:space="preserve" text-anchor="middle" x="1037.85" y="-320.32" font-family="Verdana" font-size="14.00">NewLoader</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader -->
+<g id="edge27" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader</title>
+<g id="a_edge27"><a xlink:title="at builder.go:35: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewLoader]">
+<path fill="none" stroke="black" d="M760.84,-221.22C789.46,-225.37 821.39,-233.24 847.58,-248 868.42,-259.74 863.03,-275.76 883.58,-288 911.52,-304.65 946.54,-313.82 976.05,-318.86"/>
+<polygon fill="black" stroke="black" points="975.15,-322.26 985.57,-320.36 976.24,-315.34 975.15,-322.26"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt -->
+<g id="node5" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt</title>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt | defined in loader.go:29&#10;at loader.go:42: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at loader.go:40: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at loader.go:41: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at loader.go:39: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1115.74,-255C1115.74,-255 959.95,-255 959.95,-255 953.95,-255 947.95,-249 947.95,-243 947.95,-243 947.95,-231 947.95,-231 947.95,-225 953.95,-219 959.95,-219 959.95,-219 1115.74,-219 1115.74,-219 1121.74,-219 1127.74,-225 1127.74,-231 1127.74,-231 1127.74,-243 1127.74,-243 1127.74,-249 1121.74,-255 1115.74,-255"/>
+<text xml:space="preserve" text-anchor="middle" x="1037.85" y="-232.32" font-family="Verdana" font-size="14.00">(*Loader).LoadPrompt</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt -->
+<g id="edge15" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt</title>
+<g id="a_edge15"><a xlink:title="at builder.go:55: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt]">
+<path fill="none" stroke="black" d="M760.76,-221.32C812.01,-224.23 880.2,-228.1 935.99,-231.27"/>
+<polygon fill="black" stroke="black" points="935.64,-234.76 945.82,-231.83 936.04,-227.77 935.64,-234.76"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge5" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge5"><a xlink:title="at builder.go:58: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M760.74,-219.18C789.83,-223.03 822.11,-231.23 847.58,-248 895.97,-279.86 869.41,-328.83 920.58,-356 969.98,-382.24 1110.43,-375.81 1215.98,-366.31"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1216.23,-369.81 1225.87,-365.4 1215.59,-362.83 1216.23,-369.81"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge19" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge19"><a xlink:title="at builder.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:68: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M760.79,-210.42C797.82,-207.24 843.02,-203.38 883.58,-200 998.17,-190.45 1129.02,-181.85 1221.73,-176.15"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1221.85,-179.65 1231.62,-175.54 1221.42,-172.66 1221.85,-179.65"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge18" class="edge">
+<g id="edge6" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge18"><a xlink:title="at builder.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:69: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M760.71,-34.32C790.3,-37.85 822.94,-46.31 847.58,-65 905.69,-109.09 861.24,-169.57 920.58,-212 1011.04,-276.69 1140.9,-284.74 1232.76,-280.35"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1232.74,-283.85 1242.54,-279.82 1232.36,-276.86 1232.74,-283.85"/>
+<g id="a_edge6"><a xlink:title="at builder.go:60: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:69: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<path fill="none" stroke="saddlebrown" d="M760.85,-230.19C788.28,-235.29 819.42,-241.47 847.58,-248 880.35,-255.6 887.37,-262.61 920.58,-268 1025.59,-285.04 1146.98,-290.16 1232.66,-291.4"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1232.43,-294.9 1242.47,-291.52 1232.51,-287.9 1232.43,-294.9"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge21" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge21"><a xlink:title="at loader.go:39: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M1128.13,-166.01C1185.78,-176.99 1258.06,-190.77 1302.43,-199.22"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1301.66,-202.64 1312.14,-201.07 1302.97,-195.76 1301.66,-202.64"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge4" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge4"><a xlink:title="at builder.go:57: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at builder.go:66: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M760.64,-211.57C853.66,-205.78 1016.13,-198.54 1155.12,-207 1206.17,-210.11 1264.58,-217.92 1302.6,-223.58"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1301.81,-227 1312.22,-225.03 1302.85,-220.08 1301.81,-227"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge25" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge25"><a xlink:title="at loader.go:40: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M1127.72,-130.32C1163.98,-122.69 1206.07,-113.84 1243.39,-106"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1243.74,-109.5 1252.81,-104.02 1242.3,-102.65 1243.74,-109.5"/>
+<g id="a_edge10"><a xlink:title="at loader.go:40: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M1076.26,-255.62C1120.63,-277.52 1192.09,-312.13 1220.12,-322 1228.36,-324.9 1237.02,-327.63 1245.75,-330.16"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1244.8,-333.53 1255.37,-332.86 1246.69,-326.79 1244.8,-333.53"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge12" class="edge">
+<g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge12"><a xlink:title="at loader.go:41: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M1128.13,-148.12C1157.42,-147.83 1190.5,-147.51 1221.76,-147.2"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1221.71,-150.7 1231.68,-147.1 1221.64,-143.7 1221.71,-150.7"/>
+<g id="a_edge18"><a xlink:title="at loader.go:41: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M1122.44,-218.33C1161.37,-209.63 1207.88,-199.24 1248.16,-190.25"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1248.86,-193.67 1257.86,-188.08 1247.34,-186.84 1248.86,-193.67"/>
 </a>
 </g>
 </g>
@@ -170,170 +242,89 @@
 <g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
 <g id="a_edge1"><a xlink:title="at loader.go:42: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M1071.31,-167.63C1106.87,-187.39 1166.06,-218.41 1220.12,-238 1228.19,-240.93 1236.67,-243.66 1245.23,-246.18"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1244.07,-249.49 1254.65,-248.86 1245.99,-242.76 1244.07,-249.49"/>
+<path fill="none" stroke="saddlebrown" d="M1128.13,-252.84C1160.98,-258.66 1198.57,-265.33 1233.05,-271.45"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1232.17,-274.85 1242.63,-273.15 1233.4,-267.96 1232.17,-274.85"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder -->
-<g id="node4" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder</title>
-<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder | defined in cached_builder.go:17&#10;at cached_builder.go:18: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder]&#10;at cached_builder.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M321.79,-82C321.79,-82 141.25,-82 141.25,-82 135.25,-82 129.25,-76 129.25,-70 129.25,-70 129.25,-58 129.25,-58 129.25,-52 135.25,-46 141.25,-46 141.25,-46 321.79,-46 321.79,-46 327.79,-46 333.79,-52 333.79,-58 333.79,-58 333.79,-70 333.79,-70 333.79,-76 327.79,-82 321.79,-82"/>
-<text xml:space="preserve" text-anchor="middle" x="231.52" y="-59.33" font-family="Verdana" font-size="14.00">NewCachedPromptBuilder</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder -->
-<g id="edge7" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder</title>
-<g id="a_edge7"><a xlink:title="at cached_builder.go:18: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder]">
-<path fill="none" stroke="black" d="M334.42,-57.21C413.14,-51.97 520.91,-44.79 595.66,-39.81"/>
-<polygon fill="black" stroke="black" points="595.64,-43.32 605.39,-39.16 595.18,-36.33 595.64,-43.32"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache -->
-<g id="node5" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache</title>
-<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache | defined in cache.go:28">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M744.83,-113C744.83,-113 622.79,-113 622.79,-113 616.79,-113 610.79,-107 610.79,-101 610.79,-101 610.79,-89 610.79,-89 610.79,-83 616.79,-77 622.79,-77 622.79,-77 744.83,-77 744.83,-77 750.83,-77 756.83,-83 756.83,-89 756.83,-89 756.83,-101 756.83,-101 756.83,-107 750.83,-113 744.83,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="683.81" y="-90.33" font-family="Verdana" font-size="14.00">NewPromptCache</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache -->
-<g id="edge8" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache</title>
-<g id="a_edge8"><a xlink:title="at cached_builder.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache]">
-<path fill="none" stroke="black" d="M334.42,-71.02C414.25,-76.51 523.96,-84.06 598.8,-89.22"/>
-<polygon fill="black" stroke="black" points="598.31,-92.69 608.53,-89.89 598.79,-85.71 598.31,-92.69"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache | defined in cached_builder.go:84&#10;at cached_builder.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M359.29,-174C359.29,-174 103.75,-174 103.75,-174 97.75,-174 91.75,-168 91.75,-162 91.75,-162 91.75,-150 91.75,-150 91.75,-144 97.75,-138 103.75,-138 103.75,-138 359.29,-138 359.29,-138 365.29,-138 371.29,-144 371.29,-150 371.29,-150 371.29,-162 371.29,-162 371.29,-168 365.29,-174 359.29,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="231.52" y="-151.32" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).ClearCache</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear -->
-<g id="node7" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear | defined in cache.go:91">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M760.95,-174C760.95,-174 606.66,-174 606.66,-174 600.66,-174 594.66,-168 594.66,-162 594.66,-162 594.66,-150 594.66,-150 594.66,-144 600.66,-138 606.66,-138 606.66,-138 760.95,-138 760.95,-138 766.95,-138 772.95,-144 772.95,-150 772.95,-150 772.95,-162 772.95,-162 772.95,-168 766.95,-174 760.95,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="683.81" y="-151.32" font-family="Verdana" font-size="14.00">(*PromptCache).Clear</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear</title>
-<g id="a_edge2"><a xlink:title="at cached_builder.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear]">
-<path fill="none" stroke="black" d="M371.91,-156C440.12,-156 520.67,-156 582.69,-156"/>
-<polygon fill="black" stroke="black" points="582.53,-159.5 592.53,-156 582.53,-152.5 582.53,-159.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt -->
-<g id="node8" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt | defined in builder.go:79&#10;at builder.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:105: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:103: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at builder.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at builder.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:106: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1143.12,-332C1143.12,-332 932.58,-332 932.58,-332 926.58,-332 920.58,-326 920.58,-320 920.58,-320 920.58,-308 920.58,-308 920.58,-302 926.58,-296 932.58,-296 932.58,-296 1143.12,-296 1143.12,-296 1149.12,-296 1155.12,-302 1155.12,-308 1155.12,-308 1155.12,-320 1155.12,-320 1155.12,-326 1149.12,-332 1143.12,-332"/>
-<text xml:space="preserve" text-anchor="middle" x="1037.85" y="-309.32" font-family="Verdana" font-size="14.00">(*PromptBuilder).BuildPrompt</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge9" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge9"><a xlink:title="at builder.go:103: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M1155.48,-299.14C1168.48,-294.56 1181.02,-288.64 1192.12,-281 1210.91,-268.07 1201.56,-251.25 1220.12,-238 1244.24,-220.78 1276.98,-213.1 1302.64,-209.68"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1302.83,-213.18 1312.37,-208.57 1302.03,-206.23 1302.83,-213.18"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge19" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge19"><a xlink:title="at builder.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at builder.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M1054.83,-295.36C1095.2,-248.43 1199.56,-128.27 1220.12,-116 1225.02,-113.07 1230.19,-110.42 1235.53,-108.02"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1236.66,-111.34 1244.57,-104.28 1233.99,-104.87 1236.66,-111.34"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge3"><a xlink:title="at builder.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at builder.go:105: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M1123.16,-295.28C1147.98,-286.28 1173.46,-273.12 1192.12,-254 1217.55,-227.94 1193.09,-201.4 1220.12,-177 1222.61,-174.75 1225.25,-172.66 1227.99,-170.71"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1229.81,-173.7 1236.45,-165.45 1226.11,-167.76 1229.81,-173.7"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge29" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge29"><a xlink:title="at builder.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at builder.go:106: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
-<path fill="none" stroke="saddlebrown" d="M1082.24,-332.64C1114.14,-343.4 1157.74,-351.82 1192.12,-335 1210.33,-326.09 1203.14,-310.08 1220.12,-299 1224.39,-296.21 1228.89,-293.68 1233.55,-291.37"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1234.91,-294.6 1242.59,-287.3 1232.04,-288.21 1234.91,-294.6"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="node24" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_node24"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1359.26,-347C1359.26,-347 1329.26,-347 1329.26,-347 1323.26,-347 1317.26,-341 1317.26,-335 1317.26,-335 1317.26,-323 1317.26,-323 1317.26,-317 1323.26,-311 1329.26,-311 1329.26,-311 1359.26,-311 1359.26,-311 1365.26,-311 1371.26,-317 1371.26,-323 1371.26,-323 1371.26,-335 1371.26,-335 1371.26,-341 1365.26,-347 1359.26,-347"/>
-<text xml:space="preserve" text-anchor="middle" x="1344.26" y="-324.32" font-family="Verdana" font-size="14.00">New</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge14"><a xlink:title="at builder.go:90: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M1113.18,-332.67C1127.23,-336.7 1141.71,-341.21 1155.12,-346 1171.61,-351.9 1173.99,-358.37 1191.12,-362 1230.33,-370.32 1275.16,-357.93 1305.95,-346.03"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1307.26,-349.27 1315.22,-342.27 1304.64,-342.78 1307.26,-349.27"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt -->
-<g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt | defined in builder.go:176&#10;at builder.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M819.08,-567C819.08,-567 548.54,-567 548.54,-567 542.54,-567 536.54,-561 536.54,-555 536.54,-555 536.54,-543 536.54,-543 536.54,-537 542.54,-531 548.54,-531 548.54,-531 819.08,-531 819.08,-531 825.08,-531 831.08,-537 831.08,-543 831.08,-543 831.08,-555 831.08,-555 831.08,-561 825.08,-567 819.08,-567"/>
-<text xml:space="preserve" text-anchor="middle" x="683.81" y="-544.33" font-family="Verdana" font-size="14.00">(*PromptBuilder).BuildPlanningPrompt</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt -->
-<g id="edge16" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt</title>
-<g id="a_edge16"><a xlink:title="at builder.go:212: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
-<path fill="none" stroke="black" d="M830.31,-530.38C836.41,-527.09 842.2,-523.32 847.58,-519 912.63,-466.73 857.84,-401.03 920.58,-346 923.76,-343.21 927.16,-340.67 930.72,-338.34"/>
-<polygon fill="black" stroke="black" points="932.3,-341.47 939.21,-333.44 928.8,-335.41 932.3,-341.47"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge31" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.Loader).LoadPrompt&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge31"><a xlink:title="at loader.go:39: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M1128.13,-234.95C1185.66,-233.62 1257.75,-231.97 1302.15,-230.95"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1302.2,-234.45 1312.12,-230.72 1302.04,-227.45 1302.2,-234.45"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt -->
-<g id="node10" class="node">
+<g id="node6" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt | defined in builder.go:114&#10;at builder.go:172: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M835.58,-296C835.58,-296 532.04,-296 532.04,-296 526.04,-296 520.04,-290 520.04,-284 520.04,-284 520.04,-272 520.04,-272 520.04,-266 526.04,-260 532.04,-260 532.04,-260 835.58,-260 835.58,-260 841.58,-260 847.58,-266 847.58,-272 847.58,-272 847.58,-284 847.58,-284 847.58,-290 841.58,-296 835.58,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="683.81" y="-273.32" font-family="Verdana" font-size="14.00">(*PromptBuilder).BuildFullExecutionPrompt</text>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt | defined in builder.go:114&#10;at builder.go:172: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M835.58,-567C835.58,-567 532.04,-567 532.04,-567 526.04,-567 520.04,-561 520.04,-555 520.04,-555 520.04,-543 520.04,-543 520.04,-537 526.04,-531 532.04,-531 532.04,-531 835.58,-531 835.58,-531 841.58,-531 847.58,-537 847.58,-543 847.58,-543 847.58,-555 847.58,-555 847.58,-561 841.58,-567 835.58,-567"/>
+<text xml:space="preserve" text-anchor="middle" x="683.81" y="-544.33" font-family="Verdana" font-size="14.00">(*PromptBuilder).BuildFullExecutionPrompt</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt -->
-<g id="edge22" class="edge">
+<g id="edge20" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt</title>
-<g id="a_edge22"><a xlink:title="at builder.go:172: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
-<path fill="none" stroke="black" d="M848.21,-294.71C868.41,-296.78 888.84,-298.86 908.42,-300.87"/>
-<polygon fill="black" stroke="black" points="908.03,-304.34 918.33,-301.88 908.74,-297.38 908.03,-304.34"/>
+<g id="a_edge20"><a xlink:title="at builder.go:172: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
+<path fill="none" stroke="black" d="M789.92,-530.28C820.49,-524.63 853.91,-518.26 884.58,-512 903.97,-508.04 924.7,-503.57 944.42,-499.21"/>
+<polygon fill="black" stroke="black" points="945.09,-502.64 954.1,-497.05 943.57,-495.81 945.09,-502.64"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache -->
+<g id="node7" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache</title>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache | defined in cached_builder.go:84&#10;at cached_builder.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M359.29,-52C359.29,-52 103.75,-52 103.75,-52 97.75,-52 91.75,-46 91.75,-40 91.75,-40 91.75,-28 91.75,-28 91.75,-22 97.75,-16 103.75,-16 103.75,-16 359.29,-16 359.29,-16 365.29,-16 371.29,-22 371.29,-28 371.29,-28 371.29,-40 371.29,-40 371.29,-46 365.29,-52 359.29,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="231.52" y="-29.32" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).ClearCache</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear -->
+<g id="node8" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear</title>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear | defined in cache.go:91">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M760.95,-52C760.95,-52 606.66,-52 606.66,-52 600.66,-52 594.66,-46 594.66,-40 594.66,-40 594.66,-28 594.66,-28 594.66,-22 600.66,-16 606.66,-16 606.66,-16 760.95,-16 760.95,-16 766.95,-16 772.95,-22 772.95,-28 772.95,-28 772.95,-40 772.95,-40 772.95,-46 766.95,-52 760.95,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="683.81" y="-29.32" font-family="Verdana" font-size="14.00">(*PromptCache).Clear</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear -->
+<g id="edge28" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).ClearCache&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear</title>
+<g id="a_edge28"><a xlink:title="at cached_builder.go:85: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Clear]">
+<path fill="none" stroke="black" d="M371.91,-34C440.12,-34 520.67,-34 582.69,-34"/>
+<polygon fill="black" stroke="black" points="582.53,-37.5 592.53,-34 582.53,-30.5 582.53,-37.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats -->
+<g id="node9" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats</title>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats | defined in cached_builder.go:89&#10;at cached_builder.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M371.29,-113C371.29,-113 91.75,-113 91.75,-113 85.75,-113 79.75,-107 79.75,-101 79.75,-101 79.75,-89 79.75,-89 79.75,-83 85.75,-77 91.75,-77 91.75,-77 371.29,-77 371.29,-77 377.29,-77 383.29,-83 383.29,-89 383.29,-89 383.29,-101 383.29,-101 383.29,-107 377.29,-113 371.29,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="231.52" y="-90.33" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).GetCacheStats</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats -->
+<g id="node10" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats</title>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats | defined in cache.go:115">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M760.95,-113C760.95,-113 606.66,-113 606.66,-113 600.66,-113 594.66,-107 594.66,-101 594.66,-101 594.66,-89 594.66,-89 594.66,-83 600.66,-77 606.66,-77 606.66,-77 760.95,-77 760.95,-77 766.95,-77 772.95,-83 772.95,-89 772.95,-89 772.95,-101 772.95,-101 772.95,-107 766.95,-113 760.95,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="683.81" y="-90.33" font-family="Verdana" font-size="14.00">(*PromptCache).Stats</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats</title>
+<g id="a_edge2"><a xlink:title="at cached_builder.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats]">
+<path fill="none" stroke="black" d="M384.03,-95C449.51,-95 524.34,-95 582.73,-95"/>
+<polygon fill="black" stroke="black" points="582.67,-98.5 592.67,-95 582.67,-91.5 582.67,-98.5"/>
 </a>
 </g>
 </g>
@@ -341,179 +332,188 @@
 <g id="node11" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildFullExecutionPromptCached</title>
 <g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildFullExecutionPromptCached | defined in cached_builder.go:56&#10;at cached_builder.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M435.04,-296C435.04,-296 28,-296 28,-296 22,-296 16,-290 16,-284 16,-284 16,-272 16,-272 16,-266 22,-260 28,-260 28,-260 435.04,-260 435.04,-260 441.04,-260 447.04,-266 447.04,-272 447.04,-272 447.04,-284 447.04,-284 447.04,-290 441.04,-296 435.04,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="231.52" y="-273.32" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).BuildFullExecutionPromptCached</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M435.04,-567C435.04,-567 28,-567 28,-567 22,-567 16,-561 16,-555 16,-555 16,-543 16,-543 16,-537 22,-531 28,-531 28,-531 435.04,-531 435.04,-531 441.04,-531 447.04,-537 447.04,-543 447.04,-543 447.04,-555 447.04,-555 447.04,-561 441.04,-567 435.04,-567"/>
+<text xml:space="preserve" text-anchor="middle" x="231.52" y="-544.33" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).BuildFullExecutionPromptCached</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildFullExecutionPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt -->
-<g id="edge15" class="edge">
+<g id="edge16" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildFullExecutionPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt</title>
-<g id="a_edge15"><a xlink:title="at cached_builder.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt]">
-<path fill="none" stroke="black" d="M447.77,-278C468,-278 488.33,-278 508.11,-278"/>
-<polygon fill="black" stroke="black" points="507.85,-281.5 517.85,-278 507.85,-274.5 507.85,-281.5"/>
+<g id="a_edge16"><a xlink:title="at cached_builder.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildFullExecutionPrompt]">
+<path fill="none" stroke="black" d="M447.77,-549C468,-549 488.33,-549 508.11,-549"/>
+<polygon fill="black" stroke="black" points="507.85,-552.5 517.85,-549 507.85,-545.5 507.85,-552.5"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder -->
 <g id="node12" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached | defined in cached_builder.go:30&#10;at cached_builder.go:35: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]&#10;at cached_builder.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]&#10;at cached_builder.go:32: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey]&#10;at cached_builder.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get]&#10;at cached_builder.go:50: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M388.54,-391C388.54,-391 74.5,-391 74.5,-391 68.5,-391 62.5,-385 62.5,-379 62.5,-379 62.5,-367 62.5,-367 62.5,-361 68.5,-355 74.5,-355 74.5,-355 388.54,-355 388.54,-355 394.54,-355 400.54,-361 400.54,-367 400.54,-367 400.54,-379 400.54,-379 400.54,-385 394.54,-391 388.54,-391"/>
-<text xml:space="preserve" text-anchor="middle" x="231.52" y="-368.32" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).BuildPromptCached</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder</title>
+<g id="a_node12"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder | defined in cached_builder.go:17&#10;at cached_builder.go:18: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder]&#10;at cached_builder.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M321.79,-200C321.79,-200 141.25,-200 141.25,-200 135.25,-200 129.25,-194 129.25,-188 129.25,-188 129.25,-176 129.25,-176 129.25,-170 135.25,-164 141.25,-164 141.25,-164 321.79,-164 321.79,-164 327.79,-164 333.79,-170 333.79,-176 333.79,-176 333.79,-188 333.79,-188 333.79,-194 327.79,-200 321.79,-200"/>
+<text xml:space="preserve" text-anchor="middle" x="231.52" y="-177.32" font-family="Verdana" font-size="14.00">NewCachedPromptBuilder</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt</title>
-<g id="a_edge4"><a xlink:title="at cached_builder.go:35: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]&#10;at cached_builder.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
-<path fill="none" stroke="black" d="M359.65,-354.26C409.56,-347.53 467.39,-340.5 520.04,-336 652.24,-324.7 803.98,-319.12 908.68,-316.41"/>
-<polygon fill="black" stroke="black" points="908.51,-319.92 918.42,-316.17 908.33,-312.92 908.51,-319.92"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder -->
+<g id="edge3" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder</title>
+<g id="a_edge3"><a xlink:title="at cached_builder.go:18: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptBuilder]">
+<path fill="none" stroke="black" d="M334.42,-189.92C413.14,-196.04 520.91,-204.42 595.66,-210.23"/>
+<polygon fill="black" stroke="black" points="595.15,-213.7 605.39,-210.98 595.69,-206.72 595.15,-213.7"/>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache -->
 <g id="node13" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey</title>
-<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey | defined in cache.go:71">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M728.33,-445C728.33,-445 639.29,-445 639.29,-445 633.29,-445 627.29,-439 627.29,-433 627.29,-433 627.29,-421 627.29,-421 627.29,-415 633.29,-409 639.29,-409 639.29,-409 728.33,-409 728.33,-409 734.33,-409 740.33,-415 740.33,-421 740.33,-421 740.33,-433 740.33,-433 740.33,-439 734.33,-445 728.33,-445"/>
-<text xml:space="preserve" text-anchor="middle" x="683.81" y="-422.32" font-family="Verdana" font-size="14.00">GenerateKey</text>
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache</title>
+<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache | defined in cache.go:28">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M744.83,-174C744.83,-174 622.79,-174 622.79,-174 616.79,-174 610.79,-168 610.79,-162 610.79,-162 610.79,-150 610.79,-150 610.79,-144 616.79,-138 622.79,-138 622.79,-138 744.83,-138 744.83,-138 750.83,-138 756.83,-144 756.83,-150 756.83,-150 756.83,-162 756.83,-162 756.83,-168 750.83,-174 744.83,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="683.81" y="-151.32" font-family="Verdana" font-size="14.00">NewPromptCache</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey -->
-<g id="edge10" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey</title>
-<g id="a_edge10"><a xlink:title="at cached_builder.go:32: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey]">
-<path fill="none" stroke="black" d="M388.75,-391.74C466.18,-401.02 555.66,-411.75 615.38,-418.91"/>
-<polygon fill="black" stroke="black" points="614.7,-422.36 625.04,-420.07 615.53,-415.41 614.7,-422.36"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get -->
-<g id="node14" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get | defined in cache.go:37">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M754.95,-506C754.95,-506 612.66,-506 612.66,-506 606.66,-506 600.66,-500 600.66,-494 600.66,-494 600.66,-482 600.66,-482 600.66,-476 606.66,-470 612.66,-470 612.66,-470 754.95,-470 754.95,-470 760.95,-470 766.95,-476 766.95,-482 766.95,-482 766.95,-494 766.95,-494 766.95,-500 760.95,-506 754.95,-506"/>
-<text xml:space="preserve" text-anchor="middle" x="683.81" y="-483.32" font-family="Verdana" font-size="14.00">(*PromptCache).Get</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get</title>
-<g id="a_edge23"><a xlink:title="at cached_builder.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get]">
-<path fill="none" stroke="black" d="M295.25,-391.73C376.43,-415.94 508.87,-455.33 520.04,-458 542.15,-463.29 566.15,-468.18 588.75,-472.4"/>
-<polygon fill="black" stroke="black" points="588.11,-475.85 598.58,-474.21 589.38,-468.96 588.11,-475.85"/>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache -->
+<g id="edge21" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewCachedPromptBuilder&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache</title>
+<g id="a_edge21"><a xlink:title="at cached_builder.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.NewPromptCache]">
+<path fill="none" stroke="black" d="M334.42,-176.12C414.25,-171.51 523.96,-165.17 598.8,-160.85"/>
+<polygon fill="black" stroke="black" points="598.75,-164.36 608.53,-160.29 598.34,-157.37 598.75,-164.36"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set -->
-<g id="node15" class="node">
+<g id="node14" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set</title>
-<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set | defined in cache.go:55&#10;at cache.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M754.58,-384C754.58,-384 613.04,-384 613.04,-384 607.04,-384 601.04,-378 601.04,-372 601.04,-372 601.04,-360 601.04,-360 601.04,-354 607.04,-348 613.04,-348 613.04,-348 754.58,-348 754.58,-348 760.58,-348 766.58,-354 766.58,-360 766.58,-360 766.58,-372 766.58,-372 766.58,-378 760.58,-384 754.58,-384"/>
-<text xml:space="preserve" text-anchor="middle" x="683.81" y="-361.32" font-family="Verdana" font-size="14.00">(*PromptCache).Set</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set -->
-<g id="edge24" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set</title>
-<g id="a_edge24"><a xlink:title="at cached_builder.go:50: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set]">
-<path fill="none" stroke="black" d="M401.15,-370.38C464.79,-369.39 534.86,-368.3 589.2,-367.46"/>
-<polygon fill="black" stroke="black" points="589.09,-370.96 599.03,-367.3 588.98,-363.96 589.09,-370.96"/>
+<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set | defined in cache.go:55&#10;at cache.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M754.58,-479C754.58,-479 613.04,-479 613.04,-479 607.04,-479 601.04,-473 601.04,-467 601.04,-467 601.04,-455 601.04,-455 601.04,-449 607.04,-443 613.04,-443 613.04,-443 754.58,-443 754.58,-443 760.58,-443 766.58,-449 766.58,-455 766.58,-455 766.58,-467 766.58,-467 766.58,-473 760.58,-479 754.58,-479"/>
+<text xml:space="preserve" text-anchor="middle" x="683.81" y="-456.32" font-family="Verdana" font-size="14.00">(*PromptCache).Set</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest -->
-<g id="node16" class="node">
+<g id="node15" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest</title>
-<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest | defined in cache.go:98">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1135.99,-394C1135.99,-394 939.7,-394 939.7,-394 933.7,-394 927.7,-388 927.7,-382 927.7,-382 927.7,-370 927.7,-370 927.7,-364 933.7,-358 939.7,-358 939.7,-358 1135.99,-358 1135.99,-358 1141.99,-358 1147.99,-364 1147.99,-370 1147.99,-370 1147.99,-382 1147.99,-382 1147.99,-388 1141.99,-394 1135.99,-394"/>
-<text xml:space="preserve" text-anchor="middle" x="1037.85" y="-371.32" font-family="Verdana" font-size="14.00">(*PromptCache).evictOldest</text>
+<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest | defined in cache.go:98">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1135.99,-435C1135.99,-435 939.7,-435 939.7,-435 933.7,-435 927.7,-429 927.7,-423 927.7,-423 927.7,-411 927.7,-411 927.7,-405 933.7,-399 939.7,-399 939.7,-399 1135.99,-399 1135.99,-399 1141.99,-399 1147.99,-405 1147.99,-411 1147.99,-411 1147.99,-423 1147.99,-423 1147.99,-429 1141.99,-435 1135.99,-435"/>
+<text xml:space="preserve" text-anchor="middle" x="1037.85" y="-412.32" font-family="Verdana" font-size="14.00">(*PromptCache).evictOldest</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest -->
-<g id="edge11" class="edge">
+<g id="edge17" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest</title>
-<g id="a_edge11"><a xlink:title="at cache.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest]">
-<path fill="none" stroke="black" d="M766.9,-368.33C811.29,-369.59 866.95,-371.17 916.18,-372.57"/>
-<polygon fill="black" stroke="black" points="915.95,-376.07 926.05,-372.85 916.15,-369.07 915.95,-376.07"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats -->
-<g id="node17" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats</title>
-<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats | defined in cached_builder.go:89&#10;at cached_builder.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M371.29,-235C371.29,-235 91.75,-235 91.75,-235 85.75,-235 79.75,-229 79.75,-223 79.75,-223 79.75,-211 79.75,-211 79.75,-205 85.75,-199 91.75,-199 91.75,-199 371.29,-199 371.29,-199 377.29,-199 383.29,-205 383.29,-211 383.29,-211 383.29,-223 383.29,-223 383.29,-229 377.29,-235 371.29,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="231.52" y="-212.32" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).GetCacheStats</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats -->
-<g id="node18" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats</title>
-<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats | defined in cache.go:115">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M760.95,-235C760.95,-235 606.66,-235 606.66,-235 600.66,-235 594.66,-229 594.66,-223 594.66,-223 594.66,-211 594.66,-211 594.66,-205 600.66,-199 606.66,-199 606.66,-199 760.95,-199 760.95,-199 766.95,-199 772.95,-205 772.95,-211 772.95,-211 772.95,-223 772.95,-223 772.95,-229 766.95,-235 760.95,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="683.81" y="-212.32" font-family="Verdana" font-size="14.00">(*PromptCache).Stats</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).GetCacheStats&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats</title>
-<g id="a_edge5"><a xlink:title="at cached_builder.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Stats]">
-<path fill="none" stroke="black" d="M384.03,-217C449.51,-217 524.34,-217 582.73,-217"/>
-<polygon fill="black" stroke="black" points="582.67,-220.5 592.67,-217 582.67,-213.5 582.67,-220.5"/>
+<g id="a_edge17"><a xlink:title="at cache.go:61: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).evictOldest]">
+<path fill="none" stroke="black" d="M766.9,-450.74C811.29,-445.19 866.95,-438.23 916.18,-432.08"/>
+<polygon fill="black" stroke="black" points="916.57,-435.56 926.06,-430.85 915.7,-428.61 916.57,-435.56"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached -->
-<g id="node19" class="node">
+<g id="node16" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached</title>
-<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached | defined in cached_builder.go:63&#10;at cached_builder.go:70: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get]&#10;at cached_builder.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set]&#10;at cached_builder.go:65: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey]&#10;at cached_builder.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt]&#10;at cached_builder.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M418.54,-485C418.54,-485 44.5,-485 44.5,-485 38.5,-485 32.5,-479 32.5,-473 32.5,-473 32.5,-461 32.5,-461 32.5,-455 38.5,-449 44.5,-449 44.5,-449 418.54,-449 418.54,-449 424.54,-449 430.54,-455 430.54,-461 430.54,-461 430.54,-473 430.54,-473 430.54,-479 424.54,-485 418.54,-485"/>
-<text xml:space="preserve" text-anchor="middle" x="231.52" y="-462.32" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).BuildPlanningPromptCached</text>
+<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached | defined in cached_builder.go:63&#10;at cached_builder.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set]&#10;at cached_builder.go:70: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get]&#10;at cached_builder.go:65: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey]&#10;at cached_builder.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt]&#10;at cached_builder.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M418.54,-365C418.54,-365 44.5,-365 44.5,-365 38.5,-365 32.5,-359 32.5,-353 32.5,-353 32.5,-341 32.5,-341 32.5,-335 38.5,-329 44.5,-329 44.5,-329 418.54,-329 418.54,-329 424.54,-329 430.54,-335 430.54,-341 430.54,-341 430.54,-353 430.54,-353 430.54,-359 424.54,-365 418.54,-365"/>
+<text xml:space="preserve" text-anchor="middle" x="231.52" y="-342.32" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).BuildPlanningPromptCached</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt -->
-<g id="edge31" class="edge">
+<g id="edge29" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt</title>
-<g id="a_edge31"><a xlink:title="at cached_builder.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt]&#10;at cached_builder.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt]">
-<path fill="none" stroke="black" d="M335.26,-485.71C405.01,-498.41 497.27,-515.21 569.21,-528.31"/>
-<polygon fill="black" stroke="black" points="568.17,-531.68 578.63,-530.03 569.42,-524.79 568.17,-531.68"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey -->
-<g id="edge30" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey</title>
-<g id="a_edge30"><a xlink:title="at cached_builder.go:65: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey]">
-<path fill="none" stroke="black" d="M431.01,-449.37C497.14,-443.49 566.39,-437.34 615.49,-432.98"/>
-<polygon fill="black" stroke="black" points="615.74,-436.47 625.4,-432.1 615.12,-429.5 615.74,-436.47"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get</title>
-<g id="a_edge17"><a xlink:title="at cached_builder.go:70: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get]">
-<path fill="none" stroke="black" d="M431.01,-476.26C485.78,-478.81 542.69,-481.47 588.52,-483.6"/>
-<polygon fill="black" stroke="black" points="588.26,-487.09 598.41,-484.06 588.58,-480.1 588.26,-487.09"/>
+<g id="a_edge29"><a xlink:title="at cached_builder.go:67: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt]&#10;at cached_builder.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPlanningPrompt]">
+<path fill="none" stroke="black" d="M354.67,-328.28C414.86,-319.06 487.58,-307.92 549.24,-298.47"/>
+<polygon fill="black" stroke="black" points="549.77,-301.93 559.13,-296.95 548.71,-295.01 549.77,-301.93"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set -->
-<g id="edge26" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set</title>
-<g id="a_edge26"><a xlink:title="at cached_builder.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set]">
-<path fill="none" stroke="black" d="M304.96,-448.29C362.96,-433.57 446.48,-412.95 520.04,-397 542.51,-392.13 566.81,-387.28 589.62,-382.91"/>
-<polygon fill="black" stroke="black" points="590.02,-386.39 599.19,-381.09 588.71,-379.52 590.02,-386.39"/>
+<g id="a_edge11"><a xlink:title="at cached_builder.go:79: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set]">
+<path fill="none" stroke="black" d="M290.15,-365.72C347.88,-384.03 439.47,-411.86 520.04,-431 542.38,-436.31 566.64,-441.23 589.44,-445.48"/>
+<polygon fill="black" stroke="black" points="588.54,-448.87 599.01,-447.24 589.81,-441.99 588.54,-448.87"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey -->
+<g id="node17" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey</title>
+<g id="a_node17"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey | defined in cache.go:71">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M728.33,-357C728.33,-357 639.29,-357 639.29,-357 633.29,-357 627.29,-351 627.29,-345 627.29,-345 627.29,-333 627.29,-333 627.29,-327 633.29,-321 639.29,-321 639.29,-321 728.33,-321 728.33,-321 734.33,-321 740.33,-327 740.33,-333 740.33,-333 740.33,-345 740.33,-345 740.33,-351 734.33,-357 728.33,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="683.81" y="-334.32" font-family="Verdana" font-size="14.00">GenerateKey</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey -->
+<g id="edge24" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey</title>
+<g id="a_edge24"><a xlink:title="at cached_builder.go:65: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey]">
+<path fill="none" stroke="black" d="M431.01,-343.47C497.14,-342.3 566.39,-341.07 615.49,-340.2"/>
+<polygon fill="black" stroke="black" points="615.45,-343.7 625.39,-340.02 615.33,-336.7 615.45,-343.7"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get -->
+<g id="node18" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get</title>
+<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get | defined in cache.go:37">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M754.95,-418C754.95,-418 612.66,-418 612.66,-418 606.66,-418 600.66,-412 600.66,-406 600.66,-406 600.66,-394 600.66,-394 600.66,-388 606.66,-382 612.66,-382 612.66,-382 754.95,-382 754.95,-382 760.95,-382 766.95,-388 766.95,-394 766.95,-394 766.95,-406 766.95,-406 766.95,-412 760.95,-418 754.95,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="683.81" y="-395.32" font-family="Verdana" font-size="14.00">(*PromptCache).Get</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get -->
+<g id="edge22" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPlanningPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get</title>
+<g id="a_edge22"><a xlink:title="at cached_builder.go:70: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get]">
+<path fill="none" stroke="black" d="M391.59,-365.72C457.56,-373.49 531.82,-382.23 588.85,-388.94"/>
+<polygon fill="black" stroke="black" points="588.17,-392.39 598.51,-390.08 588.99,-385.43 588.17,-392.39"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached -->
+<g id="node19" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached</title>
+<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached | defined in cached_builder.go:30&#10;at cached_builder.go:50: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set]&#10;at cached_builder.go:32: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey]&#10;at cached_builder.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get]&#10;at cached_builder.go:35: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]&#10;at cached_builder.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M388.54,-463C388.54,-463 74.5,-463 74.5,-463 68.5,-463 62.5,-457 62.5,-451 62.5,-451 62.5,-439 62.5,-439 62.5,-433 68.5,-427 74.5,-427 74.5,-427 388.54,-427 388.54,-427 394.54,-427 400.54,-433 400.54,-439 400.54,-439 400.54,-451 400.54,-451 400.54,-457 394.54,-463 388.54,-463"/>
+<text xml:space="preserve" text-anchor="middle" x="231.52" y="-440.32" font-family="Verdana" font-size="14.00">(*CachedPromptBuilder).BuildPromptCached</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt -->
+<g id="edge30" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt</title>
+<g id="a_edge30"><a xlink:title="at cached_builder.go:35: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]&#10;at cached_builder.go:44: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptBuilder).BuildPrompt]">
+<path fill="none" stroke="black" d="M323.35,-463.72C379.69,-474.36 453.75,-486.62 520.04,-492 665.14,-503.78 702.11,-497.37 847.58,-492 867.37,-491.27 888.31,-490.11 908.76,-488.76"/>
+<polygon fill="black" stroke="black" points="908.81,-492.27 918.55,-488.1 908.33,-485.28 908.81,-492.27"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set -->
+<g id="edge7" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set</title>
+<g id="a_edge7"><a xlink:title="at cached_builder.go:50: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Set]">
+<path fill="none" stroke="black" d="M401.15,-450.99C464.79,-453.25 534.86,-455.74 589.2,-457.67"/>
+<polygon fill="black" stroke="black" points="588.92,-461.17 599.03,-458.02 589.16,-454.17 588.92,-461.17"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey -->
+<g id="edge12" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey</title>
+<g id="a_edge12"><a xlink:title="at cached_builder.go:32: calling [github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.GenerateKey]">
+<path fill="none" stroke="black" d="M299.02,-426.3C357.1,-410.3 443.8,-387.18 520.04,-370 551.39,-362.93 586.38,-356.13 615.86,-350.71"/>
+<polygon fill="black" stroke="black" points="616.17,-354.21 625.38,-348.97 614.92,-347.32 616.17,-354.21"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.CachedPromptBuilder).BuildPromptCached&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get</title>
+<g id="a_edge13"><a xlink:title="at cached_builder.go:39: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/prompts/standard/templates/agent/execution.PromptCache).Get]">
+<path fill="none" stroke="black" d="M401.15,-428.15C464.55,-421.81 534.35,-414.84 588.6,-409.41"/>
+<polygon fill="black" stroke="black" points="588.82,-412.91 598.43,-408.43 588.13,-405.94 588.82,-412.91"/>
 </a>
 </g>
 </g>

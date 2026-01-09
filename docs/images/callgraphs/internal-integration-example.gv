@@ -14,82 +14,82 @@ digraph gocallvis {
     edge [minlen="2"]
 
     subgraph "cluster_focus" {
-        label="main";
+        bgcolor="#e6ecfa";
+label="main";
 labelloc="t";
 labeljust="c";
 fontsize="18";
-bgcolor="#e6ecfa";
         
         "(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Ready" [ fillcolor="lightblue" label="(*DemoService).Ready" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Ready | defined in main.go:169\nat main.go:170: calling [(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Health]" ]
-        "(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Health" [ label="(*DemoService).Health" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Health | defined in main.go:162" fillcolor="lightblue" ]
-        "github.com/guild-framework/guild-core/internal/integration/example.main" [ tooltip="github.com/guild-framework/guild-core/internal/integration/example.main | defined in main.go:16\nat main.go:84: calling [(*github.com/guild-framework/guild-core/pkg/events.MemoryEventBus).Publish]\nat main.go:32: calling [github.com/guild-framework/guild-core/internal/integration/services.NewServiceRegistry]\nat main.go:36: calling [github.com/guild-framework/guild-core/internal/integration/bridges.NewEventLoggerBridge]\nat main.go:115: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop]\nat main.go:21: calling [github.com/guild-framework/guild-core/pkg/observability.NewLogger]\nat main.go:29: calling [github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig]\nat main.go:59: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Start]\nat main.go:74: calling [github.com/guild-framework/guild-core/pkg/events.NewBaseEvent]\nat main.go:93: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Health]\nat main.go:35: calling [github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig]\nat main.go:38: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register]\nat main.go:48: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register]\nat main.go:64: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List]\nat main.go:103: calling [(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics]\nat main.go:29: calling [github.com/guild-framework/guild-core/pkg/events.NewMemoryEventBus]\nat main.go:53: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).SetDependency]" fillcolor="lightblue" label="main" penwidth="0.5" ]
+        "(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Health" [ fillcolor="lightblue" label="(*DemoService).Health" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Health | defined in main.go:162" ]
+        "github.com/guild-framework/guild-core/internal/integration/example.main" [ tooltip="github.com/guild-framework/guild-core/internal/integration/example.main | defined in main.go:16\nat main.go:53: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).SetDependency]\nat main.go:64: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List]\nat main.go:74: calling [github.com/guild-framework/guild-core/pkg/events.NewBaseEvent]\nat main.go:29: calling [github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig]\nat main.go:32: calling [github.com/guild-framework/guild-core/internal/integration/services.NewServiceRegistry]\nat main.go:36: calling [github.com/guild-framework/guild-core/internal/integration/bridges.NewEventLoggerBridge]\nat main.go:59: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Start]\nat main.go:29: calling [github.com/guild-framework/guild-core/pkg/events.NewMemoryEventBus]\nat main.go:35: calling [github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig]\nat main.go:38: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register]\nat main.go:48: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register]\nat main.go:93: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Health]\nat main.go:115: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop]\nat main.go:21: calling [github.com/guild-framework/guild-core/pkg/observability.NewLogger]\nat main.go:84: calling [(*github.com/guild-framework/guild-core/pkg/events.MemoryEventBus).Publish]\nat main.go:103: calling [(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics]" fillcolor="lightblue" label="main" penwidth="0.5" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/internal/integration/bridges" {
-        penwidth="0.8";
-style="filled";
-fillcolor="lightyellow";
-label="bridges";
+        label="bridges";
+tooltip="package: github.com/guild-framework/guild-core/internal/integration/bridges";
 fontsize="16";
-fontname="Tahoma bold";
 rank="sink";
 URL="/?f=github.com/guild-framework/guild-core/internal/integration/bridges";
-tooltip="package: github.com/guild-framework/guild-core/internal/integration/bridges";
+penwidth="0.8";
+style="filled";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
         
-        "github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig" [ fillcolor="moccasin" label="DefaultEventLoggerConfig" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig | defined in event_logger.go:72" ]
+        "github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig | defined in event_logger.go:72" fillcolor="moccasin" label="DefaultEventLoggerConfig" ]
         "github.com/guild-framework/guild-core/internal/integration/bridges.NewEventLoggerBridge" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/integration/bridges.NewEventLoggerBridge | defined in event_logger.go:83" fillcolor="moccasin" label="NewEventLoggerBridge" ]
-        "(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics" [ fillcolor="moccasin" label="(*EventLoggerBridge).GetMetrics" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics | defined in event_logger.go:379" ]
+        "(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics" [ label="(*EventLoggerBridge).GetMetrics" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics | defined in event_logger.go:379" fillcolor="moccasin" ]
         
     }
 
         subgraph "cluster_github.com/guild-framework/guild-core/internal/integration/services" {
-        fontsize="16";
+        penwidth="0.8";
+fontsize="16";
 style="filled";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
 rank="sink";
 label="services";
 URL="/?f=github.com/guild-framework/guild-core/internal/integration/services";
 tooltip="package: github.com/guild-framework/guild-core/internal/integration/services";
-fillcolor="lightyellow";
-fontname="Tahoma bold";
-penwidth="0.8";
         
-        "github.com/guild-framework/guild-core/internal/integration/services.NewServiceRegistry" [ fillcolor="moccasin" label="NewServiceRegistry" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/integration/services.NewServiceRegistry | defined in registry.go:41" ]
+        "github.com/guild-framework/guild-core/internal/integration/services.NewServiceRegistry" [ label="NewServiceRegistry" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/internal/integration/services.NewServiceRegistry | defined in registry.go:41" fillcolor="moccasin" ]
         "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register" [ label="(*DefaultServiceRegistry).Register" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register | defined in registry.go:55" fillcolor="moccasin" ]
         "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).SetDependency" [ fillcolor="moccasin" label="(*DefaultServiceRegistry).SetDependency" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).SetDependency | defined in registry.go:164" ]
         "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Start" [ fillcolor="moccasin" label="(*DefaultServiceRegistry).Start" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Start | defined in registry.go:206" ]
-        "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List" [ label="(*DefaultServiceRegistry).List" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List | defined in registry.go:144" fillcolor="moccasin" ]
+        "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List" [ fillcolor="moccasin" label="(*DefaultServiceRegistry).List" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List | defined in registry.go:144" ]
         "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Health" [ fillcolor="moccasin" label="(*DefaultServiceRegistry).Health" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Health | defined in registry.go:259" ]
-        "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop" [ fillcolor="moccasin" label="(*DefaultServiceRegistry).Stop" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop | defined in registry.go:227" ]
+        "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop" [ label="(*DefaultServiceRegistry).Stop" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop | defined in registry.go:227" fillcolor="moccasin" ]
         
     }
 
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/events" {
-        penwidth="0.8";
-fontname="Tahoma bold";
+        style="filled";
+fillcolor="lightyellow";
 rank="sink";
+label="events";
 URL="/?f=github.com/guild-framework/guild-core/pkg/events";
 tooltip="package: github.com/guild-framework/guild-core/pkg/events";
+penwidth="0.8";
 fontsize="16";
-style="filled";
-fillcolor="lightyellow";
-label="events";
+fontname="Tahoma bold";
         
-        "github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig" [ fillcolor="moccasin" label="DefaultEventBusConfig" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig | defined in bus.go:65" ]
-        "github.com/guild-framework/guild-core/pkg/events.NewMemoryEventBus" [ fillcolor="moccasin" label="NewMemoryEventBus" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/events.NewMemoryEventBus | defined in memory_bus.go:45" ]
-        "github.com/guild-framework/guild-core/pkg/events.NewBaseEvent" [ tooltip="github.com/guild-framework/guild-core/pkg/events.NewBaseEvent | defined in core.go:77" fillcolor="moccasin" label="NewBaseEvent" penwidth="1.5" ]
+        "github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig | defined in bus.go:65" fillcolor="moccasin" label="DefaultEventBusConfig" ]
+        "github.com/guild-framework/guild-core/pkg/events.NewMemoryEventBus" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/events.NewMemoryEventBus | defined in memory_bus.go:45" fillcolor="moccasin" label="NewMemoryEventBus" ]
+        "github.com/guild-framework/guild-core/pkg/events.NewBaseEvent" [ fillcolor="moccasin" label="NewBaseEvent" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/events.NewBaseEvent | defined in core.go:77" ]
         "(*github.com/guild-framework/guild-core/pkg/events.MemoryEventBus).Publish" [ fillcolor="moccasin" label="(*MemoryEventBus).Publish" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/events.MemoryEventBus).Publish | defined in memory_bus.go:159" ]
         
     }
 
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/observability" {
-        fontsize="16";
-style="filled";
-fillcolor="lightyellow";
+        style="filled";
 URL="/?f=github.com/guild-framework/guild-core/pkg/observability";
 tooltip="package: github.com/guild-framework/guild-core/pkg/observability";
-penwidth="0.8";
+fontsize="16";
+fillcolor="lightyellow";
 fontname="Tahoma bold";
 rank="sink";
 label="observability";
+penwidth="0.8";
         
         "github.com/guild-framework/guild-core/pkg/observability.NewLogger" [ fillcolor="moccasin" label="NewLogger" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/observability.NewLogger | defined in logger.go:98" ]
         
@@ -97,20 +97,20 @@ label="observability";
 
     }
 
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/pkg/events.MemoryEventBus).Publish" [ color="saddlebrown" tooltip="at main.go:84: calling [(*github.com/guild-framework/guild-core/pkg/events.MemoryEventBus).Publish]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).SetDependency" [ color="saddlebrown" tooltip="at main.go:53: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).SetDependency]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List" [ color="saddlebrown" tooltip="at main.go:64: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/pkg/events.NewBaseEvent" [ color="saddlebrown" tooltip="at main.go:74: calling [github.com/guild-framework/guild-core/pkg/events.NewBaseEvent]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig" [ color="saddlebrown" tooltip="at main.go:29: calling [github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig]" ]
     "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/internal/integration/services.NewServiceRegistry" [ color="saddlebrown" tooltip="at main.go:32: calling [github.com/guild-framework/guild-core/internal/integration/services.NewServiceRegistry]" ]
     "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/internal/integration/bridges.NewEventLoggerBridge" [ color="saddlebrown" tooltip="at main.go:36: calling [github.com/guild-framework/guild-core/internal/integration/bridges.NewEventLoggerBridge]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop" [ color="saddlebrown" tooltip="at main.go:115: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/pkg/observability.NewLogger" [ color="saddlebrown" tooltip="at main.go:21: calling [github.com/guild-framework/guild-core/pkg/observability.NewLogger]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig" [ color="saddlebrown" tooltip="at main.go:29: calling [github.com/guild-framework/guild-core/pkg/events.DefaultEventBusConfig]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Start" [ color="saddlebrown" tooltip="at main.go:59: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Start]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/pkg/events.NewBaseEvent" [ color="saddlebrown" tooltip="at main.go:74: calling [github.com/guild-framework/guild-core/pkg/events.NewBaseEvent]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Health" [ color="saddlebrown" tooltip="at main.go:93: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Health]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Start" [ tooltip="at main.go:59: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Start]" color="saddlebrown" ]
     "(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Ready" -> "(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Health" [ tooltip="at main.go:170: calling [(*github.com/guild-framework/guild-core/internal/integration/example.DemoService).Health]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig" [ color="saddlebrown" tooltip="at main.go:35: calling [github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register" [ color="saddlebrown" tooltip="at main.go:38: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register]\nat main.go:48: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List" [ color="saddlebrown" tooltip="at main.go:64: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).List]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics" [ color="saddlebrown" tooltip="at main.go:103: calling [(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics]" ]
     "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/pkg/events.NewMemoryEventBus" [ color="saddlebrown" tooltip="at main.go:29: calling [github.com/guild-framework/guild-core/pkg/events.NewMemoryEventBus]" ]
-    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).SetDependency" [ color="saddlebrown" tooltip="at main.go:53: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).SetDependency]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig" [ tooltip="at main.go:35: calling [github.com/guild-framework/guild-core/internal/integration/bridges.DefaultEventLoggerConfig]" color="saddlebrown" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register" [ color="saddlebrown" tooltip="at main.go:38: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register]\nat main.go:48: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Register]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Health" [ color="saddlebrown" tooltip="at main.go:93: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Health]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop" [ tooltip="at main.go:115: calling [(*github.com/guild-framework/guild-core/internal/integration/services.DefaultServiceRegistry).Stop]" color="saddlebrown" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "github.com/guild-framework/guild-core/pkg/observability.NewLogger" [ color="saddlebrown" tooltip="at main.go:21: calling [github.com/guild-framework/guild-core/pkg/observability.NewLogger]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/pkg/events.MemoryEventBus).Publish" [ color="saddlebrown" tooltip="at main.go:84: calling [(*github.com/guild-framework/guild-core/pkg/events.MemoryEventBus).Publish]" ]
+    "github.com/guild-framework/guild-core/internal/integration/example.main" -> "(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics" [ color="saddlebrown" tooltip="at main.go:103: calling [(*github.com/guild-framework/guild-core/internal/integration/bridges.EventLoggerBridge).GetMetrics]" ]
 }

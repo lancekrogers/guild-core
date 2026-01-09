@@ -21,18 +21,18 @@ labeljust="c";
 fontsize="18";
         
         "github.com/guild-framework/guild-core/pkg/providers/deepinfra.NewClient" [ fillcolor="lightblue" label="NewClient" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/providers/deepinfra.NewClient | defined in client.go:35\nat client.go:105: calling [github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider]" ]
-        "(*github.com/guild-framework/guild-core/pkg/providers/deepinfra.Client).Complete" [ tooltip="(*github.com/guild-framework/guild-core/pkg/providers/deepinfra.Client).Complete | defined in client.go:135\nat client.go:143: calling [(*github.com/guild-framework/guild-core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion]" fillcolor="lightblue" label="(*Client).Complete" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/providers/deepinfra.Client).Complete" [ fillcolor="lightblue" label="(*Client).Complete" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/deepinfra.Client).Complete | defined in client.go:135\nat client.go:143: calling [(*github.com/guild-framework/guild-core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion]" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/providers/base" {
-        penwidth="0.8";
+        URL="/?f=github.com/guild-framework/guild-core/pkg/providers/base";
 fontsize="16";
+fontname="Tahoma bold";
+label="base";
+tooltip="package: github.com/guild-framework/guild-core/pkg/providers/base";
+penwidth="0.8";
 style="filled";
 fillcolor="lightyellow";
 rank="sink";
-label="base";
-URL="/?f=github.com/guild-framework/guild-core/pkg/providers/base";
-fontname="Tahoma bold";
-tooltip="package: github.com/guild-framework/guild-core/pkg/providers/base";
         
         "github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider" [ tooltip="github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider | defined in openai_compatible.go:32" fillcolor="moccasin" label="NewOpenAICompatibleProvider" penwidth="1.5" ]
         "(*github.com/guild-framework/guild-core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion" [ fillcolor="moccasin" label="(*OpenAICompatibleProvider).ChatCompletion" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion | defined in openai_compatible.go:50" ]

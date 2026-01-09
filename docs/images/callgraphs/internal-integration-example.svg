@@ -65,9 +65,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/example.DemoService).Ready&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/example.DemoService).Health -->
-<g id="edge10" class="edge">
+<g id="edge8" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/example.DemoService).Ready&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/example.DemoService).Health</title>
-<g id="a_edge10"><a xlink:title="at main.go:170: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/example.DemoService).Health]">
+<g id="a_edge8"><a xlink:title="at main.go:170: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/example.DemoService).Health]">
 <path fill="none" stroke="black" d="M201.69,-34C241.26,-34 287.67,-34 328.48,-34"/>
 <polygon fill="black" stroke="black" points="328.32,-37.5 338.32,-34 328.32,-30.5 328.32,-37.5"/>
 </a>
@@ -76,7 +76,7 @@
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main -->
 <g id="node3" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main | defined in main.go:16&#10;at main.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.MemoryEventBus).Publish]&#10;at main.go:32: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/services.NewServiceRegistry]&#10;at main.go:36: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.NewEventLoggerBridge]&#10;at main.go:115: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Stop]&#10;at main.go:21: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.NewLogger]&#10;at main.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.DefaultEventBusConfig]&#10;at main.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Start]&#10;at main.go:74: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]&#10;at main.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Health]&#10;at main.go:35: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.DefaultEventLoggerConfig]&#10;at main.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register]&#10;at main.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register]&#10;at main.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).List]&#10;at main.go:103: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.EventLoggerBridge).GetMetrics]&#10;at main.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewMemoryEventBus]&#10;at main.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).SetDependency]">
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main | defined in main.go:16&#10;at main.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).SetDependency]&#10;at main.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).List]&#10;at main.go:74: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]&#10;at main.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.DefaultEventBusConfig]&#10;at main.go:32: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/services.NewServiceRegistry]&#10;at main.go:36: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.NewEventLoggerBridge]&#10;at main.go:59: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Start]&#10;at main.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewMemoryEventBus]&#10;at main.go:35: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.DefaultEventLoggerConfig]&#10;at main.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register]&#10;at main.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register]&#10;at main.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Health]&#10;at main.go:115: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Stop]&#10;at main.go:21: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.NewLogger]&#10;at main.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.MemoryEventBus).Publish]&#10;at main.go:103: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.EventLoggerBridge).GetMetrics]">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M125.29,-567C125.29,-567 91.75,-567 91.75,-567 85.75,-567 79.75,-561 79.75,-555 79.75,-555 79.75,-543 79.75,-543 79.75,-537 85.75,-531 91.75,-531 91.75,-531 125.29,-531 125.29,-531 131.29,-531 137.29,-537 137.29,-543 137.29,-543 137.29,-555 137.29,-555 137.29,-561 131.29,-567 125.29,-567"/>
 <text xml:space="preserve" text-anchor="middle" x="108.52" y="-544.33" font-family="Verdana" font-size="14.00">main</text>
 </a>
@@ -92,9 +92,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.DefaultEventLoggerConfig -->
-<g id="edge11" class="edge">
+<g id="edge10" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.DefaultEventLoggerConfig</title>
-<g id="a_edge11"><a xlink:title="at main.go:35: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.DefaultEventLoggerConfig]">
+<g id="a_edge10"><a xlink:title="at main.go:35: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.DefaultEventLoggerConfig]">
 <path fill="none" stroke="saddlebrown" d="M110.21,-531.08C113.78,-465.4 135.5,-235.99 266.04,-126 281.16,-113.26 299.82,-105.07 319.13,-99.92"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="319.82,-103.36 328.75,-97.65 318.21,-96.54 319.82,-103.36"/>
 </a>
@@ -110,9 +110,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.NewEventLoggerBridge -->
-<g id="edge3" class="edge">
+<g id="edge6" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.NewEventLoggerBridge</title>
-<g id="a_edge3"><a xlink:title="at main.go:36: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.NewEventLoggerBridge]">
+<g id="a_edge6"><a xlink:title="at main.go:36: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.NewEventLoggerBridge]">
 <path fill="none" stroke="saddlebrown" d="M111.47,-530.77C118.93,-470.84 151.22,-278.58 266.04,-187 283.93,-172.73 306.33,-164.27 328.85,-159.4"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="329.25,-162.89 338.41,-157.58 327.93,-156.02 329.25,-162.89"/>
 </a>
@@ -128,9 +128,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.EventLoggerBridge).GetMetrics -->
-<g id="edge14" class="edge">
+<g id="edge16" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.EventLoggerBridge).GetMetrics</title>
-<g id="a_edge14"><a xlink:title="at main.go:103: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.EventLoggerBridge).GetMetrics]">
+<g id="a_edge16"><a xlink:title="at main.go:103: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/bridges.EventLoggerBridge).GetMetrics]">
 <path fill="none" stroke="saddlebrown" d="M114.75,-530.86C129.79,-481.88 177.85,-345.72 266.04,-273 283.85,-258.32 305.68,-247.42 327.6,-239.36"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="328.62,-242.71 336.92,-236.12 326.33,-236.09 328.62,-242.71"/>
 </a>
@@ -146,9 +146,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/services.NewServiceRegistry -->
-<g id="edge2" class="edge">
+<g id="edge5" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/services.NewServiceRegistry</title>
-<g id="a_edge2"><a xlink:title="at main.go:32: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/services.NewServiceRegistry]">
+<g id="a_edge5"><a xlink:title="at main.go:32: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/services.NewServiceRegistry]">
 <path fill="none" stroke="saddlebrown" d="M117.13,-530.83C135.72,-488.89 187.72,-385.16 266.04,-336 288.19,-322.1 315.03,-314.11 340.65,-309.61"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="341.1,-313.09 350.43,-308.07 340.01,-306.17 341.1,-313.09"/>
 </a>
@@ -164,9 +164,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register -->
-<g id="edge12" class="edge">
+<g id="edge11" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register</title>
-<g id="a_edge12"><a xlink:title="at main.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register]&#10;at main.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register]">
+<g id="a_edge11"><a xlink:title="at main.go:38: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register]&#10;at main.go:48: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Register]">
 <path fill="none" stroke="saddlebrown" d="M122.43,-530.75C146.57,-498.13 201.95,-430.15 266.04,-397 273.32,-393.24 280.98,-389.92 288.87,-387.01"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="289.98,-390.33 298.31,-383.77 287.71,-383.71 289.98,-390.33"/>
 </a>
@@ -182,9 +182,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).SetDependency -->
-<g id="edge16" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).SetDependency</title>
-<g id="a_edge16"><a xlink:title="at main.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).SetDependency]">
+<g id="a_edge1"><a xlink:title="at main.go:53: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).SetDependency]">
 <path fill="none" stroke="saddlebrown" d="M134.47,-530.83C164.29,-510.02 216.38,-476.42 266.04,-458 275.46,-454.5 285.33,-451.39 295.37,-448.62"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="296.07,-452.05 304.85,-446.12 294.29,-445.28 296.07,-452.05"/>
 </a>
@@ -218,9 +218,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).List -->
-<g id="edge13" class="edge">
+<g id="edge2" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).List</title>
-<g id="a_edge13"><a xlink:title="at main.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).List]">
+<g id="a_edge2"><a xlink:title="at main.go:64: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).List]">
 <path fill="none" stroke="saddlebrown" d="M137.35,-549C174.68,-549 243.43,-549 305.22,-549"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="305.15,-552.5 315.15,-549 305.15,-545.5 305.15,-552.5"/>
 </a>
@@ -236,9 +236,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Health -->
-<g id="edge9" class="edge">
+<g id="edge12" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Health</title>
-<g id="a_edge9"><a xlink:title="at main.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Health]">
+<g id="a_edge12"><a xlink:title="at main.go:93: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Health]">
 <path fill="none" stroke="saddlebrown" d="M137.48,-554.69C168.77,-561.02 220.99,-571.48 266.04,-580 282.27,-583.07 299.41,-586.23 316.26,-589.31"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="315.34,-592.7 325.8,-591.04 316.59,-585.81 315.34,-592.7"/>
 </a>
@@ -254,9 +254,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Stop -->
-<g id="edge4" class="edge">
+<g id="edge13" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Stop</title>
-<g id="a_edge4"><a xlink:title="at main.go:115: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Stop]">
+<g id="a_edge13"><a xlink:title="at main.go:115: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/services.DefaultServiceRegistry).Stop]">
 <path fill="none" stroke="saddlebrown" d="M134.16,-567.24C163.88,-588.33 216.09,-622.5 266.04,-641 277.33,-645.18 289.28,-648.79 301.37,-651.91"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="300.5,-655.3 311.05,-654.28 302.16,-648.5 300.5,-655.3"/>
 </a>
@@ -272,9 +272,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.DefaultEventBusConfig -->
-<g id="edge6" class="edge">
+<g id="edge4" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.DefaultEventBusConfig</title>
-<g id="a_edge6"><a xlink:title="at main.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.DefaultEventBusConfig]">
+<g id="a_edge4"><a xlink:title="at main.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.DefaultEventBusConfig]">
 <path fill="none" stroke="saddlebrown" d="M119.23,-567.12C140.39,-604.63 194.53,-690.67 266.04,-731 285.39,-741.91 307.86,-748.82 329.93,-753.13"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="329.11,-756.54 339.57,-754.84 330.34,-749.65 329.11,-756.54"/>
 </a>
@@ -290,9 +290,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewMemoryEventBus -->
-<g id="edge15" class="edge">
+<g id="edge9" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewMemoryEventBus</title>
-<g id="a_edge15"><a xlink:title="at main.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewMemoryEventBus]">
+<g id="a_edge9"><a xlink:title="at main.go:29: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewMemoryEventBus]">
 <path fill="none" stroke="saddlebrown" d="M115.54,-567.14C131.73,-612.91 180.85,-733.4 266.04,-790 286.12,-803.34 310.44,-811.21 334.22,-815.75"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="333.52,-819.18 343.96,-817.41 334.69,-812.28 333.52,-819.18"/>
 </a>
@@ -308,9 +308,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent -->
-<g id="edge8" class="edge">
+<g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent</title>
-<g id="a_edge8"><a xlink:title="at main.go:74: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
+<g id="a_edge3"><a xlink:title="at main.go:74: calling [github.com/guild&#45;framework/guild&#45;core/pkg/events.NewBaseEvent]">
 <path fill="none" stroke="saddlebrown" d="M113.11,-567.24C124.65,-620.59 165.99,-777.23 266.04,-851 292.38,-870.42 327.33,-878.63 358.41,-881.69"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="357.91,-885.17 368.16,-882.48 358.47,-878.19 357.91,-885.17"/>
 </a>
@@ -326,9 +326,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.MemoryEventBus).Publish -->
-<g id="edge1" class="edge">
+<g id="edge15" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/events.MemoryEventBus).Publish</title>
-<g id="a_edge1"><a xlink:title="at main.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.MemoryEventBus).Publish]">
+<g id="a_edge15"><a xlink:title="at main.go:84: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/events.MemoryEventBus).Publish]">
 <path fill="none" stroke="saddlebrown" d="M111.38,-566.89C118.62,-626.58 150.47,-820.27 266.04,-912 279.26,-922.49 294.94,-929.79 311.3,-934.79"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="310.1,-938.1 320.67,-937.36 311.95,-931.34 310.1,-938.1"/>
 </a>
@@ -344,9 +344,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.NewLogger -->
-<g id="edge5" class="edge">
+<g id="edge14" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/example.main&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.NewLogger</title>
-<g id="a_edge5"><a xlink:title="at main.go:21: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.NewLogger]">
+<g id="a_edge14"><a xlink:title="at main.go:21: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.NewLogger]">
 <path fill="none" stroke="saddlebrown" d="M109.66,-566.81C111.21,-635.32 126.62,-884.02 266.04,-1002 294.81,-1026.35 336.68,-1033.31 371.25,-1034.2"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="371.12,-1037.7 381.15,-1034.28 371.17,-1030.7 371.12,-1037.7"/>
 </a>

@@ -33,7 +33,7 @@
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance -->
 <g id="node1" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance | defined in relevance.go:83&#10;at relevance.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity]&#10;at relevance.go:120: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).temporalRelevance]&#10;at relevance.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at relevance.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).keywordRelevance]&#10;at relevance.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at relevance.go:89: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at relevance.go:109: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:116: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:132: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:140: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:137: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).citationRelevance]&#10;at relevance.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance | defined in relevance.go:83&#10;at relevance.go:109: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:116: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:132: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:140: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:137: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).citationRelevance]&#10;at relevance.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]&#10;at relevance.go:89: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at relevance.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at relevance.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity]&#10;at relevance.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).keywordRelevance]&#10;at relevance.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at relevance.go:120: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).temporalRelevance]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M307.54,-296C307.54,-296 28,-296 28,-296 22,-296 16,-290 16,-284 16,-284 16,-272 16,-272 16,-266 22,-260 28,-260 28,-260 307.54,-260 307.54,-260 313.54,-260 319.54,-266 319.54,-272 319.54,-272 319.54,-284 319.54,-284 319.54,-290 313.54,-296 307.54,-296"/>
 <text xml:space="preserve" text-anchor="middle" x="167.77" y="-273.32" font-family="Verdana" font-size="14.00">(*RelevanceEngine).CalculateRelevance</text>
 </a>
@@ -42,16 +42,16 @@
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity -->
 <g id="node2" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity | defined in relevance.go:165&#10;at relevance.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at relevance.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at relevance.go:171: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).getOrComputeEmbedding]&#10;at relevance.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at relevance.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at relevance.go:187: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.cosineSimilarity]&#10;at relevance.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at relevance.go:181: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity | defined in relevance.go:165&#10;at relevance.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at relevance.go:181: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at relevance.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at relevance.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at relevance.go:171: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).getOrComputeEmbedding]&#10;at relevance.go:187: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.cosineSimilarity]&#10;at relevance.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at relevance.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="lightblue" stroke="black" stroke-width="0.5" d="M689.71,-52C689.71,-52 416.17,-52 416.17,-52 410.17,-52 404.17,-46 404.17,-40 404.17,-40 404.17,-28 404.17,-28 404.17,-22 410.17,-16 416.17,-16 416.17,-16 689.71,-16 689.71,-16 695.71,-16 701.71,-22 701.71,-28 701.71,-28 701.71,-40 701.71,-40 701.71,-46 695.71,-52 689.71,-52"/>
 <text xml:space="preserve" text-anchor="middle" x="552.94" y="-29.32" font-family="Verdana" font-size="14.00">(*RelevanceEngine).semanticSimilarity</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity -->
-<g id="edge2" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity</title>
-<g id="a_edge2"><a xlink:title="at relevance.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity]">
+<g id="a_edge11"><a xlink:title="at relevance.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity]">
 <path fill="none" stroke="black" d="M182.29,-259.26C213.84,-217.04 296.98,-114.32 392.54,-65 399.1,-61.61 405.99,-58.59 413.08,-55.9"/>
 <polygon fill="black" stroke="black" points="413.88,-59.33 422.14,-52.7 411.55,-52.73 413.88,-59.33"/>
 </a>
@@ -67,9 +67,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat -->
-<g id="edge14" class="edge">
+<g id="edge3" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat</title>
-<g id="a_edge14"><a xlink:title="at relevance.go:109: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:116: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:132: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:140: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]">
+<g id="a_edge3"><a xlink:title="at relevance.go:109: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:116: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:123: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:132: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]&#10;at relevance.go:140: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.formatFloat]">
 <path fill="none" stroke="black" d="M189.59,-259.48C227.24,-227.05 310.38,-160.2 392.54,-126 423.35,-113.18 459.75,-105.58 489.98,-101.13"/>
 <polygon fill="black" stroke="black" points="490.31,-104.61 499.74,-99.78 489.35,-97.68 490.31,-104.61"/>
 </a>
@@ -85,9 +85,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).keywordRelevance -->
-<g id="edge10" class="edge">
+<g id="edge12" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).keywordRelevance</title>
-<g id="a_edge10"><a xlink:title="at relevance.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).keywordRelevance]">
+<g id="a_edge12"><a xlink:title="at relevance.go:113: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).keywordRelevance]">
 <path fill="none" stroke="black" d="M207.95,-259.34C251.98,-239.03 326.01,-206.79 392.54,-187 405.33,-183.19 418.85,-179.74 432.37,-176.63"/>
 <polygon fill="black" stroke="black" points="432.74,-180.13 441.74,-174.54 431.21,-173.3 432.74,-180.13"/>
 </a>
@@ -103,9 +103,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).temporalRelevance -->
-<g id="edge3" class="edge">
+<g id="edge15" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).temporalRelevance</title>
-<g id="a_edge3"><a xlink:title="at relevance.go:120: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).temporalRelevance]">
+<g id="a_edge15"><a xlink:title="at relevance.go:120: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).temporalRelevance]">
 <path fill="none" stroke="black" d="M286.34,-259.28C330.65,-252.23 381.2,-244.18 426.23,-237.01"/>
 <polygon fill="black" stroke="black" points="426.73,-240.48 436.06,-235.45 425.63,-233.56 426.73,-240.48"/>
 </a>
@@ -121,9 +121,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).citationRelevance -->
-<g id="edge15" class="edge">
+<g id="edge4" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).citationRelevance</title>
-<g id="a_edge15"><a xlink:title="at relevance.go:137: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).citationRelevance]">
+<g id="a_edge4"><a xlink:title="at relevance.go:137: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).citationRelevance]">
 <path fill="none" stroke="black" d="M320.21,-278C345.15,-278 371.04,-278 396.09,-278"/>
 <polygon fill="black" stroke="black" points="396.02,-281.5 406.02,-278 396.02,-274.5 396.02,-281.5"/>
 </a>
@@ -139,9 +139,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge12" class="edge">
+<g id="edge8" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge12"><a xlink:title="at relevance.go:89: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge8"><a xlink:title="at relevance.go:89: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M281.72,-296.73C317.09,-301.77 356.35,-306.5 392.54,-309 534.78,-318.81 570.98,-317.03 713.33,-309 786.29,-304.88 870.78,-293.99 919.75,-287.07"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="920.21,-290.54 929.61,-285.66 919.22,-283.61 920.21,-290.54"/>
 </a>
@@ -157,9 +157,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge17" class="edge">
+<g id="edge9" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge17"><a xlink:title="at relevance.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge9"><a xlink:title="at relevance.go:90: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M266.11,-296.71C294.88,-302.11 326.45,-307.92 355.54,-313 371.95,-315.87 375.96,-317.33 392.54,-319 543.68,-334.26 718.41,-339.48 833.76,-341.22"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="833.52,-344.72 843.57,-341.37 833.63,-337.72 833.52,-344.72"/>
 </a>
@@ -175,9 +175,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge6" class="edge">
+<g id="edge13" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge6"><a xlink:title="at relevance.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_edge13"><a xlink:title="at relevance.go:91: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="none" stroke="saddlebrown" d="M231.43,-296.69C276.01,-309.38 337.52,-325.67 392.54,-336 545.36,-364.68 723.73,-383.33 839.27,-393.5"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="838.82,-396.98 849.09,-394.36 839.43,-390 838.82,-396.98"/>
 </a>
@@ -193,9 +193,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger -->
-<g id="edge11" class="edge">
+<g id="edge7" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).CalculateRelevance&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger</title>
-<g id="a_edge11"><a xlink:title="at relevance.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
+<g id="a_edge7"><a xlink:title="at relevance.go:84: calling [github.com/guild&#45;framework/guild&#45;core/pkg/observability.GetLogger]">
 <path fill="none" stroke="saddlebrown" d="M193.97,-296.63C233.75,-324.8 314.6,-377.17 392.54,-398 425.44,-406.79 463.16,-412.2 493.64,-415.45"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="493.14,-418.92 503.44,-416.45 493.84,-411.96 493.14,-418.92"/>
 </a>
@@ -211,9 +211,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).getOrComputeEmbedding -->
-<g id="edge7" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).getOrComputeEmbedding</title>
-<g id="a_edge7"><a xlink:title="at relevance.go:171: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).getOrComputeEmbedding]">
+<g id="a_edge10"><a xlink:title="at relevance.go:171: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).getOrComputeEmbedding]">
 <path fill="none" stroke="black" d="M675.43,-52.22C723.43,-59.42 778.74,-67.71 827.8,-75.07"/>
 <polygon fill="black" stroke="black" points="827.24,-78.52 837.65,-76.54 828.28,-71.6 827.24,-78.52"/>
 </a>
@@ -229,36 +229,36 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.cosineSimilarity -->
-<g id="edge9" class="edge">
+<g id="edge14" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.cosineSimilarity</title>
-<g id="a_edge9"><a xlink:title="at relevance.go:187: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.cosineSimilarity]">
+<g id="a_edge14"><a xlink:title="at relevance.go:187: calling [github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.cosineSimilarity]">
 <path fill="none" stroke="black" d="M701.95,-34C763.51,-34 832.4,-34 883.62,-34"/>
 <polygon fill="black" stroke="black" points="883.41,-37.5 893.41,-34 883.41,-30.5 883.41,-37.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge13" class="edge">
+<g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge13"><a xlink:title="at relevance.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at relevance.go:181: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge1"><a xlink:title="at relevance.go:173: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at relevance.go:181: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M694.43,-52.25C701.15,-55.87 707.52,-60.09 713.33,-65 783.7,-124.45 714.02,-201.92 786.33,-259 824.1,-288.81 881.51,-290.25 920.03,-286.95"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="920.24,-290.45 929.83,-285.95 919.53,-283.48 920.24,-290.45"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge8" class="edge">
+<g id="edge16" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge8"><a xlink:title="at relevance.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at relevance.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge16"><a xlink:title="at relevance.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at relevance.go:182: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M695.66,-52.09C701.99,-55.77 707.93,-60.04 713.33,-65 756.52,-104.7 732.69,-135.74 749.33,-192 765.16,-245.52 744.41,-275.16 786.33,-312 799.99,-324.01 816.67,-332.07 834.22,-337.36"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="833.23,-340.72 843.79,-339.92 835.03,-333.95 833.23,-340.72"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge1" class="edge">
+<g id="edge2" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).semanticSimilarity&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge1"><a xlink:title="at relevance.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at relevance.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_edge2"><a xlink:title="at relevance.go:175: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at relevance.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="none" stroke="saddlebrown" d="M696.65,-52.25C702.64,-55.9 708.25,-60.12 713.33,-65 764.07,-113.72 735.07,-324.84 786.33,-373 801.16,-386.93 819.99,-395.66 839.76,-400.95"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="838.81,-404.33 849.34,-403.2 840.41,-397.51 838.81,-404.33"/>
 </a>
@@ -267,25 +267,25 @@
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel -->
 <g id="node9" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel | defined in relevance.go:71&#10;at relevance.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at relevance.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at relevance.go:73: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel | defined in relevance.go:71&#10;at relevance.go:73: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at relevance.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at relevance.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M701.33,-518C701.33,-518 404.54,-518 404.54,-518 398.54,-518 392.54,-512 392.54,-506 392.54,-506 392.54,-494 392.54,-494 392.54,-488 398.54,-482 404.54,-482 404.54,-482 701.33,-482 701.33,-482 707.33,-482 713.33,-488 713.33,-494 713.33,-494 713.33,-506 713.33,-506 713.33,-512 707.33,-518 701.33,-518"/>
 <text xml:space="preserve" text-anchor="middle" x="552.94" y="-495.32" font-family="Verdana" font-size="14.00">(*RelevanceEngine).RegisterDomainModel</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge4" class="edge">
+<g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge4"><a xlink:title="at relevance.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge6"><a xlink:title="at relevance.go:74: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M707.51,-481.35C709.48,-480.29 711.43,-479.17 713.33,-478 761.78,-448.28 738.47,-403.65 786.33,-373 800.78,-363.75 817.21,-357.06 834.07,-352.25"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="834.94,-355.64 843.73,-349.74 833.17,-348.87 834.94,-355.64"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge5" class="edge">
+<g id="edge17" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge5"><a xlink:title="at relevance.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<g id="a_edge17"><a xlink:title="at relevance.go:75: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
 <path fill="none" stroke="saddlebrown" d="M703.29,-481.31C706.69,-480.27 710.04,-479.16 713.33,-478 749.05,-465.37 750.87,-447.32 786.33,-434 803.14,-427.69 821.35,-422.64 839.45,-418.62"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="840.15,-422.05 849.21,-416.55 838.71,-415.2 840.15,-422.05"/>
 </a>
@@ -301,9 +301,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge16" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/corpus/scoring.RelevanceEngine).RegisterDomainModel&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge16"><a xlink:title="at relevance.go:73: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<g id="a_edge5"><a xlink:title="at relevance.go:73: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
 <path fill="none" stroke="saddlebrown" d="M713.83,-485.85C790.12,-479.1 874.98,-471.59 922.7,-467.37"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="922.84,-470.87 932.5,-466.5 922.23,-463.89 922.84,-470.87"/>
 </a>

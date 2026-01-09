@@ -41,9 +41,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/commission/guildobj.NewGuildParser&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser -->
-<g id="edge1" class="edge">
+<g id="edge2" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/commission/guildobj.NewGuildParser&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser</title>
-<g id="a_edge1"><a xlink:title="at parser.go:18: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser]">
+<g id="a_edge2"><a xlink:title="at parser.go:18: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser]">
 <path fill="none" stroke="saddlebrown" d="M167.02,-42C195.88,-42 230.26,-42 261.84,-42"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="261.82,-45.5 271.82,-42 261.82,-38.5 261.82,-45.5"/>
 </a>
@@ -68,9 +68,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/commission/guildobj.GuildParser).Parse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse -->
-<g id="edge2" class="edge">
+<g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/commission/guildobj.GuildParser).Parse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse</title>
-<g id="a_edge2"><a xlink:title="at parser.go:25: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse]">
+<g id="a_edge1"><a xlink:title="at parser.go:25: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse]">
 <path fill="none" stroke="saddlebrown" d="M184.27,-103C203.67,-103 224.64,-103 245.07,-103"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="244.83,-106.5 254.83,-103 244.83,-99.5 244.83,-106.5"/>
 </a>

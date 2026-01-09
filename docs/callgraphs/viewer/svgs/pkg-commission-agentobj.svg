@@ -22,57 +22,57 @@
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse -->
-<g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse | defined in parser.go:25&#10;at parser.go:27: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M177.04,-60C177.04,-60 28,-60 28,-60 22,-60 16,-54 16,-48 16,-48 16,-36 16,-36 16,-30 22,-24 28,-24 28,-24 177.04,-24 177.04,-24 183.04,-24 189.04,-30 189.04,-36 189.04,-36 189.04,-48 189.04,-48 189.04,-54 183.04,-60 177.04,-60"/>
-<text xml:space="preserve" text-anchor="middle" x="102.52" y="-37.33" font-family="Verdana" font-size="14.00">(*AgentParser).Parse</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse | defined in parser.go:68">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M453.83,-60C453.83,-60 274.04,-60 274.04,-60 268.04,-60 262.04,-54 262.04,-48 262.04,-48 262.04,-36 262.04,-36 262.04,-30 268.04,-24 274.04,-24 274.04,-24 453.83,-24 453.83,-24 459.83,-24 465.83,-30 465.83,-36 465.83,-36 465.83,-48 465.83,-48 465.83,-54 459.83,-60 453.83,-60"/>
-<text xml:space="preserve" text-anchor="middle" x="363.93" y="-37.33" font-family="Verdana" font-size="14.00">(*MarkdownParser).Parse</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse</title>
-<g id="a_edge1"><a xlink:title="at parser.go:27: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse]">
-<path fill="none" stroke="saddlebrown" d="M189.54,-42C208.86,-42 229.65,-42 249.89,-42"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="249.88,-45.5 259.88,-42 249.88,-38.5 249.88,-45.5"/>
-</a>
-</g>
-</g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.NewAgentParser -->
-<g id="node2" class="node">
+<g id="node1" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.NewAgentParser</title>
-<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.NewAgentParser | defined in parser.go:18&#10;at parser.go:20: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M159.79,-121C159.79,-121 45.25,-121 45.25,-121 39.25,-121 33.25,-115 33.25,-109 33.25,-109 33.25,-97 33.25,-97 33.25,-91 39.25,-85 45.25,-85 45.25,-85 159.79,-85 159.79,-85 165.79,-85 171.79,-91 171.79,-97 171.79,-97 171.79,-109 171.79,-109 171.79,-115 165.79,-121 159.79,-121"/>
-<text xml:space="preserve" text-anchor="middle" x="102.52" y="-98.33" font-family="Verdana" font-size="14.00">NewAgentParser</text>
+<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.NewAgentParser | defined in parser.go:18&#10;at parser.go:20: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M159.79,-60C159.79,-60 45.25,-60 45.25,-60 39.25,-60 33.25,-54 33.25,-48 33.25,-48 33.25,-36 33.25,-36 33.25,-30 39.25,-24 45.25,-24 45.25,-24 159.79,-24 159.79,-24 165.79,-24 171.79,-30 171.79,-36 171.79,-36 171.79,-48 171.79,-48 171.79,-54 165.79,-60 159.79,-60"/>
+<text xml:space="preserve" text-anchor="middle" x="102.52" y="-37.33" font-family="Verdana" font-size="14.00">NewAgentParser</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser -->
-<g id="node4" class="node">
+<g id="node3" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser</title>
-<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser | defined in parser.go:58">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M436.58,-121C436.58,-121 291.29,-121 291.29,-121 285.29,-121 279.29,-115 279.29,-109 279.29,-109 279.29,-97 279.29,-97 279.29,-91 285.29,-85 291.29,-85 291.29,-85 436.58,-85 436.58,-85 442.58,-85 448.58,-91 448.58,-97 448.58,-97 448.58,-109 448.58,-109 448.58,-115 442.58,-121 436.58,-121"/>
-<text xml:space="preserve" text-anchor="middle" x="363.93" y="-98.33" font-family="Verdana" font-size="14.00">NewMarkdownParser</text>
+<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser | defined in parser.go:58">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M436.58,-60C436.58,-60 291.29,-60 291.29,-60 285.29,-60 279.29,-54 279.29,-48 279.29,-48 279.29,-36 279.29,-36 279.29,-30 285.29,-24 291.29,-24 291.29,-24 436.58,-24 436.58,-24 442.58,-24 448.58,-30 448.58,-36 448.58,-36 448.58,-48 448.58,-48 448.58,-54 442.58,-60 436.58,-60"/>
+<text xml:space="preserve" text-anchor="middle" x="363.93" y="-37.33" font-family="Verdana" font-size="14.00">NewMarkdownParser</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.NewAgentParser&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser -->
-<g id="edge2" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.NewAgentParser&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser</title>
-<g id="a_edge2"><a xlink:title="at parser.go:20: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser]">
-<path fill="none" stroke="saddlebrown" d="M172.36,-103C201.5,-103 235.95,-103 267.48,-103"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="267.44,-106.5 277.44,-103 267.44,-99.5 267.44,-106.5"/>
+<g id="a_edge1"><a xlink:title="at parser.go:20: calling [github.com/guild&#45;framework/guild&#45;core/pkg/commission.NewMarkdownParser]">
+<path fill="none" stroke="saddlebrown" d="M172.36,-42C201.5,-42 235.95,-42 267.48,-42"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="267.44,-45.5 277.44,-42 267.44,-38.5 267.44,-45.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse -->
+<g id="node2" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse | defined in parser.go:25&#10;at parser.go:27: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M177.04,-121C177.04,-121 28,-121 28,-121 22,-121 16,-115 16,-109 16,-109 16,-97 16,-97 16,-91 22,-85 28,-85 28,-85 177.04,-85 177.04,-85 183.04,-85 189.04,-91 189.04,-97 189.04,-97 189.04,-109 189.04,-109 189.04,-115 183.04,-121 177.04,-121"/>
+<text xml:space="preserve" text-anchor="middle" x="102.52" y="-98.33" font-family="Verdana" font-size="14.00">(*AgentParser).Parse</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse -->
+<g id="node4" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse</title>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse | defined in parser.go:68">
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M453.83,-121C453.83,-121 274.04,-121 274.04,-121 268.04,-121 262.04,-115 262.04,-109 262.04,-109 262.04,-97 262.04,-97 262.04,-91 268.04,-85 274.04,-85 274.04,-85 453.83,-85 453.83,-85 459.83,-85 465.83,-91 465.83,-97 465.83,-97 465.83,-109 465.83,-109 465.83,-115 459.83,-121 453.83,-121"/>
+<text xml:space="preserve" text-anchor="middle" x="363.93" y="-98.33" font-family="Verdana" font-size="14.00">(*MarkdownParser).Parse</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/commission/agentobj.AgentParser).Parse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse</title>
+<g id="a_edge2"><a xlink:title="at parser.go:27: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/commission.MarkdownParser).Parse]">
+<path fill="none" stroke="saddlebrown" d="M189.54,-103C208.86,-103 229.65,-103 249.89,-103"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="249.88,-106.5 259.88,-103 249.88,-99.5 249.88,-106.5"/>
 </a>
 </g>
 </g>

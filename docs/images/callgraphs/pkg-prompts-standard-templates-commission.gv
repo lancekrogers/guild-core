@@ -14,29 +14,29 @@ digraph gocallvis {
     edge [minlen="2"]
 
     subgraph "cluster_focus" {
-        bgcolor="#e6ecfa";
-label="commission";
-labelloc="t";
+        labelloc="t";
 labeljust="c";
 fontsize="18";
+bgcolor="#e6ecfa";
+label="commission";
         
         "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/commission.LoadPrompts" [ fillcolor="lightblue" label="LoadPrompts" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts/standard/templates/commission.LoadPrompts | defined in commission.go:21\nat commission.go:27: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat commission.go:44: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat commission.go:53: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat commission.go:28: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat commission.go:45: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat commission.go:54: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat commission.go:29: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat commission.go:46: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat commission.go:55: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat commission.go:47: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat commission.go:56: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
-        label="gerror";
-URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+        penwidth="0.8";
 fontsize="16";
 fillcolor="lightyellow";
-rank="sink";
-tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
-penwidth="0.8";
-style="filled";
 fontname="Tahoma bold";
+label="gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+style="filled";
+rank="sink";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
         
-        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" fillcolor="moccasin" ]
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
         "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
         "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" ]
-        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" fillcolor="moccasin" label="(*GuildError).WithDetails" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" ]
         
     }
 

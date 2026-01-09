@@ -17,17 +17,44 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="302.79,-146 302.79,-348 551.08,-348 551.08,-146 302.79,-146"/>
-<text xml:space="preserve" text-anchor="middle" x="426.93" y="-328.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="302.79,-139 302.79,-341 551.08,-341 551.08,-139 302.79,-139"/>
+<text xml:space="preserve" text-anchor="middle" x="426.93" y="-321.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch -->
+<g id="node1" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch | defined in jsonrpc.go:231&#10;at jsonrpc.go:235: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage]&#10;at jsonrpc.go:244: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M206.66,-52C206.66,-52 47.13,-52 47.13,-52 41.12,-52 35.12,-46 35.12,-40 35.12,-40 35.12,-28 35.12,-28 35.12,-22 41.12,-16 47.12,-16 47.12,-16 206.66,-16 206.66,-16 212.66,-16 218.66,-22 218.66,-28 218.66,-28 218.66,-40 218.66,-40 218.66,-46 212.66,-52 206.66,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="126.89" y="-29.32" font-family="Verdana" font-size="14.00">(*Codec).DecodeBatch</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage -->
+<g id="node2" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage | defined in jsonrpc.go:134">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M517.2,-52C517.2,-52 336.66,-52 336.66,-52 330.66,-52 324.66,-46 324.66,-40 324.66,-40 324.66,-28 324.66,-28 324.66,-22 330.66,-16 336.66,-16 336.66,-16 517.2,-16 517.2,-16 523.2,-16 529.2,-22 529.2,-28 529.2,-28 529.2,-40 529.2,-40 529.2,-46 523.2,-52 517.2,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="426.93" y="-29.32" font-family="Verdana" font-size="14.00">(*Codec).DecodeMessage</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage</title>
+<g id="a_edge8"><a xlink:title="at jsonrpc.go:235: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage]&#10;at jsonrpc.go:244: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage]">
+<path fill="none" stroke="black" d="M219.34,-34C248.83,-34 281.87,-34 312.74,-34"/>
+<polygon fill="black" stroke="black" points="312.49,-37.5 322.49,-34 312.49,-30.5 312.49,-37.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification -->
-<g id="node1" class="node">
+<g id="node3" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification | defined in jsonrpc.go:118&#10;at jsonrpc.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at jsonrpc.go:121: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at jsonrpc.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M225.79,-332C225.79,-332 28,-332 28,-332 22,-332 16,-326 16,-320 16,-320 16,-308 16,-308 16,-302 22,-296 28,-296 28,-296 225.79,-296 225.79,-296 231.79,-296 237.79,-302 237.79,-308 237.79,-308 237.79,-320 237.79,-320 237.79,-326 231.79,-332 225.79,-332"/>
-<text xml:space="preserve" text-anchor="middle" x="126.89" y="-309.32" font-family="Verdana" font-size="14.00">(*Codec).EncodeNotification</text>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification | defined in jsonrpc.go:118&#10;at jsonrpc.go:121: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at jsonrpc.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at jsonrpc.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M225.79,-308C225.79,-308 28,-308 28,-308 22,-308 16,-302 16,-296 16,-296 16,-284 16,-284 16,-278 22,-272 28,-272 28,-272 225.79,-272 225.79,-272 231.79,-272 237.79,-278 237.79,-284 237.79,-284 237.79,-296 237.79,-296 237.79,-302 231.79,-308 225.79,-308"/>
+<text xml:space="preserve" text-anchor="middle" x="126.89" y="-285.32" font-family="Verdana" font-size="14.00">(*Codec).EncodeNotification</text>
 </a>
 </g>
 </g>
@@ -35,17 +62,17 @@
 <g id="node8" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node8"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M444.83,-312C444.83,-312 409.04,-312 409.04,-312 403.04,-312 397.04,-306 397.04,-300 397.04,-300 397.04,-288 397.04,-288 397.04,-282 403.04,-276 409.04,-276 409.04,-276 444.83,-276 444.83,-276 450.83,-276 456.83,-282 456.83,-288 456.83,-288 456.83,-300 456.83,-300 456.83,-306 450.83,-312 444.83,-312"/>
-<text xml:space="preserve" text-anchor="middle" x="426.93" y="-289.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M444.83,-244C444.83,-244 409.04,-244 409.04,-244 403.04,-244 397.04,-238 397.04,-232 397.04,-232 397.04,-220 397.04,-220 397.04,-214 403.04,-208 409.04,-208 409.04,-208 444.83,-208 444.83,-208 450.83,-208 456.83,-214 456.83,-220 456.83,-220 456.83,-232 456.83,-232 456.83,-238 450.83,-244 444.83,-244"/>
+<text xml:space="preserve" text-anchor="middle" x="426.93" y="-221.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge11" class="edge">
+<g id="edge9" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge11"><a xlink:title="at jsonrpc.go:121: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M238.25,-322.5C250.59,-322.48 262.96,-322.05 274.79,-321 312.58,-317.65 355.06,-309.68 385.35,-303.26"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="385.8,-306.75 394.84,-301.21 384.33,-299.9 385.8,-306.75"/>
+<g id="a_edge9"><a xlink:title="at jsonrpc.go:121: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M214.9,-271.32C271.21,-259.23 341.89,-244.05 385.48,-234.69"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="385.97,-238.16 395.01,-232.64 384.5,-231.32 385.97,-238.16"/>
 </a>
 </g>
 </g>
@@ -53,17 +80,17 @@
 <g id="node9" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M531.08,-190C531.08,-190 322.79,-190 322.79,-190 316.79,-190 310.79,-184 310.79,-178 310.79,-178 310.79,-166 310.79,-166 310.79,-160 316.79,-154 322.79,-154 322.79,-154 531.08,-154 531.08,-154 537.08,-154 543.08,-160 543.08,-166 543.08,-166 543.08,-178 543.08,-178 543.08,-184 537.08,-190 531.08,-190"/>
-<text xml:space="preserve" text-anchor="middle" x="426.93" y="-167.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M531.08,-305C531.08,-305 322.79,-305 322.79,-305 316.79,-305 310.79,-299 310.79,-293 310.79,-293 310.79,-281 310.79,-281 310.79,-275 316.79,-269 322.79,-269 322.79,-269 531.08,-269 531.08,-269 537.08,-269 543.08,-275 543.08,-281 543.08,-281 543.08,-293 543.08,-293 543.08,-299 537.08,-305 531.08,-305"/>
+<text xml:space="preserve" text-anchor="middle" x="426.93" y="-282.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge16" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge16"><a xlink:title="at jsonrpc.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M177.86,-295.36C197.32,-287.07 219.33,-276.37 237.79,-264 270.7,-241.95 268.02,-222 302.79,-203 308.43,-199.92 314.38,-197.14 320.5,-194.63"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="321.42,-198.02 329.52,-191.19 318.93,-191.48 321.42,-198.02"/>
+<g id="a_edge10"><a xlink:title="at jsonrpc.go:122: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M151.5,-308.6C179.85,-328.73 229.3,-356.83 274.79,-348 311.78,-340.82 351.18,-324.61 380.47,-310.7"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="381.95,-313.87 389.42,-306.36 378.9,-307.57 381.95,-313.87"/>
 </a>
 </g>
 </g>
@@ -71,71 +98,80 @@
 <g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M525.45,-251C525.45,-251 328.41,-251 328.41,-251 322.41,-251 316.41,-245 316.41,-239 316.41,-239 316.41,-227 316.41,-227 316.41,-221 322.41,-215 328.41,-215 328.41,-215 525.45,-215 525.45,-215 531.45,-215 537.45,-221 537.45,-227 537.45,-227 537.45,-239 537.45,-239 537.45,-245 531.45,-251 525.45,-251"/>
-<text xml:space="preserve" text-anchor="middle" x="426.93" y="-228.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M525.45,-183C525.45,-183 328.41,-183 328.41,-183 322.41,-183 316.41,-177 316.41,-171 316.41,-171 316.41,-159 316.41,-159 316.41,-153 322.41,-147 328.41,-147 328.41,-147 525.45,-147 525.45,-147 531.45,-147 537.45,-153 537.45,-159 537.45,-159 537.45,-171 537.45,-171 537.45,-177 531.45,-183 525.45,-183"/>
+<text xml:space="preserve" text-anchor="middle" x="426.93" y="-160.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge8" class="edge">
+<g id="edge13" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeNotification&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge8"><a xlink:title="at jsonrpc.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M238.35,-307.39C251.04,-304.2 263.48,-299.86 274.79,-294 290.99,-285.62 287.08,-273.27 302.79,-264 307.76,-261.06 313.01,-258.4 318.42,-255.99"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="319.67,-259.26 327.6,-252.24 317.02,-252.79 319.67,-259.26"/>
+<g id="a_edge13"><a xlink:title="at jsonrpc.go:123: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M213.65,-271.28C222.05,-268.07 230.25,-264.34 237.79,-260 272.93,-239.78 267.45,-215.87 302.79,-196 308.13,-193 313.77,-190.28 319.57,-187.82"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="320.73,-191.13 328.76,-184.22 318.17,-184.61 320.73,-191.13"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch -->
-<g id="node2" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch</title>
-<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch | defined in jsonrpc.go:231&#10;at jsonrpc.go:235: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage]&#10;at jsonrpc.go:244: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M206.66,-52C206.66,-52 47.13,-52 47.13,-52 41.12,-52 35.12,-46 35.12,-40 35.12,-40 35.12,-28 35.12,-28 35.12,-22 41.12,-16 47.12,-16 47.12,-16 206.66,-16 206.66,-16 212.66,-16 218.66,-22 218.66,-28 218.66,-28 218.66,-40 218.66,-40 218.66,-46 212.66,-52 206.66,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="126.89" y="-29.32" font-family="Verdana" font-size="14.00">(*Codec).DecodeBatch</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest -->
+<g id="node4" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest</title>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest | defined in jsonrpc.go:61&#10;at jsonrpc.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at jsonrpc.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at jsonrpc.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M214.91,-125C214.91,-125 38.87,-125 38.87,-125 32.87,-125 26.87,-119 26.87,-113 26.87,-113 26.87,-101 26.87,-101 26.87,-95 32.87,-89 38.87,-89 38.87,-89 214.91,-89 214.91,-89 220.91,-89 226.91,-95 226.91,-101 226.91,-101 226.91,-113 226.91,-113 226.91,-119 220.91,-125 214.91,-125"/>
+<text xml:space="preserve" text-anchor="middle" x="126.89" y="-102.33" font-family="Verdana" font-size="14.00">(*Codec).EncodeRequest</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage | defined in jsonrpc.go:134">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M517.2,-52C517.2,-52 336.66,-52 336.66,-52 330.66,-52 324.66,-46 324.66,-40 324.66,-40 324.66,-28 324.66,-28 324.66,-22 330.66,-16 336.66,-16 336.66,-16 517.2,-16 517.2,-16 523.2,-16 529.2,-22 529.2,-28 529.2,-28 529.2,-40 529.2,-40 529.2,-46 523.2,-52 517.2,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="426.93" y="-29.32" font-family="Verdana" font-size="14.00">(*Codec).DecodeMessage</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge1"><a xlink:title="at jsonrpc.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M209.97,-125.65C219.61,-129.15 229.1,-133.23 237.79,-138 271.74,-156.62 268.51,-177.99 302.79,-196 328.44,-209.47 360.27,-217.02 385.15,-221.18"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="384.48,-224.62 394.9,-222.68 385.54,-217.7 384.48,-224.62"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
 <g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeBatch&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage</title>
-<g id="a_edge4"><a xlink:title="at jsonrpc.go:235: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage]&#10;at jsonrpc.go:244: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).DecodeMessage]">
-<path fill="none" stroke="black" d="M219.34,-34C248.83,-34 281.87,-34 312.74,-34"/>
-<polygon fill="black" stroke="black" points="312.49,-37.5 322.49,-34 312.49,-30.5 312.49,-37.5"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge4"><a xlink:title="at jsonrpc.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M217.88,-125.67C224.99,-129.11 231.74,-133.18 237.79,-138 284.92,-175.56 254.99,-220.29 302.79,-257 305.54,-259.11 308.41,-261.07 311.39,-262.9"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="309.43,-265.82 319.88,-267.56 312.8,-259.68 309.43,-265.82"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge2"><a xlink:title="at jsonrpc.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M165.43,-88.36C196.93,-75.6 241.92,-64.37 274.79,-85 299.03,-100.22 279.98,-125.7 302.79,-143 303.93,-143.87 305.1,-144.7 306.29,-145.51"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="304.09,-148.28 314.47,-150.38 307.67,-142.26 304.09,-148.28"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeBatch -->
-<g id="node4" class="node">
+<g id="node5" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeBatch</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeBatch | defined in jsonrpc.go:214&#10;at jsonrpc.go:220: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at jsonrpc.go:221: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at jsonrpc.go:222: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M206.29,-113C206.29,-113 47.5,-113 47.5,-113 41.5,-113 35.5,-107 35.5,-101 35.5,-101 35.5,-89 35.5,-89 35.5,-83 41.5,-77 47.5,-77 47.5,-77 206.29,-77 206.29,-77 212.29,-77 218.29,-83 218.29,-89 218.29,-89 218.29,-101 218.29,-101 218.29,-107 212.29,-113 206.29,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="126.89" y="-90.33" font-family="Verdana" font-size="14.00">(*Codec).EncodeBatch</text>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeBatch | defined in jsonrpc.go:214&#10;at jsonrpc.go:220: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at jsonrpc.go:222: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at jsonrpc.go:221: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M206.29,-247C206.29,-247 47.5,-247 47.5,-247 41.5,-247 35.5,-241 35.5,-235 35.5,-235 35.5,-223 35.5,-223 35.5,-217 41.5,-211 47.5,-211 47.5,-211 206.29,-211 206.29,-211 212.29,-211 218.29,-217 218.29,-223 218.29,-223 218.29,-235 218.29,-235 218.29,-241 212.29,-247 206.29,-247"/>
+<text xml:space="preserve" text-anchor="middle" x="126.89" y="-224.32" font-family="Verdana" font-size="14.00">(*Codec).EncodeBatch</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeBatch&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge1" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeBatch&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge1"><a xlink:title="at jsonrpc.go:220: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M219.01,-113.7C225.75,-117.13 232.12,-121.2 237.79,-126 289.52,-169.82 250.28,-221.12 302.79,-264 325.85,-282.83 358.92,-290.13 384.99,-292.84"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="384.65,-296.32 394.91,-293.66 385.23,-289.35 384.65,-296.32"/>
+<g id="a_edge5"><a xlink:title="at jsonrpc.go:220: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M218.95,-226.84C237.11,-226.49 256.06,-226.18 273.79,-226 311.45,-225.61 354.35,-225.66 384.98,-225.77"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="384.95,-229.27 394.97,-225.81 384.98,-222.27 384.95,-229.27"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeBatch&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge5" class="edge">
+<g id="edge14" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeBatch&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge5"><a xlink:title="at jsonrpc.go:221: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M194.23,-76.35C229.87,-67.16 267.91,-59 274.79,-64 304.65,-85.68 277.74,-117.78 302.36,-147.75"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="299.68,-150.02 309.2,-154.65 304.65,-145.09 299.68,-150.02"/>
+<g id="a_edge14"><a xlink:title="at jsonrpc.go:221: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M217.16,-247.63C224.51,-251.08 231.51,-255.16 237.79,-260 262.73,-279.21 246.45,-305.39 273.79,-321 308.47,-340.8 353.71,-326.49 385.82,-310.8"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="387.11,-314.07 394.4,-306.39 383.91,-307.85 387.11,-314.07"/>
 </a>
 </g>
 </g>
@@ -143,116 +179,80 @@
 <g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeBatch&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_edge6"><a xlink:title="at jsonrpc.go:222: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M191.45,-76.26C219.67,-71.92 251.66,-72.94 274.79,-91 315.23,-122.58 266.4,-166.83 302.79,-203 304.57,-204.76 306.43,-206.43 308.36,-208.01"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="305.87,-210.53 316.05,-213.46 309.92,-204.82 305.87,-210.53"/>
+<path fill="none" stroke="saddlebrown" d="M218.84,-211.44C225.66,-208 232.09,-203.9 237.79,-199 267.68,-173.33 240.76,-139.47 273.79,-118 288.06,-108.73 287.49,-135.55 302.79,-143 303.71,-143.45 304.63,-143.88 305.57,-144.31"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="303.84,-147.39 314.42,-148 306.54,-140.93 303.84,-147.39"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError | defined in jsonrpc.go:94&#10;at jsonrpc.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at jsonrpc.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at jsonrpc.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M204.04,-251C204.04,-251 49.75,-251 49.75,-251 43.75,-251 37.75,-245 37.75,-239 37.75,-239 37.75,-227 37.75,-227 37.75,-221 43.75,-215 49.75,-215 49.75,-215 204.04,-215 204.04,-215 210.04,-215 216.04,-221 216.04,-227 216.04,-227 216.04,-239 216.04,-239 216.04,-245 210.04,-251 204.04,-251"/>
-<text xml:space="preserve" text-anchor="middle" x="126.89" y="-228.32" font-family="Verdana" font-size="14.00">(*Codec).EncodeError</text>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError | defined in jsonrpc.go:94&#10;at jsonrpc.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at jsonrpc.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at jsonrpc.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M204.04,-186C204.04,-186 49.75,-186 49.75,-186 43.75,-186 37.75,-180 37.75,-174 37.75,-174 37.75,-162 37.75,-162 37.75,-156 43.75,-150 49.75,-150 49.75,-150 204.04,-150 204.04,-150 210.04,-150 216.04,-156 216.04,-162 216.04,-162 216.04,-174 216.04,-174 216.04,-180 210.04,-186 204.04,-186"/>
+<text xml:space="preserve" text-anchor="middle" x="126.89" y="-163.32" font-family="Verdana" font-size="14.00">(*Codec).EncodeError</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge12" class="edge">
+<g id="edge3" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge12"><a xlink:title="at jsonrpc.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M216.51,-251.14C272.47,-262.59 342.1,-276.84 385.29,-285.68"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="384.49,-289.09 394.99,-287.67 385.89,-282.23 384.49,-289.09"/>
+<g id="a_edge3"><a xlink:title="at jsonrpc.go:100: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M216.51,-185.24C272.47,-196.13 342.1,-209.69 385.29,-218.09"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="384.5,-221.5 394.98,-219.98 385.84,-214.63 384.5,-221.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge13" class="edge">
+<g id="edge15" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge13"><a xlink:title="at jsonrpc.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M216.51,-214.86C250.11,-207.99 288.64,-200.1 323.41,-192.98"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="323.98,-196.44 333.08,-191 322.58,-189.58 323.98,-196.44"/>
+<g id="a_edge15"><a xlink:title="at jsonrpc.go:101: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M216.75,-184.84C224.4,-188.65 231.58,-193.31 237.79,-199 271.08,-229.5 236.63,-268.35 273.79,-294 297.22,-310.18 327.85,-311.51 355.48,-307.62"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="355.93,-311.09 365.22,-305.99 354.78,-304.19 355.93,-311.09"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge14"><a xlink:title="at jsonrpc.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M216.51,-233C244.13,-233 275.07,-233 304.53,-233"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="304.22,-236.5 314.22,-233 304.22,-229.5 304.22,-236.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest | defined in jsonrpc.go:61&#10;at jsonrpc.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at jsonrpc.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at jsonrpc.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M214.91,-174C214.91,-174 38.87,-174 38.87,-174 32.87,-174 26.87,-168 26.87,-162 26.87,-162 26.87,-150 26.87,-150 26.87,-144 32.87,-138 38.87,-138 38.87,-138 214.91,-138 214.91,-138 220.91,-138 226.91,-144 226.91,-150 226.91,-150 226.91,-162 226.91,-162 226.91,-168 220.91,-174 214.91,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="126.89" y="-151.32" font-family="Verdana" font-size="14.00">(*Codec).EncodeRequest</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge15" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge15"><a xlink:title="at jsonrpc.go:64: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M181.79,-174.67C200.26,-182.19 220.59,-191.76 237.79,-203 270.95,-224.68 267.95,-245.13 302.79,-264 328.26,-277.79 360.1,-285.34 385.03,-289.41"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="384.39,-292.85 394.8,-290.87 385.42,-285.93 384.39,-292.85"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge2"><a xlink:title="at jsonrpc.go:65: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M227.49,-144.15C243.32,-143.53 259.51,-143.65 274.79,-145 274.83,-145 289.62,-147.64 309.94,-151.27"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="309.07,-154.67 319.53,-152.99 310.3,-147.78 309.07,-154.67"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
 <g id="edge7" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeRequest&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge7"><a xlink:title="at jsonrpc.go:66: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M227.55,-156.96C243.94,-159.87 260.28,-164.59 274.79,-172 291.32,-180.45 286.84,-193.49 302.79,-203 307.05,-205.54 311.52,-207.87 316.12,-210"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="314.42,-213.07 324.99,-213.76 317.15,-206.63 314.42,-213.07"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeError&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge7"><a xlink:title="at jsonrpc.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M216.56,-149.39C224.03,-146.18 231.22,-142.41 237.79,-138 259.63,-123.32 250.2,-102.65 273.79,-91 297.52,-79.29 281.36,-127.48 302.79,-143 303.95,-143.84 305.14,-144.66 306.34,-145.44"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="304.21,-148.25 314.63,-150.18 307.68,-142.18 304.21,-148.25"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse -->
 <g id="node7" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse | defined in jsonrpc.go:78&#10;at jsonrpc.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at jsonrpc.go:81: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at jsonrpc.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse | defined in jsonrpc.go:78&#10;at jsonrpc.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at jsonrpc.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at jsonrpc.go:81: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M220.16,-413C220.16,-413 33.63,-413 33.63,-413 27.63,-413 21.62,-407 21.62,-401 21.62,-401 21.62,-389 21.62,-389 21.62,-383 27.62,-377 33.62,-377 33.62,-377 220.16,-377 220.16,-377 226.16,-377 232.16,-383 232.16,-389 232.16,-389 232.16,-401 232.16,-401 232.16,-407 226.16,-413 220.16,-413"/>
 <text xml:space="preserve" text-anchor="middle" x="126.89" y="-390.32" font-family="Verdana" font-size="14.00">(*Codec).EncodeResponse</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge9" class="edge">
+<g id="edge16" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge9"><a xlink:title="at jsonrpc.go:81: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M232.63,-409.1C247.01,-408.41 261.42,-406.29 274.79,-402 324.61,-386.03 371.98,-346.93 400,-320.43"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="402.21,-323.17 406.97,-313.7 397.35,-318.13 402.21,-323.17"/>
+<g id="a_edge16"><a xlink:title="at jsonrpc.go:81: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M158.82,-376.34C181.45,-362.18 212.5,-341.67 237.79,-321 269.18,-295.35 267.45,-276.87 302.79,-257 328.17,-242.73 360.15,-234.93 385.15,-230.73"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="385.6,-234.2 394.96,-229.22 384.54,-227.28 385.6,-234.2"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge10" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge10"><a xlink:title="at jsonrpc.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M189.18,-376.25C206.5,-368.68 224.29,-358.47 237.79,-345 286.93,-295.98 249.44,-247.4 302.79,-203 305.67,-200.6 308.71,-198.39 311.88,-196.34"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="313.48,-199.45 320.42,-191.44 310,-193.38 313.48,-199.45"/>
+<g id="a_edge11"><a xlink:title="at jsonrpc.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M232.75,-409.47C247.11,-408.72 261.48,-406.49 274.79,-402 326.32,-384.62 374.19,-341.9 401.73,-313.71"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="404.18,-316.21 408.56,-306.56 399.12,-311.37 404.18,-316.21"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge3" class="edge">
+<g id="edge12" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/mcp/protocol.Codec).EncodeResponse&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge3"><a xlink:title="at jsonrpc.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M232.62,-396.27C248.14,-392.29 262.89,-385.64 274.79,-375 312.72,-341.09 266.8,-299.97 302.79,-264 304.87,-261.92 307.07,-259.97 309.37,-258.15"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="311.2,-261.14 317.44,-252.58 307.22,-255.38 311.2,-261.14"/>
+<g id="a_edge12"><a xlink:title="at jsonrpc.go:83: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M165,-376.26C188.11,-363.19 217.26,-343.99 237.79,-321 279.49,-274.29 253.67,-234.83 302.79,-196 305.91,-193.53 309.2,-191.26 312.63,-189.16"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="314.17,-192.31 321.27,-184.45 310.82,-186.17 314.17,-192.31"/>
 </a>
 </g>
 </g>

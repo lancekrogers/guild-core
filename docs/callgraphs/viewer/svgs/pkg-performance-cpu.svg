@@ -17,172 +17,46 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1082.35,-547 1082.35,-627 1152.35,-627 1152.35,-547 1082.35,-547"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-607.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="1082.35,-592 1082.35,-672 1152.35,-672 1152.35,-592 1082.35,-592"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-652.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1 -->
 <g id="node1" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore | defined in affinity.go:307&#10;at affinity.go:312: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M320.29,-418C320.29,-418 97.75,-418 97.75,-418 91.75,-418 85.75,-412 85.75,-406 85.75,-406 85.75,-394 85.75,-394 85.75,-388 91.75,-382 97.75,-382 97.75,-382 320.29,-382 320.29,-382 326.29,-382 332.29,-388 332.29,-394 332.29,-394 332.29,-406 332.29,-406 332.29,-412 326.29,-418 320.29,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-395.32" font-family="Verdana" font-size="14.00">(*ThreadPinner).GetPinnedCore</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1 | defined in parallel.go:130&#10;at parallel.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1]">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="798.08,-174 556.04,-174 556.04,-138 798.08,-138 798.08,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-151.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapInts$1</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1 -->
 <g id="node2" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
-<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID | defined in affinity.go:548">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M730.2,-418C730.2,-418 623.91,-418 623.91,-418 617.91,-418 611.91,-412 611.91,-406 611.91,-406 611.91,-394 611.91,-394 611.91,-388 617.91,-382 623.91,-382 623.91,-382 730.2,-382 730.2,-382 736.2,-382 742.2,-388 742.2,-394 742.2,-394 742.2,-406 742.2,-406 742.2,-412 736.2,-418 730.2,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-395.32" font-family="Verdana" font-size="14.00">getGoroutineID</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1 | defined in parallel.go:145">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1247.37,-174 987.33,-174 987.33,-138 1247.37,-138 1247.37,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-151.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapInts$1$1</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
-<g id="edge20" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
-<g id="a_edge20"><a xlink:title="at affinity.go:312: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
-<path fill="none" stroke="black" d="M332.77,-400C417.76,-400 528.18,-400 600.53,-400"/>
-<polygon fill="black" stroke="black" points="600.29,-403.5 610.29,-400 600.29,-396.5 600.29,-403.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync -->
-<g id="node3" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync</title>
-<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync | defined in batch.go:572&#10;at batch.go:576: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M390.04,-52C390.04,-52 28,-52 28,-52 22,-52 16,-46 16,-40 16,-40 16,-28 16,-28 16,-22 22,-16 28,-16 28,-16 390.04,-16 390.04,-16 396.04,-16 402.04,-22 402.04,-28 402.04,-28 402.04,-40 402.04,-40 402.04,-46 396.04,-52 390.04,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-29.32" font-family="Verdana" font-size="14.00">(*StreamingBatchProcessor[T]).processBatchAsync</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1 -->
-<g id="node4" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1</title>
-<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1 | defined in batch.go:576">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="879.08,-52 475.04,-52 475.04,-16 879.08,-16 879.08,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-29.32" font-family="Verdana" font-size="14.00">(*StreamingBatchProcessor[T]).processBatchAsync$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1 -->
-<g id="edge29" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1</title>
-<g id="a_edge29"><a xlink:title="at batch.go:576: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1]">
-<path fill="none" stroke="black" d="M402.27,-34C417.89,-34 433.76,-34 449.59,-34"/>
-<polygon fill="black" stroke="black" points="463.31,-37.5 473.31,-34 463.31,-30.5 463.31,-37.5"/>
-<polyline fill="none" stroke="black" points="462.81,-34 457.81,-34"/>
-<ellipse fill="none" stroke="black" cx="453.31" cy="-34" rx="4" ry="4"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU -->
-<g id="node5" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU</title>
-<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU | defined in affinity.go:99&#10;at affinity.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin]&#10;at affinity.go:110: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin]&#10;at affinity.go:106: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA]&#10;at affinity.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]&#10;at affinity.go:108: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M779.7,-357C779.7,-357 574.41,-357 574.41,-357 568.41,-357 562.41,-351 562.41,-345 562.41,-345 562.41,-333 562.41,-333 562.41,-327 568.41,-321 574.41,-321 574.41,-321 779.7,-321 779.7,-321 785.7,-321 791.7,-327 791.7,-333 791.7,-333 791.7,-345 791.7,-345 791.7,-351 785.7,-357 779.7,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-334.32" font-family="Verdana" font-size="14.00">(*AffinityManager).selectCPU</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin -->
-<g id="node6" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin | defined in affinity.go:115">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1248.12,-479C1248.12,-479 986.58,-479 986.58,-479 980.58,-479 974.58,-473 974.58,-467 974.58,-467 974.58,-455 974.58,-455 974.58,-449 980.58,-443 986.58,-443 986.58,-443 1248.12,-443 1248.12,-443 1254.12,-443 1260.12,-449 1260.12,-455 1260.12,-455 1260.12,-467 1260.12,-467 1260.12,-473 1254.12,-479 1248.12,-479"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-456.32" font-family="Verdana" font-size="14.00">(*AffinityManager).selectRoundRobin</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin -->
-<g id="edge21" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin</title>
-<g id="a_edge21"><a xlink:title="at affinity.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin]&#10;at affinity.go:110: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin]">
-<path fill="none" stroke="black" d="M791.75,-345.63C821.12,-350.24 852.05,-357.78 879.08,-370 917.61,-387.42 913.8,-413.05 952.08,-431 958.69,-434.1 965.6,-436.88 972.67,-439.37"/>
-<polygon fill="black" stroke="black" points="971.1,-442.54 981.7,-442.35 973.3,-435.9 971.1,-442.54"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed -->
-<g id="node7" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed | defined in affinity.go:121">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1654.29,-418C1654.29,-418 1405.5,-418 1405.5,-418 1399.5,-418 1393.5,-412 1393.5,-406 1393.5,-406 1393.5,-394 1393.5,-394 1393.5,-388 1399.5,-382 1405.5,-382 1405.5,-382 1654.29,-382 1654.29,-382 1660.29,-382 1666.29,-388 1666.29,-394 1666.29,-394 1666.29,-406 1666.29,-406 1666.29,-412 1660.29,-418 1654.29,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="1529.89" y="-395.32" font-family="Verdana" font-size="14.00">(*AffinityManager).selectLeastUsed</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed -->
-<g id="edge26" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed</title>
-<g id="a_edge26"><a xlink:title="at affinity.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
-<path fill="none" stroke="black" d="M791.89,-339.27C822.21,-343.78 853.59,-352.85 879.08,-370 931.5,-405.28 897.11,-460.83 952.08,-492 1130.78,-593.32 1387.86,-476.67 1487.37,-423.58"/>
-<polygon fill="black" stroke="black" points="1488.87,-426.75 1496,-418.92 1485.54,-420.59 1488.87,-426.75"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA -->
-<g id="node8" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA</title>
-<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA | defined in affinity.go:137&#10;at affinity.go:140: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1227.12,-357C1227.12,-357 1007.58,-357 1007.58,-357 1001.58,-357 995.58,-351 995.58,-345 995.58,-345 995.58,-333 995.58,-333 995.58,-327 1001.58,-321 1007.58,-321 1007.58,-321 1227.12,-321 1227.12,-321 1233.12,-321 1239.12,-327 1239.12,-333 1239.12,-333 1239.12,-345 1239.12,-345 1239.12,-351 1233.12,-357 1227.12,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-334.32" font-family="Verdana" font-size="14.00">(*AffinityManager).selectNUMA</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA -->
-<g id="edge22" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA</title>
-<g id="a_edge22"><a xlink:title="at affinity.go:106: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA]">
-<path fill="none" stroke="black" d="M791.79,-339C850.64,-339 922.82,-339 984.16,-339"/>
-<polygon fill="black" stroke="black" points="983.96,-342.5 993.96,-339 983.96,-335.5 983.96,-342.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated -->
-<g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated | defined in affinity.go:144&#10;at affinity.go:147: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1240.62,-418C1240.62,-418 994.08,-418 994.08,-418 988.08,-418 982.08,-412 982.08,-406 982.08,-406 982.08,-394 982.08,-394 982.08,-388 988.08,-382 994.08,-382 994.08,-382 1240.62,-382 1240.62,-382 1246.62,-382 1252.62,-388 1252.62,-394 1252.62,-394 1252.62,-406 1252.62,-406 1252.62,-412 1246.62,-418 1240.62,-418"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-395.32" font-family="Verdana" font-size="14.00">(*AffinityManager).selectDedicated</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated -->
-<g id="edge27" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated</title>
-<g id="a_edge27"><a xlink:title="at affinity.go:108: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated]">
-<path fill="none" stroke="black" d="M791.79,-354.83C847.42,-362.57 914.97,-371.97 974,-380.19"/>
-<polygon fill="black" stroke="black" points="973.41,-383.64 983.8,-381.55 974.38,-376.71 973.41,-383.64"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed -->
-<g id="edge15" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed</title>
-<g id="a_edge15"><a xlink:title="at affinity.go:140: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
-<path fill="none" stroke="black" d="M1239.31,-356.97C1288.23,-364.24 1344.89,-372.66 1395.05,-380.11"/>
-<polygon fill="black" stroke="black" points="1394.41,-383.56 1404.82,-381.56 1395.44,-376.63 1394.41,-383.56"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed -->
-<g id="edge30" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed</title>
-<g id="a_edge30"><a xlink:title="at affinity.go:147: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
-<path fill="none" stroke="black" d="M1252.78,-400C1294.12,-400 1339.83,-400 1381.97,-400"/>
-<polygon fill="black" stroke="black" points="1381.95,-403.5 1391.95,-400 1381.95,-396.5 1381.95,-403.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1 -->
+<g id="edge5" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1</title>
+<g id="a_edge5"><a xlink:title="at parallel.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1]">
+<path fill="none" stroke="black" d="M798.4,-156C847.57,-156 905.12,-156 957.65,-156"/>
+<polygon fill="black" stroke="black" points="975.55,-159.5 985.55,-156 975.55,-152.5 975.55,-159.5"/>
+<polyline fill="none" stroke="black" points="975.05,-156 970.05,-156"/>
+<polygon fill="none" stroke="black" points="957.15,-156 963.15,-152 969.15,-156 963.15,-160 957.15,-156"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore -->
-<g id="node10" class="node">
+<g id="node3" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore | defined in affinity.go:204&#10;at affinity.go:212: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M761.7,-601C761.7,-601 592.41,-601 592.41,-601 586.41,-601 580.41,-595 580.41,-589 580.41,-589 580.41,-577 580.41,-577 580.41,-571 586.41,-565 592.41,-565 592.41,-565 761.7,-565 761.7,-565 767.7,-565 773.7,-571 773.7,-577 773.7,-577 773.7,-589 773.7,-589 773.7,-595 767.7,-601 761.7,-601"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-578.33" font-family="Verdana" font-size="14.00">(*CPUPool).AllocateCore</text>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore | defined in affinity.go:204&#10;at affinity.go:212: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M761.7,-723C761.7,-723 592.41,-723 592.41,-723 586.41,-723 580.41,-717 580.41,-711 580.41,-711 580.41,-699 580.41,-699 580.41,-693 586.41,-687 592.41,-687 592.41,-687 761.7,-687 761.7,-687 767.7,-687 773.7,-693 773.7,-699 773.7,-699 773.7,-711 773.7,-711 773.7,-717 767.7,-723 761.7,-723"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-700.33" font-family="Verdana" font-size="14.00">(*CPUPool).AllocateCore</text>
 </a>
 </g>
 </g>
@@ -190,104 +64,129 @@
 <g id="node38" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
 <g id="a_node38"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New | defined in errors.go:190">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1132.35,-591C1132.35,-591 1102.35,-591 1102.35,-591 1096.35,-591 1090.35,-585 1090.35,-579 1090.35,-579 1090.35,-567 1090.35,-567 1090.35,-561 1096.35,-555 1102.35,-555 1102.35,-555 1132.35,-555 1132.35,-555 1138.35,-555 1144.35,-561 1144.35,-567 1144.35,-567 1144.35,-579 1144.35,-579 1144.35,-585 1138.35,-591 1132.35,-591"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-568.33" font-family="Verdana" font-size="14.00">New</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1132.35,-636C1132.35,-636 1102.35,-636 1102.35,-636 1096.35,-636 1090.35,-630 1090.35,-624 1090.35,-624 1090.35,-612 1090.35,-612 1090.35,-606 1096.35,-600 1102.35,-600 1102.35,-600 1132.35,-600 1132.35,-600 1138.35,-600 1144.35,-606 1144.35,-612 1144.35,-612 1144.35,-624 1144.35,-624 1144.35,-630 1138.35,-636 1132.35,-636"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-613.33" font-family="Verdana" font-size="14.00">New</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge8" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge8"><a xlink:title="at affinity.go:212: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M774.24,-580.81C869.81,-578.63 1011.49,-575.39 1078.54,-573.86"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1078.36,-577.37 1088.28,-573.64 1078.2,-570.37 1078.36,-577.37"/>
+<g id="a_edge11"><a xlink:title="at affinity.go:212: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M774.21,-696.58C807.86,-692.09 845.6,-685.27 879.08,-675 913.48,-664.45 917.6,-650.29 952.08,-640 994.25,-627.41 1044.68,-622.01 1078.44,-619.7"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1078.36,-623.22 1088.13,-619.1 1077.93,-616.23 1078.36,-623.22"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA -->
+<g id="node4" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA</title>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA | defined in affinity.go:137&#10;at affinity.go:140: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1227.12,-418C1227.12,-418 1007.58,-418 1007.58,-418 1001.58,-418 995.58,-412 995.58,-406 995.58,-406 995.58,-394 995.58,-394 995.58,-388 1001.58,-382 1007.58,-382 1007.58,-382 1227.12,-382 1227.12,-382 1233.12,-382 1239.12,-388 1239.12,-394 1239.12,-394 1239.12,-406 1239.12,-406 1239.12,-412 1233.12,-418 1227.12,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-395.32" font-family="Verdana" font-size="14.00">(*AffinityManager).selectNUMA</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed -->
+<g id="node5" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed</title>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed | defined in affinity.go:121">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1654.29,-462C1654.29,-462 1405.5,-462 1405.5,-462 1399.5,-462 1393.5,-456 1393.5,-450 1393.5,-450 1393.5,-438 1393.5,-438 1393.5,-432 1399.5,-426 1405.5,-426 1405.5,-426 1654.29,-426 1654.29,-426 1660.29,-426 1666.29,-432 1666.29,-438 1666.29,-438 1666.29,-450 1666.29,-450 1666.29,-456 1660.29,-462 1654.29,-462"/>
+<text xml:space="preserve" text-anchor="middle" x="1529.89" y="-439.32" font-family="Verdana" font-size="14.00">(*AffinityManager).selectLeastUsed</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed</title>
+<g id="a_edge15"><a xlink:title="at affinity.go:140: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
+<path fill="none" stroke="black" d="M1239.31,-412.96C1284.08,-417.76 1335.34,-423.26 1382.16,-428.27"/>
+<polygon fill="black" stroke="black" points="1381.51,-431.72 1391.83,-429.31 1382.26,-424.76 1381.51,-431.72"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1 -->
-<g id="node11" class="node">
+<g id="node6" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1</title>
-<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1 | defined in parallel.go:180&#10;at parallel.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1]">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1243.24,-174 991.45,-174 991.45,-138 1243.24,-138 1243.24,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-151.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapBools$1</text>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1 | defined in parallel.go:180&#10;at parallel.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1]">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1243.24,-357 991.45,-357 991.45,-321 1243.24,-321 1243.24,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-334.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapBools$1</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1 -->
-<g id="node12" class="node">
+<g id="node7" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1 | defined in parallel.go:195">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1664.79,-174 1395,-174 1395,-138 1664.79,-138 1664.79,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="1529.89" y="-151.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapBools$1$1</text>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1 | defined in parallel.go:195">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1664.79,-357 1395,-357 1395,-321 1664.79,-321 1664.79,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="1529.89" y="-334.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapBools$1$1</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1 -->
-<g id="edge11" class="edge">
+<g id="edge1" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1</title>
-<g id="a_edge11"><a xlink:title="at parallel.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1]">
-<path fill="none" stroke="black" d="M1243.48,-156C1281.91,-156 1324.79,-156 1365.39,-156"/>
-<polygon fill="black" stroke="black" points="1383.3,-159.5 1393.3,-156 1383.3,-152.5 1383.3,-159.5"/>
-<polyline fill="none" stroke="black" points="1382.8,-156 1377.8,-156"/>
-<polygon fill="none" stroke="black" points="1364.9,-156 1370.9,-152 1376.9,-156 1370.9,-160 1364.9,-156"/>
+<g id="a_edge1"><a xlink:title="at parallel.go:195: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1$1]">
+<path fill="none" stroke="black" d="M1243.48,-339C1281.91,-339 1324.79,-339 1365.39,-339"/>
+<polygon fill="black" stroke="black" points="1383.3,-342.5 1393.3,-339 1383.3,-335.5 1383.3,-342.5"/>
+<polyline fill="none" stroke="black" points="1382.8,-339 1377.8,-339"/>
+<polygon fill="none" stroke="black" points="1364.9,-339 1370.9,-335 1376.9,-339 1370.9,-343 1364.9,-339"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools -->
-<g id="node13" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools</title>
-<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools | defined in parallel.go:168&#10;at parallel.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M781.95,-174C781.95,-174 572.16,-174 572.16,-174 566.16,-174 560.16,-168 560.16,-162 560.16,-162 560.16,-150 560.16,-150 560.16,-144 566.16,-138 572.16,-138 572.16,-138 781.95,-138 781.95,-138 787.95,-138 793.95,-144 793.95,-150 793.95,-150 793.95,-162 793.95,-162 793.95,-168 787.95,-174 781.95,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-151.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapBools</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode -->
+<g id="node8" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode</title>
+<g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode | defined in affinity.go:422&#10;at affinity.go:428: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M804.45,-601C804.45,-601 549.66,-601 549.66,-601 543.66,-601 537.66,-595 537.66,-589 537.66,-589 537.66,-577 537.66,-577 537.66,-571 543.66,-565 549.66,-565 549.66,-565 804.45,-565 804.45,-565 810.45,-565 816.45,-571 816.45,-577 816.45,-577 816.45,-589 816.45,-589 816.45,-595 810.45,-601 804.45,-601"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-578.33" font-family="Verdana" font-size="14.00">(*NUMAManager).ReleaseFromNode</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1 -->
-<g id="edge9" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1</title>
-<g id="a_edge9"><a xlink:title="at parallel.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1]">
-<path fill="none" stroke="black" d="M794.65,-156C847.21,-156 909.93,-156 965.98,-156"/>
-<polygon fill="black" stroke="black" points="979.68,-159.5 989.68,-156 979.68,-152.5 979.68,-159.5"/>
-<polyline fill="none" stroke="black" points="979.18,-156 974.18,-156"/>
-<ellipse fill="none" stroke="black" cx="969.68" cy="-156" rx="4" ry="4"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge24" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge24"><a xlink:title="at affinity.go:428: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M817.04,-594.1C908.09,-601.37 1020.57,-610.35 1078.26,-614.96"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1077.96,-618.45 1088.21,-615.75 1078.52,-611.47 1077.96,-618.45"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1 -->
-<g id="node14" class="node">
+<g id="node9" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1 | defined in parallel.go:82&#10;at parallel.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1]">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1282.62,-52 952.08,-52 952.08,-16 1282.62,-16 1282.62,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-29.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).processChunksBytes$1</text>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1 | defined in parallel.go:82&#10;at parallel.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1]">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1282.62,-723 952.08,-723 952.08,-687 1282.62,-687 1282.62,-723"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-700.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).processChunksBytes$1</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1 -->
-<g id="node15" class="node">
+<g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1</title>
-<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1 | defined in parallel.go:92">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1704.16,-52 1355.62,-52 1355.62,-16 1704.16,-16 1704.16,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="1529.89" y="-29.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).processChunksBytes$1$1</text>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1 | defined in parallel.go:92">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1704.16,-723 1355.62,-723 1355.62,-687 1704.16,-687 1704.16,-723"/>
+<text xml:space="preserve" text-anchor="middle" x="1529.89" y="-700.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).processChunksBytes$1$1</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1 -->
-<g id="edge31" class="edge">
+<g id="edge26" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1</title>
-<g id="a_edge31"><a xlink:title="at parallel.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1]">
-<path fill="none" stroke="black" d="M1282.97,-34C1297.07,-34 1311.45,-34 1325.8,-34"/>
-<polygon fill="black" stroke="black" points="1343.65,-37.5 1353.65,-34 1343.65,-30.5 1343.65,-37.5"/>
-<polyline fill="none" stroke="black" points="1343.15,-34 1338.15,-34"/>
-<polygon fill="none" stroke="black" points="1325.25,-34 1331.25,-30 1337.25,-34 1331.25,-38 1325.25,-34"/>
+<g id="a_edge26"><a xlink:title="at parallel.go:92: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1$1]">
+<path fill="none" stroke="black" d="M1282.97,-705C1297.07,-705 1311.45,-705 1325.8,-705"/>
+<polygon fill="black" stroke="black" points="1343.65,-708.5 1353.65,-705 1343.65,-701.5 1343.65,-708.5"/>
+<polyline fill="none" stroke="black" points="1343.15,-705 1338.15,-705"/>
+<polygon fill="none" stroke="black" points="1325.25,-705 1331.25,-701 1337.25,-705 1331.25,-709 1325.25,-705"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes -->
-<g id="node16" class="node">
+<g id="node11" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes</title>
-<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes | defined in parallel.go:75&#10;at parallel.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1]&#10;at parallel.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$2]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M821.33,-113C821.33,-113 532.79,-113 532.79,-113 526.79,-113 520.79,-107 520.79,-101 520.79,-101 520.79,-89 520.79,-89 520.79,-83 526.79,-77 532.79,-77 532.79,-77 821.33,-77 821.33,-77 827.33,-77 833.33,-83 833.33,-89 833.33,-89 833.33,-101 833.33,-101 833.33,-107 827.33,-113 821.33,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-90.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).processChunksBytes</text>
+<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes | defined in parallel.go:75&#10;at parallel.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1]&#10;at parallel.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$2]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M821.33,-784C821.33,-784 532.79,-784 532.79,-784 526.79,-784 520.79,-778 520.79,-772 520.79,-772 520.79,-760 520.79,-760 520.79,-754 526.79,-748 532.79,-748 532.79,-748 821.33,-748 821.33,-748 827.33,-748 833.33,-754 833.33,-760 833.33,-760 833.33,-772 833.33,-772 833.33,-778 827.33,-784 821.33,-784"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-761.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).processChunksBytes</text>
 </a>
 </g>
 </g>
@@ -295,19 +194,19 @@
 <g id="edge12" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1</title>
 <g id="a_edge12"><a xlink:title="at parallel.go:82: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$1]">
-<path fill="none" stroke="black" d="M808.97,-76.78C855.9,-70.25 909.32,-62.81 958.31,-56"/>
-<polygon fill="black" stroke="black" points="972.54,-57.55 981.97,-52.7 971.58,-50.62 972.54,-57.55"/>
-<polyline fill="none" stroke="black" points="971.57,-54.15 966.61,-54.84"/>
-<ellipse fill="none" stroke="black" cx="962.16" cy="-55.46" rx="4" ry="4"/>
+<path fill="none" stroke="black" d="M808.97,-747.78C855.9,-741.25 909.32,-733.81 958.31,-727"/>
+<polygon fill="black" stroke="black" points="972.54,-728.55 981.97,-723.7 971.58,-721.62 972.54,-728.55"/>
+<polyline fill="none" stroke="black" points="971.57,-725.15 966.61,-725.84"/>
+<ellipse fill="none" stroke="black" cx="962.16" cy="-726.46" rx="4" ry="4"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$2 -->
-<g id="node17" class="node">
+<g id="node12" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$2</title>
-<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$2 | defined in parallel.go:102">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1282.62,-113 952.08,-113 952.08,-77 1282.62,-77 1282.62,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-90.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).processChunksBytes$2</text>
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$2 | defined in parallel.go:102">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1282.62,-784 952.08,-784 952.08,-748 1282.62,-748 1282.62,-784"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-761.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).processChunksBytes$2</text>
 </a>
 </g>
 </g>
@@ -315,375 +214,476 @@
 <g id="edge16" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$2</title>
 <g id="a_edge16"><a xlink:title="at parallel.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes$2]">
-<path fill="none" stroke="black" d="M833.51,-95C863.56,-95 895.37,-95 926.38,-95"/>
-<polygon fill="black" stroke="black" points="940.09,-98.5 950.09,-95 940.09,-91.5 940.09,-98.5"/>
-<polyline fill="none" stroke="black" points="939.59,-95 934.59,-95"/>
-<ellipse fill="none" stroke="black" cx="930.09" cy="-95" rx="4" ry="4"/>
+<path fill="none" stroke="black" d="M833.51,-766C863.56,-766 895.37,-766 926.38,-766"/>
+<polygon fill="black" stroke="black" points="940.09,-769.5 950.09,-766 940.09,-762.5 940.09,-769.5"/>
+<polyline fill="none" stroke="black" points="939.59,-766 934.59,-766"/>
+<ellipse fill="none" stroke="black" cx="930.09" cy="-766" rx="4" ry="4"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes -->
-<g id="node18" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes</title>
-<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes | defined in parallel.go:46&#10;at parallel.go:71: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M343.16,-113C343.16,-113 74.88,-113 74.88,-113 68.88,-113 62.87,-107 62.87,-101 62.87,-101 62.87,-89 62.87,-89 62.87,-83 68.87,-77 74.87,-77 74.87,-77 343.16,-77 343.16,-77 349.16,-77 355.16,-83 355.16,-89 355.16,-89 355.16,-101 355.16,-101 355.16,-107 349.16,-113 343.16,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-90.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ProcessSliceBytes</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync -->
+<g id="node13" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync</title>
+<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync | defined in batch.go:572&#10;at batch.go:576: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M390.04,-52C390.04,-52 28,-52 28,-52 22,-52 16,-46 16,-40 16,-40 16,-28 16,-28 16,-22 22,-16 28,-16 28,-16 390.04,-16 390.04,-16 396.04,-16 402.04,-22 402.04,-28 402.04,-28 402.04,-40 402.04,-40 402.04,-46 396.04,-52 390.04,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-29.32" font-family="Verdana" font-size="14.00">(*StreamingBatchProcessor[T]).processBatchAsync</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes -->
-<g id="edge32" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes</title>
-<g id="a_edge32"><a xlink:title="at parallel.go:71: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes]">
-<path fill="none" stroke="black" d="M355.88,-95C404.66,-95 459.39,-95 509.62,-95"/>
-<polygon fill="black" stroke="black" points="509.42,-98.5 519.42,-95 509.42,-91.5 509.42,-98.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1 -->
+<g id="node14" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1</title>
+<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1 | defined in batch.go:576">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="879.08,-52 475.04,-52 475.04,-16 879.08,-16 879.08,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-29.32" font-family="Verdana" font-size="14.00">(*StreamingBatchProcessor[T]).processBatchAsync$1</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts -->
-<g id="node19" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts</title>
-<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts | defined in parallel.go:284&#10;at parallel.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M312.04,-174C312.04,-174 106,-174 106,-174 100,-174 94,-168 94,-162 94,-162 94,-150 94,-150 94,-144 100,-138 106,-138 106,-138 312.04,-138 312.04,-138 318.04,-138 324.04,-144 324.04,-150 324.04,-150 324.04,-162 324.04,-162 324.04,-168 318.04,-174 312.04,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-151.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).FilterInts</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools -->
-<g id="edge10" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools</title>
-<g id="a_edge10"><a xlink:title="at parallel.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools]">
-<path fill="none" stroke="black" d="M324.62,-156C392.42,-156 478.42,-156 548.38,-156"/>
-<polygon fill="black" stroke="black" points="547.96,-159.5 557.96,-156 547.96,-152.5 547.96,-159.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin -->
-<g id="node20" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin</title>
-<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin | defined in affinity.go:291&#10;at affinity.go:296: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]&#10;at affinity.go:300: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M289.16,-540C289.16,-540 128.88,-540 128.88,-540 122.88,-540 116.87,-534 116.87,-528 116.87,-528 116.87,-516 116.87,-516 116.87,-510 122.87,-504 128.87,-504 128.87,-504 289.16,-504 289.16,-504 295.16,-504 301.16,-510 301.16,-516 301.16,-516 301.16,-528 301.16,-528 301.16,-534 295.16,-540 289.16,-540"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-517.33" font-family="Verdana" font-size="14.00">(*ThreadPinner).Unpin</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
-<g id="a_edge17"><a xlink:title="at affinity.go:296: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
-<path fill="none" stroke="black" d="M301.82,-517.8C334.56,-513.7 371,-506.07 402.04,-492 440.55,-474.55 436.51,-448.42 475.04,-431 514.28,-413.26 561.76,-405.39 600.72,-402.01"/>
-<polygon fill="black" stroke="black" points="600.78,-405.51 610.48,-401.25 600.24,-398.53 600.78,-405.51"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore -->
-<g id="node21" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore</title>
-<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore | defined in affinity.go:217&#10;at affinity.go:222: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at affinity.go:231: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M761.33,-540C761.33,-540 592.79,-540 592.79,-540 586.79,-540 580.79,-534 580.79,-528 580.79,-528 580.79,-516 580.79,-516 580.79,-510 586.79,-504 592.79,-504 592.79,-504 761.33,-504 761.33,-504 767.33,-504 773.33,-510 773.33,-516 773.33,-516 773.33,-528 773.33,-528 773.33,-534 767.33,-540 761.33,-540"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-517.33" font-family="Verdana" font-size="14.00">(*CPUPool).ReleaseCore</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore -->
-<g id="edge23" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore</title>
-<g id="a_edge23"><a xlink:title="at affinity.go:300: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore]">
-<path fill="none" stroke="black" d="M301.82,-522C378.56,-522 488.1,-522 568.86,-522"/>
-<polygon fill="black" stroke="black" points="568.54,-525.5 578.54,-522 568.54,-518.5 568.54,-525.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge1"><a xlink:title="at affinity.go:222: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at affinity.go:231: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M773.97,-533.16C869.51,-544.28 1011.36,-560.78 1078.5,-568.6"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1077.91,-572.05 1088.25,-569.73 1078.72,-565.1 1077.91,-572.05"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1 -->
-<g id="node22" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1</title>
-<g id="a_node22"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1 | defined in parallel.go:664&#10;at parallel.go:678: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1]">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="794.33,-235 559.79,-235 559.79,-199 794.33,-199 794.33,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-212.32" font-family="Verdana" font-size="14.00">(*ParallelExecutor).Execute$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1 -->
-<g id="node23" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1</title>
-<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1 | defined in parallel.go:678">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1243.62,-235 991.08,-235 991.08,-199 1243.62,-199 1243.62,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-212.32" font-family="Verdana" font-size="14.00">(*ParallelExecutor).Execute$1$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1 -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1</title>
-<g id="a_edge5"><a xlink:title="at parallel.go:678: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1]">
-<path fill="none" stroke="black" d="M794.65,-217C845.8,-217 906.58,-217 961.45,-217"/>
-<polygon fill="black" stroke="black" points="979.29,-220.5 989.29,-217 979.29,-213.5 979.29,-220.5"/>
-<polyline fill="none" stroke="black" points="978.79,-217 973.79,-217"/>
-<polygon fill="none" stroke="black" points="960.89,-217 966.89,-213 972.89,-217 966.89,-221 960.89,-217"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute -->
-<g id="node24" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute</title>
-<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute | defined in parallel.go:647&#10;at parallel.go:664: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M305.29,-235C305.29,-235 112.75,-235 112.75,-235 106.75,-235 100.75,-229 100.75,-223 100.75,-223 100.75,-211 100.75,-211 100.75,-205 106.75,-199 112.75,-199 112.75,-199 305.29,-199 305.29,-199 311.29,-199 317.29,-205 317.29,-211 317.29,-211 317.29,-223 317.29,-223 317.29,-229 311.29,-235 305.29,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-212.32" font-family="Verdana" font-size="14.00">(*ParallelExecutor).Execute</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1 -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1</title>
-<g id="a_edge2"><a xlink:title="at parallel.go:664: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1]">
-<path fill="none" stroke="black" d="M317.82,-217C382.09,-217 464.44,-217 533.97,-217"/>
-<polygon fill="black" stroke="black" points="547.93,-220.5 557.93,-217 547.93,-213.5 547.93,-220.5"/>
-<polyline fill="none" stroke="black" points="547.43,-217 542.43,-217"/>
-<ellipse fill="none" stroke="black" cx="537.93" cy="-217" rx="4" ry="4"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU -->
-<g id="node25" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU</title>
-<g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU | defined in affinity.go:56&#10;at affinity.go:72: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU]&#10;at affinity.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M314.66,-357C314.66,-357 103.38,-357 103.38,-357 97.38,-357 91.37,-351 91.37,-345 91.37,-345 91.37,-333 91.37,-333 91.37,-327 97.37,-321 103.37,-321 103.37,-321 314.66,-321 314.66,-321 320.66,-321 326.66,-327 326.66,-333 326.66,-333 326.66,-345 326.66,-345 326.66,-351 320.66,-357 314.66,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-334.32" font-family="Verdana" font-size="14.00">(*AffinityManager).AssignCPU</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1 -->
 <g id="edge6" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
-<g id="a_edge6"><a xlink:title="at affinity.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
-<path fill="none" stroke="black" d="M327.32,-354.35C413.11,-365.58 526.95,-380.48 600.84,-390.16"/>
-<polygon fill="black" stroke="black" points="600.03,-393.58 610.4,-391.41 600.94,-386.64 600.03,-393.58"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU</title>
-<g id="a_edge3"><a xlink:title="at affinity.go:72: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU]">
-<path fill="none" stroke="black" d="M327.32,-339C395.52,-339 481.44,-339 550.93,-339"/>
-<polygon fill="black" stroke="black" points="550.86,-342.5 560.86,-339 550.86,-335.5 550.86,-342.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU -->
-<g id="node26" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU</title>
-<g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU | defined in affinity.go:80&#10;at affinity.go:85: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M318.41,-479C318.41,-479 99.62,-479 99.62,-479 93.62,-479 87.62,-473 87.62,-467 87.62,-467 87.62,-455 87.62,-455 87.62,-449 93.62,-443 99.62,-443 99.62,-443 318.41,-443 318.41,-443 324.41,-443 330.41,-449 330.41,-455 330.41,-455 330.41,-467 330.41,-467 330.41,-473 324.41,-479 318.41,-479"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-456.32" font-family="Verdana" font-size="14.00">(*AffinityManager).ReleaseCPU</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
-<g id="edge28" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
-<g id="a_edge28"><a xlink:title="at affinity.go:85: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
-<path fill="none" stroke="black" d="M330.95,-445.17C416.2,-434.01 527.72,-419.42 600.59,-409.88"/>
-<polygon fill="black" stroke="black" points="600.98,-413.36 610.44,-408.59 600.07,-406.42 600.98,-413.36"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode -->
-<g id="node27" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode</title>
-<g id="a_node27"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode | defined in affinity.go:402&#10;at affinity.go:407: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at affinity.go:412: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M804.83,-723C804.83,-723 549.29,-723 549.29,-723 543.29,-723 537.29,-717 537.29,-711 537.29,-711 537.29,-699 537.29,-699 537.29,-693 543.29,-687 549.29,-687 549.29,-687 804.83,-687 804.83,-687 810.83,-687 816.83,-693 816.83,-699 816.83,-699 816.83,-711 816.83,-711 816.83,-717 810.83,-723 804.83,-723"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-700.33" font-family="Verdana" font-size="14.00">(*NUMAManager).AllocateFromNode</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge18" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge18"><a xlink:title="at affinity.go:407: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at affinity.go:412: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M817.48,-696.86C838.9,-692.07 860.16,-685.08 879.08,-675 921.56,-652.36 909.43,-617.32 952.08,-595 991.7,-574.26 1043.77,-570.6 1078.56,-570.92"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1078.07,-574.41 1088.14,-571.13 1078.22,-567.41 1078.07,-574.41"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1 -->
-<g id="node28" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1</title>
-<g id="a_node28"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1 | defined in parallel.go:318&#10;at parallel.go:332: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1]">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="819.83,-296 534.29,-296 534.29,-260 819.83,-260 819.83,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-273.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ParallelForInts$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1 -->
-<g id="node29" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1</title>
-<g id="a_node29"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1 | defined in parallel.go:332">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1269.12,-296 965.58,-296 965.58,-260 1269.12,-260 1269.12,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-273.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ParallelForInts$1$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1 -->
-<g id="edge19" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1</title>
-<g id="a_edge19"><a xlink:title="at parallel.go:332: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1]">
-<path fill="none" stroke="black" d="M820.06,-278C856.93,-278 897.13,-278 935.7,-278"/>
-<polygon fill="black" stroke="black" points="953.62,-281.5 963.62,-278 953.62,-274.5 953.62,-281.5"/>
-<polyline fill="none" stroke="black" points="953.12,-278 948.12,-278"/>
-<polygon fill="none" stroke="black" points="935.22,-278 941.22,-274 947.22,-278 941.22,-282 935.22,-278"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts -->
-<g id="node30" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts</title>
-<g id="a_node30"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts | defined in parallel.go:307&#10;at parallel.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M330.79,-296C330.79,-296 87.25,-296 87.25,-296 81.25,-296 75.25,-290 75.25,-284 75.25,-284 75.25,-272 75.25,-272 75.25,-266 81.25,-260 87.25,-260 87.25,-260 330.79,-260 330.79,-260 336.79,-260 342.79,-266 342.79,-272 342.79,-272 342.79,-284 342.79,-284 342.79,-290 336.79,-296 330.79,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-273.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ParallelForInts</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1 -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1</title>
-<g id="a_edge13"><a xlink:title="at parallel.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1]">
-<path fill="none" stroke="black" d="M343.26,-278C394.81,-278 454.4,-278 508.78,-278"/>
-<polygon fill="black" stroke="black" points="522.67,-281.5 532.67,-278 522.67,-274.5 522.67,-281.5"/>
-<polyline fill="none" stroke="black" points="522.17,-278 517.17,-278"/>
-<ellipse fill="none" stroke="black" cx="512.67" cy="-278" rx="4" ry="4"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1</title>
+<g id="a_edge6"><a xlink:title="at batch.go:576: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.StreamingBatchProcessor[T]).processBatchAsync$1]">
+<path fill="none" stroke="black" d="M402.27,-34C417.89,-34 433.76,-34 449.59,-34"/>
+<polygon fill="black" stroke="black" points="463.31,-37.5 473.31,-34 463.31,-30.5 463.31,-37.5"/>
+<polyline fill="none" stroke="black" points="462.81,-34 457.81,-34"/>
+<ellipse fill="none" stroke="black" cx="453.31" cy="-34" rx="4" ry="4"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts -->
-<g id="node31" class="node">
+<g id="node15" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts</title>
-<g id="a_node31"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts | defined in parallel.go:218&#10;at parallel.go:246: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M320.29,-662C320.29,-662 97.75,-662 97.75,-662 91.75,-662 85.75,-656 85.75,-650 85.75,-650 85.75,-638 85.75,-638 85.75,-632 91.75,-626 97.75,-626 97.75,-626 320.29,-626 320.29,-626 326.29,-626 332.29,-632 332.29,-638 332.29,-638 332.29,-650 332.29,-650 332.29,-656 326.29,-662 320.29,-662"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-639.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ReduceInts</text>
+<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts | defined in parallel.go:218&#10;at parallel.go:246: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M320.29,-113C320.29,-113 97.75,-113 97.75,-113 91.75,-113 85.75,-107 85.75,-101 85.75,-101 85.75,-89 85.75,-89 85.75,-83 91.75,-77 97.75,-77 97.75,-77 320.29,-77 320.29,-77 326.29,-77 332.29,-83 332.29,-89 332.29,-89 332.29,-101 332.29,-101 332.29,-107 326.29,-113 320.29,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-90.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ReduceInts</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1 -->
-<g id="node32" class="node">
+<g id="node16" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1</title>
-<g id="a_node32"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1 | defined in parallel.go:246">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="809.33,-662 544.79,-662 544.79,-626 809.33,-626 809.33,-662"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-639.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ReduceInts$1</text>
+<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1 | defined in parallel.go:246">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="809.33,-113 544.79,-113 544.79,-77 809.33,-77 809.33,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-90.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ReduceInts$1</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1 -->
-<g id="edge24" class="edge">
+<g id="edge2" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1</title>
-<g id="a_edge24"><a xlink:title="at parallel.go:246: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1]">
-<path fill="none" stroke="black" d="M332.77,-644C389.76,-644 458.18,-644 518.89,-644"/>
-<polygon fill="black" stroke="black" points="532.87,-647.5 542.87,-644 532.87,-640.5 532.87,-647.5"/>
-<polyline fill="none" stroke="black" points="532.37,-644 527.37,-644"/>
-<ellipse fill="none" stroke="black" cx="522.87" cy="-644" rx="4" ry="4"/>
+<g id="a_edge2"><a xlink:title="at parallel.go:246: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ReduceInts$1]">
+<path fill="none" stroke="black" d="M332.77,-95C389.76,-95 458.18,-95 518.89,-95"/>
+<polygon fill="black" stroke="black" points="532.87,-98.5 542.87,-95 532.87,-91.5 532.87,-98.5"/>
+<polyline fill="none" stroke="black" points="532.37,-95 527.37,-95"/>
+<ellipse fill="none" stroke="black" cx="522.87" cy="-95" rx="4" ry="4"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin -->
-<g id="node33" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin</title>
-<g id="a_node33"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin | defined in affinity.go:268&#10;at affinity.go:281: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore]&#10;at affinity.go:273: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M279.04,-601C279.04,-601 139,-601 139,-601 133,-601 127,-595 127,-589 127,-589 127,-577 127,-577 127,-571 133,-565 139,-565 139,-565 279.04,-565 279.04,-565 285.04,-565 291.04,-571 291.04,-577 291.04,-577 291.04,-589 291.04,-589 291.04,-595 285.04,-601 279.04,-601"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-578.33" font-family="Verdana" font-size="14.00">(*ThreadPinner).Pin</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1 -->
+<g id="node17" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1</title>
+<g id="a_node17"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1 | defined in parallel.go:664&#10;at parallel.go:678: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1]">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="794.33,-296 559.79,-296 559.79,-260 794.33,-260 794.33,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-273.32" font-family="Verdana" font-size="14.00">(*ParallelExecutor).Execute$1</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
-<g id="edge33" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
-<g id="a_edge33"><a xlink:title="at affinity.go:273: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
-<path fill="none" stroke="black" d="M291.33,-585.47C327.85,-582.95 369.87,-574.69 402.04,-553 454.43,-517.67 422.62,-466.28 475.04,-431 511.52,-406.46 560.06,-398.45 600.3,-396.71"/>
-<polygon fill="black" stroke="black" points="600.28,-400.21 610.18,-396.41 600.08,-393.21 600.28,-400.21"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1 -->
+<g id="node18" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1</title>
+<g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1 | defined in parallel.go:678">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1243.62,-296 991.08,-296 991.08,-260 1243.62,-260 1243.62,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-273.32" font-family="Verdana" font-size="14.00">(*ParallelExecutor).Execute$1$1</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore</title>
-<g id="a_edge14"><a xlink:title="at affinity.go:281: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore]">
-<path fill="none" stroke="black" d="M291.73,-583C368.6,-583 484.18,-583 568.51,-583"/>
-<polygon fill="black" stroke="black" points="568.42,-586.5 578.42,-583 568.42,-579.5 568.42,-586.5"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1 -->
+<g id="edge19" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1</title>
+<g id="a_edge19"><a xlink:title="at parallel.go:678: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1$1]">
+<path fill="none" stroke="black" d="M794.65,-278C845.8,-278 906.58,-278 961.45,-278"/>
+<polygon fill="black" stroke="black" points="979.29,-281.5 989.29,-278 979.29,-274.5 979.29,-281.5"/>
+<polyline fill="none" stroke="black" points="978.79,-278 973.79,-278"/>
+<polygon fill="none" stroke="black" points="960.89,-278 966.89,-274 972.89,-278 966.89,-282 960.89,-278"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode -->
-<g id="node34" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode</title>
-<g id="a_node34"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode | defined in affinity.go:422&#10;at affinity.go:428: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M804.45,-479C804.45,-479 549.66,-479 549.66,-479 543.66,-479 537.66,-473 537.66,-467 537.66,-467 537.66,-455 537.66,-455 537.66,-449 543.66,-443 549.66,-443 549.66,-443 804.45,-443 804.45,-443 810.45,-443 816.45,-449 816.45,-455 816.45,-455 816.45,-467 816.45,-467 816.45,-473 810.45,-479 804.45,-479"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-456.32" font-family="Verdana" font-size="14.00">(*NUMAManager).ReleaseFromNode</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1 -->
+<g id="node19" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1</title>
+<g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1 | defined in parallel.go:318&#10;at parallel.go:332: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1]">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="819.83,-235 534.29,-235 534.29,-199 819.83,-199 819.83,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-212.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ParallelForInts$1</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge25" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).ReleaseFromNode&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge25"><a xlink:title="at affinity.go:428: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
-<path fill="none" stroke="saddlebrown" d="M817.05,-472.62C838.37,-477.18 859.7,-483.43 879.08,-492 917.23,-508.87 913.76,-534.51 952.08,-551 992.86,-568.55 1044.16,-572.94 1078.49,-573.65"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="1078.32,-577.15 1088.36,-573.75 1078.4,-570.15 1078.32,-577.15"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1 -->
+<g id="node20" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1</title>
+<g id="a_node20"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1 | defined in parallel.go:332">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1269.12,-235 965.58,-235 965.58,-199 1269.12,-199 1269.12,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-212.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ParallelForInts$1$1</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1 -->
-<g id="node35" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1</title>
-<g id="a_node35"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1 | defined in parallel.go:130&#10;at parallel.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1]">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="798.08,-784 556.04,-784 556.04,-748 798.08,-748 798.08,-784"/>
-<text xml:space="preserve" text-anchor="middle" x="677.06" y="-761.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapInts$1</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1 -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1</title>
+<g id="a_edge17"><a xlink:title="at parallel.go:332: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1$1]">
+<path fill="none" stroke="black" d="M820.06,-217C856.93,-217 897.13,-217 935.7,-217"/>
+<polygon fill="black" stroke="black" points="953.62,-220.5 963.62,-217 953.62,-213.5 953.62,-220.5"/>
+<polyline fill="none" stroke="black" points="953.12,-217 948.12,-217"/>
+<polygon fill="none" stroke="black" points="935.22,-217 941.22,-213 947.22,-217 941.22,-221 935.22,-217"/>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1 -->
-<g id="node36" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1</title>
-<g id="a_node36"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1 | defined in parallel.go:145">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1247.37,-784 987.33,-784 987.33,-748 1247.37,-748 1247.37,-784"/>
-<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-761.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapInts$1$1</text>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU -->
+<g id="node21" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU</title>
+<g id="a_node21"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU | defined in affinity.go:56&#10;at affinity.go:72: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU]&#10;at affinity.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M314.66,-418C314.66,-418 103.38,-418 103.38,-418 97.38,-418 91.37,-412 91.37,-406 91.37,-406 91.37,-394 91.37,-394 91.37,-388 97.37,-382 103.37,-382 103.37,-382 314.66,-382 314.66,-382 320.66,-382 326.66,-388 326.66,-394 326.66,-394 326.66,-406 326.66,-406 326.66,-412 320.66,-418 314.66,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-395.32" font-family="Verdana" font-size="14.00">(*AffinityManager).AssignCPU</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1 -->
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
+<g id="node22" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
+<g id="a_node22"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID | defined in affinity.go:548">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M730.2,-479C730.2,-479 623.91,-479 623.91,-479 617.91,-479 611.91,-473 611.91,-467 611.91,-467 611.91,-455 611.91,-455 611.91,-449 617.91,-443 623.91,-443 623.91,-443 730.2,-443 730.2,-443 736.2,-443 742.2,-449 742.2,-455 742.2,-455 742.2,-467 742.2,-467 742.2,-473 736.2,-479 730.2,-479"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-456.32" font-family="Verdana" font-size="14.00">getGoroutineID</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
+<g id="edge27" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
+<g id="a_edge27"><a xlink:title="at affinity.go:61: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
+<path fill="none" stroke="black" d="M327.32,-415.35C413.11,-426.58 526.95,-441.48 600.84,-451.16"/>
+<polygon fill="black" stroke="black" points="600.03,-454.58 610.4,-452.41 600.94,-447.64 600.03,-454.58"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU -->
+<g id="node23" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU</title>
+<g id="a_node23"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU | defined in affinity.go:99&#10;at affinity.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin]&#10;at affinity.go:110: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin]&#10;at affinity.go:106: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA]&#10;at affinity.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]&#10;at affinity.go:108: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M779.7,-418C779.7,-418 574.41,-418 574.41,-418 568.41,-418 562.41,-412 562.41,-406 562.41,-406 562.41,-394 562.41,-394 562.41,-388 568.41,-382 574.41,-382 574.41,-382 779.7,-382 779.7,-382 785.7,-382 791.7,-388 791.7,-394 791.7,-394 791.7,-406 791.7,-406 791.7,-412 785.7,-418 779.7,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-395.32" font-family="Verdana" font-size="14.00">(*AffinityManager).selectCPU</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU -->
 <g id="edge7" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1</title>
-<g id="a_edge7"><a xlink:title="at parallel.go:145: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1$1]">
-<path fill="none" stroke="black" d="M798.4,-766C847.57,-766 905.12,-766 957.65,-766"/>
-<polygon fill="black" stroke="black" points="975.55,-769.5 985.55,-766 975.55,-762.5 975.55,-769.5"/>
-<polyline fill="none" stroke="black" points="975.05,-766 970.05,-766"/>
-<polygon fill="none" stroke="black" points="957.15,-766 963.15,-762 969.15,-766 963.15,-770 957.15,-766"/>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).AssignCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU</title>
+<g id="a_edge7"><a xlink:title="at affinity.go:72: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU]">
+<path fill="none" stroke="black" d="M327.32,-400C395.52,-400 481.44,-400 550.93,-400"/>
+<polygon fill="black" stroke="black" points="550.86,-403.5 560.86,-400 550.86,-396.5 550.86,-403.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA -->
+<g id="edge20" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA</title>
+<g id="a_edge20"><a xlink:title="at affinity.go:106: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectNUMA]">
+<path fill="none" stroke="black" d="M791.79,-400C850.64,-400 922.82,-400 984.16,-400"/>
+<polygon fill="black" stroke="black" points="983.96,-403.5 993.96,-400 983.96,-396.5 983.96,-403.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed -->
+<g id="edge28" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed</title>
+<g id="a_edge28"><a xlink:title="at affinity.go:104: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
+<path fill="none" stroke="black" d="M791.84,-415.2C841.03,-421.16 899.3,-427.43 952.08,-431 1098,-440.88 1265.11,-443.72 1381.77,-444.33"/>
+<polygon fill="black" stroke="black" points="1381.72,-447.83 1391.74,-444.38 1381.75,-440.83 1381.72,-447.83"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin -->
+<g id="node24" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin</title>
+<g id="a_node24"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin | defined in affinity.go:115">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1248.12,-506C1248.12,-506 986.58,-506 986.58,-506 980.58,-506 974.58,-500 974.58,-494 974.58,-494 974.58,-482 974.58,-482 974.58,-476 980.58,-470 986.58,-470 986.58,-470 1248.12,-470 1248.12,-470 1254.12,-470 1260.12,-476 1260.12,-482 1260.12,-482 1260.12,-494 1260.12,-494 1260.12,-500 1254.12,-506 1248.12,-506"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-483.32" font-family="Verdana" font-size="14.00">(*AffinityManager).selectRoundRobin</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin -->
+<g id="edge3" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin</title>
+<g id="a_edge3"><a xlink:title="at affinity.go:102: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin]&#10;at affinity.go:110: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectRoundRobin]">
+<path fill="none" stroke="black" d="M791.93,-410.41C820.85,-414.98 851.52,-421.56 879.08,-431 896.4,-436.93 897.85,-444.82 915.08,-451 933.12,-457.47 952.5,-462.86 971.86,-467.34"/>
+<polygon fill="black" stroke="black" points="970.91,-470.71 981.44,-469.47 972.43,-463.88 970.91,-470.71"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated -->
+<g id="node25" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated</title>
+<g id="a_node25"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated | defined in affinity.go:144&#10;at affinity.go:147: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M1240.62,-567C1240.62,-567 994.08,-567 994.08,-567 988.08,-567 982.08,-561 982.08,-555 982.08,-555 982.08,-543 982.08,-543 982.08,-537 988.08,-531 994.08,-531 994.08,-531 1240.62,-531 1240.62,-531 1246.62,-531 1252.62,-537 1252.62,-543 1252.62,-543 1252.62,-555 1252.62,-555 1252.62,-561 1246.62,-567 1240.62,-567"/>
+<text xml:space="preserve" text-anchor="middle" x="1117.35" y="-544.33" font-family="Verdana" font-size="14.00">(*AffinityManager).selectDedicated</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated -->
+<g id="edge32" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectCPU&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated</title>
+<g id="a_edge32"><a xlink:title="at affinity.go:108: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated]">
+<path fill="none" stroke="black" d="M791.84,-403.12C821.67,-407.71 852.81,-416.11 879.08,-431 923.29,-456.06 908.22,-493.33 952.08,-519 958.24,-522.6 964.73,-525.79 971.43,-528.61"/>
+<polygon fill="black" stroke="black" points="970.13,-531.86 980.72,-532.2 972.65,-525.33 970.13,-531.86"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectDedicated&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed</title>
+<g id="a_edge13"><a xlink:title="at affinity.go:147: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).selectLeastUsed]">
+<path fill="none" stroke="black" d="M1227.85,-530.82C1246.21,-527.25 1265.01,-523.27 1282.62,-519 1345.21,-503.81 1415.37,-481.96 1464.74,-465.75"/>
+<polygon fill="black" stroke="black" points="1465.74,-469.11 1474.14,-462.65 1463.54,-462.46 1465.74,-469.11"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts -->
-<g id="node37" class="node">
+<g id="node26" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts</title>
-<g id="a_node37"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts | defined in parallel.go:118&#10;at parallel.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M309.04,-784C309.04,-784 109,-784 109,-784 103,-784 97,-778 97,-772 97,-772 97,-760 97,-760 97,-754 103,-748 109,-748 109,-748 309.04,-748 309.04,-748 315.04,-748 321.04,-754 321.04,-760 321.04,-760 321.04,-772 321.04,-772 321.04,-778 315.04,-784 309.04,-784"/>
-<text xml:space="preserve" text-anchor="middle" x="209.02" y="-761.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapInts</text>
+<g id="a_node26"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts | defined in parallel.go:118&#10;at parallel.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M309.04,-174C309.04,-174 109,-174 109,-174 103,-174 97,-168 97,-162 97,-162 97,-150 97,-150 97,-144 103,-138 109,-138 109,-138 309.04,-138 309.04,-138 315.04,-138 321.04,-144 321.04,-150 321.04,-150 321.04,-162 321.04,-162 321.04,-168 315.04,-174 309.04,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-151.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapInts</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1 -->
-<g id="edge4" class="edge">
+<g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1</title>
-<g id="a_edge4"><a xlink:title="at parallel.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1]">
-<path fill="none" stroke="black" d="M321.65,-766C384.21,-766 462.96,-766 530.34,-766"/>
-<polygon fill="black" stroke="black" points="544.03,-769.5 554.03,-766 544.03,-762.5 544.03,-769.5"/>
-<polyline fill="none" stroke="black" points="543.53,-766 538.53,-766"/>
-<ellipse fill="none" stroke="black" cx="534.03" cy="-766" rx="4" ry="4"/>
+<g id="a_edge18"><a xlink:title="at parallel.go:130: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapInts$1]">
+<path fill="none" stroke="black" d="M321.65,-156C384.21,-156 462.96,-156 530.34,-156"/>
+<polygon fill="black" stroke="black" points="544.03,-159.5 554.03,-156 544.03,-152.5 544.03,-159.5"/>
+<polyline fill="none" stroke="black" points="543.53,-156 538.53,-156"/>
+<ellipse fill="none" stroke="black" cx="534.03" cy="-156" rx="4" ry="4"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts -->
+<g id="node27" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts</title>
+<g id="a_node27"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts | defined in parallel.go:307&#10;at parallel.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M330.79,-235C330.79,-235 87.25,-235 87.25,-235 81.25,-235 75.25,-229 75.25,-223 75.25,-223 75.25,-211 75.25,-211 75.25,-205 81.25,-199 87.25,-199 87.25,-199 330.79,-199 330.79,-199 336.79,-199 342.79,-205 342.79,-211 342.79,-211 342.79,-223 342.79,-223 342.79,-229 336.79,-235 330.79,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-212.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ParallelForInts</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1 -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1</title>
+<g id="a_edge8"><a xlink:title="at parallel.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ParallelForInts$1]">
+<path fill="none" stroke="black" d="M343.26,-217C394.81,-217 454.4,-217 508.78,-217"/>
+<polygon fill="black" stroke="black" points="522.67,-220.5 532.67,-217 522.67,-213.5 522.67,-220.5"/>
+<polyline fill="none" stroke="black" points="522.17,-217 517.17,-217"/>
+<ellipse fill="none" stroke="black" cx="512.67" cy="-217" rx="4" ry="4"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore -->
+<g id="node28" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore</title>
+<g id="a_node28"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore | defined in affinity.go:217&#10;at affinity.go:222: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at affinity.go:231: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M761.33,-662C761.33,-662 592.79,-662 592.79,-662 586.79,-662 580.79,-656 580.79,-650 580.79,-650 580.79,-638 580.79,-638 580.79,-632 586.79,-626 592.79,-626 592.79,-626 761.33,-626 761.33,-626 767.33,-626 773.33,-632 773.33,-638 773.33,-638 773.33,-650 773.33,-650 773.33,-656 767.33,-662 761.33,-662"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-639.33" font-family="Verdana" font-size="14.00">(*CPUPool).ReleaseCore</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge21" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge21"><a xlink:title="at affinity.go:222: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at affinity.go:231: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M773.97,-638.31C869.51,-632.64 1011.36,-624.23 1078.5,-620.25"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1078.47,-623.75 1088.24,-619.67 1078.05,-616.77 1078.47,-623.75"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute -->
+<g id="node29" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute</title>
+<g id="a_node29"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute | defined in parallel.go:647&#10;at parallel.go:664: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M305.29,-296C305.29,-296 112.75,-296 112.75,-296 106.75,-296 100.75,-290 100.75,-284 100.75,-284 100.75,-272 100.75,-272 100.75,-266 106.75,-260 112.75,-260 112.75,-260 305.29,-260 305.29,-260 311.29,-260 317.29,-266 317.29,-272 317.29,-272 317.29,-284 317.29,-284 317.29,-290 311.29,-296 305.29,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-273.32" font-family="Verdana" font-size="14.00">(*ParallelExecutor).Execute</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1 -->
+<g id="edge14" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1</title>
+<g id="a_edge14"><a xlink:title="at parallel.go:664: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelExecutor).Execute$1]">
+<path fill="none" stroke="black" d="M317.82,-278C382.09,-278 464.44,-278 533.97,-278"/>
+<polygon fill="black" stroke="black" points="547.93,-281.5 557.93,-278 547.93,-274.5 547.93,-281.5"/>
+<polyline fill="none" stroke="black" points="547.43,-278 542.43,-278"/>
+<ellipse fill="none" stroke="black" cx="537.93" cy="-278" rx="4" ry="4"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore -->
+<g id="node30" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore</title>
+<g id="a_node30"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore | defined in affinity.go:307&#10;at affinity.go:312: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M320.29,-479C320.29,-479 97.75,-479 97.75,-479 91.75,-479 85.75,-473 85.75,-467 85.75,-467 85.75,-455 85.75,-455 85.75,-449 91.75,-443 97.75,-443 97.75,-443 320.29,-443 320.29,-443 326.29,-443 332.29,-449 332.29,-455 332.29,-455 332.29,-467 332.29,-467 332.29,-473 326.29,-479 320.29,-479"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-456.32" font-family="Verdana" font-size="14.00">(*ThreadPinner).GetPinnedCore</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
+<g id="edge25" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).GetPinnedCore&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
+<g id="a_edge25"><a xlink:title="at affinity.go:312: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
+<path fill="none" stroke="black" d="M332.77,-461C417.76,-461 528.18,-461 600.53,-461"/>
+<polygon fill="black" stroke="black" points="600.29,-464.5 610.29,-461 600.29,-457.5 600.29,-464.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU -->
+<g id="node31" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU</title>
+<g id="a_node31"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU | defined in affinity.go:80&#10;at affinity.go:85: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M318.41,-540C318.41,-540 99.62,-540 99.62,-540 93.62,-540 87.62,-534 87.62,-528 87.62,-528 87.62,-516 87.62,-516 87.62,-510 93.62,-504 99.62,-504 99.62,-504 318.41,-504 318.41,-504 324.41,-504 330.41,-510 330.41,-516 330.41,-516 330.41,-528 330.41,-528 330.41,-534 324.41,-540 318.41,-540"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-517.33" font-family="Verdana" font-size="14.00">(*AffinityManager).ReleaseCPU</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
+<g id="edge33" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.AffinityManager).ReleaseCPU&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
+<g id="a_edge33"><a xlink:title="at affinity.go:85: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
+<path fill="none" stroke="black" d="M330.95,-506.17C416.2,-495.01 527.72,-480.42 600.59,-470.88"/>
+<polygon fill="black" stroke="black" points="600.98,-474.36 610.44,-469.59 600.07,-467.42 600.98,-474.36"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode -->
+<g id="node32" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode</title>
+<g id="a_node32"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode | defined in affinity.go:402&#10;at affinity.go:407: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at affinity.go:412: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M804.83,-540C804.83,-540 549.29,-540 549.29,-540 543.29,-540 537.29,-534 537.29,-528 537.29,-528 537.29,-516 537.29,-516 537.29,-510 543.29,-504 549.29,-504 549.29,-504 804.83,-504 804.83,-504 810.83,-504 816.83,-510 816.83,-516 816.83,-516 816.83,-528 816.83,-528 816.83,-534 810.83,-540 804.83,-540"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-517.33" font-family="Verdana" font-size="14.00">(*NUMAManager).AllocateFromNode</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
+<g id="edge29" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.NUMAManager).AllocateFromNode&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
+<g id="a_edge29"><a xlink:title="at affinity.go:407: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at affinity.go:412: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<path fill="none" stroke="saddlebrown" d="M817.38,-536.44C838.38,-540.63 859.54,-546.03 879.08,-553 914.55,-565.65 916.49,-583.7 952.08,-596 993.8,-610.42 1044.51,-615.46 1078.45,-617.18"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="1078.06,-620.67 1088.21,-617.6 1078.36,-613.67 1078.06,-620.67"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools -->
+<g id="node33" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools</title>
+<g id="a_node33"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools | defined in parallel.go:168&#10;at parallel.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M781.95,-357C781.95,-357 572.16,-357 572.16,-357 566.16,-357 560.16,-351 560.16,-345 560.16,-345 560.16,-333 560.16,-333 560.16,-327 566.16,-321 572.16,-321 572.16,-321 781.95,-321 781.95,-321 787.95,-321 793.95,-327 793.95,-333 793.95,-333 793.95,-345 793.95,-345 793.95,-351 787.95,-357 781.95,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="677.06" y="-334.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).MapBools</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1 -->
+<g id="edge9" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1</title>
+<g id="a_edge9"><a xlink:title="at parallel.go:180: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools$1]">
+<path fill="none" stroke="black" d="M794.65,-339C847.21,-339 909.93,-339 965.98,-339"/>
+<polygon fill="black" stroke="black" points="979.68,-342.5 989.68,-339 979.68,-335.5 979.68,-342.5"/>
+<polyline fill="none" stroke="black" points="979.18,-339 974.18,-339"/>
+<ellipse fill="none" stroke="black" cx="969.68" cy="-339" rx="4" ry="4"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts -->
+<g id="node34" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts</title>
+<g id="a_node34"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts | defined in parallel.go:284&#10;at parallel.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M312.04,-357C312.04,-357 106,-357 106,-357 100,-357 94,-351 94,-345 94,-345 94,-333 94,-333 94,-327 100,-321 106,-321 106,-321 312.04,-321 312.04,-321 318.04,-321 324.04,-327 324.04,-333 324.04,-333 324.04,-345 324.04,-345 324.04,-351 318.04,-357 312.04,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-334.32" font-family="Verdana" font-size="14.00">(*ParallelProcessor).FilterInts</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools -->
+<g id="edge22" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).FilterInts&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools</title>
+<g id="a_edge22"><a xlink:title="at parallel.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).MapBools]">
+<path fill="none" stroke="black" d="M324.62,-339C392.42,-339 478.42,-339 548.38,-339"/>
+<polygon fill="black" stroke="black" points="547.96,-342.5 557.96,-339 547.96,-335.5 547.96,-342.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin -->
+<g id="node35" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin</title>
+<g id="a_node35"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin | defined in affinity.go:268&#10;at affinity.go:273: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]&#10;at affinity.go:281: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M279.04,-708C279.04,-708 139,-708 139,-708 133,-708 127,-702 127,-696 127,-696 127,-684 127,-684 127,-678 133,-672 139,-672 139,-672 279.04,-672 279.04,-672 285.04,-672 291.04,-678 291.04,-684 291.04,-684 291.04,-696 291.04,-696 291.04,-702 285.04,-708 279.04,-708"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-685.33" font-family="Verdana" font-size="14.00">(*ThreadPinner).Pin</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore -->
+<g id="edge10" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore</title>
+<g id="a_edge10"><a xlink:title="at affinity.go:281: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).AllocateCore]">
+<path fill="none" stroke="black" d="M291.73,-692.63C368.6,-695.1 484.18,-698.82 568.51,-701.54"/>
+<polygon fill="black" stroke="black" points="568.31,-705.03 578.42,-701.86 568.54,-698.04 568.31,-705.03"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
+<g id="edge4" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Pin&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
+<g id="a_edge4"><a xlink:title="at affinity.go:273: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
+<path fill="none" stroke="black" d="M291.54,-679.03C328.54,-670.65 370.88,-655.9 402.04,-630 455.4,-585.64 418.51,-532.24 475.04,-492 510.99,-466.41 559.74,-458.42 600.23,-456.94"/>
+<polygon fill="black" stroke="black" points="600.25,-460.44 610.17,-456.72 600.09,-453.44 600.25,-460.44"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin -->
+<g id="node36" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin</title>
+<g id="a_node36"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin | defined in affinity.go:291&#10;at affinity.go:296: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]&#10;at affinity.go:300: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M289.16,-617C289.16,-617 128.88,-617 128.88,-617 122.88,-617 116.87,-611 116.87,-605 116.87,-605 116.87,-593 116.87,-593 116.87,-587 122.87,-581 128.87,-581 128.87,-581 289.16,-581 289.16,-581 295.16,-581 301.16,-587 301.16,-593 301.16,-593 301.16,-605 301.16,-605 301.16,-611 295.16,-617 289.16,-617"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-594.33" font-family="Verdana" font-size="14.00">(*ThreadPinner).Unpin</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID -->
+<g id="edge30" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID</title>
+<g id="a_edge30"><a xlink:title="at affinity.go:296: calling [github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.getGoroutineID]">
+<path fill="none" stroke="black" d="M301.45,-586.03C334.33,-579.09 370.95,-568.62 402.04,-553 439.82,-534.02 436.51,-509.42 475.04,-492 514.28,-474.26 561.76,-466.39 600.72,-463.01"/>
+<polygon fill="black" stroke="black" points="600.78,-466.51 610.48,-462.25 600.24,-459.53 600.78,-466.51"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore -->
+<g id="edge31" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ThreadPinner).Unpin&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore</title>
+<g id="a_edge31"><a xlink:title="at affinity.go:300: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.CPUPool).ReleaseCore]">
+<path fill="none" stroke="black" d="M301.82,-607.86C378.56,-615.27 488.1,-625.85 568.86,-633.65"/>
+<polygon fill="black" stroke="black" points="568.26,-637.11 578.55,-634.58 568.93,-630.14 568.26,-637.11"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes -->
+<g id="node37" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes</title>
+<g id="a_node37"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes | defined in parallel.go:46&#10;at parallel.go:71: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M343.16,-784C343.16,-784 74.88,-784 74.88,-784 68.88,-784 62.87,-778 62.87,-772 62.87,-772 62.87,-760 62.87,-760 62.87,-754 68.87,-748 74.87,-748 74.87,-748 343.16,-748 343.16,-748 349.16,-748 355.16,-754 355.16,-760 355.16,-760 355.16,-772 355.16,-772 355.16,-778 349.16,-784 343.16,-784"/>
+<text xml:space="preserve" text-anchor="middle" x="209.02" y="-761.33" font-family="Verdana" font-size="14.00">(*ParallelProcessor).ProcessSliceBytes</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes -->
+<g id="edge23" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).ProcessSliceBytes&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes</title>
+<g id="a_edge23"><a xlink:title="at parallel.go:71: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/performance/cpu.ParallelProcessor).processChunksBytes]">
+<path fill="none" stroke="black" d="M355.88,-766C404.66,-766 459.39,-766 509.62,-766"/>
+<polygon fill="black" stroke="black" points="509.42,-769.5 519.42,-766 509.42,-762.5 509.42,-769.5"/>
 </a>
 </g>
 </g>

@@ -21,18 +21,18 @@ labeljust="c";
 fontsize="18";
         
         "(*github.com/guild-framework/guild-core/pkg/providers/deepseek.Client).Complete" [ fillcolor="lightblue" label="(*Client).Complete" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/deepseek.Client).Complete | defined in client.go:92\nat client.go:100: calling [(*github.com/guild-framework/guild-core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion]" ]
-        "github.com/guild-framework/guild-core/pkg/providers/deepseek.NewClient" [ fillcolor="lightblue" label="NewClient" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/providers/deepseek.NewClient | defined in client.go:26\nat client.go:64: calling [github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider]" ]
+        "github.com/guild-framework/guild-core/pkg/providers/deepseek.NewClient" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/providers/deepseek.NewClient | defined in client.go:26\nat client.go:64: calling [github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider]" fillcolor="lightblue" label="NewClient" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/providers/base" {
-        style="filled";
+        fontname="Tahoma bold";
+URL="/?f=github.com/guild-framework/guild-core/pkg/providers/base";
 fillcolor="lightyellow";
-fontname="Tahoma bold";
 rank="sink";
 label="base";
 tooltip="package: github.com/guild-framework/guild-core/pkg/providers/base";
 penwidth="0.8";
 fontsize="16";
-URL="/?f=github.com/guild-framework/guild-core/pkg/providers/base";
+style="filled";
         
         "(*github.com/guild-framework/guild-core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion" [ fillcolor="moccasin" label="(*OpenAICompatibleProvider).ChatCompletion" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion | defined in openai_compatible.go:50" ]
         "github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider" [ tooltip="github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider | defined in openai_compatible.go:32" fillcolor="moccasin" label="NewOpenAICompatibleProvider" penwidth="1.5" ]
@@ -42,5 +42,5 @@ URL="/?f=github.com/guild-framework/guild-core/pkg/providers/base";
     }
 
     "(*github.com/guild-framework/guild-core/pkg/providers/deepseek.Client).Complete" -> "(*github.com/guild-framework/guild-core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion" [ tooltip="at client.go:100: calling [(*github.com/guild-framework/guild-core/pkg/providers/base.OpenAICompatibleProvider).ChatCompletion]" color="saddlebrown" ]
-    "github.com/guild-framework/guild-core/pkg/providers/deepseek.NewClient" -> "github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider" [ tooltip="at client.go:64: calling [github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider]" color="saddlebrown" ]
+    "github.com/guild-framework/guild-core/pkg/providers/deepseek.NewClient" -> "github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider" [ color="saddlebrown" tooltip="at client.go:64: calling [github.com/guild-framework/guild-core/pkg/providers/base.NewOpenAICompatibleProvider]" ]
 }

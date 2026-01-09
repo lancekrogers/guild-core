@@ -25,7 +25,7 @@
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs -->
 <g id="node1" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs</title>
-<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs | defined in service_config.go:388&#10;at service_config.go:396: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toDaemonServiceConfig]&#10;at service_config.go:391: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toMemoryServiceConfig]&#10;at service_config.go:392: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toSessionServiceConfig]&#10;at service_config.go:393: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toOrchestratorServiceConfig]&#10;at service_config.go:397: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toCorpusServiceConfig]&#10;at service_config.go:394: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toAgentManagerServiceConfig]&#10;at service_config.go:390: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toKanbanServiceConfig]&#10;at service_config.go:395: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toChatUIServiceConfig]">
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs | defined in service_config.go:388&#10;at service_config.go:392: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toSessionServiceConfig]&#10;at service_config.go:395: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toChatUIServiceConfig]&#10;at service_config.go:396: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toDaemonServiceConfig]&#10;at service_config.go:390: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toKanbanServiceConfig]&#10;at service_config.go:394: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toAgentManagerServiceConfig]&#10;at service_config.go:391: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toMemoryServiceConfig]&#10;at service_config.go:393: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toOrchestratorServiceConfig]&#10;at service_config.go:397: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toCorpusServiceConfig]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M270.04,-270C270.04,-270 28,-270 28,-270 22,-270 16,-264 16,-258 16,-258 16,-246 16,-246 16,-240 22,-234 28,-234 28,-234 270.04,-234 270.04,-234 276.04,-234 282.04,-240 282.04,-246 282.04,-246 282.04,-258 282.04,-258 282.04,-264 276.04,-270 270.04,-270"/>
 <text xml:space="preserve" text-anchor="middle" x="149.02" y="-247.32" font-family="Verdana" font-size="14.00">(*ServiceConfig).ToServiceConfigs</text>
 </a>
@@ -41,9 +41,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toKanbanServiceConfig -->
-<g id="edge14" class="edge">
+<g id="edge11" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toKanbanServiceConfig</title>
-<g id="a_edge14"><a xlink:title="at service_config.go:390: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toKanbanServiceConfig]">
+<g id="a_edge11"><a xlink:title="at service_config.go:390: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toKanbanServiceConfig]">
 <path fill="none" stroke="black" d="M202.14,-233.33C243.25,-219.13 302.26,-199.9 355.04,-187 370.93,-183.12 387.72,-179.53 404.4,-176.28"/>
 <polygon fill="black" stroke="black" points="404.68,-179.79 413.85,-174.48 403.37,-172.92 404.68,-179.79"/>
 </a>
@@ -59,9 +59,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toMemoryServiceConfig -->
-<g id="edge3" class="edge">
+<g id="edge17" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toMemoryServiceConfig</title>
-<g id="a_edge3"><a xlink:title="at service_config.go:391: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toMemoryServiceConfig]">
+<g id="a_edge17"><a xlink:title="at service_config.go:391: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toMemoryServiceConfig]">
 <path fill="none" stroke="black" d="M282.69,-239.88C309.8,-237.41 338.64,-234.77 366.76,-232.2"/>
 <polygon fill="black" stroke="black" points="366.76,-235.72 376.4,-231.32 366.13,-228.75 366.76,-235.72"/>
 </a>
@@ -95,9 +95,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toOrchestratorServiceConfig -->
-<g id="edge5" class="edge">
+<g id="edge18" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toOrchestratorServiceConfig</title>
-<g id="a_edge5"><a xlink:title="at service_config.go:393: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toOrchestratorServiceConfig]">
+<g id="a_edge18"><a xlink:title="at service_config.go:393: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toOrchestratorServiceConfig]">
 <path fill="none" stroke="black" d="M210.6,-270.64C251.2,-282.68 306,-298.08 355.04,-309 370.59,-312.46 386.97,-315.73 403.26,-318.74"/>
 <polygon fill="black" stroke="black" points="402.55,-322.17 413.02,-320.52 403.8,-315.29 402.55,-322.17"/>
 </a>
@@ -113,9 +113,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toAgentManagerServiceConfig -->
-<g id="edge9" class="edge">
+<g id="edge12" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toAgentManagerServiceConfig</title>
-<g id="a_edge9"><a xlink:title="at service_config.go:394: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toAgentManagerServiceConfig]">
+<g id="a_edge12"><a xlink:title="at service_config.go:394: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toAgentManagerServiceConfig]">
 <path fill="none" stroke="black" d="M175.41,-270.64C212.78,-297.11 285.65,-345.1 355.04,-370 364.47,-373.38 374.32,-376.39 384.34,-379.06"/>
 <polygon fill="black" stroke="black" points="383.25,-382.39 393.8,-381.46 384.97,-375.61 383.25,-382.39"/>
 </a>
@@ -131,9 +131,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toChatUIServiceConfig -->
-<g id="edge15" class="edge">
+<g id="edge5" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toChatUIServiceConfig</title>
-<g id="a_edge15"><a xlink:title="at service_config.go:395: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toChatUIServiceConfig]">
+<g id="a_edge5"><a xlink:title="at service_config.go:395: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toChatUIServiceConfig]">
 <path fill="none" stroke="black" d="M164.97,-270.64C196.01,-307.92 271.55,-391.46 355.04,-431 361.46,-434.04 368.13,-436.78 374.97,-439.24"/>
 <polygon fill="black" stroke="black" points="373.81,-442.54 384.4,-442.41 376.04,-435.9 373.81,-442.54"/>
 </a>
@@ -149,9 +149,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toDaemonServiceConfig -->
-<g id="edge1" class="edge">
+<g id="edge6" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toDaemonServiceConfig</title>
-<g id="a_edge1"><a xlink:title="at service_config.go:396: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toDaemonServiceConfig]">
+<g id="a_edge6"><a xlink:title="at service_config.go:396: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toDaemonServiceConfig]">
 <path fill="none" stroke="black" d="M164.09,-233.44C194.35,-195 269.83,-106.78 355.04,-65 362.03,-61.57 369.34,-58.52 376.84,-55.79"/>
 <polygon fill="black" stroke="black" points="377.78,-59.17 386.13,-52.65 375.53,-52.54 377.78,-59.17"/>
 </a>
@@ -167,9 +167,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toCorpusServiceConfig -->
-<g id="edge6" class="edge">
+<g id="edge19" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ToServiceConfigs&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toCorpusServiceConfig</title>
-<g id="a_edge6"><a xlink:title="at service_config.go:397: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toCorpusServiceConfig]">
+<g id="a_edge19"><a xlink:title="at service_config.go:397: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).toCorpusServiceConfig]">
 <path fill="none" stroke="black" d="M173.38,-233.48C209.9,-205.53 283.73,-152.98 355.04,-126 364.96,-122.25 375.35,-118.95 385.94,-116.04"/>
 <polygon fill="black" stroke="black" points="386.76,-119.45 395.56,-113.54 385,-112.67 386.76,-119.45"/>
 </a>
@@ -178,7 +178,7 @@
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig -->
 <g id="node10" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig</title>
-<g id="a_node10"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig | defined in service_config.go:269&#10;at service_config.go:283: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:271: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/config.DefaultServiceConfig]&#10;at service_config.go:295: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate]&#10;at service_config.go:282: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:289: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:284: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service_config.go:291: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service_config.go:300: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ApplyEnvironmentOverrides]">
+<g id="a_node10"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig | defined in service_config.go:269&#10;at service_config.go:283: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:284: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service_config.go:291: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service_config.go:282: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:289: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:300: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ApplyEnvironmentOverrides]&#10;at service_config.go:271: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/config.DefaultServiceConfig]&#10;at service_config.go:295: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M213.41,-654C213.41,-654 84.62,-654 84.62,-654 78.62,-654 72.62,-648 72.62,-642 72.62,-642 72.62,-630 72.62,-630 72.62,-624 78.62,-618 84.62,-618 84.62,-618 213.41,-618 213.41,-618 219.41,-618 225.41,-624 225.41,-630 225.41,-630 225.41,-642 225.41,-642 225.41,-648 219.41,-654 213.41,-654"/>
 <text xml:space="preserve" text-anchor="middle" x="149.02" y="-631.33" font-family="Verdana" font-size="14.00">LoadServiceConfig</text>
 </a>
@@ -194,9 +194,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/config.DefaultServiceConfig -->
-<g id="edge7" class="edge">
+<g id="edge13" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/integration/config.DefaultServiceConfig</title>
-<g id="a_edge7"><a xlink:title="at service_config.go:271: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/config.DefaultServiceConfig]">
+<g id="a_edge13"><a xlink:title="at service_config.go:271: calling [github.com/guild&#45;framework/guild&#45;core/internal/integration/config.DefaultServiceConfig]">
 <path fill="none" stroke="black" d="M212.45,-617.3C252.87,-605.6 306.78,-590.76 355.04,-580 381.58,-574.08 410.56,-568.62 437.28,-563.98"/>
 <polygon fill="black" stroke="black" points="437.83,-567.44 447.09,-562.3 436.65,-560.54 437.83,-567.44"/>
 </a>
@@ -205,16 +205,16 @@
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate -->
 <g id="node12" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate | defined in service_config.go:337&#10;at service_config.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:347: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:354: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:340: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service_config.go:346: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service_config.go:353: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service_config.go:348: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate | defined in service_config.go:337&#10;at service_config.go:348: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service_config.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:347: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:354: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:340: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service_config.go:346: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service_config.go:353: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M622.95,-628C622.95,-628 445.41,-628 445.41,-628 439.41,-628 433.41,-622 433.41,-616 433.41,-616 433.41,-604 433.41,-604 433.41,-598 439.41,-592 445.41,-592 445.41,-592 622.95,-592 622.95,-592 628.95,-592 634.95,-598 634.95,-604 634.95,-604 634.95,-616 634.95,-616 634.95,-622 628.95,-628 622.95,-628"/>
 <text xml:space="preserve" text-anchor="middle" x="534.18" y="-605.33" font-family="Verdana" font-size="14.00">(*ServiceConfig).Validate</text>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate -->
-<g id="edge8" class="edge">
+<g id="edge15" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate</title>
-<g id="a_edge8"><a xlink:title="at service_config.go:295: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate]">
+<g id="a_edge15"><a xlink:title="at service_config.go:295: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate]">
 <path fill="none" stroke="black" d="M225.72,-630.86C281.68,-627.07 358.78,-621.83 421.77,-617.56"/>
 <polygon fill="black" stroke="black" points="421.7,-621.07 431.44,-616.9 421.23,-614.09 421.7,-621.07"/>
 </a>
@@ -230,9 +230,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ApplyEnvironmentOverrides -->
-<g id="edge18" class="edge">
+<g id="edge9" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ApplyEnvironmentOverrides</title>
-<g id="a_edge18"><a xlink:title="at service_config.go:300: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ApplyEnvironmentOverrides]">
+<g id="a_edge9"><a xlink:title="at service_config.go:300: calling [(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).ApplyEnvironmentOverrides]">
 <path fill="none" stroke="black" d="M225.72,-642.91C261.81,-646.21 306.69,-650.31 350.91,-654.35"/>
 <polygon fill="black" stroke="black" points="350.34,-657.81 360.62,-655.24 350.98,-650.84 350.34,-657.81"/>
 </a>
@@ -248,9 +248,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge10" class="edge">
+<g id="edge8" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge10"><a xlink:title="at service_config.go:282: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:289: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge8"><a xlink:title="at service_config.go:282: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:289: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M166.6,-654.72C198.79,-689.46 273.75,-762.87 355.04,-790 536.07,-850.42 768.97,-791.57 861.25,-763.28"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="862.1,-766.68 870.61,-760.36 860.02,-760 862.1,-766.68"/>
 </a>
@@ -266,9 +266,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge2" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge2"><a xlink:title="at service_config.go:283: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge1"><a xlink:title="at service_config.go:283: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:290: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M194.24,-654.67C235.11,-670.86 297.97,-693.04 355.04,-702 497.45,-724.36 663.25,-715.6 774.55,-704.79"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="774.71,-708.29 784.31,-703.82 774.02,-701.32 774.71,-708.29"/>
 </a>
@@ -284,27 +284,27 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge11" class="edge">
+<g id="edge7" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/config.LoadServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge11"><a xlink:title="at service_config.go:284: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service_config.go:291: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<g id="a_edge7"><a xlink:title="at service_config.go:284: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]&#10;at service_config.go:291: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
 <path fill="none" stroke="saddlebrown" d="M173.14,-617.35C209.33,-589.47 282.75,-538.18 355.04,-519 521.07,-474.96 724.39,-516.8 830.04,-545.37"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="828.86,-548.68 839.43,-547.95 830.71,-541.93 828.86,-548.68"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge13" class="edge">
+<g id="edge10" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge13"><a xlink:title="at service_config.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:347: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:354: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge10"><a xlink:title="at service_config.go:341: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:347: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:354: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M635.4,-625.67C660.91,-630.14 688.22,-635.35 713.33,-641 742.58,-647.58 749.32,-651.45 778.33,-659 789.3,-661.86 800.85,-664.78 812.29,-667.62"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="811.19,-670.96 821.74,-669.96 812.87,-664.16 811.19,-670.96"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails -->
-<g id="edge17" class="edge">
+<g id="edge2" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails</title>
-<g id="a_edge17"><a xlink:title="at service_config.go:348: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
+<g id="a_edge2"><a xlink:title="at service_config.go:348: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithDetails]">
 <path fill="none" stroke="saddlebrown" d="M635.28,-598.25C683.42,-592.6 741.28,-585.81 790.74,-580"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="791.11,-583.48 800.64,-578.84 790.3,-576.53 791.11,-583.48"/>
 </a>
@@ -320,9 +320,9 @@
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge16" class="edge">
+<g id="edge14" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/internal/integration/config.ServiceConfig).Validate&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge16"><a xlink:title="at service_config.go:340: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service_config.go:346: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service_config.go:353: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<g id="a_edge14"><a xlink:title="at service_config.go:340: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service_config.go:346: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at service_config.go:353: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
 <path fill="none" stroke="saddlebrown" d="M635.28,-614.92C710.7,-618.62 809.96,-623.5 863.43,-626.13"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="863.07,-629.62 873.23,-626.61 863.42,-622.63 863.07,-629.62"/>
 </a>
@@ -338,18 +338,18 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/config.SaveServiceConfig&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge19" class="edge">
+<g id="edge16" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/config.SaveServiceConfig&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge19"><a xlink:title="at service_config.go:310: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:317: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:324: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:329: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge16"><a xlink:title="at service_config.go:310: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:317: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:324: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at service_config.go:329: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M611.97,-757.11C687.89,-755.25 801.11,-752.47 860.98,-750.99"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="860.79,-754.5 870.7,-750.76 860.62,-747.5 860.79,-754.5"/>
 </a>
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/integration/config.SaveServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge12" class="edge">
+<g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/integration/config.SaveServiceConfig&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge12"><a xlink:title="at service_config.go:311: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:325: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:330: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<g id="a_edge3"><a xlink:title="at service_config.go:311: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:318: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:325: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at service_config.go:330: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
 <path fill="none" stroke="saddlebrown" d="M612.01,-746.64C653.12,-739.81 704.58,-730.92 750.33,-722 768.95,-718.37 788.8,-714.23 807.79,-710.14"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="808.34,-713.6 817.37,-708.06 806.86,-706.76 808.34,-713.6"/>
 </a>

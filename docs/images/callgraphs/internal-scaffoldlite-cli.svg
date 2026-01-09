@@ -41,7 +41,7 @@
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit -->
 <g id="node1" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit</title>
-<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit | defined in init.go:15&#10;at init.go:17: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at init.go:20: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at init.go:23: calling [github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS]&#10;at init.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at init.go:51: calling [github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite.ScaffoldFromFS]">
+<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit | defined in init.go:15&#10;at init.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at init.go:51: calling [github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite.ScaffoldFromFS]&#10;at init.go:17: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at init.go:20: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at init.go:23: calling [github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS]">
 <path fill="lightblue" stroke="black" stroke-width="1.5" d="M106.54,-191C106.54,-191 28,-191 28,-191 22,-191 16,-185 16,-179 16,-179 16,-167 16,-167 16,-161 22,-155 28,-155 28,-155 106.54,-155 106.54,-155 112.54,-155 118.54,-161 118.54,-167 118.54,-167 118.54,-179 118.54,-179 118.54,-185 112.54,-191 106.54,-191"/>
 <text xml:space="preserve" text-anchor="middle" x="67.27" y="-168.32" font-family="Verdana" font-size="14.00">ExecuteInit</text>
 </a>
@@ -57,9 +57,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite.ScaffoldFromFS -->
-<g id="edge4" class="edge">
+<g id="edge2" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite.ScaffoldFromFS</title>
-<g id="a_edge4"><a xlink:title="at init.go:51: calling [github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite.ScaffoldFromFS]">
+<g id="a_edge2"><a xlink:title="at init.go:51: calling [github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite.ScaffoldFromFS]">
 <path fill="none" stroke="saddlebrown" d="M94.74,-154.52C117.76,-138.76 152.24,-115.88 183.54,-98 203.39,-86.66 225.84,-75.23 245.45,-65.68"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="246.87,-68.88 254.35,-61.38 243.82,-62.58 246.87,-68.88"/>
 </a>
@@ -75,9 +75,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS -->
-<g id="edge2" class="edge">
+<g id="edge4" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit&#45;&gt;github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS</title>
-<g id="a_edge2"><a xlink:title="at init.go:23: calling [github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS]">
+<g id="a_edge4"><a xlink:title="at init.go:23: calling [github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/templates.GetEmbeddedTemplatesFS]">
 <path fill="none" stroke="saddlebrown" d="M119.13,-163.4C138.96,-159.66 162.49,-155.22 185.83,-150.82"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="186.22,-154.31 195.4,-149.01 184.92,-147.43 186.22,-154.31"/>
 </a>
@@ -93,9 +93,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New -->
-<g id="edge1" class="edge">
+<g id="edge3" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New</title>
-<g id="a_edge1"><a xlink:title="at init.go:17: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at init.go:20: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
+<g id="a_edge3"><a xlink:title="at init.go:17: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]&#10;at init.go:20: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.New]">
 <path fill="none" stroke="saddlebrown" d="M119.13,-183.04C161.34,-191.38 220.41,-203.04 258.49,-210.56"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="257.62,-213.95 268.1,-212.46 258.97,-207.08 257.62,-213.95"/>
 </a>
@@ -111,9 +111,9 @@
 </g>
 </g>
 <!-- github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge3" class="edge">
+<g id="edge1" class="edge">
 <title>github.com/guild&#45;framework/guild&#45;core/internal/scaffoldlite/cli.ExecuteInit&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge3"><a xlink:title="at init.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<g id="a_edge1"><a xlink:title="at init.go:25: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
 <path fill="none" stroke="saddlebrown" d="M91.68,-191.73C114.08,-208.82 149.42,-233.7 183.54,-249 206.39,-259.25 233.48,-266.6 255.36,-271.46"/>
 <polygon fill="saddlebrown" stroke="saddlebrown" points="254.61,-274.88 265.12,-273.53 256.06,-268.03 254.61,-274.88"/>
 </a>

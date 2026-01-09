@@ -14,29 +14,29 @@ digraph gocallvis {
     edge [minlen="2"]
 
     subgraph "cluster_focus" {
-        bgcolor="#e6ecfa";
-label="extraction";
+        label="extraction";
 labelloc="t";
 labeljust="c";
 fontsize="18";
+bgcolor="#e6ecfa";
         
-        "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt | defined in loader.go:18\nat loader.go:28: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat loader.go:29: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat loader.go:26: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat loader.go:27: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" fillcolor="lightblue" label="LoadPrompt" ]
-        "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.GetAvailablePrompts" [ fillcolor="lightblue" label="GetAvailablePrompts" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.GetAvailablePrompts | defined in loader.go:54\nat loader.go:57: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat loader.go:58: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat loader.go:59: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+        "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.GetAvailablePrompts" [ tooltip="github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.GetAvailablePrompts | defined in loader.go:54\nat loader.go:57: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat loader.go:58: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat loader.go:59: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" fillcolor="lightblue" label="GetAvailablePrompts" penwidth="1.5" ]
+        "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" [ fillcolor="lightblue" label="LoadPrompt" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt | defined in loader.go:18\nat loader.go:26: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat loader.go:27: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat loader.go:28: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat loader.go:29: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
         "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPromptByPath" [ fillcolor="lightblue" label="LoadPromptByPath" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPromptByPath | defined in loader.go:47\nat loader.go:50: calling [github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt]" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
-        fontname="Tahoma bold";
+        label="gerror";
 tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
 penwidth="0.8";
 fontsize="16";
-fillcolor="lightyellow";
+fontname="Tahoma bold";
 rank="sink";
-label="gerror";
 URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
 style="filled";
+fillcolor="lightyellow";
         
         "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
-        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" fillcolor="moccasin" label="(*GuildError).WithComponent" ]
         "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" ]
         "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" ]
         
@@ -44,12 +44,12 @@ style="filled";
 
     }
 
-    "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at loader.go:28: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
-    "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at loader.go:29: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPromptByPath" -> "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" [ tooltip="at loader.go:50: calling [github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt]" ]
     "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.GetAvailablePrompts" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at loader.go:57: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
     "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.GetAvailablePrompts" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at loader.go:58: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
     "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.GetAvailablePrompts" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at loader.go:59: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
-    "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPromptByPath" -> "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" [ tooltip="at loader.go:50: calling [github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt]" ]
     "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at loader.go:26: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
     "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at loader.go:27: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at loader.go:28: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/extraction.LoadPrompt" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at loader.go:29: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
 }

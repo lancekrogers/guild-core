@@ -17,125 +17,116 @@
 <g id="clust2" class="cluster">
 <title>cluster_github.com/guild&#45;framework/guild&#45;core/pkg/gerror</title>
 <g id="a_clust2"><a xlink:href="/?f=github.com/guild-framework/guild-core/pkg/gerror" xlink:title="package: github.com/guild&#45;framework/guild&#45;core/pkg/gerror">
-<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="871.33,-253 871.33,-455 1119.62,-455 1119.62,-253 871.33,-253"/>
-<text xml:space="preserve" text-anchor="middle" x="995.48" y="-435.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
+<polygon fill="lightyellow" stroke="black" stroke-width="0.8" points="871.33,-252 871.33,-454 1119.62,-454 1119.62,-252 871.33,-252"/>
+<text xml:space="preserve" text-anchor="middle" x="995.48" y="-434.8" font-family="Tahoma bold" font-size="16.00">gerror</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register -->
 <g id="node1" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator</title>
-<g id="a_node1"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator | defined in eventbus_integration.go:146&#10;at eventbus_integration.go:157: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter]&#10;at eventbus_integration.go:161: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter]&#10;at eventbus_integration.go:164: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting]&#10;at eventbus_integration.go:158: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter]&#10;at eventbus_integration.go:156: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M273.79,-174C273.79,-174 107.5,-174 107.5,-174 101.5,-174 95.5,-168 95.5,-162 95.5,-162 95.5,-150 95.5,-150 95.5,-144 101.5,-138 107.5,-138 107.5,-138 273.79,-138 273.79,-138 279.79,-138 285.79,-144 285.79,-150 285.79,-150 285.79,-162 285.79,-162 285.79,-168 279.79,-174 273.79,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="190.65" y="-151.32" font-family="Verdana" font-size="14.00">NewEventBusIntegrator</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register</title>
+<g id="a_node1"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register | defined in eventbus_integration.go:505&#10;at eventbus_integration.go:545: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M736.58,-52C736.58,-52 469.79,-52 469.79,-52 463.79,-52 457.79,-46 457.79,-40 457.79,-40 457.79,-28 457.79,-28 457.79,-22 463.79,-16 469.79,-16 469.79,-16 736.58,-16 736.58,-16 742.58,-16 748.58,-22 748.58,-28 748.58,-28 748.58,-40 748.58,-40 748.58,-46 742.58,-52 736.58,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="603.19" y="-29.32" font-family="Verdana" font-size="14.00">(*PerformanceEventAdapter).Register</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter -->
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1 -->
 <g id="node2" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter</title>
-<g id="a_node2"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter | defined in eventbus_integration.go:395">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M692.33,-174C692.33,-174 514.04,-174 514.04,-174 508.04,-174 502.04,-168 502.04,-162 502.04,-162 502.04,-150 502.04,-150 502.04,-144 508.04,-138 514.04,-138 514.04,-138 692.33,-138 692.33,-138 698.33,-138 704.33,-144 704.33,-150 704.33,-150 704.33,-162 704.33,-162 704.33,-168 698.33,-174 692.33,-174"/>
-<text xml:space="preserve" text-anchor="middle" x="603.19" y="-151.32" font-family="Verdana" font-size="14.00">NewSessionEventAdapter</text>
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1</title>
+<g id="a_node2"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1 | defined in eventbus_integration.go:515">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1149.87,-52 841.08,-52 841.08,-16 1149.87,-16 1149.87,-52"/>
+<text xml:space="preserve" text-anchor="middle" x="995.48" y="-29.32" font-family="Verdana" font-size="14.00">(*PerformanceEventAdapter).Register$1</text>
 </a>
 </g>
 </g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter -->
-<g id="edge19" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter</title>
-<g id="a_edge19"><a xlink:title="at eventbus_integration.go:156: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter]">
-<path fill="none" stroke="black" d="M286.35,-156C347.11,-156 426.29,-156 490.18,-156"/>
-<polygon fill="black" stroke="black" points="490,-159.5 500,-156 490,-152.5 490,-159.5"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter -->
-<g id="node3" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter</title>
-<g id="a_node3"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter | defined in eventbus_integration.go:498">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M709.58,-235C709.58,-235 496.79,-235 496.79,-235 490.79,-235 484.79,-229 484.79,-223 484.79,-223 484.79,-211 484.79,-211 484.79,-205 490.79,-199 496.79,-199 496.79,-199 709.58,-199 709.58,-199 715.58,-199 721.58,-205 721.58,-211 721.58,-211 721.58,-223 721.58,-223 721.58,-229 715.58,-235 709.58,-235"/>
-<text xml:space="preserve" text-anchor="middle" x="603.19" y="-212.32" font-family="Verdana" font-size="14.00">NewPerformanceEventAdapter</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter -->
-<g id="edge7" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter</title>
-<g id="a_edge7"><a xlink:title="at eventbus_integration.go:157: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter]">
-<path fill="none" stroke="black" d="M286.35,-170.07C341.74,-178.3 412.46,-188.81 472.92,-197.79"/>
-<polygon fill="black" stroke="black" points="472.18,-201.22 482.59,-199.23 473.21,-194.3 472.18,-201.22"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter -->
-<g id="node4" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter</title>
-<g id="a_node4"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter | defined in eventbus_integration.go:564">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M702.46,-296C702.46,-296 503.92,-296 503.92,-296 497.92,-296 491.92,-290 491.92,-284 491.92,-284 491.92,-272 491.92,-272 491.92,-266 497.92,-260 503.92,-260 503.92,-260 702.46,-260 702.46,-260 708.46,-260 714.46,-266 714.46,-272 714.46,-272 714.46,-284 714.46,-284 714.46,-290 708.46,-296 702.46,-296"/>
-<text xml:space="preserve" text-anchor="middle" x="603.19" y="-273.32" font-family="Verdana" font-size="14.00">NewMonitoringEventAdapter</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter -->
-<g id="edge15" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter</title>
-<g id="a_edge15"><a xlink:title="at eventbus_integration.go:158: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter]">
-<path fill="none" stroke="black" d="M234.55,-174.64C283.16,-195.14 365.15,-227.84 438.29,-248 451.85,-251.74 466.16,-255.14 480.46,-258.19"/>
-<polygon fill="black" stroke="black" points="479.4,-261.55 489.9,-260.15 480.82,-254.69 479.4,-261.55"/>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter -->
-<g id="node5" class="node">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter</title>
-<g id="a_node5"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter | defined in eventbus_integration.go:623">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M660.83,-52C660.83,-52 545.54,-52 545.54,-52 539.54,-52 533.54,-46 533.54,-40 533.54,-40 533.54,-28 533.54,-28 533.54,-22 539.54,-16 545.54,-16 545.54,-16 660.83,-16 660.83,-16 666.83,-16 672.83,-22 672.83,-28 672.83,-28 672.83,-40 672.83,-40 672.83,-46 666.83,-52 660.83,-52"/>
-<text xml:space="preserve" text-anchor="middle" x="603.19" y="-29.32" font-family="Verdana" font-size="14.00">NewEventRouter</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter -->
-<g id="edge8" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter</title>
-<g id="a_edge8"><a xlink:title="at eventbus_integration.go:161: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter]">
-<path fill="none" stroke="black" d="M235.47,-137.3C284.23,-117.09 365.71,-85.1 438.29,-65 465.15,-57.56 494.98,-51.33 521.75,-46.46"/>
-<polygon fill="black" stroke="black" points="522.3,-49.92 531.53,-44.72 521.07,-43.02 522.3,-49.92"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1 -->
+<g id="edge10" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1</title>
+<g id="a_edge10"><a xlink:title="at eventbus_integration.go:545: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1]">
+<path fill="none" stroke="black" d="M749.24,-34C775.33,-34 802.69,-34 829.3,-34"/>
+<polygon fill="black" stroke="black" points="829.14,-37.5 839.14,-34 829.14,-30.5 829.14,-37.5"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting -->
-<g id="node6" class="node">
+<g id="node3" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting</title>
-<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting | defined in eventbus_integration.go:671&#10;at eventbus_integration.go:673: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]&#10;at eventbus_integration.go:679: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]&#10;at eventbus_integration.go:685: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]">
-<path fill="lightblue" stroke="black" stroke-width="0.5" d="M756.08,-113C756.08,-113 450.29,-113 450.29,-113 444.29,-113 438.29,-107 438.29,-101 438.29,-101 438.29,-89 438.29,-89 438.29,-83 444.29,-77 450.29,-77 450.29,-77 756.08,-77 756.08,-77 762.08,-77 768.08,-83 768.08,-89 768.08,-89 768.08,-101 768.08,-101 768.08,-107 762.08,-113 756.08,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="603.19" y="-90.33" font-family="Verdana" font-size="14.00">(*EventBusIntegrator).setupDefaultRouting</text>
-</a>
-</g>
-</g>
-<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting -->
-<g id="edge9" class="edge">
-<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting</title>
-<g id="a_edge9"><a xlink:title="at eventbus_integration.go:164: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting]">
-<path fill="none" stroke="black" d="M286.35,-141.93C340.29,-133.91 408.76,-123.74 468.15,-114.92"/>
-<polygon fill="black" stroke="black" points="468.64,-118.38 478.02,-113.45 467.61,-111.46 468.64,-118.38"/>
+<g id="a_node3"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting | defined in eventbus_integration.go:671&#10;at eventbus_integration.go:673: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]&#10;at eventbus_integration.go:679: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]&#10;at eventbus_integration.go:685: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]">
+<path fill="lightblue" stroke="black" stroke-width="0.5" d="M756.08,-621C756.08,-621 450.29,-621 450.29,-621 444.29,-621 438.29,-615 438.29,-609 438.29,-609 438.29,-597 438.29,-597 438.29,-591 444.29,-585 450.29,-585 450.29,-585 756.08,-585 756.08,-585 762.08,-585 768.08,-591 768.08,-597 768.08,-597 768.08,-609 768.08,-609 768.08,-615 762.08,-621 756.08,-621"/>
+<text xml:space="preserve" text-anchor="middle" x="603.19" y="-598.33" font-family="Verdana" font-size="14.00">(*EventBusIntegrator).setupDefaultRouting</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute -->
-<g id="node7" class="node">
+<g id="node4" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute</title>
-<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute | defined in eventbus_integration.go:692">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1085.37,-113C1085.37,-113 905.58,-113 905.58,-113 899.58,-113 893.58,-107 893.58,-101 893.58,-101 893.58,-89 893.58,-89 893.58,-83 899.58,-77 905.58,-77 905.58,-77 1085.37,-77 1085.37,-77 1091.37,-77 1097.37,-83 1097.37,-89 1097.37,-89 1097.37,-101 1097.37,-101 1097.37,-107 1091.37,-113 1085.37,-113"/>
-<text xml:space="preserve" text-anchor="middle" x="995.48" y="-90.33" font-family="Verdana" font-size="14.00">(*EventRouter).AddRoute</text>
+<g id="a_node4"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute | defined in eventbus_integration.go:692">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1085.37,-621C1085.37,-621 905.58,-621 905.58,-621 899.58,-621 893.58,-615 893.58,-609 893.58,-609 893.58,-597 893.58,-597 893.58,-591 899.58,-585 905.58,-585 905.58,-585 1085.37,-585 1085.37,-585 1091.37,-585 1097.37,-591 1097.37,-597 1097.37,-597 1097.37,-609 1097.37,-609 1097.37,-615 1091.37,-621 1085.37,-621"/>
+<text xml:space="preserve" text-anchor="middle" x="995.48" y="-598.33" font-family="Verdana" font-size="14.00">(*EventRouter).AddRoute</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute -->
-<g id="edge16" class="edge">
+<g id="edge20" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute</title>
-<g id="a_edge16"><a xlink:title="at eventbus_integration.go:673: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]&#10;at eventbus_integration.go:679: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]&#10;at eventbus_integration.go:685: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]">
-<path fill="none" stroke="black" d="M768.29,-95C806.48,-95 846.29,-95 881.68,-95"/>
-<polygon fill="black" stroke="black" points="881.49,-98.5 891.49,-95 881.49,-91.5 881.49,-98.5"/>
+<g id="a_edge20"><a xlink:title="at eventbus_integration.go:673: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]&#10;at eventbus_integration.go:679: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]&#10;at eventbus_integration.go:685: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).AddRoute]">
+<path fill="none" stroke="black" d="M768.29,-603C806.48,-603 846.29,-603 881.68,-603"/>
+<polygon fill="black" stroke="black" points="881.49,-606.5 891.49,-603 881.49,-599.5 881.49,-606.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register -->
+<g id="node5" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register</title>
+<g id="a_node5"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register | defined in eventbus_integration.go:402&#10;at eventbus_integration.go:468: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M719.33,-113C719.33,-113 487.04,-113 487.04,-113 481.04,-113 475.04,-107 475.04,-101 475.04,-101 475.04,-89 475.04,-89 475.04,-83 481.04,-77 487.04,-77 487.04,-77 719.33,-77 719.33,-77 725.33,-77 731.33,-83 731.33,-89 731.33,-89 731.33,-101 731.33,-101 731.33,-107 725.33,-113 719.33,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="603.19" y="-90.33" font-family="Verdana" font-size="14.00">(*SessionEventAdapter).Register</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1 -->
+<g id="node6" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1</title>
+<g id="a_node6"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1 | defined in eventbus_integration.go:413">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1132.62,-113 858.33,-113 858.33,-77 1132.62,-77 1132.62,-113"/>
+<text xml:space="preserve" text-anchor="middle" x="995.48" y="-90.33" font-family="Verdana" font-size="14.00">(*SessionEventAdapter).Register$1</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1 -->
+<g id="edge1" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1</title>
+<g id="a_edge1"><a xlink:title="at eventbus_integration.go:468: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1]">
+<path fill="none" stroke="black" d="M731.98,-95C768.71,-95 809.06,-95 846.87,-95"/>
+<polygon fill="black" stroke="black" points="846.48,-98.5 856.48,-95 846.48,-91.5 846.48,-98.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents -->
+<g id="node7" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents</title>
+<g id="a_node7"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents | defined in eventbus_integration.go:170&#10;at eventbus_integration.go:188: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register]&#10;at eventbus_integration.go:175: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:182: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:189: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:177: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:184: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:191: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register]&#10;at eventbus_integration.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent]&#10;at eventbus_integration.go:176: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:190: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M353.29,-218C353.29,-218 28,-218 28,-218 22,-218 16,-212 16,-206 16,-206 16,-194 16,-194 16,-188 22,-182 28,-182 28,-182 353.29,-182 353.29,-182 359.29,-182 365.29,-188 365.29,-194 365.29,-194 365.29,-206 365.29,-206 365.29,-212 359.29,-218 353.29,-218"/>
+<text xml:space="preserve" text-anchor="middle" x="190.65" y="-195.32" font-family="Verdana" font-size="14.00">(*EventBusIntegrator).RegisterAllComponents</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register -->
+<g id="edge16" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register</title>
+<g id="a_edge16"><a xlink:title="at eventbus_integration.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register]">
+<path fill="none" stroke="black" d="M218.77,-181.4C262.82,-152.08 353.5,-95.36 438.29,-65 448.2,-61.45 458.61,-58.28 469.17,-55.46"/>
+<polygon fill="black" stroke="black" points="469.92,-58.88 478.74,-53.02 468.19,-52.1 469.92,-58.88"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register -->
+<g id="edge11" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register</title>
+<g id="a_edge11"><a xlink:title="at eventbus_integration.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register]">
+<path fill="none" stroke="black" d="M248,-181.26C297.7,-165.17 372.27,-142.1 438.29,-126 452.78,-122.47 468.07,-119.1 483.26,-115.98"/>
+<polygon fill="black" stroke="black" points="483.69,-119.46 492.8,-114.05 482.3,-112.6 483.69,-119.46"/>
 </a>
 </g>
 </g>
@@ -143,53 +134,35 @@
 <g id="node8" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register</title>
 <g id="a_node8"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register | defined in eventbus_integration.go:571&#10;at eventbus_integration.go:609: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M729.46,-357C729.46,-357 476.92,-357 476.92,-357 470.92,-357 464.92,-351 464.92,-345 464.92,-345 464.92,-333 464.92,-333 464.92,-327 470.92,-321 476.92,-321 476.92,-321 729.46,-321 729.46,-321 735.46,-321 741.46,-327 741.46,-333 741.46,-333 741.46,-345 741.46,-345 741.46,-351 735.46,-357 729.46,-357"/>
-<text xml:space="preserve" text-anchor="middle" x="603.19" y="-334.32" font-family="Verdana" font-size="14.00">(*MonitoringEventAdapter).Register</text>
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M729.46,-174C729.46,-174 476.92,-174 476.92,-174 470.92,-174 464.92,-168 464.92,-162 464.92,-162 464.92,-150 464.92,-150 464.92,-144 470.92,-138 476.92,-138 476.92,-138 729.46,-138 729.46,-138 735.46,-138 741.46,-144 741.46,-150 741.46,-150 741.46,-162 741.46,-162 741.46,-168 735.46,-174 729.46,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="603.19" y="-151.32" font-family="Verdana" font-size="14.00">(*MonitoringEventAdapter).Register</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1 -->
-<g id="node9" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1</title>
-<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1 | defined in eventbus_integration.go:579">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1142.75,-236 848.21,-236 848.21,-200 1142.75,-200 1142.75,-236"/>
-<text xml:space="preserve" text-anchor="middle" x="995.48" y="-213.32" font-family="Verdana" font-size="14.00">(*MonitoringEventAdapter).Register$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1 -->
-<g id="edge10" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1</title>
-<g id="a_edge10"><a xlink:title="at eventbus_integration.go:609: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1]">
-<path fill="none" stroke="black" d="M738.85,-320.36C748.94,-317.15 758.8,-313.4 768.08,-309 806.55,-290.77 802.67,-265.34 841.08,-247 846.3,-244.51 851.71,-242.23 857.25,-240.15"/>
-<polygon fill="black" stroke="black" points="858.32,-243.48 866.61,-236.88 856.01,-236.87 858.32,-243.48"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register -->
+<g id="edge3" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register</title>
+<g id="a_edge3"><a xlink:title="at eventbus_integration.go:188: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register]">
+<path fill="none" stroke="black" d="M365.75,-181.34C394.79,-178.23 424.67,-175.02 453.02,-171.99"/>
+<polygon fill="black" stroke="black" points="453.14,-175.49 462.71,-170.95 452.4,-168.53 453.14,-175.49"/>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent -->
 <g id="node10" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent</title>
-<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent | defined in eventbus_integration.go:215&#10;at eventbus_integration.go:227: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent]&#10;at eventbus_integration.go:228: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:236: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:244: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:229: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:245: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:230: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:238: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:246: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M729.46,-472C729.46,-472 476.92,-472 476.92,-472 470.92,-472 464.92,-466 464.92,-460 464.92,-460 464.92,-448 464.92,-448 464.92,-442 470.92,-436 476.92,-436 476.92,-436 729.46,-436 729.46,-436 735.46,-436 741.46,-442 741.46,-448 741.46,-448 741.46,-460 741.46,-460 741.46,-466 735.46,-472 729.46,-472"/>
-<text xml:space="preserve" text-anchor="middle" x="603.19" y="-449.32" font-family="Verdana" font-size="14.00">(*EventBusIntegrator).PublishEvent</text>
+<g id="a_node10"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent | defined in eventbus_integration.go:215&#10;at eventbus_integration.go:230: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:238: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:246: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:227: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent]&#10;at eventbus_integration.go:228: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:236: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:244: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:229: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:245: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M729.46,-262C729.46,-262 476.92,-262 476.92,-262 470.92,-262 464.92,-256 464.92,-250 464.92,-250 464.92,-238 464.92,-238 464.92,-232 470.92,-226 476.92,-226 476.92,-226 729.46,-226 729.46,-226 735.46,-226 741.46,-232 741.46,-238 741.46,-238 741.46,-250 741.46,-250 741.46,-256 735.46,-262 729.46,-262"/>
+<text xml:space="preserve" text-anchor="middle" x="603.19" y="-239.32" font-family="Verdana" font-size="14.00">(*EventBusIntegrator).PublishEvent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent -->
-<g id="node11" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent</title>
-<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent | defined in eventbus_integration.go:632">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1091.37,-499C1091.37,-499 899.58,-499 899.58,-499 893.58,-499 887.58,-493 887.58,-487 887.58,-487 887.58,-475 887.58,-475 887.58,-469 893.58,-463 899.58,-463 899.58,-463 1091.37,-463 1091.37,-463 1097.37,-463 1103.37,-469 1103.37,-475 1103.37,-475 1103.37,-487 1103.37,-487 1103.37,-493 1097.37,-499 1091.37,-499"/>
-<text xml:space="preserve" text-anchor="middle" x="995.48" y="-476.32" font-family="Verdana" font-size="14.00">(*EventRouter).RouteEvent</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent -->
-<g id="edge1" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent</title>
-<g id="a_edge1"><a xlink:title="at eventbus_integration.go:227: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent]">
-<path fill="none" stroke="black" d="M742.06,-463.54C785.67,-466.55 833.46,-469.86 875.62,-472.78"/>
-<polygon fill="black" stroke="black" points="875.33,-476.27 885.55,-473.46 875.82,-469.28 875.33,-476.27"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent -->
+<g id="edge13" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent</title>
+<g id="a_edge13"><a xlink:title="at eventbus_integration.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent]">
+<path fill="none" stroke="black" d="M365.75,-218.66C394.79,-221.77 424.67,-224.98 453.02,-228.01"/>
+<polygon fill="black" stroke="black" points="452.4,-231.47 462.71,-229.05 453.14,-224.51 452.4,-231.47"/>
 </a>
 </g>
 </g>
@@ -197,17 +170,17 @@
 <g id="node17" class="node">
 <title>github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
 <g id="a_node17"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap | defined in errors.go:223">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1013.37,-419C1013.37,-419 977.58,-419 977.58,-419 971.58,-419 965.58,-413 965.58,-407 965.58,-407 965.58,-395 965.58,-395 965.58,-389 971.58,-383 977.58,-383 977.58,-383 1013.37,-383 1013.37,-383 1019.37,-383 1025.37,-389 1025.37,-395 1025.37,-395 1025.37,-407 1025.37,-407 1025.37,-413 1019.37,-419 1013.37,-419"/>
-<text xml:space="preserve" text-anchor="middle" x="995.48" y="-396.32" font-family="Verdana" font-size="14.00">Wrap</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1013.37,-418C1013.37,-418 977.58,-418 977.58,-418 971.58,-418 965.58,-412 965.58,-406 965.58,-406 965.58,-394 965.58,-394 965.58,-388 971.58,-382 977.58,-382 977.58,-382 1013.37,-382 1013.37,-382 1019.37,-382 1025.37,-388 1025.37,-394 1025.37,-394 1025.37,-406 1025.37,-406 1025.37,-412 1019.37,-418 1013.37,-418"/>
+<text xml:space="preserve" text-anchor="middle" x="995.48" y="-395.32" font-family="Verdana" font-size="14.00">Wrap</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge2" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge2"><a xlink:title="at eventbus_integration.go:228: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:236: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:244: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M741.97,-443.92C763.2,-441.32 784.8,-438.07 805.08,-434 821.48,-430.71 824.75,-426.64 841.08,-423 878.92,-414.56 922.76,-408.65 953.85,-405.1"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="954.05,-408.6 963.61,-404.02 953.28,-401.64 954.05,-408.6"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge6" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge6"><a xlink:title="at eventbus_integration.go:175: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:182: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:189: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M228.14,-218.58C275.33,-241.68 360.68,-280.32 438.29,-299 581.38,-333.44 627.53,-285.33 768.08,-329 803.62,-340.04 806.16,-357.16 841.08,-370 877.89,-383.54 922.03,-391.35 953.49,-395.59"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="953.02,-399.06 963.39,-396.85 953.91,-392.12 953.02,-399.06"/>
 </a>
 </g>
 </g>
@@ -215,17 +188,17 @@
 <g id="node18" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
 <g id="a_node18"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1099.62,-297C1099.62,-297 891.33,-297 891.33,-297 885.33,-297 879.33,-291 879.33,-285 879.33,-285 879.33,-273 879.33,-273 879.33,-267 885.33,-261 891.33,-261 891.33,-261 1099.62,-261 1099.62,-261 1105.62,-261 1111.62,-267 1111.62,-273 1111.62,-273 1111.62,-285 1111.62,-285 1111.62,-291 1105.62,-297 1099.62,-297"/>
-<text xml:space="preserve" text-anchor="middle" x="995.48" y="-274.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1099.62,-357C1099.62,-357 891.33,-357 891.33,-357 885.33,-357 879.33,-351 879.33,-345 879.33,-345 879.33,-333 879.33,-333 879.33,-327 885.33,-321 891.33,-321 891.33,-321 1099.62,-321 1099.62,-321 1105.62,-321 1111.62,-327 1111.62,-333 1111.62,-333 1111.62,-345 1111.62,-345 1111.62,-351 1105.62,-357 1099.62,-357"/>
+<text xml:space="preserve" text-anchor="middle" x="995.48" y="-334.32" font-family="Verdana" font-size="14.00">(*GuildError).WithComponent</text>
 </a>
 </g>
 </g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge3" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge3"><a xlink:title="at eventbus_integration.go:229: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:245: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M669.81,-435.31C701.04,-424.73 738.03,-409.63 768.08,-390 787.55,-377.28 789.38,-370.15 805.08,-353 821.91,-334.61 819.66,-322.74 841.08,-310 849.48,-305 858.54,-300.8 867.92,-297.27"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="868.9,-300.63 877.2,-294.05 866.61,-294.02 868.9,-300.63"/>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge15" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge15"><a xlink:title="at eventbus_integration.go:176: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:190: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M242.39,-218.62C291.74,-235.97 369.17,-261.17 438.29,-275 582.73,-303.9 621.8,-290.67 768.08,-308 800.33,-311.82 835.09,-316.37 867.48,-320.78"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="866.94,-324.24 877.32,-322.13 867.89,-317.31 866.94,-324.24"/>
 </a>
 </g>
 </g>
@@ -233,143 +206,170 @@
 <g id="node19" class="node">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
 <g id="a_node19"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162">
-<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1094,-358C1094,-358 896.96,-358 896.96,-358 890.96,-358 884.96,-352 884.96,-346 884.96,-346 884.96,-334 884.96,-334 884.96,-328 890.96,-322 896.96,-322 896.96,-322 1094,-322 1094,-322 1100,-322 1106,-328 1106,-334 1106,-334 1106,-346 1106,-346 1106,-352 1100,-358 1094,-358"/>
-<text xml:space="preserve" text-anchor="middle" x="995.48" y="-335.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge11" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge11"><a xlink:title="at eventbus_integration.go:230: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:238: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:246: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M734.66,-435.29C759.06,-428.57 783.61,-419.43 805.08,-407 824.66,-395.67 821.14,-381.7 841.08,-371 851.24,-365.55 862.25,-361.05 873.54,-357.35"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="874.44,-360.73 882.99,-354.47 872.41,-354.03 874.44,-360.73"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register -->
-<g id="node12" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register</title>
-<g id="a_node12"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register | defined in eventbus_integration.go:505&#10;at eventbus_integration.go:545: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M736.58,-560C736.58,-560 469.79,-560 469.79,-560 463.79,-560 457.79,-554 457.79,-548 457.79,-548 457.79,-536 457.79,-536 457.79,-530 463.79,-524 469.79,-524 469.79,-524 736.58,-524 736.58,-524 742.58,-524 748.58,-530 748.58,-536 748.58,-536 748.58,-548 748.58,-548 748.58,-554 742.58,-560 736.58,-560"/>
-<text xml:space="preserve" text-anchor="middle" x="603.19" y="-537.33" font-family="Verdana" font-size="14.00">(*PerformanceEventAdapter).Register</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1 -->
-<g id="node13" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1</title>
-<g id="a_node13"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1 | defined in eventbus_integration.go:515">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1149.87,-560 841.08,-560 841.08,-524 1149.87,-524 1149.87,-560"/>
-<text xml:space="preserve" text-anchor="middle" x="995.48" y="-537.33" font-family="Verdana" font-size="14.00">(*PerformanceEventAdapter).Register$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1 -->
-<g id="edge12" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1</title>
-<g id="a_edge12"><a xlink:title="at eventbus_integration.go:545: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register$1]">
-<path fill="none" stroke="black" d="M749.24,-542C775.33,-542 802.69,-542 829.3,-542"/>
-<polygon fill="black" stroke="black" points="829.14,-545.5 839.14,-542 829.14,-538.5 829.14,-545.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register -->
-<g id="node14" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register</title>
-<g id="a_node14"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register | defined in eventbus_integration.go:402&#10;at eventbus_integration.go:468: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M719.33,-621C719.33,-621 487.04,-621 487.04,-621 481.04,-621 475.04,-615 475.04,-609 475.04,-609 475.04,-597 475.04,-597 475.04,-591 481.04,-585 487.04,-585 487.04,-585 719.33,-585 719.33,-585 725.33,-585 731.33,-591 731.33,-597 731.33,-597 731.33,-609 731.33,-609 731.33,-615 725.33,-621 719.33,-621"/>
-<text xml:space="preserve" text-anchor="middle" x="603.19" y="-598.33" font-family="Verdana" font-size="14.00">(*SessionEventAdapter).Register</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1 -->
-<g id="node15" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1</title>
-<g id="a_node15"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1 | defined in eventbus_integration.go:413">
-<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1132.62,-621 858.33,-621 858.33,-585 1132.62,-585 1132.62,-621"/>
-<text xml:space="preserve" text-anchor="middle" x="995.48" y="-598.33" font-family="Verdana" font-size="14.00">(*SessionEventAdapter).Register$1</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1 -->
-<g id="edge17" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1</title>
-<g id="a_edge17"><a xlink:title="at eventbus_integration.go:468: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register$1]">
-<path fill="none" stroke="black" d="M731.98,-603C768.71,-603 809.06,-603 846.87,-603"/>
-<polygon fill="black" stroke="black" points="846.48,-606.5 856.48,-603 846.48,-599.5 846.48,-606.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents -->
-<g id="node16" class="node">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents</title>
-<g id="a_node16"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents | defined in eventbus_integration.go:170&#10;at eventbus_integration.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register]&#10;at eventbus_integration.go:175: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:182: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:189: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:177: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:184: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:191: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:176: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:190: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register]&#10;at eventbus_integration.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent]&#10;at eventbus_integration.go:188: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register]">
-<path fill="lightblue" stroke="black" stroke-width="1.5" d="M353.29,-472C353.29,-472 28,-472 28,-472 22,-472 16,-466 16,-460 16,-460 16,-448 16,-448 16,-442 22,-436 28,-436 28,-436 353.29,-436 353.29,-436 359.29,-436 365.29,-442 365.29,-448 365.29,-448 365.29,-460 365.29,-460 365.29,-466 359.29,-472 353.29,-472"/>
-<text xml:space="preserve" text-anchor="middle" x="190.65" y="-449.32" font-family="Verdana" font-size="14.00">(*EventBusIntegrator).RegisterAllComponents</text>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register -->
-<g id="edge20" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register</title>
-<g id="a_edge20"><a xlink:title="at eventbus_integration.go:188: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register]">
-<path fill="none" stroke="black" d="M235.08,-435.3C276.98,-417.88 342.52,-392.21 401.29,-376 423.32,-369.92 447,-364.56 470.09,-359.94"/>
-<polygon fill="black" stroke="black" points="470.74,-363.37 479.88,-358.02 469.4,-356.51 470.74,-363.37"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent -->
-<g id="edge18" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent</title>
-<g id="a_edge18"><a xlink:title="at eventbus_integration.go:206: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent]">
-<path fill="none" stroke="black" d="M365.75,-454C394.79,-454 424.67,-454 453.02,-454"/>
-<polygon fill="black" stroke="black" points="452.7,-457.5 462.7,-454 452.7,-450.5 452.7,-457.5"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register -->
-<g id="edge14" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register</title>
-<g id="a_edge14"><a xlink:title="at eventbus_integration.go:181: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.PerformanceEventAdapter).Register]">
-<path fill="none" stroke="black" d="M264.18,-472.71C304.44,-482.83 355.5,-495.22 401.29,-505 427.73,-510.65 456.25,-516.21 483.25,-521.24"/>
-<polygon fill="black" stroke="black" points="482.36,-524.64 492.83,-523.02 483.63,-517.75 482.36,-524.64"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register -->
-<g id="edge4" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register</title>
-<g id="a_edge4"><a xlink:title="at eventbus_integration.go:174: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.SessionEventAdapter).Register]">
-<path fill="none" stroke="black" d="M223.2,-472.66C269.03,-498.95 357.38,-546.61 438.29,-573 447.98,-576.16 458.12,-579.02 468.38,-581.6"/>
-<polygon fill="black" stroke="black" points="467.55,-585 478.09,-583.94 469.18,-578.2 467.55,-585"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
-<g id="edge5" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
-<g id="a_edge5"><a xlink:title="at eventbus_integration.go:175: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:182: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:189: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
-<path fill="none" stroke="saddlebrown" d="M320.82,-472.72C465.17,-491.57 689,-514.05 768.08,-485 808.04,-470.32 802.27,-440.48 841.08,-423 876.91,-406.86 921.79,-401.98 953.73,-400.76"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="953.45,-404.27 963.35,-400.5 953.26,-397.27 953.45,-404.27"/>
-</a>
-</g>
-</g>
-<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
-<g id="edge13" class="edge">
-<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
-<g id="a_edge13"><a xlink:title="at eventbus_integration.go:176: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:183: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:190: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
-<path fill="none" stroke="saddlebrown" d="M248.24,-435.27C297.77,-419.74 371.97,-398.57 438.29,-388 510.77,-376.45 699.68,-396.63 768.08,-370 807.22,-354.76 803.15,-328.03 841.08,-310 849.63,-305.93 858.7,-302.4 867.99,-299.33"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="869,-302.68 877.52,-296.38 866.93,-295.99 869,-302.68"/>
+<path fill="moccasin" stroke="black" stroke-width="1.5" d="M1094,-296C1094,-296 896.96,-296 896.96,-296 890.96,-296 884.96,-290 884.96,-284 884.96,-284 884.96,-272 884.96,-272 884.96,-266 890.96,-260 896.96,-260 896.96,-260 1094,-260 1094,-260 1100,-260 1106,-266 1106,-272 1106,-272 1106,-284 1106,-284 1106,-290 1100,-296 1094,-296"/>
+<text xml:space="preserve" text-anchor="middle" x="995.48" y="-273.32" font-family="Verdana" font-size="14.00">(*GuildError).WithOperation</text>
 </a>
 </g>
 </g>
 <!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
-<g id="edge6" class="edge">
+<g id="edge7" class="edge">
 <title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).RegisterAllComponents&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
-<g id="a_edge6"><a xlink:title="at eventbus_integration.go:177: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:184: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:191: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
-<path fill="none" stroke="saddlebrown" d="M341.92,-435.28C373.73,-431.44 407.1,-427.5 438.29,-424 584.72,-407.55 623.08,-416.19 768.08,-390 801.07,-384.04 808.41,-378.55 841.08,-371 855.78,-367.6 871.32,-364.22 886.64,-361.01"/>
-<polygon fill="saddlebrown" stroke="saddlebrown" points="887.18,-364.47 896.26,-359.01 885.76,-357.62 887.18,-364.47"/>
+<g id="a_edge7"><a xlink:title="at eventbus_integration.go:177: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:184: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:191: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M365.93,-194.85C507.52,-192.4 695.24,-193.59 768.08,-214 804.12,-224.1 805.7,-243.79 841.08,-256 851.38,-259.55 862.26,-262.53 873.28,-265.03"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="872.34,-268.41 882.85,-267.06 873.79,-261.56 872.34,-268.41"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1 -->
+<g id="node9" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1</title>
+<g id="a_node9"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1 | defined in eventbus_integration.go:579">
+<polygon fill="lightblue" stroke="black" stroke-dasharray="1,5" points="1142.75,-174 848.21,-174 848.21,-138 1142.75,-138 1142.75,-174"/>
+<text xml:space="preserve" text-anchor="middle" x="995.48" y="-151.32" font-family="Verdana" font-size="14.00">(*MonitoringEventAdapter).Register$1</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1 -->
+<g id="edge2" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1</title>
+<g id="a_edge2"><a xlink:title="at eventbus_integration.go:609: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.MonitoringEventAdapter).Register$1]">
+<path fill="none" stroke="black" d="M742.06,-156C772.54,-156 805.07,-156 836.28,-156"/>
+<polygon fill="black" stroke="black" points="836.2,-159.5 846.2,-156 836.2,-152.5 836.2,-159.5"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent -->
+<g id="node11" class="node">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent</title>
+<g id="a_node11"><a xlink:title="(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent | defined in eventbus_integration.go:632">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M1091.37,-235C1091.37,-235 899.58,-235 899.58,-235 893.58,-235 887.58,-229 887.58,-223 887.58,-223 887.58,-211 887.58,-211 887.58,-205 893.58,-199 899.58,-199 899.58,-199 1091.37,-199 1091.37,-199 1097.37,-199 1103.37,-205 1103.37,-211 1103.37,-211 1103.37,-223 1103.37,-223 1103.37,-229 1097.37,-235 1091.37,-235"/>
+<text xml:space="preserve" text-anchor="middle" x="995.48" y="-212.32" font-family="Verdana" font-size="14.00">(*EventRouter).RouteEvent</text>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent -->
+<g id="edge12" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent</title>
+<g id="a_edge12"><a xlink:title="at eventbus_integration.go:227: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventRouter).RouteEvent]">
+<path fill="none" stroke="black" d="M742.05,-231.69C762.83,-230 784.01,-228.38 804.08,-227 827.31,-225.4 852.16,-223.93 875.97,-222.63"/>
+<polygon fill="black" stroke="black" points="875.89,-226.14 885.69,-222.11 875.51,-219.15 875.89,-226.14"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap -->
+<g id="edge17" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap</title>
+<g id="a_edge17"><a xlink:title="at eventbus_integration.go:228: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:236: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]&#10;at eventbus_integration.go:244: calling [github.com/guild&#45;framework/guild&#45;core/pkg/gerror.Wrap]">
+<path fill="none" stroke="saddlebrown" d="M662.71,-262.71C694.74,-273.96 734.6,-289.65 768.08,-308 785.93,-317.78 789.52,-321.87 805.08,-335 822.14,-349.39 821.31,-359.65 841.08,-370 876.3,-388.44 921.45,-395.6 953.63,-398.35"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="953.11,-401.82 963.34,-399.06 953.63,-394.84 953.11,-401.82"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent -->
+<g id="edge18" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent</title>
+<g id="a_edge18"><a xlink:title="at eventbus_integration.go:229: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:237: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]&#10;at eventbus_integration.go:245: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithComponent]">
+<path fill="none" stroke="saddlebrown" d="M742.2,-260.35C763.78,-265.47 785.42,-272.18 805.08,-281 823.57,-289.29 822.63,-300.6 841.08,-309 849.6,-312.88 858.61,-316.26 867.82,-319.2"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="866.68,-322.51 877.26,-322.02 868.69,-315.8 866.68,-322.51"/>
+</a>
+</g>
+</g>
+<!-- (*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation -->
+<g id="edge8" class="edge">
+<title>(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).PublishEvent&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation</title>
+<g id="a_edge8"><a xlink:title="at eventbus_integration.go:230: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:238: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]&#10;at eventbus_integration.go:246: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/gerror.GuildError).WithOperation]">
+<path fill="none" stroke="saddlebrown" d="M742.07,-249.47C763.19,-250.71 784.73,-252.21 805.08,-254 827.04,-255.94 850.37,-258.48 872.89,-261.2"/>
+<polygon fill="saddlebrown" stroke="saddlebrown" points="872.36,-264.66 882.71,-262.4 873.21,-257.71 872.36,-264.66"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator -->
+<g id="node12" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator</title>
+<g id="a_node12"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator | defined in eventbus_integration.go:146&#10;at eventbus_integration.go:158: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter]&#10;at eventbus_integration.go:161: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter]&#10;at eventbus_integration.go:156: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter]&#10;at eventbus_integration.go:164: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting]&#10;at eventbus_integration.go:157: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter]">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M273.79,-499C273.79,-499 107.5,-499 107.5,-499 101.5,-499 95.5,-493 95.5,-487 95.5,-487 95.5,-475 95.5,-475 95.5,-469 101.5,-463 107.5,-463 107.5,-463 273.79,-463 273.79,-463 279.79,-463 285.79,-469 285.79,-475 285.79,-475 285.79,-487 285.79,-487 285.79,-493 279.79,-499 273.79,-499"/>
+<text xml:space="preserve" text-anchor="middle" x="190.65" y="-476.32" font-family="Verdana" font-size="14.00">NewEventBusIntegrator</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting -->
+<g id="edge14" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting</title>
+<g id="a_edge14"><a xlink:title="at eventbus_integration.go:164: calling [(*github.com/guild&#45;framework/guild&#45;core/pkg/integration.EventBusIntegrator).setupDefaultRouting]">
+<path fill="none" stroke="black" d="M234.55,-499.64C283.16,-520.14 365.15,-552.84 438.29,-573 450.82,-576.45 463.99,-579.62 477.21,-582.49"/>
+<polygon fill="black" stroke="black" points="476.31,-585.88 486.82,-584.52 477.76,-579.03 476.31,-585.88"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter -->
+<g id="node13" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter</title>
+<g id="a_node13"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter | defined in eventbus_integration.go:395">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M692.33,-377C692.33,-377 514.04,-377 514.04,-377 508.04,-377 502.04,-371 502.04,-365 502.04,-365 502.04,-353 502.04,-353 502.04,-347 508.04,-341 514.04,-341 514.04,-341 692.33,-341 692.33,-341 698.33,-341 704.33,-347 704.33,-353 704.33,-353 704.33,-365 704.33,-365 704.33,-371 698.33,-377 692.33,-377"/>
+<text xml:space="preserve" text-anchor="middle" x="603.19" y="-354.32" font-family="Verdana" font-size="14.00">NewSessionEventAdapter</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter -->
+<g id="edge9" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter</title>
+<g id="a_edge9"><a xlink:title="at eventbus_integration.go:156: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewSessionEventAdapter]">
+<path fill="none" stroke="black" d="M235.47,-462.3C284.23,-442.09 365.71,-410.1 438.29,-390 455.05,-385.36 472.96,-381.19 490.56,-377.53"/>
+<polygon fill="black" stroke="black" points="490.88,-381.03 499.98,-375.61 489.49,-374.17 490.88,-381.03"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter -->
+<g id="node14" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter</title>
+<g id="a_node14"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter | defined in eventbus_integration.go:498">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M709.58,-438C709.58,-438 496.79,-438 496.79,-438 490.79,-438 484.79,-432 484.79,-426 484.79,-426 484.79,-414 484.79,-414 484.79,-408 490.79,-402 496.79,-402 496.79,-402 709.58,-402 709.58,-402 715.58,-402 721.58,-408 721.58,-414 721.58,-414 721.58,-426 721.58,-426 721.58,-432 715.58,-438 709.58,-438"/>
+<text xml:space="preserve" text-anchor="middle" x="603.19" y="-415.32" font-family="Verdana" font-size="14.00">NewPerformanceEventAdapter</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter -->
+<g id="edge19" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter</title>
+<g id="a_edge19"><a xlink:title="at eventbus_integration.go:157: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewPerformanceEventAdapter]">
+<path fill="none" stroke="black" d="M286.35,-466.93C341.74,-458.7 412.46,-448.19 472.92,-439.21"/>
+<polygon fill="black" stroke="black" points="473.21,-442.7 482.59,-437.77 472.18,-435.78 473.21,-442.7"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter -->
+<g id="node15" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter</title>
+<g id="a_node15"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter | defined in eventbus_integration.go:564">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M702.46,-499C702.46,-499 503.92,-499 503.92,-499 497.92,-499 491.92,-493 491.92,-487 491.92,-487 491.92,-475 491.92,-475 491.92,-469 497.92,-463 503.92,-463 503.92,-463 702.46,-463 702.46,-463 708.46,-463 714.46,-469 714.46,-475 714.46,-475 714.46,-487 714.46,-487 714.46,-493 708.46,-499 702.46,-499"/>
+<text xml:space="preserve" text-anchor="middle" x="603.19" y="-476.32" font-family="Verdana" font-size="14.00">NewMonitoringEventAdapter</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter -->
+<g id="edge4" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter</title>
+<g id="a_edge4"><a xlink:title="at eventbus_integration.go:158: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewMonitoringEventAdapter]">
+<path fill="none" stroke="black" d="M286.35,-481C343.86,-481 417.88,-481 479.81,-481"/>
+<polygon fill="black" stroke="black" points="479.71,-484.5 489.71,-481 479.71,-477.5 479.71,-484.5"/>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter -->
+<g id="node16" class="node">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter</title>
+<g id="a_node16"><a xlink:title="github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter | defined in eventbus_integration.go:623">
+<path fill="lightblue" stroke="black" stroke-width="1.5" d="M660.83,-560C660.83,-560 545.54,-560 545.54,-560 539.54,-560 533.54,-554 533.54,-548 533.54,-548 533.54,-536 533.54,-536 533.54,-530 539.54,-524 545.54,-524 545.54,-524 660.83,-524 660.83,-524 666.83,-524 672.83,-530 672.83,-536 672.83,-536 672.83,-548 672.83,-548 672.83,-554 666.83,-560 660.83,-560"/>
+<text xml:space="preserve" text-anchor="middle" x="603.19" y="-537.33" font-family="Verdana" font-size="14.00">NewEventRouter</text>
+</a>
+</g>
+</g>
+<!-- github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter -->
+<g id="edge5" class="edge">
+<title>github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventBusIntegrator&#45;&gt;github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter</title>
+<g id="a_edge5"><a xlink:title="at eventbus_integration.go:161: calling [github.com/guild&#45;framework/guild&#45;core/pkg/integration.NewEventRouter]">
+<path fill="none" stroke="black" d="M286.35,-495.07C357.68,-505.67 454.4,-520.04 521.95,-530.08"/>
+<polygon fill="black" stroke="black" points="521.04,-533.48 531.45,-531.49 522.07,-526.56 521.04,-533.48"/>
 </a>
 </g>
 </g>

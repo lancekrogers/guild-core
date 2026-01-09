@@ -14,33 +14,33 @@ digraph gocallvis {
     edge [minlen="2"]
 
     subgraph "cluster_focus" {
-        fontsize="18";
+        labeljust="c";
+fontsize="18";
 bgcolor="#e6ecfa";
 label="agentobj";
 labelloc="t";
-labeljust="c";
         
-        "(*github.com/guild-framework/guild-core/pkg/commission/agentobj.AgentParser).Parse" [ fillcolor="lightblue" label="(*AgentParser).Parse" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/commission/agentobj.AgentParser).Parse | defined in parser.go:25\nat parser.go:27: calling [(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse]" ]
         "github.com/guild-framework/guild-core/pkg/commission/agentobj.NewAgentParser" [ fillcolor="lightblue" label="NewAgentParser" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/commission/agentobj.NewAgentParser | defined in parser.go:18\nat parser.go:20: calling [github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser]" ]
+        "(*github.com/guild-framework/guild-core/pkg/commission/agentobj.AgentParser).Parse" [ tooltip="(*github.com/guild-framework/guild-core/pkg/commission/agentobj.AgentParser).Parse | defined in parser.go:25\nat parser.go:27: calling [(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse]" fillcolor="lightblue" label="(*AgentParser).Parse" penwidth="1.5" ]
         
         subgraph "cluster_github.com/guild-framework/guild-core/pkg/commission" {
-        style="filled";
+        fontname="Tahoma bold";
 label="commission";
+penwidth="0.8";
+style="filled";
+fillcolor="lightyellow";
+rank="sink";
 URL="/?f=github.com/guild-framework/guild-core/pkg/commission";
 tooltip="package: github.com/guild-framework/guild-core/pkg/commission";
-fillcolor="lightyellow";
-fontname="Tahoma bold";
-rank="sink";
-penwidth="0.8";
 fontsize="16";
         
+        "github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser" [ label="NewMarkdownParser" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser | defined in parser.go:58" fillcolor="moccasin" ]
         "(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse" [ fillcolor="moccasin" label="(*MarkdownParser).Parse" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse | defined in parser.go:68" ]
-        "github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser" [ fillcolor="moccasin" label="NewMarkdownParser" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser | defined in parser.go:58" ]
         
     }
 
     }
 
+    "github.com/guild-framework/guild-core/pkg/commission/agentobj.NewAgentParser" -> "github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser" [ tooltip="at parser.go:20: calling [github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser]" color="saddlebrown" ]
     "(*github.com/guild-framework/guild-core/pkg/commission/agentobj.AgentParser).Parse" -> "(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse" [ color="saddlebrown" tooltip="at parser.go:27: calling [(*github.com/guild-framework/guild-core/pkg/commission.MarkdownParser).Parse]" ]
-    "github.com/guild-framework/guild-core/pkg/commission/agentobj.NewAgentParser" -> "github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser" [ color="saddlebrown" tooltip="at parser.go:20: calling [github.com/guild-framework/guild-core/pkg/commission.NewMarkdownParser]" ]
 }
