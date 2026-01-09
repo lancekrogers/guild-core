@@ -1,6 +1,15 @@
 # Callgraph recipes
+
+# Path anchoring
+REPO_ROOT := justfile_directory()
+TOOLS_DIR := REPO_ROOT / "tools"
+DOCS_DIR := REPO_ROOT / "docs"
+CALLGRAPHS_DIR := DOCS_DIR / "images" / "callgraphs"
+VIEWER_DIR := DOCS_DIR / "callgraphs" / "viewer"
+
+# Configuration
 module_path := "github.com/guild-framework/guild-core"
-out_dir := "docs/images/callgraphs"
+out_dir := CALLGRAPHS_DIR
 callvis := "go-callvis"
 go_cache := "$PWD/.cache/go-build"
 
@@ -48,38 +57,44 @@ non-ui: setup
 all: cli-daemon daemon-lifecycle integration-services
 
 # Generate static HTML viewer for callgraphs
+[no-cd]
 viewer:
     @echo "Generating callgraph viewer..."
-    go run ./tools/callgraph-viewer
-    @echo "✓ Viewer generated at docs/callgraphs/viewer/index.html"
+    cd {{REPO_ROOT}} && go run {{TOOLS_DIR}}/callgraph-viewer
+    @echo "✓ Viewer generated at {{VIEWER_DIR}}/index.html"
 
 # Generate viewer and start server at localhost:9000
+[no-cd]
 view: viewer
     @echo "✓ Viewer ready at http://localhost:9000"
     @echo "Press Ctrl+C to stop the server"
     @echo ""
-    cd docs/callgraphs/viewer && python3 -m http.server 9000
+    cd {{VIEWER_DIR}} && python3 -m http.server 9000
 
 # Regenerate callgraphs and viewer
 [no-cd]
 refresh: non-ui viewer
 
 # Serve viewer with local HTTP server (required for ES modules)
+[no-cd]
 serve-viewer:
     @echo "Starting viewer at http://localhost:9000"
     @echo "Press Ctrl+C to stop"
-    cd docs/callgraphs/viewer && python3 -m http.server 9000
+    cd {{VIEWER_DIR}} && python3 -m http.server 9000
 
 # Open viewer in default browser (deprecated - use serve-viewer instead)
+[no-cd]
 open-viewer:
     @echo "Warning: Opening file:// may not work due to CORS restrictions"
     @echo "Use 'just callgraph serve-viewer' instead"
-    open docs/callgraphs/viewer/index.html
+    open {{VIEWER_DIR}}/index.html
 
 # Watch for SVG changes and regenerate viewer
+[no-cd]
 viewer-watch:
-    watchexec -w docs/images/callgraphs -e svg -- just callgraph viewer
+    watchexec -w {{CALLGRAPHS_DIR}} -e svg -- just callgraph viewer
 
 # Clean generated viewer files
+[no-cd]
 clean-viewer:
-    rm -rf docs/callgraphs/viewer
+    rm -rf {{VIEWER_DIR}}
