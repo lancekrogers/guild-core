@@ -38,8 +38,8 @@ func (s *Scanner) Scan(ctx context.Context) ([]string, error) {
 			return nil
 		}
 
-		// Only process .svg files
-		if strings.HasSuffix(info.Name(), ".svg") {
+		// Only process .svg files (excluding test files which have no content)
+		if strings.HasSuffix(info.Name(), ".svg") && !strings.Contains(info.Name(), "_test.svg") {
 			relPath, err := filepath.Rel(s.BaseDir, path)
 			if err != nil {
 				return gerror.Wrap(err, gerror.ErrCodeIO, "failed to get relative path").

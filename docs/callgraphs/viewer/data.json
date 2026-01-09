@@ -12,17 +12,6 @@
       "lastModified": "2026-01-06T12:22:14.475058553-07:00"
     },
     {
-      "id": "internal-agent_test",
-      "title": "internal/agent_test",
-      "filePath": "svgs/internal-agent_test.svg",
-      "category": "internal",
-      "domain": "agent_test",
-      "sizeBytes": 579,
-      "sizeCategory": "small",
-      "functions": 0,
-      "lastModified": "2026-01-08T22:08:37.787158866-07:00"
-    },
-    {
       "id": "internal-buildutil",
       "title": "internal/buildutil",
       "filePath": "svgs/internal-buildutil.svg",
@@ -54,17 +43,6 @@
       "sizeCategory": "small",
       "functions": 0,
       "lastModified": "2026-01-08T22:08:39.077464535-07:00"
-    },
-    {
-      "id": "internal-chat_test",
-      "title": "internal/chat_test",
-      "filePath": "svgs/internal-chat_test.svg",
-      "category": "internal",
-      "domain": "chat_test",
-      "sizeBytes": 579,
-      "sizeCategory": "small",
-      "functions": 0,
-      "lastModified": "2026-01-08T22:08:39.117959268-07:00"
     },
     {
       "id": "internal-daemon",
@@ -164,28 +142,6 @@
       "sizeCategory": "small",
       "functions": 0,
       "lastModified": "2026-01-08T22:08:52.375884978-07:00"
-    },
-    {
-      "id": "internal-manager_intelligence_test",
-      "title": "internal/manager_intelligence_test",
-      "filePath": "svgs/internal-manager_intelligence_test.svg",
-      "category": "internal",
-      "domain": "manager_intelligence_test",
-      "sizeBytes": 579,
-      "sizeCategory": "small",
-      "functions": 0,
-      "lastModified": "2026-01-08T22:08:52.422152059-07:00"
-    },
-    {
-      "id": "internal-memory_test",
-      "title": "internal/memory_test",
-      "filePath": "svgs/internal-memory_test.svg",
-      "category": "internal",
-      "domain": "memory_test",
-      "sizeBytes": 579,
-      "sizeCategory": "small",
-      "functions": 0,
-      "lastModified": "2026-01-08T22:08:52.458364905-07:00"
     },
     {
       "id": "internal-qa",
@@ -1764,17 +1720,6 @@
   "categories": {
     "internal": [
       {
-        "id": "internal-agent_test",
-        "title": "internal/agent_test",
-        "filePath": "svgs/internal-agent_test.svg",
-        "category": "internal",
-        "domain": "agent_test",
-        "sizeBytes": 579,
-        "sizeCategory": "small",
-        "functions": 0,
-        "lastModified": "2026-01-08T22:08:37.787158866-07:00"
-      },
-      {
         "id": "internal-buildutil",
         "title": "internal/buildutil",
         "filePath": "svgs/internal-buildutil.svg",
@@ -1806,17 +1751,6 @@
         "sizeCategory": "small",
         "functions": 0,
         "lastModified": "2026-01-08T22:08:39.077464535-07:00"
-      },
-      {
-        "id": "internal-chat_test",
-        "title": "internal/chat_test",
-        "filePath": "svgs/internal-chat_test.svg",
-        "category": "internal",
-        "domain": "chat_test",
-        "sizeBytes": 579,
-        "sizeCategory": "small",
-        "functions": 0,
-        "lastModified": "2026-01-08T22:08:39.117959268-07:00"
       },
       {
         "id": "internal-daemon",
@@ -1916,28 +1850,6 @@
         "sizeCategory": "small",
         "functions": 0,
         "lastModified": "2026-01-08T22:08:52.375884978-07:00"
-      },
-      {
-        "id": "internal-manager_intelligence_test",
-        "title": "internal/manager_intelligence_test",
-        "filePath": "svgs/internal-manager_intelligence_test.svg",
-        "category": "internal",
-        "domain": "manager_intelligence_test",
-        "sizeBytes": 579,
-        "sizeCategory": "small",
-        "functions": 0,
-        "lastModified": "2026-01-08T22:08:52.422152059-07:00"
-      },
-      {
-        "id": "internal-memory_test",
-        "title": "internal/memory_test",
-        "filePath": "svgs/internal-memory_test.svg",
-        "category": "internal",
-        "domain": "memory_test",
-        "sizeBytes": 579,
-        "sizeCategory": "small",
-        "functions": 0,
-        "lastModified": "2026-01-08T22:08:52.458364905-07:00"
       },
       {
         "id": "internal-qa",
@@ -3530,19 +3442,6 @@
     ]
   },
   "domains": {
-    "agent_test": [
-      {
-        "id": "internal-agent_test",
-        "title": "internal/agent_test",
-        "filePath": "svgs/internal-agent_test.svg",
-        "category": "internal",
-        "domain": "agent_test",
-        "sizeBytes": 579,
-        "sizeCategory": "small",
-        "functions": 0,
-        "lastModified": "2026-01-08T22:08:37.787158866-07:00"
-      }
-    ],
     "agents": [
       {
         "id": "pkg-agents",
@@ -3703,19 +3602,6 @@
         "sizeCategory": "medium",
         "functions": 0,
         "lastModified": "2026-01-08T22:09:14.766359511-07:00"
-      }
-    ],
-    "chat_test": [
-      {
-        "id": "internal-chat_test",
-        "title": "internal/chat_test",
-        "filePath": "svgs/internal-chat_test.svg",
-        "category": "internal",
-        "domain": "chat_test",
-        "sizeBytes": 579,
-        "sizeCategory": "small",
-        "functions": 0,
-        "lastModified": "2026-01-08T22:08:39.117959268-07:00"
       }
     ],
     "client": [
@@ -4376,19 +4262,6 @@
         "lastModified": "2026-01-08T22:10:05.090583472-07:00"
       }
     ],
-    "manager_intelligence_test": [
-      {
-        "id": "internal-manager_intelligence_test",
-        "title": "internal/manager_intelligence_test",
-        "filePath": "svgs/internal-manager_intelligence_test.svg",
-        "category": "internal",
-        "domain": "manager_intelligence_test",
-        "sizeBytes": 579,
-        "sizeCategory": "small",
-        "functions": 0,
-        "lastModified": "2026-01-08T22:08:52.422152059-07:00"
-      }
-    ],
     "mcp": [
       {
         "id": "pkg-mcp",
@@ -4556,19 +4429,6 @@
         "sizeCategory": "medium",
         "functions": 0,
         "lastModified": "2026-01-08T22:10:18.756167346-07:00"
-      }
-    ],
-    "memory_test": [
-      {
-        "id": "internal-memory_test",
-        "title": "internal/memory_test",
-        "filePath": "svgs/internal-memory_test.svg",
-        "category": "internal",
-        "domain": "memory_test",
-        "sizeBytes": 579,
-        "sizeCategory": "small",
-        "functions": 0,
-        "lastModified": "2026-01-08T22:08:52.458364905-07:00"
       }
     ],
     "monitoring": [
@@ -5407,5 +5267,5 @@
       }
     ]
   },
-  "generatedAt": "2026-01-08T22:11:09.91094-07:00"
+  "generatedAt": "2026-01-08T23:05:29.210956-07:00"
 }
