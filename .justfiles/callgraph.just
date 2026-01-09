@@ -54,6 +54,14 @@ viewer:
     go run ./tools/callgraph-viewer
     @echo "✓ Viewer generated at docs/callgraphs/viewer/index.html"
 
+# Generate viewer and start server at localhost:9000
+[no-cd]
+view: viewer
+    @echo "✓ Viewer ready at http://localhost:9000"
+    @echo "Press Ctrl+C to stop the server"
+    @echo ""
+    cd docs/callgraphs/viewer && python3 -m http.server 9000
+
 # Regenerate callgraphs and viewer
 [no-cd]
 refresh: non-ui viewer
