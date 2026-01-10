@@ -16,84 +16,102 @@
 
 > ⚠️ **Guild is under active development and not yet ready for public use.**
 >
-> This project is being shared early to demonstrate ongoing work on a deeply modular AI orchestration framework. Many systems are incomplete or experimental, and the codebase is **not yet stable or usable out-of-the-box**.
->
-> If you're curious, feel free to follow development or get in touch — but **this is not a production-ready tool**, nor is it currently suitable for integration into your projects.
+> This project is being shared early to demonstrate ongoing work on a deeply modular AI orchestration system I started working on in March 2025. Many systems are incomplete or experimental.
 
 ---
 
 ## 🏰 What Is Guild?
 
-**Guild** is a collaborative, agentic framework built in Go for orchestrating specialized AI agents to work together toward complex goals — inspired by medieval guilds of skilled craftspeople.
+**Guild** is a collaborative, agentic framework built in Go for orchestrating as many AI agents as humanely possible. Inspired by medieval guilds and corporate org structures.
 
-It provides:
+I started building Guild to better understand agentic systems and as an agent framework with an easier to comprehend mental model of the concepts required to orchestrate agents.
 
-- Configurable agents with roles, tools, and goals
-- Shared memory and structured task decomposition
-- Kanban-style task coordination
-- A command-line interface for managing projects, agents, and tasks
+It evolved into a research and exploration project into how I could manage hundreds or even thousands of agents working together in a hierarchical structure to help me achieve my goal that run 24/7,
+while still being time and cost conscious and that when they're working I can be confident they're doing exactly what I want them to do without me having to plan out every step they should take to get there.
 
-The goal is to provide a **developer-first, deeply modular system** for building and scaling multi-agent AI workflows — one that balances fun, clarity, and serious engineering.
 
----
+**Core Components:**
 
-## 🎬 Visual Demo: Real-time Kanban Board
+- **Agent Framework**: Flexible system for defining AI agents with specialized capabilities, tools, and behaviors
+- **Orchestration Engine**: Coordinates multiple agents, managing task dependencies and inter-agent communication via gRPC
+- **Memory Layer**: SQLite-based persistence with vector search capabilities for maintaining context across sessions
+- **Prompt Management**: Multi-layer prompt system enabling dynamic behavior customization while maintaining efficiency
+- **Task Management**: Kanban-style board for tracking work items and managing human review requirements
 
-Guild's kanban board provides real-time visual coordination for multi-agent workflows. Watch tasks flow through columns as agents collaborate, with events streaming at sub-200ms latency:
 
-### Quick Demo: Task Creation and Real-time Updates
+### Why the Medieval Theme?
 
-![Guild Kanban Quick Demo](demo-assets/quick-demo-optimized.gif)
+The medieval guild theme serves a purpose beyond aesthetics:
 
-*Create tasks and watch them appear instantly across all connected kanban views*
+- **Guilds** = Configurable agent teams with specialized capabilities
+- **Commissions → Festivals** = Work assignments that evolved into hierarchical project planning methodology (via Fest CLI)
+- **Festivals** = AI-driven planning that analyzes guild configs and divides work by cost and agent capabilities
+- **Corpus** = Collaborative knowledge base where humans and agents share domain expertise. Agents add context as they work; humans use the corpus agent to translate agent knowledge into human-readable format
+- **Campaigns** = Agentic workspaces containing configs, resources, task definitions, and everything needed to customize and run the system in way that YOU think will produce the best results
 
-### Multi-Agent Workflow Coordination  
 
-![Guild Kanban Multi-Agent Workflow](demo-assets/multi-task-workflow-optimized.gif)
+The goal: Lower the cognitive load associated with building highly capable AI automation systems
 
-*Multiple agents working simultaneously with automatic task blocking and dependency resolution*
+--
 
-### Performance at Scale
 
-![Guild Kanban Performance Showcase](demo-assets/performance-showcase-optimized.gif)
+Guild is built as a modular, extensible framework for orchestrating multiple AI agents working together on complex tasks. The architecture emphasizes:
 
-*Smooth 30 FPS rendering with 200+ tasks and real-time search capabilities*
+## **The Guild Metaphor**
 
-**Key Features Demonstrated:**
-- ⚡ **Real-time Updates**: Sub-200ms latency from agent action to UI display
-- 🔄 **Event Streaming**: Live task status changes across all connected views  
-- 🚫 **Smart Blocking**: Automatic task blocking with human review workflow
-- 🔍 **Instant Search**: Filter 200+ tasks with real-time results
-- 📊 **Performance**: 30 FPS rendering and >5k events/second throughput
-- 👥 **Multi-Agent**: Visual coordination of parallel agent work
 
-Try the interactive demo yourself:
-```bash
-# Record your own kanban demo
-./scripts/record-kanban-demo.sh quick-demo
+- Makes complex multi-agent concepts more intuitive
+- Provides a consistent mental model for system components
+- Adds personality to what could be a dry technical framework
 
-# Or try the full performance showcase  
-./scripts/record-kanban-demo.sh performance-showcase
-```
+The goal is serious engineering wrapped in an approachable, memorable package.
 
-> **See the complete demo commission example**: [examples/kanban-demo-commission.md](examples/kanban-demo-commission.md) shows a realistic 30-task development workflow demonstrating how agents collaborate through the kanban board to build a task tracking API.
 
 ---
 
 ## 🔧 Project Status
 
-Guild is in **pre-MVP development**. Core infrastructure is in place, but many commands and systems are incomplete or non-functional. The project is being opened publicly to:
+Guild is R&D. Core infrastructure is in place, but many commands and systems are incomplete or non-functional. The project is being opened publicly to:
 
 - Share development progress
 - Get feedback and issue reports
 - Allow early supporters to follow along
-- Begin building a contributor community (later)
+- Begin building a contributor community if other people find this interesting.
+
+
 
 ---
 
+## Notable Results
+
+## [Festival Methodology](https://github.com/lancekrogers/festival-methodology)
+
+I've been using and refining guild's project planning and task assignment system daily since early May 2025 on dozens of personal and professional projects.
+
+Decreased human effort in planning multi-step, hierarchical planning specs from 1-2 weeks in June to 2-3 days In October and down to 30 minutes in December.
+
+The fest cli orchestration features decreased my token usage by >90% by reducing itteration via templating and just in time context injection.
+
+Festival plans work consistently with all models and model providers.  Results rarely require any human intervention and the difference between model intelligence is in speed to complete the festival.  Quality gates ensure that agents fix their own mistakes early, before they compound into a mess.
+
+## Exponential Producivity Increase
+
+I published a [blog post](https://blockhead.consulting/blog/1_million_per_week_with_claude_code) on June 15th 2025 where I measured my output over 7 weeks using the COCOMO software cost estimation model.
+My theory wasn't about value estimation, but that I could use COCOMO to measure my personal productivity increases with different tools and techniques over time.
+
+At the time with my initial guild inspired workflow, I was able to produce high quality, niche, greenfield codebases with a COCOMO cost estimate of $142,000 per day.  This is compared to $6500 per day pre-chatgpt, $9,000 per day post chatgpt.
+
+On January 8th 2026, my daily COCOMO estimated value following the same criteria from June has increased by 28x to $4,000,000 COCOMO cost estimate per day.
+
+When I started guild I thought the useful limit of what I was trying to build would cap out at about where I am now, but now the path to doubling the productive growth rate again seems like a simple UX problem and the use case is clear. Still falls under the abstraction of a very large company.
+
+Beyond that is where things could get very intersting
+
+--- 
+
 ## 📜 License
 
-Guild is **not open source**.
+Guild is **source available**.
 
 It is licensed under a custom [Angry Goat License](LICENSE), which means:
 
@@ -102,94 +120,6 @@ It is licensed under a custom [Angry Goat License](LICENSE), which means:
 - 🔒 Redistribution, forking, and repackaging are not allowed
 - 💼 If you'd like to use Guild commercially, email [lance@blockhead.consulting](mailto:lance@blockhead.consulting)
 
-> This is a **source-available project**, not an open source one.
 
----
 
-## 🧭 What’s Next?
-
-I'm working toward a stable MVP that will include:
-
-- A multi-agent TUI chat
-- Multi-agent task decomposition
-- Local/remote model provider integration
-- Workspace-safe tool execution
-- Agent memory + human knowledge base integration
-- Kanban agent task tracking
-- Cost aware task assignment
-- Themed project structure, making multi-agentic development easy and intuitive
-- Layered system prompts
-
-If you’d like to follow development, feel free to:
-
-- ⭐ Star the repo
-- Watch for updates
-- Open issues for feedback or discussion
-- Contact: [lance@blockhead.consulting](mailto:lance@blockhead.consulting)
-
----
-
-## 🏗️ Architecture Overview
-
-Guild is built as a modular, extensible framework for orchestrating multiple AI agents working together on complex tasks. The architecture emphasizes:
-
-**Core Components:**
-
-- **Agent Framework**: Flexible system for defining AI agents with specialized capabilities, tools, and behaviors
-- **Orchestration Engine**: Coordinates multiple agents, managing task dependencies and inter-agent communication via gRPC
-- **Memory Layer**: SQLite-based persistence with vector search capabilities for maintaining context across sessions
-- **Tool Execution System**: Sandboxed environments for agents to safely execute code and interact with external systems
-- **Prompt Management**: Multi-layer prompt system enabling dynamic behavior customization while maintaining efficiency
-- **Task Management**: Kanban-style board for tracking work items and managing human review requirements
-
-**Technology Stack:**
-
-- **Go**: Chosen for performance, strong concurrency primitives, and type safety
-- **SQLite**: Production-ready relational database for state management
-- **gRPC**: High-performance RPC framework for inter-component communication
-- **Bubble Tea**: Modern TUI framework for rich terminal interfaces
-
----
-
-## 🎯 Technical Philosophy
-
-**Why Go?**
-Guild is built in Go rather than Python (the typical choice for AI projects) for several deliberate reasons:
-
-- **Performance**: Go's compiled nature and efficient runtime make it ideal for orchestrating multiple concurrent agents
-- **Type Safety**: Strong typing catches errors at compile time, crucial for a complex multi-agent system
-- **Concurrency**: Go's goroutines and channels provide elegant patterns for coordinating parallel agent operations
-- **Single Binary**: Easy deployment without dependency management headaches
-
-**Developer-First Design**
-
-- **Modularity**: Every major system is behind an interface, allowing easy extension and testing
-- **Registry Pattern**: Components are discoverable and loosely coupled through a central registry
-- **Progressive Disclosure**: Start simple with one agent, scale up to complex multi-agent workflows
-- **Local-First**: Everything runs on your machine - no cloud dependencies unless you want them
-
-**The Guild Metaphor**
-While not yet consistently implemented, the medieval guild theme serves a purpose beyond aesthetics:
-
-- Makes complex multi-agent concepts more intuitive
-- Provides a consistent mental model for system components
-- Adds personality to what could be a dry technical framework
-
-The goal is serious engineering wrapped in an approachable, memorable package.
-
----
-
-## 🙏 Acknowledgments
-
-Guild draws inspiration from:
-
-- [CrewAI](https://github.com/joaomdmoura/crewAI) - Multi-agent orchestration patterns
-- [LangChain](https://github.com/langchain-ai/langchain) - LLM application framework concepts
-- [Aider](https://github.com/paul-gauthier/aider) - AI pair programming interactions
-- Medieval guild structures and master-apprentice relationships
-
----
-
-<div align="center">
-  <i>Forging the future of agentic collaboration — one artisan at a time.</i>
-</div>
+*Guild is shared as a research artifact and portfolio piece. Development priorities shift based on exploration rather than user demand. Systems may be rebuilt, deleted, or evolve significantly.*
