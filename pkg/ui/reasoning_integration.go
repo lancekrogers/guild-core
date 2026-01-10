@@ -11,9 +11,9 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/lancekrogers/guild/internal/ui/chat/session"
 	"github.com/lancekrogers/guild/pkg/agents/core"
 	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/messages"
 	"github.com/lancekrogers/guild/pkg/observability"
 )
 
@@ -670,9 +670,9 @@ type CheckReasoningUpdatesMsg struct{}
 
 // Integration with message types
 
-// ReasoningMessage extends messages.Message with reasoning support
+// ReasoningMessage extends session.Message with reasoning support
 type ReasoningMessage struct {
-	messages.Message
+	session.Message
 	ReasoningChain *core.ReasoningChainEnhanced `json:"reasoning_chain,omitempty"`
 	ShowReasoning  bool                          `json:"show_reasoning"`
 }
