@@ -11,8 +11,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/events"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Type aliases for convenience

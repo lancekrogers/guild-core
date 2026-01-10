@@ -14,11 +14,11 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/providers"
-	providerif "github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	providerif "github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 
-	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 type localAgentState struct {

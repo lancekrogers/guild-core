@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/corpus/extraction"
-	"github.com/guild-framework/guild-core/pkg/corpus/graph"
+	"github.com/lancekrogers/guild-core/pkg/corpus/extraction"
+	"github.com/lancekrogers/guild-core/pkg/corpus/graph"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 func TestCampaignConfig_Validate(t *testing.T) {

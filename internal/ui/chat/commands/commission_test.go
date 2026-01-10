@@ -12,8 +12,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // MockCommissionManager is a mock implementation of commission.Manager

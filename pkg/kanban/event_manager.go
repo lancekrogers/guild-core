@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"sync"
 
-	"github.com/guild-framework/guild-core/pkg/comms"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/comms"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // EventManager handles kanban event publishing and subscription

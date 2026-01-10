@@ -12,8 +12,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // Ora models

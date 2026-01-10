@@ -13,10 +13,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/tools"
-	"github.com/guild-framework/guild-core/tools/fs"
-	"github.com/guild-framework/guild-core/tools/shell"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/tools/fs"
+	"github.com/lancekrogers/guild-core/tools/shell"
 )
 
 func TestTaskExecutor_ToolExecution(t *testing.T) {

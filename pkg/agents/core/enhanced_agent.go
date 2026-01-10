@@ -6,12 +6,12 @@ package core
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/memory"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	"github.com/guild-framework/guild-core/pkg/providers"
-	"github.com/guild-framework/guild-core/pkg/suggestions"
-	"github.com/guild-framework/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 )
 
 // EnhancedGuildArtisan extends GuildArtisan with suggestion capabilities

@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"time"
 
-	daemonPkg "github.com/guild-framework/guild-core/pkg/daemon"
-	"github.com/guild-framework/guild-core/pkg/paths"
+	daemonPkg "github.com/lancekrogers/guild-core/pkg/daemon"
+	"github.com/lancekrogers/guild-core/pkg/paths"
 )
 
 // DaemonConfig represents the configuration for a Guild daemon instance

@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/memory"
 )
 
 // MockCommissionManager implements the commission.Manager interface for testing

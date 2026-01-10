@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // OptimizationTestFramework provides continuous performance optimization testing

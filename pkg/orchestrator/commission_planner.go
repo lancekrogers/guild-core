@@ -7,11 +7,11 @@ import (
 	"context"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/agents/core/manager"
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/orchestrator/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/manager"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator/interfaces"
 )
 
 // CommissionTaskPlanner creates kanban tasks from refined commissions

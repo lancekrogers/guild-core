@@ -8,7 +8,7 @@ CALLGRAPHS_DIR := DOCS_DIR / "images" / "callgraphs"
 VIEWER_DIR := DOCS_DIR / "callgraphs" / "viewer"
 
 # Configuration
-module_path := "github.com/guild-framework/guild-core"
+module_path := "github.com/lancekrogers/guild-core"
 out_dir := CALLGRAPHS_DIR
 callvis := "go-callvis"
 go_cache := "$PWD/.cache/go-build"

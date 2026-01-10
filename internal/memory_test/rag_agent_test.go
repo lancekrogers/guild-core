@@ -8,12 +8,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/memory"
-	"github.com/guild-framework/guild-core/pkg/memory/rag"
-	"github.com/guild-framework/guild-core/pkg/providers"
-	"github.com/guild-framework/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 )
 
 // MockAgent implements the GuildArtisan interface for testing

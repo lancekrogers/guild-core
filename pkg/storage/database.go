@@ -17,8 +17,8 @@ import (
 	"github.com/golang-migrate/migrate/v4/source/iofs"
 	_ "modernc.org/sqlite"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/storage/db"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/storage/db"
 )
 
 //go:embed all:migrations/*.sql

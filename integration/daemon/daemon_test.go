@@ -22,11 +22,11 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/health/grpc_health_v1"
 
-	"github.com/guild-framework/guild-core/internal/daemon"
-	pkgDaemon "github.com/guild-framework/guild-core/pkg/daemon"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	pkgDaemon "github.com/lancekrogers/guild-core/pkg/daemon"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 func TestGuildDaemonLifecycle(t *testing.T) {

@@ -18,9 +18,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/internal/testutil"
-	"github.com/guild-framework/guild-core/pkg/agents/core/mocks"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/mocks"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // TestSustainedLoadMemoryProfile tests memory behavior under sustained load

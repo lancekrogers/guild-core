@@ -7,9 +7,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/agents/core/manager"
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/manager"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

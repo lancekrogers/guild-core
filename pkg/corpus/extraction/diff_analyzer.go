@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // DiffAnalyzer analyzes git diffs to extract structural changes

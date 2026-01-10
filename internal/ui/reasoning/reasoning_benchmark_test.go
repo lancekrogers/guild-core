@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	viewutil "github.com/lancekrogers/guild-core/internal/ui/view"
 	"github.com/stretchr/testify/require"
 )
 

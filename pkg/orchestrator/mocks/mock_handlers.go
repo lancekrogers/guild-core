@@ -6,7 +6,7 @@ package mocks
 import (
 	"sync"
 
-	"github.com/guild-framework/guild-core/pkg/orchestrator/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator/interfaces"
 )
 
 // MockEventHandler is a mock implementation of the EventHandler function

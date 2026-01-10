@@ -13,9 +13,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	"github.com/guild-framework/guild-core/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
 )
 
 // Parser parses Anthropic-style XML tool calls

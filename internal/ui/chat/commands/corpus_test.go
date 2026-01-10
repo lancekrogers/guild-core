@@ -11,11 +11,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/internal/ui/chat/common/config"
-	"github.com/guild-framework/guild-core/internal/ui/chat/panes"
-	"github.com/guild-framework/guild-core/pkg/corpus"
-	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/config"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

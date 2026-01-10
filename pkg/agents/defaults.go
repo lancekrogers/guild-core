@@ -6,9 +6,9 @@ package agents
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/agents/backstory/templates"
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/agents/backstory/templates"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // DefaultAgentCreator provides enhanced agent creation with rich backstories

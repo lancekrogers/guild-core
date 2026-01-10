@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/guild-framework/guild-core/pkg/lsp"
-	lsptools "github.com/guild-framework/guild-core/pkg/lsp/tools"
+	"github.com/lancekrogers/guild-core/pkg/lsp"
+	lsptools "github.com/lancekrogers/guild-core/pkg/lsp/tools"
 )
 
 // ExampleLSPUsage demonstrates how to use the LSP integration

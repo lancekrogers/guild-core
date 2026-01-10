@@ -13,8 +13,8 @@ import (
 	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
 
-	"github.com/guild-framework/guild-core/pkg/corpus"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Update handles UI events and state transitions

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // RAGSearchResult represents a result from RAG system search

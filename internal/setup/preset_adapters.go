@@ -6,8 +6,8 @@ package setup
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // AdaptPresetForProviders adapts a preset collection to work with available providers

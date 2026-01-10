@@ -9,7 +9,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/guild-framework/guild-core/internal/setup"
+	"github.com/lancekrogers/guild-core/internal/setup"
 )
 
 func main() {

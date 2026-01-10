@@ -16,11 +16,11 @@ import (
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 
-	"github.com/guild-framework/guild-core/internal/daemon"
-	"github.com/guild-framework/guild-core/pkg/events"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // DaemonService wraps the daemon server to integrate with the service framework

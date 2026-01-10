@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/mcp/protocol"
 )
 
 // Tool represents a callable tool in the MCP system

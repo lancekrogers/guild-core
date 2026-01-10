@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ExampleUsage demonstrates how to use the ComponentRegistry

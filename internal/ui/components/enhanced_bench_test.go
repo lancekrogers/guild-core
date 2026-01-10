@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/internal/ui/animation"
-	"github.com/guild-framework/guild-core/internal/ui/theme"
+	"github.com/lancekrogers/guild-core/internal/ui/animation"
+	"github.com/lancekrogers/guild-core/internal/ui/theme"
 )
 
 // BenchmarkComponentLibrary_RenderButton benchmarks button rendering performance

@@ -9,8 +9,8 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/guild-framework/guild-core/pkg/comms"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/comms"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Transport implements transport.Transport using Go channels

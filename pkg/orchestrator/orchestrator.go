@@ -6,8 +6,8 @@ package orchestrator
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	"github.com/guild-framework/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/commission"
 )
 
 // Status represents the status of the orchestrator

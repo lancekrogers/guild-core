@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 // CommandResult holds the result of running a command

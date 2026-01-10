@@ -11,11 +11,11 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	"github.com/guild-framework/guild-core/pkg/session"
+	viewutil "github.com/lancekrogers/guild-core/internal/ui/view"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/session"
 )
 
 // ReasoningIntegration manages the integration between reasoning and chat UI

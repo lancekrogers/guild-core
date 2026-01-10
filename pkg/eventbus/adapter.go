@@ -4,7 +4,7 @@
 package eventbus
 
 import (
-	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/events"
 )
 
 // Event is an alias for the existing CoreEvent interface

@@ -7,9 +7,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 // ManagerIntelligenceService provides intelligent task analysis and agent routing

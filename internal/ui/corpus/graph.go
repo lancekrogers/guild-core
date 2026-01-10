@@ -11,7 +11,7 @@ import (
 	"charm.land/lipgloss/v2"
 	"github.com/muesli/reflow/truncate"
 
-	"github.com/guild-framework/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
 )
 
 // GraphView handles rendering the document relationship graph

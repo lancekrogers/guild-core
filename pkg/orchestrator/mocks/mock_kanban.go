@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // MockKanbanManager is a mock implementation of the kanban.Manager

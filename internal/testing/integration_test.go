@@ -16,11 +16,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/pkg/monitoring"
-	"github.com/guild-framework/guild-core/pkg/orchestrator"
-	"github.com/guild-framework/guild-core/pkg/performance"
-	"github.com/guild-framework/guild-core/pkg/registry"
-	sessionpkg "github.com/guild-framework/guild-core/pkg/session"
+	"github.com/lancekrogers/guild-core/pkg/monitoring"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator"
+	"github.com/lancekrogers/guild-core/pkg/performance"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	sessionpkg "github.com/lancekrogers/guild-core/pkg/session"
 	"go.uber.org/zap"
 )
 

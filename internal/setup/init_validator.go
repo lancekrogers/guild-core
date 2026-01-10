@@ -12,13 +12,13 @@ import (
 
 	"github.com/fatih/color"
 
-	"github.com/guild-framework/guild-core/pkg/campaign"
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/daemon"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/paths"
-	"github.com/guild-framework/guild-core/pkg/providers"
-	"github.com/guild-framework/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/daemon"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // InitValidationResult represents the result of a single validation check

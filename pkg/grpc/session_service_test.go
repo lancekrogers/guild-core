@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	v1 "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	v1 "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 // TestSessionService_CreateSession_Validation tests comprehensive input validation

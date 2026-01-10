@@ -16,9 +16,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/internal/ui/chat/session"
-	"github.com/guild-framework/guild-core/internal/ui/progress"
-	"github.com/guild-framework/guild-core/internal/ui/tools"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/session"
+	"github.com/lancekrogers/guild-core/internal/ui/progress"
+	"github.com/lancekrogers/guild-core/internal/ui/tools"
 )
 
 // Mock implementations for testing

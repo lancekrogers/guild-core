@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/terminal"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/terminal"
 )
 
 // WindowsProfileDetector detects Windows-specific terminal profiles

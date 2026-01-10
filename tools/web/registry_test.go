@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/guild-framework/guild-core/pkg/registry"
-	"github.com/guild-framework/guild-core/tools"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 func TestRegisterWebTools(t *testing.T) {

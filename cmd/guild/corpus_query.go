@@ -13,13 +13,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-framework/guild-core/pkg/corpus"
-	corpusagent "github.com/guild-framework/guild-core/pkg/corpus/agent"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/memory/rag"
-	"github.com/guild-framework/guild-core/pkg/memory/vector"
-	"github.com/guild-framework/guild-core/pkg/providers"
-	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	corpusagent "github.com/lancekrogers/guild-core/pkg/corpus/agent"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // corpusQueryCmd represents the corpus query command

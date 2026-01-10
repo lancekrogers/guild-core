@@ -9,9 +9,9 @@ import (
 	"sort"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // TaskAssigner implements intelligent task assignment using agent capability models

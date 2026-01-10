@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"charm.land/lipgloss/v2"
-	"github.com/guild-framework/guild-core/internal/ui/progress"
+	"github.com/lancekrogers/guild-core/internal/ui/progress"
 	"image/color"
 )
 

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // TestNewTask tests the creation of a new task

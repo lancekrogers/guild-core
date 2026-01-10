@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 	"github.com/lancekrogers/claude-code-go/pkg/claude"
 )
 

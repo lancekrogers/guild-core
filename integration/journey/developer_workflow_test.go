@@ -17,8 +17,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/internal/testutil"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // TestDeveloperDailyWorkflow tests a typical developer's daily workflow

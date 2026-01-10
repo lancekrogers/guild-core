@@ -12,16 +12,16 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/guild-framework/guild-core/internal/daemon"
-	"github.com/guild-framework/guild-core/pkg/campaign"
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/memory"
-	"github.com/guild-framework/guild-core/pkg/orchestrator"
-	"github.com/guild-framework/guild-core/pkg/project"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 var (

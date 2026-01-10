@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/events"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // EventTypeRule matches events by type

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // RecommendPresets analyzes providers and project context to recommend optimal presets

@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // Manager handles storage and retrieval of commissions

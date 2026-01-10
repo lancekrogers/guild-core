@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/events"
 )
 
 func TestEventRegistry_RegisterSchema(t *testing.T) {

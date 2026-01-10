@@ -12,9 +12,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/pkg/memory"
-	"github.com/guild-framework/guild-core/pkg/storage"
-	"github.com/guild-framework/guild-core/pkg/storage/promptchain"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/storage/promptchain"
 )
 
 // TestPromptChainIntegration tests the full integration of the prompt chain system

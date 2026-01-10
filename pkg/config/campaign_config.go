@@ -10,8 +10,8 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
 )
 
 // CampaignConfig represents the campaign-level configuration

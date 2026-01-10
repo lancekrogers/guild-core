@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 // BackstoryManager manages agent personalities and integrates them with the layered prompt system

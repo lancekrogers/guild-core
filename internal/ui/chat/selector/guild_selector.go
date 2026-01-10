@@ -17,10 +17,10 @@ import (
 	"charm.land/lipgloss/v2"
 	"gopkg.in/yaml.v3"
 
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/paths"
-	"github.com/guild-framework/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 // Guild selector key bindings

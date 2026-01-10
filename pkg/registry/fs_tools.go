@@ -6,8 +6,8 @@ package registry
 import (
 	"os"
 
-	"github.com/guild-framework/guild-core/tools"
-	"github.com/guild-framework/guild-core/tools/fs"
+	"github.com/lancekrogers/guild-core/tools"
+	"github.com/lancekrogers/guild-core/tools/fs"
 )
 
 // RegisterFSTools registers all filesystem tools with the given tool registry

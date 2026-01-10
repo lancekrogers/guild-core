@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // PlanningStage represents the current stage of commission planning

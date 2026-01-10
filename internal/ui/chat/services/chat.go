@@ -9,12 +9,12 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	"github.com/guild-framework/guild-core/pkg/registry"
-	"github.com/guild-framework/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
 )
 
 // ChatService handles communication with Guild agents via gRPC

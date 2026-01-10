@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-framework/guild-core/tools"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // TestCraftSearchToolRegistry tests the search tool registry functionality

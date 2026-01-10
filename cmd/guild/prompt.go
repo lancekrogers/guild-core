@@ -14,8 +14,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	promptspb "github.com/guild-framework/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	promptspb "github.com/lancekrogers/guild-core/pkg/grpc/pb/prompts/v1"
 )
 
 var (

@@ -7,11 +7,11 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/guild-framework/guild-core/pkg/agents/core/manager"
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/events"
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/orchestrator/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/manager"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator/interfaces"
 )
 
 // UnifiedCommissionTaskPlanner implements CommissionTaskPlanner using the unified event system

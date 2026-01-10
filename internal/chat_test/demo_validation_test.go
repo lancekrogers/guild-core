@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/internal/ui/formatting"
+	"github.com/lancekrogers/guild-core/internal/ui/formatting"
 )
 
 // DemoScenario represents a demo test case

@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"charm.land/lipgloss/v2"
-	"github.com/guild-framework/guild-core/internal/ui/chat/common/utils"
-	"github.com/guild-framework/guild-core/internal/ui/chat/components"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/utils"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/components"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"go.uber.org/zap"
 )
 

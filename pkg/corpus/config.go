@@ -10,8 +10,8 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ConfigKeys defines the environment variable keys for corpus configuration

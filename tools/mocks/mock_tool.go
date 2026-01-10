@@ -7,7 +7,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/guild-framework/guild-core/tools"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // MockTool is a mock implementation of the Tool interface for testing

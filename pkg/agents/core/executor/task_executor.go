@@ -11,15 +11,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/git/worktree"
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	"github.com/guild-framework/guild-core/pkg/prompts/standard/templates/agent/execution"
-	"github.com/guild-framework/guild-core/pkg/tools"
-	"github.com/guild-framework/guild-core/tools/fs"
-	"github.com/guild-framework/guild-core/tools/shell"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/git/worktree"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/prompts/standard/templates/agent/execution"
+	"github.com/lancekrogers/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/tools/fs"
+	"github.com/lancekrogers/guild-core/tools/shell"
 )
 
 // BasicTaskExecutor implements the TaskExecutor interface

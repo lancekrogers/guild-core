@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/internal/ui/chat/panes"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/preferences"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/preferences"
 )
 
 // PreferencesHandler handles preference-related commands

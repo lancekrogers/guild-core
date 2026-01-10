@@ -10,11 +10,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/internal/ui/chat/commands"
-	"github.com/guild-framework/guild-core/internal/ui/chat/common"
-	"github.com/guild-framework/guild-core/internal/ui/chat/messages"
-	"github.com/guild-framework/guild-core/internal/ui/chat/panes"
-	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/commands"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/messages"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild-core/pkg/config"
 )
 
 func newMinimalApp(t *testing.T) *App {

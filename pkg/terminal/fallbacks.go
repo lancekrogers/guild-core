@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // FallbackStrategy defines a text transformation strategy

@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/internal/testutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

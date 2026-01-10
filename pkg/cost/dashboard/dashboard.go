@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"charm.land/lipgloss/v2"
-	"github.com/guild-framework/guild-core/pkg/cost"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/cost"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // CostDashboard provides real-time cost monitoring and visualization

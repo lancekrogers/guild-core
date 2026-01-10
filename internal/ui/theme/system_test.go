@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"charm.land/lipgloss/v2"
-	"github.com/guild-framework/guild-core/internal/ui"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/ui"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 func TestNewThemeManager(t *testing.T) {

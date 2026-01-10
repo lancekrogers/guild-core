@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"time"
 
-	scaffold "github.com/guild-framework/guild-core/internal/scaffoldlite"
-	templ "github.com/guild-framework/guild-core/internal/scaffoldlite/templates"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	scaffold "github.com/lancekrogers/guild-core/internal/scaffoldlite"
+	templ "github.com/lancekrogers/guild-core/internal/scaffoldlite/templates"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ExecuteInit executes the embedded template-driven initialization

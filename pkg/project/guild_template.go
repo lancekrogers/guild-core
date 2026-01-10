@@ -9,7 +9,7 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // GuildTemplate provides default guild configurations for new projects

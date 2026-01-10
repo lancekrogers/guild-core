@@ -6,10 +6,10 @@ package panes
 import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/guild-framework/guild-core/internal/ui/chat/common/layout"
-	"github.com/guild-framework/guild-core/internal/ui/chat/completion"
-	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
-	"github.com/guild-framework/guild-core/internal/ui/vim"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/layout"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/completion"
+	viewutil "github.com/lancekrogers/guild-core/internal/ui/view"
+	"github.com/lancekrogers/guild-core/internal/ui/vim"
 )
 
 // VimInputAdapter wraps InputPane to make it VimCapable

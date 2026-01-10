@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // AgentCapability represents what an agent can do

@@ -17,8 +17,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
-	"github.com/guild-framework/guild-core/tools"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // MockAIProvider implements the AIProvider interface for testing

@@ -6,7 +6,7 @@ package reasoning
 import (
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // MetricsAdapter provides a compatibility layer for reasoning metrics

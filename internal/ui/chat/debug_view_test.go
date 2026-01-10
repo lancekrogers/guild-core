@@ -11,8 +11,8 @@ import (
 	"charm.land/lipgloss/v2"
 	"github.com/muesli/termenv"
 
-	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
-	"github.com/guild-framework/guild-core/pkg/config"
+	viewutil "github.com/lancekrogers/guild-core/internal/ui/view"
+	"github.com/lancekrogers/guild-core/pkg/config"
 )
 
 func escVisible(s string) string {

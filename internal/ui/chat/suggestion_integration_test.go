@@ -10,13 +10,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/internal/ui/chat/completion"
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/memory"
-	"github.com/guild-framework/guild-core/pkg/providers"
-	"github.com/guild-framework/guild-core/pkg/suggestions"
-	"github.com/guild-framework/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/completion"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 )
 
 // TestSuggestionIntegration verifies the suggestion system is properly integrated

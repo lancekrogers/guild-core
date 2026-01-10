@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // SessionManagerInterface defines the high-level session management contract

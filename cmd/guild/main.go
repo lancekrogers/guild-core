@@ -13,7 +13,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // rootCmd represents the Great Hall command (root command in standard terminology)

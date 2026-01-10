@@ -14,7 +14,7 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/internal/teatest"
+	"github.com/lancekrogers/guild-core/internal/teatest"
 )
 
 // TeaTestCleanup provides a pattern for proper teatest cleanup

@@ -7,7 +7,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Mock implementations for testing

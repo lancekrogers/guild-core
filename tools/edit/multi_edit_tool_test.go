@@ -10,7 +10,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Test data constants

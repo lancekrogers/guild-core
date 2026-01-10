@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/prompts/standard"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/prompts/standard"
 )
 
 // PromptEvaluator evaluates prompt effectiveness and quality

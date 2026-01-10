@@ -16,7 +16,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 
-	"github.com/guild-framework/guild-core/tools/search"
+	"github.com/lancekrogers/guild-core/tools/search"
 )
 
 // GlobalSearchKeyMap defines key bindings for the global search

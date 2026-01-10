@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/events"
 )
 
 // Event types for reasoning system

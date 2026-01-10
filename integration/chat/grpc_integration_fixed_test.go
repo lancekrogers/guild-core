@@ -22,13 +22,13 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/guild-framework/guild-core/internal/testutil"
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/events"
-	grpcpkg "github.com/guild-framework/guild-core/pkg/grpc"
-	guildv1 "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-framework/guild-core/pkg/project"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	grpcpkg "github.com/lancekrogers/guild-core/pkg/grpc"
+	guildv1 "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // TestChatServiceBasicsFixed tests basic chat service functionality with proper project setup

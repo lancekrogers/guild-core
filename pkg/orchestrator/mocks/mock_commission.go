@@ -6,7 +6,7 @@ package mocks
 import (
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/commission"
 )
 
 // MockObjective creates a mock objective for testing

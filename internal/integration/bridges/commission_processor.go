@@ -4,11 +4,11 @@ package bridges
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	"github.com/guild-framework/guild-core/pkg/orchestrator"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // CommissionProcessorBridge provides commission processing functionality to other bridges

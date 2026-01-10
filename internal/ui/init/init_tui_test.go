@@ -12,11 +12,11 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/internal/teatest"
+	"github.com/lancekrogers/guild-core/internal/teatest"
 
-	"github.com/guild-framework/guild-core/internal/setup"
-	uiinit "github.com/guild-framework/guild-core/internal/ui/init"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/setup"
+	uiinit "github.com/lancekrogers/guild-core/internal/ui/init"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Mock implementations for testing

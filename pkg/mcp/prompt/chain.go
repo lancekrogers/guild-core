@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/mcp/protocol"
 )
 
 // Processor defines the interface for processing prompts

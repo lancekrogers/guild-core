@@ -11,7 +11,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/guild-framework/guild-core/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
 )
 
 // Detector detects OpenAI-style JSON tool call format with confidence scoring

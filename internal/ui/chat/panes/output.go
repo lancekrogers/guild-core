@@ -12,10 +12,10 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 
-	"github.com/guild-framework/guild-core/internal/ui/chat/common"
-	"github.com/guild-framework/guild-core/internal/ui/chat/common/layout"
-	"github.com/guild-framework/guild-core/internal/ui/formatting"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/layout"
+	"github.com/lancekrogers/guild-core/internal/ui/formatting"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // OutputPane handles the display of messages and rich content

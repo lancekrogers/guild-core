@@ -15,9 +15,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/tools"
-	"github.com/guild-framework/guild-core/tools/code"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools"
+	"github.com/lancekrogers/guild-core/tools/code"
 )
 
 // MultiFileRefactorTool provides coordinated refactoring across multiple files

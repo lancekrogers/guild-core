@@ -6,7 +6,7 @@ package commission
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Planner manages the planning process for commissions

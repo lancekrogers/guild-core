@@ -7,10 +7,10 @@ import (
 	"log"
 	"time"
 
-	"github.com/guild-framework/guild-core/internal/integration/bridges"
-	"github.com/guild-framework/guild-core/internal/integration/services"
-	"github.com/guild-framework/guild-core/pkg/events"
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/internal/integration/bridges"
+	"github.com/lancekrogers/guild-core/internal/integration/services"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 func main() {

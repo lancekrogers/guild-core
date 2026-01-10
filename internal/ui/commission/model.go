@@ -14,7 +14,7 @@ import (
 	"charm.land/bubbles/v2/viewport"
 	tea "charm.land/bubbletea/v2"
 
-	commissionpkg "github.com/guild-framework/guild-core/pkg/commission"
+	commissionpkg "github.com/lancekrogers/guild-core/pkg/commission"
 )
 
 // Define UI states

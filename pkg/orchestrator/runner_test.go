@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/orchestrator/interfaces"
-	"github.com/guild-framework/guild-core/pkg/orchestrator/mocks"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

@@ -8,9 +8,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/guild-framework/guild-core/tools/callgraph-viewer/generator"
-	"github.com/guild-framework/guild-core/tools/callgraph-viewer/static"
-	"github.com/guild-framework/guild-core/tools/callgraph-viewer/templates"
+	"github.com/lancekrogers/guild-core/tools/callgraph-viewer/generator"
+	"github.com/lancekrogers/guild-core/tools/callgraph-viewer/static"
+	"github.com/lancekrogers/guild-core/tools/callgraph-viewer/templates"
 )
 
 func main() {

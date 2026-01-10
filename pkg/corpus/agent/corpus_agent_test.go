@@ -12,10 +12,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/pkg/corpus"
-	"github.com/guild-framework/guild-core/pkg/memory/rag"
-	"github.com/guild-framework/guild-core/pkg/memory/vector"
-	"github.com/guild-framework/guild-core/pkg/providers/mock"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/providers/mock"
 )
 
 func TestNewCorpusAgent(t *testing.T) {

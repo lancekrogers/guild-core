@@ -5,7 +5,7 @@ import (
 	"io/fs"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Engine provides the main scaffold operations interface

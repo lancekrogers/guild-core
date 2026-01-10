@@ -13,10 +13,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/internal/testutil"
-	"github.com/guild-framework/guild-core/pkg/memory/rag"
-	"github.com/guild-framework/guild-core/pkg/memory/vector"
-	"github.com/guild-framework/guild-core/pkg/providers/mock"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/providers/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

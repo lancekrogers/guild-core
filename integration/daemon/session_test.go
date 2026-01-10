@@ -19,8 +19,8 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	pkgDaemon "github.com/guild-framework/guild-core/internal/daemon"
-	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
+	pkgDaemon "github.com/lancekrogers/guild-core/internal/daemon"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 // TestSessionRoundTrip tests create-stream-persist-restart functionality

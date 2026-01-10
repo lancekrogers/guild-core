@@ -15,8 +15,8 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 
-	"github.com/guild-framework/guild-core/internal/setup"
-	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/internal/setup"
+	"github.com/lancekrogers/guild-core/pkg/config"
 )
 
 // WizardInterface defines the interface for the setup wizard

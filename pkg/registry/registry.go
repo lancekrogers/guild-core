@@ -9,13 +9,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/paths"
-	globalproj "github.com/guild-framework/guild-core/pkg/project/global"
-	"github.com/guild-framework/guild-core/pkg/prompts/layered"
-	"github.com/guild-framework/guild-core/pkg/providers"
-	"github.com/guild-framework/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	globalproj "github.com/lancekrogers/guild-core/pkg/project/global"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // layeredManagerWrapper wraps a basic manager to implement LayeredManager interface

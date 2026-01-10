@@ -19,13 +19,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/internal/testutil"
-	"github.com/guild-framework/guild-core/pkg/corpus"
-	"github.com/guild-framework/guild-core/pkg/interfaces"
-	"github.com/guild-framework/guild-core/pkg/memory/rag"
-	"github.com/guild-framework/guild-core/pkg/memory/vector"
-	"github.com/guild-framework/guild-core/pkg/project"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // TestCorpusScanningAndIndexing tests scanning project files and indexing in vector store

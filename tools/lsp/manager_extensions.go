@@ -7,8 +7,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/lsp"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/lsp"
 )
 
 // This file contains example extensions for the LSP manager that would need to be

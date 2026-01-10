@@ -12,8 +12,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/corpus"
-	"github.com/guild-framework/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 // TestProjectIntegration tests the full project workflow

@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/memory/vector"
-	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
-	"github.com/guild-framework/guild-core/tools"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // MockLLMProvider provides a configurable mock LLM provider for testing

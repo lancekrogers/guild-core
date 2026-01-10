@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
 )
 
 // Re-export types from the types package for convenience and backward compatibility.

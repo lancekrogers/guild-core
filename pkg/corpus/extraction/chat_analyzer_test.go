@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/storage/db"
+	"github.com/lancekrogers/guild-core/pkg/storage/db"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

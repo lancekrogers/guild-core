@@ -9,8 +9,8 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/internal/teatest"
-	testingpkg "github.com/guild-framework/guild-core/internal/testing"
+	"github.com/lancekrogers/guild-core/internal/teatest"
+	testingpkg "github.com/lancekrogers/guild-core/internal/testing"
 )
 
 // TestTerminalCleanup verifies that terminal cleanup works correctly

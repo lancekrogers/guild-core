@@ -6,7 +6,7 @@ package corpus
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
 )
 
 // CorpusManager interface abstracts corpus operations for UI

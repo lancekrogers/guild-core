@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/orchestrator/mocks"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator/mocks"
 )
 
 func setupDispatcherTest() (*taskDispatcher, *mocks.MockKanbanManager, *mocks.MockAgentFactory, *eventBus, *mocks.MockEventHandler) {

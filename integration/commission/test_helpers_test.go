@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/project"
-	"github.com/guild-framework/guild-core/pkg/registry"
-	"github.com/guild-framework/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 	"github.com/stretchr/testify/require"
 )
 

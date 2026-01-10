@@ -11,10 +11,10 @@ import (
 
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/ansi"
-	"github.com/guild-framework/guild-core/internal/ui/visual"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	"github.com/guild-framework/guild-core/pkg/templates"
+	"github.com/lancekrogers/guild-core/internal/ui/visual"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/templates"
 )
 
 // ContentFormatter provides high-level content formatting for different message types

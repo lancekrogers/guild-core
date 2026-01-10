@@ -6,7 +6,7 @@ package init
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/internal/setup"
+	"github.com/lancekrogers/guild-core/internal/setup"
 )
 
 // ConfigurationManager handles all configuration operations

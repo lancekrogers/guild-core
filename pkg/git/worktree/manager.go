@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/go-git/go-git/v5"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // WorktreeManager manages git worktrees for multiple agents

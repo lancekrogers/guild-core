@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"charm.land/lipgloss/v2"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // MermaidProcessor handles Mermaid diagram detection and rendering

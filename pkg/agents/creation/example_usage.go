@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 // ExampleCreateEnhancedGuild demonstrates creating a guild with Elena and rich agents

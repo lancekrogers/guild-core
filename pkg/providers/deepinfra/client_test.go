@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/providers/base"
-	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
-	providertesting "github.com/guild-framework/guild-core/pkg/providers/testing"
+	"github.com/lancekrogers/guild-core/pkg/providers/base"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	providertesting "github.com/lancekrogers/guild-core/pkg/providers/testing"
 )
 
 func TestDeepInfraProvider(t *testing.T) {

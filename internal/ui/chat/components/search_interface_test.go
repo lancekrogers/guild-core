@@ -10,8 +10,8 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
-	"github.com/guild-framework/guild-core/pkg/observability"
+	viewutil "github.com/lancekrogers/guild-core/internal/ui/view"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

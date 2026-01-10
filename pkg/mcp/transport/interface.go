@@ -11,8 +11,8 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/mcp/protocol"
 )
 
 // Transport defines the interface for MCP transport implementations

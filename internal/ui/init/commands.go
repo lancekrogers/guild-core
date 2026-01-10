@@ -13,10 +13,10 @@ import (
 	tea "charm.land/bubbletea/v2"
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/guild-framework/guild-core/pkg/agents/creation"
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/agents/creation"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
 // doInitialization performs the main initialization with proper context handling

@@ -14,7 +14,7 @@ import (
 )
 
 // Tracer name for the parser package
-const tracerName = "github.com/guild-framework/guild-core/pkg/tools/parser"
+const tracerName = "github.com/lancekrogers/guild-core/pkg/tools/parser"
 
 // getTracer returns the tracer for the parser package
 func getTracer() trace.Tracer {

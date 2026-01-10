@@ -8,11 +8,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	mcpconfig "github.com/guild-framework/guild-core/pkg/mcp/config"
-	"github.com/guild-framework/guild-core/pkg/mcp/server"
-	"github.com/guild-framework/guild-core/pkg/mcp/transport"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	mcpconfig "github.com/lancekrogers/guild-core/pkg/mcp/config"
+	"github.com/lancekrogers/guild-core/pkg/mcp/server"
+	"github.com/lancekrogers/guild-core/pkg/mcp/transport"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // MCPRegistryAdapter adapts MCP server for Guild registry

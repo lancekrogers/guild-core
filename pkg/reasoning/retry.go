@@ -9,7 +9,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // RetryConfig configures retry behavior

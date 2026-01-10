@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/config"
 )
 
 func TestConfigShowCommand(t *testing.T) {

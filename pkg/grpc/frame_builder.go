@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/campaign"
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // ANSI color codes

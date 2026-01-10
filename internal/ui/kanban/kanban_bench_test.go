@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	viewutil "github.com/guild-framework/guild-core/internal/ui/view"
-	"github.com/guild-framework/guild-core/pkg/kanban"
+	viewutil "github.com/lancekrogers/guild-core/internal/ui/view"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // setupKanbanWithCards creates a kanban model with the specified number of cards

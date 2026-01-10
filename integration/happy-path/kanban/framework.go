@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/memory"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // kanbanRegistryAdapter adapts registry.ComponentRegistry to kanban.ComponentRegistry

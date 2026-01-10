@@ -16,9 +16,9 @@ import (
 	"github.com/charmbracelet/glamour/v2"
 	"charm.land/lipgloss/v2"
 
-	"github.com/guild-framework/guild-core/internal/setup"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/internal/setup"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
 // InitTUIModelV2 represents the improved initialization TUI with better practices

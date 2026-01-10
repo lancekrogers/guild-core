@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/corpus/extraction"
+	"github.com/lancekrogers/guild-core/pkg/corpus/extraction"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

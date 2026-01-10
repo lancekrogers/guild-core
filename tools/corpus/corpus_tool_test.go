@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
 )
 
 func TestCorpusTool(t *testing.T) {

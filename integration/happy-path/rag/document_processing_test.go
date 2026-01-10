@@ -18,9 +18,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	// testutil provides testing utilities
-	"github.com/guild-framework/guild-core/pkg/memory/rag"
-	"github.com/guild-framework/guild-core/pkg/memory/vector"
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // Type definitions are now in framework.go

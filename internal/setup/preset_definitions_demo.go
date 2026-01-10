@@ -4,7 +4,7 @@
 package setup
 
 import (
-	"github.com/guild-framework/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/config"
 )
 
 // createDemoMinimalPreset creates a minimal preset optimized for quick demos

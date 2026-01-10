@@ -13,10 +13,10 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	jsonparser "github.com/guild-framework/guild-core/pkg/tools/parser/json"
-	xmlparser "github.com/guild-framework/guild-core/pkg/tools/parser/xml"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	jsonparser "github.com/lancekrogers/guild-core/pkg/tools/parser/json"
+	xmlparser "github.com/lancekrogers/guild-core/pkg/tools/parser/xml"
 )
 
 // RobustParser implements ResponseParser with proper format detection and validation

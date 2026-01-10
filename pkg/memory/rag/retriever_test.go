@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

@@ -3,8 +3,8 @@ package managers
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // MinimalCommissionManager is a placeholder commission manager for suggestion system

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/guild-framework/guild-core/internal/ui/formatting"
+	"github.com/lancekrogers/guild-core/internal/ui/formatting"
 )
 
 // stripANSI removes ANSI escape sequences from text for content validation

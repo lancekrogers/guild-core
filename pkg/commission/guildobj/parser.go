@@ -4,7 +4,7 @@
 package guildobj
 
 import (
-	"github.com/guild-framework/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/commission"
 )
 
 // GuildParser represents a specialized parser for guild-themed commissions

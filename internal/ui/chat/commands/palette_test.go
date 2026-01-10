@@ -10,8 +10,8 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/internal/teatest"
-	"github.com/guild-framework/guild-core/internal/ui/chat/commands"
+	"github.com/lancekrogers/guild-core/internal/teatest"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/commands"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

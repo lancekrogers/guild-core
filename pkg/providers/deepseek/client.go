@@ -7,8 +7,8 @@ import (
 	"context"
 	"os"
 
-	"github.com/guild-framework/guild-core/pkg/providers/base"
-	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/providers/base"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // DeepSeek models

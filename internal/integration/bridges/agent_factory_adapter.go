@@ -3,9 +3,9 @@ package bridges
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // AgentFactoryAdapter adapts the registry's agent system to the orchestrator's AgentFactory interface

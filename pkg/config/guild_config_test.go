@@ -11,7 +11,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 func TestGuildConfigFile_Validate(t *testing.T) {

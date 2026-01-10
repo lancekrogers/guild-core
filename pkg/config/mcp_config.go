@@ -7,7 +7,7 @@ package config
 import (
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // MCPConfig represents MCP configuration section

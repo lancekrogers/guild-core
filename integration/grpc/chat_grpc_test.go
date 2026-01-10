@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	guildgrpc "github.com/guild-framework/guild-core/pkg/grpc"
-	guildpb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	guildgrpc "github.com/lancekrogers/guild-core/pkg/grpc"
+	guildpb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"

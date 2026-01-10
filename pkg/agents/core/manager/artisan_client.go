@@ -6,8 +6,8 @@ package manager
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
 // GuildArtisanClient implements ArtisanClient interface using Guild's AIProvider

@@ -11,9 +11,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/corpus"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
 )
 
 // Retriever provides methods for retrieving relevant context from both

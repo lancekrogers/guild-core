@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/guild-framework/guild-core/internal/ui/formatting"
+	"github.com/lancekrogers/guild-core/internal/ui/formatting"
 )
 
 func TestNewMarkdownRenderer(t *testing.T) {
@@ -107,7 +107,7 @@ func TestMarkdownRenderer_Render(t *testing.T) {
 		},
 		{
 			name:    "links",
-			content: "[Guild Framework](https://github.com/guild-framework/guild-core)",
+			content: "[Guild Framework](https://github.com/lancekrogers/guild-core)",
 			validate: func(output string) bool {
 				return strings.Contains(output, "Guild Framework")
 			},

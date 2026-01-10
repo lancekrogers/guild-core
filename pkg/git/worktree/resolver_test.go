@@ -103,7 +103,7 @@ import (
 	"fmt"
 	"os"
 	"github.com/stretchr/testify/assert"
-	"github.com/guild-framework/guild-core/pkg/test"
+	"github.com/lancekrogers/guild-core/pkg/test"
 )
 
 func main() {}`
@@ -124,7 +124,7 @@ func main() {}`
 	unsorted := []string{
 		"\"github.com/stretchr/testify/assert\"",
 		"\"fmt\"",
-		"\"github.com/guild-framework/guild-core/pkg/test\"",
+		"\"github.com/lancekrogers/guild-core/pkg/test\"",
 		"\"os\"",
 	}
 
@@ -533,7 +533,7 @@ func BenchmarkImportSorting(b *testing.B) {
 		"\"fmt\"",
 		"\"os\"",
 		"\"github.com/stretchr/testify/assert\"",
-		"\"github.com/guild-framework/guild-core/pkg/test\"",
+		"\"github.com/lancekrogers/guild-core/pkg/test\"",
 		"\"log\"",
 		"\"context\"",
 	}

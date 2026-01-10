@@ -9,9 +9,9 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/internal/daemon"
-	pkgDaemon "github.com/guild-framework/guild-core/pkg/daemon"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	pkgDaemon "github.com/lancekrogers/guild-core/pkg/daemon"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // DaemonService monitors and manages the Guild daemon

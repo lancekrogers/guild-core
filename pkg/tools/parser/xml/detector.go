@@ -10,7 +10,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
 )
 
 // Detector detects Anthropic-style XML tool call format

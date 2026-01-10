@@ -11,16 +11,16 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/internal/ui/chat/agents"
-	"github.com/guild-framework/guild-core/internal/ui/chat/common"
-	"github.com/guild-framework/guild-core/internal/ui/chat/messages"
-	toolmsg "github.com/guild-framework/guild-core/internal/ui/chat/messages/tools"
-	"github.com/guild-framework/guild-core/internal/ui/chat/panes"
-	"github.com/guild-framework/guild-core/internal/ui/chat/session"
-	pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
-	"github.com/guild-framework/guild-core/pkg/observability"
-	"github.com/guild-framework/guild-core/pkg/preferences"
-	"github.com/guild-framework/guild-core/pkg/templates"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/agents"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/messages"
+	toolmsg "github.com/lancekrogers/guild-core/internal/ui/chat/messages/tools"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/session"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/preferences"
+	"github.com/lancekrogers/guild-core/pkg/templates"
 )
 
 // CommandProcessor handles command parsing and execution
@@ -816,7 +816,7 @@ This demonstrates **Guild's markdown rendering capabilities**:
 ## Text Formatting
 - **Bold text** and *italic text*
 - ~~Strikethrough text~~ and ` + "`inline code`" + `
-- [Links to resources](https://github.com/guild-framework/guild-core)
+- [Links to resources](https://github.com/lancekrogers/guild-core)
 
 ## Lists and Structure
 
@@ -880,8 +880,8 @@ import (
 	"fmt"
 	"log"
 	
-	"github.com/guild-framework/guild-core/pkg/agents/core"
-	"github.com/guild-framework/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
 // GuildExample demonstrates Guild framework usage

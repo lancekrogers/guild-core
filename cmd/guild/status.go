@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/guild-framework/guild-core/internal/daemon"
-	"github.com/guild-framework/guild-core/pkg/campaign"
-	pkgDaemon "github.com/guild-framework/guild-core/pkg/daemon"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	pkgDaemon "github.com/lancekrogers/guild-core/pkg/daemon"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"github.com/spf13/cobra"
 )
 

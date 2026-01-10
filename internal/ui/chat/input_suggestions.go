@@ -8,7 +8,7 @@ import (
 	"time"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/internal/ui/chat/completion"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/completion"
 )
 
 // InputSuggestionManager handles real-time input suggestions with debouncing

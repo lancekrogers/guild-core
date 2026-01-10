@@ -11,11 +11,11 @@ import (
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 
-	"github.com/guild-framework/guild-core/internal/daemonconn"
-	kanbanui "github.com/guild-framework/guild-core/internal/ui/kanban"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/kanban"
-	"github.com/guild-framework/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/daemonconn"
+	kanbanui "github.com/lancekrogers/guild-core/internal/ui/kanban"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 var kanbanNoDaemon bool // Disable daemon event stream for the UI

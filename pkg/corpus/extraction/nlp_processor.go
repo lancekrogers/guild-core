@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // NLPProcessor provides natural language processing capabilities for knowledge extraction

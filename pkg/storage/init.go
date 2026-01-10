@@ -6,8 +6,8 @@ package storage
 import (
 	"context"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/storage/optimization"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/storage/optimization"
 )
 
 // InitializeSQLiteStorageForRegistry initializes SQLite storage and returns configured components

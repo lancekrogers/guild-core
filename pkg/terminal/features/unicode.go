@@ -7,7 +7,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // UnicodeDetector detects terminal Unicode support

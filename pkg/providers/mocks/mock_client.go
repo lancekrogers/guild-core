@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // MockClient provides a mock implementation of the LLMClient interface for testing

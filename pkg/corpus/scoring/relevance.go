@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/corpus/retrieval"
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/corpus/retrieval"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // RelevanceEngine implements advanced relevance scoring for documents

@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	jsonparser "github.com/guild-framework/guild-core/pkg/tools/parser/json"
-	xmlparser "github.com/guild-framework/guild-core/pkg/tools/parser/xml"
+	jsonparser "github.com/lancekrogers/guild-core/pkg/tools/parser/json"
+	xmlparser "github.com/lancekrogers/guild-core/pkg/tools/parser/xml"
 )
 
 // HealthStatus represents the health status of the parser

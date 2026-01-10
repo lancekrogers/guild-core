@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/storage/db"
+	"github.com/lancekrogers/guild-core/pkg/storage/db"
 )
 
 // Ensure our models implement the necessary interfaces

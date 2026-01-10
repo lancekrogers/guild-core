@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Profile represents a terminal profile with known capabilities

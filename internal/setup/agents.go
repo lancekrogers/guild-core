@@ -7,8 +7,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // AgentConfig handles creation of default agent configurations

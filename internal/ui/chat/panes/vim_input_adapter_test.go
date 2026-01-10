@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	tea "charm.land/bubbletea/v2"
-	"github.com/guild-framework/guild-core/internal/ui/vim"
+	"github.com/lancekrogers/guild-core/internal/ui/vim"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

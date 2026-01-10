@@ -13,8 +13,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	localcli "github.com/guild-framework/guild-core/internal/scaffoldlite/cli"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	localcli "github.com/lancekrogers/guild-core/internal/scaffoldlite/cli"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ScaffoldIntegration provides scaffold integration with guild init

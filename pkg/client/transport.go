@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // UnixSocketTransport implements http.RoundTripper for Unix domain socket connections

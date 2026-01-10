@@ -1631,7 +1631,7 @@ const file_proto_guild_v1_session_proto_rawDesc = "" +
 	"\x10GetMessagesAfter\x12!.guild.v1.GetMessagesAfterRequest\x1a\x1d.guild.v1.GetMessagesResponse\x12P\n" +
 	"\rDeleteMessage\x12\x1e.guild.v1.DeleteMessageRequest\x1a\x1f.guild.v1.DeleteMessageResponse\x12F\n" +
 	"\x0eStreamMessages\x12\x1f.guild.v1.StreamMessagesRequest\x1a\x11.guild.v1.Message0\x01\x12U\n" +
-	"\x13StreamSessionEvents\x12$.guild.v1.StreamSessionEventsRequest\x1a\x16.guild.v1.SessionEvent0\x01B<Z:github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1b\x06proto3"
+	"\x13StreamSessionEvents\x12$.guild.v1.StreamSessionEventsRequest\x1a\x16.guild.v1.SessionEvent0\x01B<Z:github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1b\x06proto3"
 
 var (
 	file_proto_guild_v1_session_proto_rawDescOnce sync.Once

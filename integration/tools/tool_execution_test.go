@@ -15,12 +15,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/guild-framework/guild-core/pkg/providers/anthropic"
-	"github.com/guild-framework/guild-core/pkg/providers/interfaces"
-	"github.com/guild-framework/guild-core/pkg/tools"
-	"github.com/guild-framework/guild-core/pkg/tools/executor"
-	"github.com/guild-framework/guild-core/pkg/tools/parser"
-	"github.com/guild-framework/guild-core/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/pkg/providers/anthropic"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/tools/executor"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
 )
 
 // MockTool implements a simple test tool

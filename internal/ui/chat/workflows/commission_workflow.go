@@ -11,10 +11,10 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
-	"github.com/guild-framework/guild-core/internal/ui/chat/components"
-	"github.com/guild-framework/guild-core/pkg/agents/core/elena"
-	"github.com/guild-framework/guild-core/pkg/commission"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/components"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/elena"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // CommissionWorkflow manages the commission creation and refinement workflow

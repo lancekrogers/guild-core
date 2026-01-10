@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
-	"github.com/guild-framework/guild-core/tools"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // GitLogInput represents the input parameters for git log

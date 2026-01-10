@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/cost"
-	"github.com/guild-framework/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/cost"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // DataVisualizer creates visualizations for cost data

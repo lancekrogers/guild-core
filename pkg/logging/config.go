@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Config defines the logger configuration

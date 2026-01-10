@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/guild-framework/guild-core/pkg/agents/backstory/templates"
-	"github.com/guild-framework/guild-core/pkg/config"
-	"github.com/guild-framework/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/agents/backstory/templates"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // AgentCreationWizard provides an interactive way to create agents with rich backstories
