@@ -442,7 +442,6 @@ func (ri *ReasoningIntegration) renderOverlayLayout(chatView string, width, heig
 		lipgloss.Center,
 		overlay,
 		lipgloss.WithWhitespaceChars(""),
-		lipgloss.WithWhitespaceForeground(lipgloss.NoColor{}),
 	)
 }
 

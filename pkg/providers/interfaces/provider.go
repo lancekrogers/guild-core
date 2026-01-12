@@ -30,4 +30,7 @@ const (
 
 	// ProviderOra represents the Ora provider
 	ProviderOra ProviderType = "ora"
+
+	// ProviderXAI represents the xAI Grok provider
+	ProviderXAI ProviderType = "xai"
 )
