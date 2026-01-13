@@ -26,8 +26,10 @@
 
 I started building Guild to better understand agentic systems and as an agent framework with an easier to comprehend mental model of the concepts required to orchestrate agents.
 
-It evolved into a research and exploration project into how I could manage hundreds or even thousands of agents working together in a hierarchical structure to help me achieve my goal that run 24/7,
-while still being time and cost conscious and that when they're working I can be confident they're doing exactly what I want them to do without me having to plan out every step they should take to get there.
+It evolved into a research and exploration project into how I, as a single person, could manage and direct hundreds, or even thousands of agents towards a single multi faceted purpose.  Essentially how can I build a single tool, that enables myself and other users to become the CEO of a 24/7 agent team, where each agent has the same capabilities as a similarly sized team of humans using currently available AI tools.
+
+The research is ongoing but results are 
+
 
 
 **Core Components:**
@@ -37,6 +39,8 @@ while still being time and cost conscious and that when they're working I can be
 - **Memory Layer**: SQLite-based persistence with vector search capabilities for maintaining context across sessions
 - **Prompt Management**: Multi-layer prompt system enabling dynamic behavior customization while maintaining efficiency
 - **Task Management**: Kanban-style board for tracking work items and managing human review requirements
+- **Hierarchical org structure**: Managers of managers approach
+- **Accountability, Auditing and Visibility**: Fest cli gives full visibility into the actions agents will take before they take it, and full tracking enabling comparison to the exact plan they were given. This gives humans the ability to answer questions about what and why things were done a certain way, and to catch mistakes the agents were going to make before the mistakes are made.
 
 
 ### Why the Medieval Theme?
@@ -45,7 +49,7 @@ The medieval guild theme serves a purpose beyond aesthetics:
 
 - **Guilds** = Configurable agent teams with specialized capabilities
 - **Commissions → Festivals** = Work assignments that evolved into hierarchical project planning methodology (via Fest CLI)
-- **Festivals** = AI-driven planning that analyzes guild configs and divides work by cost and agent capabilities
+- **Festivals** = AI-driven planning that breaks down high level goals into a hierarchy of smaller goals, all the way down to individual task
 - **Corpus** = Collaborative knowledge base where humans and agents share domain expertise. Agents add context as they work; humans use the corpus agent to translate agent knowledge into human-readable format
 - **Campaigns** = Agentic workspaces containing configs, resources, task definitions, and everything needed to customize and run the system in way that YOU think will produce the best results
 
@@ -82,7 +86,7 @@ Guild is R&D. Core infrastructure is in place, but many commands and systems are
 
 ---
 
-## Notable Results
+## Notable Results & Insights
 
 ## [Festival Methodology](https://github.com/lancekrogers/festival-methodology)
 
@@ -105,7 +109,13 @@ On January 8th 2026, my daily COCOMO estimated value following the same criteria
 
 When I started guild I thought the useful limit of what I was trying to build would cap out at about where I am now, but now the path to doubling the productive growth rate again seems like a simple UX problem and the use case is clear. Still falls under the abstraction of a very large company.
 
-Beyond that is where things could get very intersting
+Beyond that is where things could get very interestin
+
+## Best model moat is a myth
+
+The results of using festival methodology, prove that breaking complex goals down into actionable, hierarchical task, is more important and more effective than increasing context window size or building more capable models.
+
+Using guild inspired campaigns and festivals, has proven to be consistenlty be more effective than an increase in model capability. My personal productivity does correlate with increases in models, but the rate of change jumps exponentially faster due to improvements to guild based infra and tooling. In many cases, I've noticed exponential increases in my personal productivity multiple times per day as I start using and refining new tools.
 
 --- 
 
