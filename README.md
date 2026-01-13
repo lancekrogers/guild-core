@@ -22,7 +22,7 @@
 
 ## 🏰 What Is Guild?
 
-**Guild** is a collaborative, agentic framework built in Go for orchestrating as many AI agents as humanely possible. Inspired by medieval guilds and corporate org structures.
+**Guild** is a collaborative, agentic framework built in Go for increasing the amount of AI agents a single person can direct productively. Inspired by medieval guilds and corporate org structures.
 
 I started building Guild to better understand agentic systems and as an agent framework with an easier to comprehend mental model of the concepts required to orchestrate agents.
 
