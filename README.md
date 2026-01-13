@@ -96,7 +96,7 @@ Decreased human effort in planning multi-step, hierarchical planning specs from 
 
 The fest cli orchestration features decreased my token usage by >90% by reducing itteration via templating and just in time context injection.
 
-Festival plans work consistently with all models and model providers.  Results rarely require any human intervention and the difference between model intelligence is in speed to complete the festival.  Quality gates ensure that agents fix their own mistakes early, before they compound into a mess.
+Festival plans work consistently with all models and model providers.  Results rarely require any human intervention and the difference between model intelligence is in speed to complete the festival.  Quality gates ensure that agents fix their own mistakes early, before they compound.
 
 ## Exponential Producivity Increase
 
