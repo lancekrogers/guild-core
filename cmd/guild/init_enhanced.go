@@ -14,11 +14,11 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/paths"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // campaignDirectoryStructure defines the complete campaign directory structure
@@ -43,7 +43,7 @@ func createEnhancedCampaignStructure(ctx context.Context, projectPath string) er
 	campaignDir := filepath.Join(projectPath, paths.DefaultCampaignDir)
 
 	// Create campaign directory
-	if err := os.MkdirAll(campaignDir, 0755); err != nil {
+	if err := os.MkdirAll(campaignDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("cli").
 			WithOperation("createEnhancedCampaignStructure").
@@ -53,7 +53,7 @@ func createEnhancedCampaignStructure(ctx context.Context, projectPath string) er
 	// Create subdirectories
 	for _, dir := range campaignDirectoryStructure {
 		dirPath := filepath.Join(campaignDir, dir)
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
+		if err := os.MkdirAll(dirPath, 0o755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create directory").
 				WithComponent("cli").
 				WithOperation("createEnhancedCampaignStructure").
@@ -72,7 +72,7 @@ func createEnhancedCampaignStructure(ctx context.Context, projectPath string) er
 
 	for _, dir := range userDirs {
 		dirPath := filepath.Join(projectPath, dir)
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
+		if err := os.MkdirAll(dirPath, 0o755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create user directory").
 				WithComponent("cli").
 				WithOperation("createEnhancedCampaignStructure").
@@ -81,7 +81,7 @@ func createEnhancedCampaignStructure(ctx context.Context, projectPath string) er
 
 		// Create .gitkeep file in empty directories to ensure they're tracked by git
 		gitkeepPath := filepath.Join(dirPath, ".gitkeep")
-		if err := os.WriteFile(gitkeepPath, []byte(""), 0644); err != nil {
+		if err := os.WriteFile(gitkeepPath, []byte(""), 0o644); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create .gitkeep file").
 				WithComponent("cli").
 				WithOperation("createEnhancedCampaignStructure").
@@ -144,7 +144,7 @@ func createCampaignConfig(ctx context.Context, projectPath, campaignName, projec
 			WithOperation("createCampaignConfig")
 	}
 
-	if err := os.WriteFile(campaignPath, data, 0644); err != nil {
+	if err := os.WriteFile(campaignPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign config").
 			WithComponent("cli").
 			WithOperation("createCampaignConfig").
@@ -153,7 +153,7 @@ func createCampaignConfig(ctx context.Context, projectPath, campaignName, projec
 
 	// Create .hash file for ultra-fast detection
 	hashPath := filepath.Join(projectPath, paths.DefaultCampaignDir, paths.CampaignHashFile)
-	if err := os.WriteFile(hashPath, []byte(campaignHash), 0644); err != nil {
+	if err := os.WriteFile(hashPath, []byte(campaignHash), 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write hash file").
 			WithComponent("cli").
 			WithOperation("createCampaignConfig").
@@ -192,7 +192,7 @@ func createSocketRegistry(ctx context.Context, projectPath, campaignName, campai
 			WithOperation("createSocketRegistry")
 	}
 
-	if err := os.WriteFile(registryPath, data, 0644); err != nil {
+	if err := os.WriteFile(registryPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write socket registry").
 			WithComponent("cli").
 			WithOperation("createSocketRegistry").
@@ -246,7 +246,7 @@ func createDefaultGuildConfig(ctx context.Context, projectPath, projectName stri
 
 	// Ensure guilds directory exists
 	guildsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "guilds")
-	if err := os.MkdirAll(guildsDir, 0755); err != nil {
+	if err := os.MkdirAll(guildsDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guilds directory").
 			WithComponent("cli").
 			WithOperation("createDefaultGuildConfig")
@@ -259,7 +259,7 @@ func createDefaultGuildConfig(ctx context.Context, projectPath, projectName stri
 			WithOperation("createDefaultGuildConfig")
 	}
 
-	if err := os.WriteFile(guildPath, data, 0644); err != nil {
+	if err := os.WriteFile(guildPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
 			WithComponent("cli").
 			WithOperation("createDefaultGuildConfig").
@@ -390,7 +390,7 @@ func createEnhancedAgentConfigs(ctx context.Context, projectPath string, project
 				WithDetails("agent", agent.ID)
 		}
 
-		if err := os.WriteFile(filepath, data, 0644); err != nil {
+		if err := os.WriteFile(filepath, data, 0o644); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config").
 				WithComponent("cli").
 				WithOperation("createEnhancedAgentConfigs").
@@ -511,7 +511,7 @@ func adaptAgentConfigsToProjectType(ctx context.Context, projectPath string, pro
 			WithOperation("adaptAgentConfigsToProjectType")
 	}
 
-	if err := os.WriteFile(marcusPath, updatedData, 0644); err != nil {
+	if err := os.WriteFile(marcusPath, updatedData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write updated Marcus config").
 			WithComponent("cli").
 			WithOperation("adaptAgentConfigsToProjectType")

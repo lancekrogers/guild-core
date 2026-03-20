@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package performance
 
 import (
@@ -14,8 +17,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // Agent4SLAValidationFramework provides comprehensive SLA validation for Agent 4 orchestration requirements

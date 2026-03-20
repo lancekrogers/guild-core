@@ -6,15 +6,13 @@ package providers
 import (
 	"context"
 	"fmt"
-	"math"
-	"math/rand"
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // RealProviderIntegrationFramework provides real provider integration testing
@@ -124,6 +122,15 @@ const (
 	CircuitOpen
 	CircuitHalfOpen
 )
+
+// CircuitBreakerMetrics tracks circuit breaker statistics
+type CircuitBreakerMetrics struct {
+	WasTriggered             bool
+	FailedRequestsBeforeOpen int
+	RecoverySuccessRate      float64
+	OpenDuration             time.Duration
+	HalfOpenAttempts         int
+}
 
 // ProviderPerformance tracks provider performance metrics
 type ProviderPerformance struct {

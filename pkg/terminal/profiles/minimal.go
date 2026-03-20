@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/terminal"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/terminal"
 )
 
 // MinimalProfileDetector detects minimal terminal environments

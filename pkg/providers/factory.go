@@ -6,8 +6,8 @@ package providers
 import (
 	"os"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers/claudecode"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers/claudecode"
 )
 
 // Factory creates LLM clients
@@ -22,11 +22,22 @@ func NewFactory() *Factory {
 	}
 }
 
-// CreateClient creates a new LLM client based on the provider type
+// CreateClient creates a new LLM client based on the provider type.
+//
+// Parameters:
+//   - providerType: The type of provider (OpenAI, Anthropic, ClaudeCode, etc.)
+//   - apiKey: API key for most providers. For ClaudeCode, this is the path to the claude binary
+//     (defaults to "claude" if empty, assumes claude is in PATH)
+//   - model: The model to use (e.g., "gpt-4", "claude-3-opus", etc.)
+//
+// Note: ClaudeCode provider doesn't require an API key as it uses the Claude Code CLI
+// which handles its own authentication through the /login command. The apiKey parameter
+// is repurposed as the binary path due to interface constraints.
 func (f *Factory) CreateClient(providerType ProviderType, apiKey string, model string) (LLMClient, error) {
-	// Special case for Claude Code which doesn't use AIProvider
+	// Special case for Claude Code which uses claude-code-go SDK
 	if providerType == ProviderClaudeCode {
-		// For Claude Code, apiKey is used as binary path, model is configuration type
+		// apiKey parameter is repurposed as binary path for ClaudeCode
+		// Empty string defaults to "claude" (assumes claude CLI is in PATH)
 		return claudecode.NewClient(apiKey, model), nil
 	}
 
@@ -40,7 +51,16 @@ func (f *Factory) CreateClient(providerType ProviderType, apiKey string, model s
 	return f.v2Factory.CreateLLMClientAdapter(aiProvider), nil
 }
 
-// CreateClientFromConfig creates a client from configuration map
+// CreateClientFromConfig creates a client from configuration map.
+//
+// Config keys:
+//   - "model": The model to use (optional, uses provider defaults if not specified)
+//   - "api_key": API key for most providers. For ClaudeCode, this is the path to claude binary
+//   - "api_key_env": Environment variable containing the API key (used if api_key not provided)
+//   - "binary_path": Alternative key for ClaudeCode provider to specify claude binary path
+//
+// For ClaudeCode provider, the config can use either "api_key" or "binary_path" to specify
+// the path to the claude CLI binary. If neither is provided, defaults to "claude" in PATH.
 func (f *Factory) CreateClientFromConfig(providerType ProviderType, config map[string]interface{}) (LLMClient, error) {
 	// Extract model
 	model, ok := config["model"].(string)
@@ -50,9 +70,22 @@ func (f *Factory) CreateClientFromConfig(providerType ProviderType, config map[s
 
 	// Extract API key - try config first, then environment variable
 	var apiKey string
-	if key, exists := config["api_key"]; exists {
-		if keyStr, ok := key.(string); ok {
-			apiKey = keyStr
+
+	// For ClaudeCode, also check for binary_path key for clarity
+	if providerType == ProviderClaudeCode {
+		if path, exists := config["binary_path"]; exists {
+			if pathStr, ok := path.(string); ok {
+				apiKey = pathStr
+			}
+		}
+	}
+
+	// Standard api_key extraction (also used as binary path for ClaudeCode)
+	if apiKey == "" {
+		if key, exists := config["api_key"]; exists {
+			if keyStr, ok := key.(string); ok {
+				apiKey = keyStr
+			}
 		}
 	}
 

@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // LifecycleManager manages the lifecycle of language servers

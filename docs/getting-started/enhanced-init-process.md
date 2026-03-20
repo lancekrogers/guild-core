@@ -62,13 +62,16 @@ my-project/
 Guild automatically detects your project type and configures appropriate agents:
 
 ### Go Projects
+
 **Detected by:** `go.mod`, `*.go` files
 **Agents configured:**
+
 - Elena (Guild Master) - Project coordination
 - Marcus (Developer) - Go development specialist
 - Vera (Tester) - Testing and QA
 
 **Example agent specialization:**
+
 ```yaml
 # marcus-developer.yaml
 languages:
@@ -85,21 +88,27 @@ tools:
 ```
 
 ### JavaScript/Node.js Projects
+
 **Detected by:** `package.json`, `*.js`, `*.ts` files
 **Agents configured:**
+
 - Elena (Guild Master) - Project coordination
 - Marcus (Developer) - Full-stack JavaScript specialist
 - Vera (Tester) - Frontend/backend testing
 
 ### Python Projects
+
 **Detected by:** `requirements.txt`, `pyproject.toml`, `*.py` files
 **Agents configured:**
+
 - Elena (Guild Master) - Project coordination
 - Marcus (Developer) - Python backend specialist
 - Vera (Tester) - Python testing specialist
 
 ### Generic Projects
+
 **For any other project type:**
+
 - Elena (Guild Master) - General project coordination
 - Additional agents can be added via `guild setup-wizard`
 
@@ -217,6 +226,7 @@ guild chat
 ### Sample First Interactions
 
 **Elena (Project Planning):**
+
 ```
 You: "Hello Elena, I want to build a REST API for user management"
 
@@ -233,6 +243,7 @@ Marcus can handle the Go implementation, and Vera will ensure comprehensive test
 ```
 
 **Marcus (Technical Implementation):**
+
 ```
 You: "@marcus I need help implementing JWT authentication"
 
@@ -248,6 +259,7 @@ Want me to implement a secure JWT setup with proper error handling and token rot
 ```
 
 **Vera (Quality Assurance):**
+
 ```
 You: "@vera please test the authentication system"
 
@@ -273,6 +285,7 @@ guild setup-wizard
 ```
 
 The wizard will guide you through:
+
 - Custom agent selection
 - Provider configuration (API keys, models)
 - Tool access controls
@@ -296,6 +309,7 @@ guild agent add devops-specialist --type specialist --capabilities deployment,mo
 ### Common Issues
 
 **Issue: Init fails with permission errors**
+
 ```bash
 # Check directory permissions
 ls -la
@@ -303,6 +317,7 @@ ls -la
 ```
 
 **Issue: Project type not detected correctly**
+
 ```bash
 # Force specific project type
 guild init --type go
@@ -311,6 +326,7 @@ guild init --type python
 ```
 
 **Issue: Missing dependencies**
+
 ```bash
 # Reinstall Guild
 make install
@@ -344,16 +360,19 @@ guild config validate
 ## Best Practices
 
 ### Project Organization
+
 - Keep commission files focused on specific features
 - Use descriptive names for commissions and tasks
 - Regular status checks with `guild status`
 
 ### Agent Utilization
+
 - Use Elena for planning and coordination
 - Direct technical questions to Marcus
 - Involve Vera early for testing strategy
 
 ### Configuration Management
+
 - Version control your `.campaign/` directory
 - Document custom agent modifications
 - Regular backups of `memory.db` for important projects
@@ -361,6 +380,7 @@ guild config validate
 ## Performance Targets
 
 The enhanced init process meets these performance goals:
+
 - ✅ **Init time < 2 seconds** for most projects
 - ✅ **Memory usage < 100MB** during initialization
 - ✅ **Agent response time < 500ms** for basic queries

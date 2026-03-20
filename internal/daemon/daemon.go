@@ -16,7 +16,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 const (
@@ -116,7 +116,7 @@ func Start(ctx context.Context) error {
 
 	// Ensure .guild directory exists
 	guildDir := filepath.Dir(GetPIDFilePath())
-	if err := os.MkdirAll(guildDir, 0755); err != nil {
+	if err := os.MkdirAll(guildDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create .guild directory").
 			WithComponent("daemon").
 			WithOperation("Start").
@@ -137,7 +137,7 @@ func Start(ctx context.Context) error {
 
 	// Redirect output to log file
 	logPath := GetLogFilePath()
-	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to open log file").
 			WithComponent("daemon").
@@ -158,7 +158,7 @@ func Start(ctx context.Context) error {
 
 	// Write PID file
 	pidFile := GetPIDFilePath()
-	if err := os.WriteFile(pidFile, []byte(strconv.Itoa(cmd.Process.Pid)), 0644); err != nil {
+	if err := os.WriteFile(pidFile, []byte(strconv.Itoa(cmd.Process.Pid)), 0o644); err != nil {
 		cmd.Process.Kill()
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to write PID file").
 			WithComponent("daemon").

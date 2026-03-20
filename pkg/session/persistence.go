@@ -17,8 +17,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // SessionManager provides enhanced session persistence with enterprise features
@@ -665,7 +666,7 @@ func (as *AutoSaver) saveIfChanged(ctx context.Context, session *Session) {
 func (as *AutoSaver) save(ctx context.Context, session *Session) {
 	if err := as.manager.SaveSession(ctx, session); err != nil {
 		// Log error but don't panic
-		fmt.Printf("Auto-save failed: %v\n", err)
+		observability.GetLogger(ctx).Warn("auto-save failed", "error", err, "session_id", session.ID)
 	}
 }
 

@@ -36,6 +36,7 @@ Confidence: [0.0-1.0]
 ## When to Use Deep Reasoning
 
 Apply detailed reasoning for:
+
 - Complex multi-step tasks
 - Tasks requiring tool selection
 - Ambiguous or unclear requests

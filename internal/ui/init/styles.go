@@ -4,7 +4,7 @@
 package init
 
 import (
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 )
 
 // Styles defines all the styles used in the init TUI

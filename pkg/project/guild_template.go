@@ -9,7 +9,7 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // GuildTemplate provides default guild configurations for new projects
@@ -178,7 +178,7 @@ func SaveGuildConfig(projectPath string, config *GuildConfig) error {
 	}
 
 	guildPath := filepath.Join(projectPath, "guild.yaml")
-	if err := os.WriteFile(guildPath, data, 0644); err != nil {
+	if err := os.WriteFile(guildPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
 			WithComponent("project").
 			WithOperation("SaveGuildConfig").

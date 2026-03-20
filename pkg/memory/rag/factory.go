@@ -6,13 +6,18 @@ package rag
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
 )
 
 // Factory creates RAG components
 type Factory struct {
 	retriever RetrieverInterface
 	embedder  vector.Embedder
+}
+
+// NewFactory creates a new RAG factory (public constructor)
+func NewFactory(ctx context.Context, embedder vector.Embedder, config Config) (*Factory, error) {
+	return newFactory(ctx, embedder, config)
 }
 
 // newFactory creates a new RAG factory (private constructor)

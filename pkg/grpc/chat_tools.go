@@ -10,14 +10,14 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/pkg/tools"
-	"github.com/lancekrogers/guild/pkg/tools/executor"
-	"github.com/lancekrogers/guild/pkg/tools/parser"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/tools/executor"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser"
 )
 
 // executeAgentResponseWithTools extends executeAgentResponse to handle tool calls

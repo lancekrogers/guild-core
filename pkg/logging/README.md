@@ -22,7 +22,7 @@ import (
     "context"
     "log/slog"
     
-    "github.com/lancekrogers/guild/pkg/logging"
+    "github.com/guild-framework/guild-core/pkg/logging"
 )
 
 func main() {
@@ -232,7 +232,7 @@ logger.Info("Processing payment for user@example.com with card 4111-1111-1111-11
 ### Custom Redaction
 
 ```go
-import "github.com/lancekrogers/guild/pkg/logging/hooks"
+import "github.com/guild-framework/guild-core/pkg/logging/hooks"
 
 // Custom redactor showing type
 hook := hooks.NewSensitiveDataHook()
@@ -250,7 +250,7 @@ patternSampler := hooks.NewMessagePatternSampler(patterns)
 ### HTTP Middleware
 
 ```go
-import "github.com/lancekrogers/guild/pkg/logging"
+import "github.com/guild-framework/guild-core/pkg/logging"
 
 mux := http.NewServeMux()
 mux.HandleFunc("/api/health", healthHandler)
@@ -265,7 +265,7 @@ http.ListenAndServe(":8080", handler)
 ```go
 import (
     "google.golang.org/grpc"
-    "github.com/lancekrogers/guild/pkg/logging"
+    "github.com/guild-framework/guild-core/pkg/logging"
 )
 
 server := grpc.NewServer(
@@ -277,7 +277,7 @@ server := grpc.NewServer(
 ## Log Rotation
 
 ```go
-import "github.com/lancekrogers/guild/pkg/logging/writers"
+import "github.com/guild-framework/guild-core/pkg/logging/writers"
 
 // Create rotating writer
 writer, err := writers.NewRotatingWriter(
@@ -294,7 +294,7 @@ writer, err := writers.NewRotatingWriter(
 ### Error Tracking Hook
 
 ```go
-import "github.com/lancekrogers/guild/pkg/logging/hooks"
+import "github.com/guild-framework/guild-core/pkg/logging/hooks"
 
 errorHook := hooks.NewErrorHook(
     true,  // Include stack traces
@@ -381,6 +381,7 @@ The package includes comprehensive tests covering:
 - Hook processing and error handling
 
 Run tests with:
+
 ```bash
 go test ./pkg/logging/...
 ```

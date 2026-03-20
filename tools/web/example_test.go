@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // ExampleWebSearchTool demonstrates basic usage of the WebSearch tool
@@ -25,7 +25,6 @@ func ExampleWebSearchTool() {
 	// Execute the search
 	ctx := context.Background()
 	result, err := tool.Execute(ctx, input)
-
 	if err != nil {
 		// Handle error
 		return
@@ -58,7 +57,6 @@ func ExampleWebFetchTool() {
 	// Execute the fetch and analysis
 	ctx := context.Background()
 	result, err := tool.Execute(ctx, input)
-
 	if err != nil {
 		// Handle error
 		return

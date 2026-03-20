@@ -11,9 +11,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/mcp/protocol"
-	"github.com/lancekrogers/guild/pkg/mcp/transport"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild-core/pkg/mcp/transport"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // Client represents an MCP client
@@ -474,7 +475,7 @@ func (c *Client) processMessages(ctx context.Context) {
 func (c *Client) handleMessage(ctx context.Context, msgBytes []byte) {
 	var msg protocol.MCPMessage
 	if err := json.Unmarshal(msgBytes, &msg); err != nil {
-		fmt.Printf("Failed to unmarshal message: %v\n", err)
+		observability.GetLogger(ctx).Warn("failed to unmarshal MCP message", "error", err)
 		return
 	}
 
@@ -503,7 +504,7 @@ func (c *Client) handleMessage(ctx context.Context, msgBytes []byte) {
 		if exists {
 			go func() {
 				if err := handler(ctx, &msg); err != nil {
-					fmt.Printf("Event handler error: %v\n", err)
+					observability.GetLogger(ctx).Warn("MCP event handler error", "error", err, "method", msg.Method)
 				}
 			}()
 		}

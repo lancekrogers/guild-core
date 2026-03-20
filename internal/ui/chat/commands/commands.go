@@ -10,17 +10,17 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/internal/ui/chat/agents"
-	"github.com/lancekrogers/guild/internal/ui/chat/common"
-	"github.com/lancekrogers/guild/internal/ui/chat/messages"
-	toolmsg "github.com/lancekrogers/guild/internal/ui/chat/messages/tools"
-	"github.com/lancekrogers/guild/internal/ui/chat/panes"
-	"github.com/lancekrogers/guild/internal/ui/chat/session"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/preferences"
-	"github.com/lancekrogers/guild/pkg/templates"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/agents"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/messages"
+	toolmsg "github.com/lancekrogers/guild-core/internal/ui/chat/messages/tools"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/session"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/preferences"
+	"github.com/lancekrogers/guild-core/pkg/templates"
 )
 
 // CommandProcessor handles command parsing and execution
@@ -34,6 +34,13 @@ type CommandProcessor struct {
 	templateManager templates.TemplateManager
 	guildClient     pb.GuildClient
 	prefService     *preferences.Service // Sprint 2: Preferences integration
+	agentRouter     AgentRouter          // For campaign commands
+}
+
+// AgentRouter interface for sending messages to agents
+type AgentRouter interface {
+	SendToAgent(agentID, message string) tea.Cmd
+	BroadcastToAll(message string) tea.Cmd
 }
 
 // CommandHandler defines the interface for command handlers
@@ -79,6 +86,15 @@ func (cp *CommandProcessor) SetPreferencesService(prefService *preferences.Servi
 	if cp.prefService != nil {
 		cp.handlers["preferences"] = NewPreferencesHandler(cp.prefService, cp.config.UserID, cp.config.CampaignID)
 		cp.handlers["prefs"] = cp.handlers["preferences"] // Alias
+	}
+}
+
+// SetAgentRouter sets the agent router for command handling
+func (cp *CommandProcessor) SetAgentRouter(agentRouter AgentRouter) {
+	cp.agentRouter = agentRouter
+	// Register campaign command that depends on agent router
+	if cp.agentRouter != nil {
+		cp.handlers["campaign"] = NewCampaignCommand(cp.agentRouter)
 	}
 }
 
@@ -800,7 +816,7 @@ This demonstrates **Guild's markdown rendering capabilities**:
 ## Text Formatting
 - **Bold text** and *italic text*
 - ~~Strikethrough text~~ and ` + "`inline code`" + `
-- [Links to resources](https://github.com/lancekrogers/guild)
+- [Links to resources](https://github.com/lancekrogers/guild-core)
 
 ## Lists and Structure
 
@@ -864,8 +880,8 @@ import (
 	"fmt"
 	"log"
 	
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
 // GuildExample demonstrates Guild framework usage

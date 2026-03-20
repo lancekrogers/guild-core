@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // GlobTool provides file pattern matching capabilities equivalent to Claude Code's Glob tool
@@ -57,7 +57,7 @@ func NewGlobTool(basePath string) *GlobTool {
 
 	// Ensure the base path exists
 	if _, err := os.Stat(basePath); os.IsNotExist(err) {
-		os.MkdirAll(basePath, 0755)
+		os.MkdirAll(basePath, 0o755)
 	}
 
 	schema := map[string]interface{}{
@@ -258,7 +258,6 @@ func (t *GlobTool) findMatches(searchDir, pattern string, excludePatterns []stri
 
 			return nil
 		})
-
 		if err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to walk directory").
 				WithComponent("glob_tool").

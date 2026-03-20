@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/list"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/list"
+	tea "charm.land/bubbletea/v2"
 
-	"github.com/lancekrogers/guild/internal/ui/commission/components"
-	commissionpkg "github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild-core/internal/ui/commission/components"
+	commissionpkg "github.com/lancekrogers/guild-core/pkg/commission"
 )
 
 // Custom message types with Guild-themed names
@@ -61,6 +61,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
+		keyPress := msg.Key()
 		// First check global keybindings that work in all states
 		switch {
 		case key.Matches(msg, m.keymap.LeaveHall):
@@ -121,13 +122,13 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.scribe, cmd = m.scribe.Update(msg)
 				cmds = append(cmds, cmd)
 
-			case msg.Type == tea.KeyEsc:
+			case keyPress.Code == tea.KeyEscape:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.scribe.Blur()
 				m.proclamation = "Context crafting cancelled. Returned to the main chamber."
 
-			case msg.Type == tea.KeyEnter && key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+enter"))):
+			case key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+enter"))):
 				// Submit context with Ctrl+Enter
 				content := m.scribe.Value()
 				if content != "" {
@@ -148,7 +149,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.viewport, cmd = m.viewport.Update(msg)
 				cmds = append(cmds, cmd)
 
-			case msg.Type == tea.KeyEsc, key.Matches(msg, m.keymap.ExamineDocs):
+			case keyPress.Code == tea.KeyEscape, key.Matches(msg, m.keymap.ExamineDocs):
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.proclamation = "Returned to the main chamber."
@@ -164,12 +165,12 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				cmds = append(cmds, cmd)
 
 			case key.Matches(msg, m.keymap.ToggleView),
-				msg.Type == tea.KeyEsc:
+				keyPress.Code == tea.KeyEscape:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.proclamation = "Closed the Guild's commission ledger."
 
-			case msg.Type == tea.KeyEnter:
+			case keyPress.Code == tea.KeyEnter:
 				// Select commission from ledger
 				// TODO: Get selected commission and load it
 				m.chamberState = stateViewing
@@ -179,13 +180,13 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case stateCommands:
 			// Command input state key bindings
 			switch {
-			case msg.Type == tea.KeyEsc:
+			case keyPress.Code == tea.KeyEscape:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.parchment.Blur()
 				m.proclamation = "Command cancelled. Returned to the main chamber."
 
-			case msg.Type == tea.KeyEnter:
+			case keyPress.Code == tea.KeyEnter:
 				// Process command
 				command := m.parchment.Value()
 				m.parchment.Reset()
@@ -211,13 +212,13 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.scribe, cmd = m.scribe.Update(msg)
 				cmds = append(cmds, cmd)
 
-			case msg.Type == tea.KeyEsc:
+			case keyPress.Code == tea.KeyEscape:
 				// Return to viewing state
 				m.chamberState = stateViewing
 				m.scribe.Blur()
 				m.proclamation = "Commission creation cancelled. Returned to the main chamber."
 
-			case msg.Type == tea.KeyEnter && key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+enter"))):
+			case key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+enter"))):
 				// Submit new commission with Ctrl+Enter
 				content := m.scribe.Value()
 				if content != "" {
@@ -239,8 +240,8 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		footerHeight := 4 // Status + help
 		contentHeight := m.hallHeight - headerHeight - footerHeight
 
-		m.viewport.Width = m.hallWidth
-		m.viewport.Height = contentHeight
+		m.viewport.SetWidth(m.hallWidth)
+		m.viewport.SetHeight(contentHeight)
 
 		// Update textarea width
 		m.scribe.SetWidth(m.hallWidth)
@@ -249,7 +250,7 @@ func (m CommissionChamber) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.ledger.SetSize(m.hallWidth, contentHeight)
 
 		// Update help width
-		m.helpScroll.Width = m.hallWidth
+		m.helpScroll.SetWidth(m.hallWidth)
 
 	case ContextCraftedMsg:
 		// Handle context processing results

@@ -7,7 +7,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 func TestNewAgentPresets(t *testing.T) {

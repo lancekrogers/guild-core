@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // Service provides high-level preference management with caching and validation

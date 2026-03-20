@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/providers/mock"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/providers/mock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -24,7 +24,7 @@ func TestPerformCorpusScan(t *testing.T) {
 	// Create a temporary test directory
 	tempDir := t.TempDir()
 	corpusPath := filepath.Join(tempDir, "corpus")
-	require.NoError(t, os.MkdirAll(corpusPath, 0755))
+	require.NoError(t, os.MkdirAll(corpusPath, 0o755))
 
 	// Create corpus config
 	cfg := corpus.Config{
@@ -114,7 +114,7 @@ func TestPerformCorpusScan(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			// Create a unique temp dir for each test to ensure clean state
 			testTempDir := filepath.Join(tempDir, tt.name)
-			require.NoError(t, os.MkdirAll(testTempDir, 0755))
+			require.NoError(t, os.MkdirAll(testTempDir, 0o755))
 
 			// Create mock RAG system
 			mockProvider := mock.NewProviderForTesting()
@@ -158,7 +158,7 @@ func TestGetEmbeddingsMetadata(t *testing.T) {
 	tempDir := t.TempDir()
 	corpusPath := filepath.Join(tempDir, "corpus")
 	embeddingsPath := filepath.Join(tempDir, "embeddings")
-	require.NoError(t, os.MkdirAll(embeddingsPath, 0755))
+	require.NoError(t, os.MkdirAll(embeddingsPath, 0o755))
 
 	cfg := corpus.Config{
 		CorpusPath: corpusPath,
@@ -174,7 +174,7 @@ func TestGetEmbeddingsMetadata(t *testing.T) {
 	content := "/path/to/doc1.md\t" + testTime.Format(time.RFC3339) + "\n" +
 		"/path/to/doc2.md\t" + testTime.Add(-time.Hour).Format(time.RFC3339)
 
-	require.NoError(t, os.WriteFile(metadataPath, []byte(content), 0644))
+	require.NoError(t, os.WriteFile(metadataPath, []byte(content), 0o644))
 
 	// Test reading metadata
 	metadata = getEmbeddingsMetadata(cfg)

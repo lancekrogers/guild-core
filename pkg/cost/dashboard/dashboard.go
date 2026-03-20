@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/pkg/cost"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/pkg/cost"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // CostDashboard provides real-time cost monitoring and visualization

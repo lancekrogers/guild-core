@@ -45,10 +45,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/internal/ui"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/ui"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"go.uber.org/zap"
 )
 
@@ -140,8 +140,10 @@ type KeyBinding struct {
 }
 
 // Callbacks for events
-type ShortcutHandler func(ctx context.Context) tea.Cmd
-type CommandHandler func(ctx context.Context, args map[string]interface{}) tea.Cmd
+type (
+	ShortcutHandler func(ctx context.Context) tea.Cmd
+	CommandHandler  func(ctx context.Context, args map[string]interface{}) tea.Cmd
+)
 
 // NewShortcutManager creates a new shortcut manager with built-in shortcuts
 func NewShortcutManager() *ShortcutManager {

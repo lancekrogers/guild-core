@@ -12,14 +12,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // SessionAnalytics provides usage analytics and insights for sessions
 type SessionAnalytics struct {
-	store    AnalyticsStore
-	analyzer *UsageAnalyzer
-	reporter *ReportGenerator
+	store             AnalyticsStore
+	analyzer          *UsageAnalyzer
+	reporter          *ReportGenerator
+	reasoningInsights *ReasoningInsightGenerator
 }
 
 // AnalyticsStore defines the interface for analytics data storage
@@ -41,6 +42,7 @@ type AnalyticsData struct {
 	TokenUsage        TokenUsage             `json:"token_usage"`
 	TaskMetrics       TaskMetrics            `json:"task_metrics"`
 	ProductivityScore float64                `json:"productivity_score"`
+	ReasoningMetrics  *ReasoningMetrics      `json:"reasoning_metrics,omitempty"`
 	Timestamp         time.Time              `json:"timestamp"`
 	Metadata          map[string]interface{} `json:"metadata"`
 }
@@ -58,13 +60,17 @@ type AgentUsage struct {
 
 // TokenUsage tracks token consumption across different models
 type TokenUsage struct {
-	Total       int                `json:"total"`
-	Input       int                `json:"input"`
-	Output      int                `json:"output"`
-	ByModel     map[string]int     `json:"by_model"`
-	ByAgent     map[string]int     `json:"by_agent"`
-	Cost        float64            `json:"cost"`
-	CostByModel map[string]float64 `json:"cost_by_model"`
+	Total            int                `json:"total"`
+	Input            int                `json:"input"`
+	Output           int                `json:"output"`
+	Reasoning        int                `json:"reasoning"`
+	ReasoningRatio   float64            `json:"reasoning_ratio"`
+	ByModel          map[string]int     `json:"by_model"`
+	ByAgent          map[string]int     `json:"by_agent"`
+	ReasoningByModel map[string]int     `json:"reasoning_by_model"`
+	ReasoningByAgent map[string]int     `json:"reasoning_by_agent"`
+	Cost             float64            `json:"cost"`
+	CostByModel      map[string]float64 `json:"cost_by_model"`
 }
 
 // TaskMetrics contains task-related analytics
@@ -85,9 +91,10 @@ type TimePeriod struct {
 // NewSessionAnalytics creates a new session analytics instance
 func NewSessionAnalytics(store AnalyticsStore) *SessionAnalytics {
 	return &SessionAnalytics{
-		store:    store,
-		analyzer: NewUsageAnalyzer(),
-		reporter: NewReportGenerator(),
+		store:             store,
+		analyzer:          NewUsageAnalyzer(),
+		reporter:          NewReportGenerator(),
+		reasoningInsights: NewReasoningInsightGenerator(nil), // TODO: Pass actual reasoning analyzer
 	}
 }
 
@@ -101,9 +108,11 @@ func (sa *SessionAnalytics) AnalyzeSession(ctx context.Context, session *Session
 		AgentUsage:   make(map[string]AgentUsage),
 		CommandUsage: make(map[string]int),
 		TokenUsage: TokenUsage{
-			ByModel:     make(map[string]int),
-			ByAgent:     make(map[string]int),
-			CostByModel: make(map[string]float64),
+			ByModel:          make(map[string]int),
+			ByAgent:          make(map[string]int),
+			ReasoningByModel: make(map[string]int),
+			ReasoningByAgent: make(map[string]int),
+			CostByModel:      make(map[string]float64),
 		},
 		Timestamp: time.Now(),
 		Metadata:  make(map[string]interface{}),
@@ -122,6 +131,14 @@ func (sa *SessionAnalytics) AnalyzeSession(ctx context.Context, session *Session
 
 	// Calculate productivity score
 	analytics.ProductivityScore = sa.calculateProductivity(analytics)
+
+	// Calculate reasoning metrics
+	if sa.reasoningInsights != nil {
+		reasoningMetrics, err := sa.reasoningInsights.CalculateReasoningMetrics(ctx, analytics)
+		if err == nil {
+			analytics.ReasoningMetrics = reasoningMetrics
+		}
+	}
 
 	// Add contextual metadata
 	sa.addContextualMetadata(session, analytics)
@@ -167,6 +184,30 @@ func (sa *SessionAnalytics) analyzeMessages(messages []Message, analytics *Analy
 			}
 		}
 
+		// Count reasoning tokens separately
+		if reasoningTokens, ok := msg.Metadata["reasoning_tokens"].(int); ok {
+			analytics.TokenUsage.Reasoning += reasoningTokens
+			analytics.TokenUsage.ReasoningByAgent[msg.Agent] += reasoningTokens
+
+			// Track reasoning tokens by model if available
+			if model, ok := msg.Metadata["model"].(string); ok {
+				analytics.TokenUsage.ReasoningByModel[model] += reasoningTokens
+			}
+		}
+
+		// Extract input/output tokens from usage metadata
+		if usage, ok := msg.Metadata["usage"].(map[string]interface{}); ok {
+			if inputTokens, ok := usage["prompt_tokens"].(int); ok {
+				analytics.TokenUsage.Input += inputTokens
+			}
+			if outputTokens, ok := usage["completion_tokens"].(int); ok {
+				analytics.TokenUsage.Output += outputTokens
+			}
+			if reasoningTokens, ok := usage["reasoning_tokens"].(int); ok {
+				analytics.TokenUsage.Reasoning += reasoningTokens
+			}
+		}
+
 		// Track commands
 		if cmd := sa.extractCommand(msg.Content); cmd != "" {
 			analytics.CommandUsage[cmd]++
@@ -188,6 +229,11 @@ func (sa *SessionAnalytics) analyzeMessages(messages []Message, analytics *Analy
 			usage.SuccessRate = float64(totalMessages-usage.ErrorCount) / float64(totalMessages)
 			analytics.AgentUsage[agent] = usage
 		}
+	}
+
+	// Calculate reasoning ratio
+	if analytics.TokenUsage.Total > 0 {
+		analytics.TokenUsage.ReasoningRatio = float64(analytics.TokenUsage.Reasoning) / float64(analytics.TokenUsage.Total)
 	}
 
 	return nil
@@ -251,8 +297,15 @@ func (sa *SessionAnalytics) calculateProductivity(analytics *AnalyticsData) floa
 		commandDiversity = 1.0
 	}
 
+	// Reasoning efficiency (lower ratio = more efficient)
+	reasoningEfficiency := 1.0 - analytics.TokenUsage.ReasoningRatio
+	if reasoningEfficiency < 0.5 {
+		reasoningEfficiency = 0.5 // Floor at 0.5 to not penalize thoughtful responses too much
+	}
+
 	// Calculate weighted score (0-100)
-	score := (messagesPerMinute*0.3 + taskCompletionRate*0.4 + avgSuccessRate*0.2 + commandDiversity*0.1) * 100
+	// Adjusted weights to include reasoning efficiency
+	score := (messagesPerMinute*0.25 + taskCompletionRate*0.35 + avgSuccessRate*0.2 + commandDiversity*0.1 + reasoningEfficiency*0.1) * 100
 
 	// Cap at 100
 	if score > 100 {
@@ -358,11 +411,16 @@ type CostBreakdown struct {
 
 // AggregateTokenUsage contains aggregated token usage statistics
 type AggregateTokenUsage struct {
-	Total      int            `json:"total"`
-	ByModel    map[string]int `json:"by_model"`
-	ByAgent    map[string]int `json:"by_agent"`
-	Trend      []DataPoint    `json:"trend"`
-	Efficiency float64        `json:"efficiency"`
+	Total            int            `json:"total"`
+	Reasoning        int            `json:"reasoning"`
+	ReasoningRatio   float64        `json:"reasoning_ratio"`
+	ByModel          map[string]int `json:"by_model"`
+	ByAgent          map[string]int `json:"by_agent"`
+	ReasoningByModel map[string]int `json:"reasoning_by_model"`
+	ReasoningByAgent map[string]int `json:"reasoning_by_agent"`
+	Trend            []DataPoint    `json:"trend"`
+	ReasoningTrend   []DataPoint    `json:"reasoning_trend"`
+	Efficiency       float64        `json:"efficiency"`
 }
 
 // GenerateReport creates a comprehensive analytics report
@@ -383,10 +441,10 @@ func (sa *SessionAnalytics) GenerateReport(ctx context.Context, period TimePerio
 	report.Aggregate = sa.aggregateMetrics(data)
 
 	// Generate insights
-	report.Insights = sa.generateInsights(report.Aggregate)
+	report.Insights = sa.generateInsights(report.Aggregate, data)
 
 	// Create visualizations
-	report.Charts = sa.generateCharts(report.Aggregate)
+	report.Charts = sa.generateCharts(report.Aggregate, data)
 
 	return report, nil
 }
@@ -454,6 +512,12 @@ func (sa *SessionAnalytics) aggregateMetrics(data []*AnalyticsData) *AggregateAn
 		TotalSessions: len(data),
 		TopAgents:     make([]AgentRanking, 0),
 		TopCommands:   make([]CommandRanking, 0),
+		TokenUsage: AggregateTokenUsage{
+			ByModel:          make(map[string]int),
+			ByAgent:          make(map[string]int),
+			ReasoningByModel: make(map[string]int),
+			ReasoningByAgent: make(map[string]int),
+		},
 	}
 
 	// Calculate totals
@@ -474,6 +538,26 @@ func (sa *SessionAnalytics) aggregateMetrics(data []*AnalyticsData) *AggregateAn
 		// Aggregate command usage
 		for cmd, count := range session.CommandUsage {
 			commandUsage[cmd] += count
+		}
+
+		// Aggregate token usage
+		aggregate.TokenUsage.Total += session.TokenUsage.Total
+		aggregate.TokenUsage.Reasoning += session.TokenUsage.Reasoning
+
+		// Aggregate by model
+		for model, tokens := range session.TokenUsage.ByModel {
+			aggregate.TokenUsage.ByModel[model] += tokens
+		}
+		for model, tokens := range session.TokenUsage.ReasoningByModel {
+			aggregate.TokenUsage.ReasoningByModel[model] += tokens
+		}
+
+		// Aggregate by agent
+		for agent, tokens := range session.TokenUsage.ByAgent {
+			aggregate.TokenUsage.ByAgent[agent] += tokens
+		}
+		for agent, tokens := range session.TokenUsage.ReasoningByAgent {
+			aggregate.TokenUsage.ReasoningByAgent[agent] += tokens
 		}
 	}
 
@@ -517,6 +601,11 @@ func (sa *SessionAnalytics) aggregateMetrics(data []*AnalyticsData) *AggregateAn
 		aggregate.TopCommands[i].Rank = i + 1
 	}
 
+	// Calculate reasoning ratio
+	if aggregate.TokenUsage.Total > 0 {
+		aggregate.TokenUsage.ReasoningRatio = float64(aggregate.TokenUsage.Reasoning) / float64(aggregate.TokenUsage.Total)
+	}
+
 	// Generate productivity trend (simplified)
 	aggregate.ProductivityTrend = sa.generateProductivityTrend(data)
 
@@ -524,7 +613,7 @@ func (sa *SessionAnalytics) aggregateMetrics(data []*AnalyticsData) *AggregateAn
 }
 
 // generateInsights creates actionable insights from aggregated data
-func (sa *SessionAnalytics) generateInsights(agg *AggregateAnalytics) []Insight {
+func (sa *SessionAnalytics) generateInsights(agg *AggregateAnalytics, data []*AnalyticsData) []Insight {
 	var insights []Insight
 
 	// Productivity insights
@@ -552,6 +641,15 @@ func (sa *SessionAnalytics) generateInsights(agg *AggregateAnalytics) []Insight 
 		}
 	}
 
+	// Generate reasoning-specific insights
+	if sa.reasoningInsights != nil && len(data) > 0 {
+		// Use the first analytics data for reasoning insights (simplified)
+		reasoningInsights, err := sa.reasoningInsights.GenerateReasoningInsights(context.Background(), data[0])
+		if err == nil {
+			insights = append(insights, reasoningInsights...)
+		}
+	}
+
 	// Usage patterns
 	if len(agg.TopCommands) > 0 {
 		topCommand := agg.TopCommands[0]
@@ -563,11 +661,37 @@ func (sa *SessionAnalytics) generateInsights(agg *AggregateAnalytics) []Insight 
 		})
 	}
 
+	// Reasoning efficiency insights
+	if agg.TokenUsage.Total > 0 && agg.TokenUsage.ReasoningRatio > 0 {
+		if agg.TokenUsage.ReasoningRatio > 0.5 {
+			insights = append(insights, Insight{
+				Type:     InsightEfficiency,
+				Title:    "High Reasoning Token Usage",
+				Message:  fmt.Sprintf("%.0f%% of tokens are used for reasoning. Consider more direct prompts for simple tasks.", agg.TokenUsage.ReasoningRatio*100),
+				Priority: InsightPriorityMedium,
+				Actions: []Action{
+					{
+						Title:       "Optimize Prompts",
+						Description: "Use clearer, more specific prompts to reduce reasoning overhead",
+						Type:        "optimization",
+					},
+				},
+			})
+		} else if agg.TokenUsage.ReasoningRatio < 0.1 {
+			insights = append(insights, Insight{
+				Type:     InsightUsage,
+				Title:    "Low Reasoning Usage",
+				Message:  "Only using reasoning for complex tasks. This is efficient token usage!",
+				Priority: InsightPriorityLow,
+			})
+		}
+	}
+
 	return insights
 }
 
 // generateCharts creates visualization data
-func (sa *SessionAnalytics) generateCharts(agg *AggregateAnalytics) []Chart {
+func (sa *SessionAnalytics) generateCharts(agg *AggregateAnalytics, data []*AnalyticsData) []Chart {
 	var charts []Chart
 
 	// Agent usage pie chart
@@ -605,6 +729,54 @@ func (sa *SessionAnalytics) generateCharts(agg *AggregateAnalytics) []Chart {
 			Title: "Top Commands",
 			Data:  commandData,
 		})
+	}
+
+	// Reasoning vs Content token distribution
+	if agg.TokenUsage.Total > 0 {
+		tokenDistribution := map[string]int{
+			"Content Tokens":   agg.TokenUsage.Total - agg.TokenUsage.Reasoning,
+			"Reasoning Tokens": agg.TokenUsage.Reasoning,
+		}
+
+		charts = append(charts, Chart{
+			Type:  "pie",
+			Title: "Token Distribution",
+			Data:  tokenDistribution,
+			Config: map[string]interface{}{
+				"colors": []string{"#4CAF50", "#FF9800"}, // Green for content, orange for reasoning
+			},
+		})
+	}
+
+	// Reasoning efficiency by model
+	if len(agg.TokenUsage.ReasoningByModel) > 0 {
+		modelEfficiency := make(map[string]float64)
+		for model, reasoningTokens := range agg.TokenUsage.ReasoningByModel {
+			if totalTokens, ok := agg.TokenUsage.ByModel[model]; ok && totalTokens > 0 {
+				efficiency := 1.0 - (float64(reasoningTokens) / float64(totalTokens))
+				modelEfficiency[model] = math.Round(efficiency*1000) / 10 // Percentage with 1 decimal
+			}
+		}
+
+		if len(modelEfficiency) > 0 {
+			charts = append(charts, Chart{
+				Type:  "bar",
+				Title: "Model Reasoning Efficiency (%)",
+				Data:  modelEfficiency,
+			})
+		}
+	}
+
+	// Add reasoning heatmap if available
+	if sa.reasoningInsights != nil && len(data) > 0 {
+		heatmap, err := sa.reasoningInsights.GenerateReasoningHeatmap(context.Background(), data[0])
+		if err == nil {
+			charts = append(charts, Chart{
+				Type:  "heatmap",
+				Title: "Reasoning Intensity by Hour",
+				Data:  heatmap,
+			})
+		}
 	}
 
 	return charts
@@ -736,7 +908,7 @@ func (sa *SessionAnalytics) GenerateInsights(ctx context.Context, userID string,
 
 	// Aggregate and generate insights
 	agg := sa.aggregateMetrics(userAnalytics)
-	return sa.generateInsights(agg), nil
+	return sa.generateInsights(agg, userAnalytics), nil
 }
 
 // GetSessionMetrics gets metrics for a specific session

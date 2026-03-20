@@ -19,9 +19,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	guildv1 "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	guildv1 "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 // E2ETestSuite provides utilities for end-to-end testing
@@ -84,7 +84,6 @@ func findOrBuildGuildBinary(t TestingTB) string {
 	buildCmd := exec.Command("make", "build")
 	buildCmd.Dir = "../../../" // Relative to guild-core/test/e2e/
 	output, err := buildCmd.CombinedOutput()
-
 	if err != nil {
 		t.Logf("Build output: %s", string(output))
 		t.Skip("Guild binary not available and build failed - skipping E2E tests")
@@ -403,9 +402,9 @@ func TestGuildProjectTypeDetection(t *testing.T) {
 			// Setup project files
 			for file, content := range tt.setupFiles {
 				filePath := filepath.Join(suite.projectDir, file)
-				err := os.MkdirAll(filepath.Dir(filePath), 0755)
+				err := os.MkdirAll(filepath.Dir(filePath), 0o755)
 				require.NoError(t, err)
-				err = os.WriteFile(filePath, []byte(content), 0644)
+				err = os.WriteFile(filePath, []byte(content), 0o644)
 				require.NoError(t, err)
 			}
 
@@ -481,7 +480,7 @@ func TestGuildErrorRecovery(t *testing.T) {
 
 		// Corrupt the campaign config
 		campaignPath := filepath.Join(suite.projectDir, ".campaign/campaign.yaml")
-		err = os.WriteFile(campaignPath, []byte("invalid: yaml: content: ["), 0644)
+		err = os.WriteFile(campaignPath, []byte("invalid: yaml: content: ["), 0o644)
 		require.NoError(t, err)
 
 		// Try operations that should handle corrupted config gracefully

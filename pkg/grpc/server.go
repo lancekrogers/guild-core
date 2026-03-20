@@ -14,16 +14,17 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/lancekrogers/guild/pkg/campaign"
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	promptspb "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/orchestrator"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	promptspb "github.com/lancekrogers/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // Server implements the Guild gRPC service
@@ -74,7 +75,9 @@ func NewServer(
 	commissionMgr := getCommissionManager(registry)
 	kanbanMgr := getKanbanManager(registry)
 	agentReg := registry.Agents()
-	orchestrator := getOrchestrator(registry)
+	// Create minimal orchestrator placeholder
+	// The actual orchestration will be handled by the bridge pattern
+	orch := &NoOpOrchestrator{}
 
 	// Get prompt manager - creates a memory-based layered manager
 	promptManager := getPromptManager(registry)
@@ -100,7 +103,7 @@ func NewServer(
 		commissionMgr:  commissionMgr,
 		kanbanMgr:      kanbanMgr,
 		agentReg:       agentReg,
-		orchestrator:   orchestrator,
+		orchestrator:   orch,
 		promptManager:  promptManager,
 		frameBuilder:   NewFrameBuilder(campaignMgr, commissionMgr, kanbanMgr, agentReg),
 		watchers:       make(map[string]*watcher),
@@ -1433,4 +1436,65 @@ func (a *kanbanStorageAdapter) GetKanbanTaskRepository() kanban.TaskRepository {
 // GetMemoryStore implements kanban.StorageRegistry
 func (a *kanbanStorageAdapter) GetMemoryStore() kanban.MemoryStore {
 	return a.storage.GetMemoryStore()
+}
+
+// NoOpOrchestrator is a placeholder orchestrator that implements the interface
+type NoOpOrchestrator struct{}
+
+// Start is a no-op implementation
+func (n *NoOpOrchestrator) Start(ctx context.Context) error {
+	return nil
+}
+
+// Stop is a no-op implementation
+func (n *NoOpOrchestrator) Stop(ctx context.Context) error {
+	return nil
+}
+
+// Pause is a no-op implementation
+func (n *NoOpOrchestrator) Pause(ctx context.Context) error {
+	return nil
+}
+
+// Resume is a no-op implementation
+func (n *NoOpOrchestrator) Resume(ctx context.Context) error {
+	return nil
+}
+
+// Status returns idle status
+func (n *NoOpOrchestrator) Status() orchestrator.Status {
+	return orchestrator.StatusIdle
+}
+
+// AddAgent is a no-op implementation
+func (n *NoOpOrchestrator) AddAgent(agent core.Agent) error {
+	return nil
+}
+
+// RemoveAgent is a no-op implementation
+func (n *NoOpOrchestrator) RemoveAgent(agentID string) error {
+	return nil
+}
+
+// GetAgent is a no-op implementation
+func (n *NoOpOrchestrator) GetAgent(agentID string) (core.Agent, bool) {
+	return nil, false
+}
+
+// SetCommission is a no-op implementation
+func (n *NoOpOrchestrator) SetCommission(commission *commission.Commission) error {
+	return nil
+}
+
+// GetCommission is a no-op implementation
+func (n *NoOpOrchestrator) GetCommission() *commission.Commission {
+	return nil
+}
+
+// AddEventHandler is a no-op implementation
+func (n *NoOpOrchestrator) AddEventHandler(handler orchestrator.EventHandler) {
+}
+
+// EmitEvent is a no-op implementation
+func (n *NoOpOrchestrator) EmitEvent(event orchestrator.Event) {
 }

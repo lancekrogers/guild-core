@@ -9,9 +9,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	_ "modernc.org/sqlite"
 )
 
 // CostStorage handles persistent storage of cost data
@@ -24,8 +24,8 @@ func NewCostStorage(ctx context.Context) (*CostStorage, error) {
 	ctx = observability.WithComponent(ctx, "cost.storage")
 	ctx = observability.WithOperation(ctx, "NewCostStorage")
 
-	// Use in-memory SQLite for cost storage
-	db, err := sql.Open("sqlite3", ":memory:?_foreign_keys=on")
+	// Use in-memory SQLite for cost storage (modernc driver)
+	db, err := sql.Open("sqlite", ":memory:?_foreign_keys=on")
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize database").
 			WithComponent("cost.storage").
@@ -84,7 +84,6 @@ func (cs *CostStorage) StoreUsage(ctx context.Context, usage Usage) error {
 		usage.Timestamp,
 		string(metadataJSON),
 	)
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to store usage").
 			WithComponent("cost.storage").

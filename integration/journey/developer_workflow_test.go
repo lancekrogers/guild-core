@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package journey
 
 import (
@@ -14,8 +17,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // TestDeveloperDailyWorkflow tests a typical developer's daily workflow
@@ -44,7 +47,7 @@ func TestDeveloperDailyWorkflow(t *testing.T) {
 		// Simulate chat session creation
 		sessionID := "dev-session-001"
 		sessionPath := filepath.Join(projCtx.GetGuildPath(), "sessions", sessionID)
-		err := os.MkdirAll(sessionPath, 0755)
+		err := os.MkdirAll(sessionPath, 0o755)
 		require.NoError(t, err)
 
 		// Create session metadata
@@ -54,7 +57,7 @@ user: developer
 project: %s
 `, sessionID, startTime.Format(time.RFC3339), "test-project")
 
-		err = os.WriteFile(filepath.Join(sessionPath, "session.yaml"), []byte(metadata), 0644)
+		err = os.WriteFile(filepath.Join(sessionPath, "session.yaml"), []byte(metadata), 0o644)
 		require.NoError(t, err)
 
 		// Verify session created quickly
@@ -109,9 +112,9 @@ Implement a complete user authentication system for the API with JWT token suppo
 
 		// Save commission to project
 		commissionPath := filepath.Join(projCtx.GetGuildPath(), "commissions", "auth-system.md")
-		err = os.MkdirAll(filepath.Dir(commissionPath), 0755)
+		err = os.MkdirAll(filepath.Dir(commissionPath), 0o755)
 		require.NoError(t, err)
-		err = os.WriteFile(commissionPath, []byte(response), 0644)
+		err = os.WriteFile(commissionPath, []byte(response), 0o644)
 		require.NoError(t, err)
 	})
 
@@ -142,14 +145,14 @@ Implement a complete user authentication system for the API with JWT token suppo
 		// Create kanban board for commission
 		kanbanPath := filepath.Join(projCtx.GetGuildPath(), "kanban", "auth-commission")
 		todoPath := filepath.Join(kanbanPath, "todo")
-		err := os.MkdirAll(todoPath, 0755)
+		err := os.MkdirAll(todoPath, 0o755)
 		require.NoError(t, err)
 
 		// Create task files
 		for i, task := range tasks {
 			taskFile := fmt.Sprintf("task-%03d.md", i+1)
 			content := fmt.Sprintf("# %s\n\nStatus: TODO\nPriority: High\n", task)
-			err := os.WriteFile(filepath.Join(todoPath, taskFile), []byte(content), 0644)
+			err := os.WriteFile(filepath.Join(todoPath, taskFile), []byte(content), 0o644)
 			require.NoError(t, err)
 		}
 
@@ -165,9 +168,9 @@ Implement a complete user authentication system for the API with JWT token suppo
 		inProgressPath := filepath.Join(kanbanPath, "in_progress")
 		donePath := filepath.Join(kanbanPath, "done")
 
-		err := os.MkdirAll(inProgressPath, 0755)
+		err := os.MkdirAll(inProgressPath, 0o755)
 		require.NoError(t, err)
-		err = os.MkdirAll(donePath, 0755)
+		err = os.MkdirAll(donePath, 0o755)
 		require.NoError(t, err)
 
 		// Mock agent responses for task execution
@@ -231,7 +234,7 @@ func (s *JWTService) GenerateToken(userID string) (string, error) {
 		reviewPath := filepath.Join(kanbanPath, "review")
 		donePath := filepath.Join(kanbanPath, "done")
 
-		err := os.MkdirAll(reviewPath, 0755)
+		err := os.MkdirAll(reviewPath, 0o755)
 		require.NoError(t, err)
 
 		// Move completed task to review
@@ -262,7 +265,7 @@ JWT service has been implemented with:
 - auth/jwt_service.go
 - auth/jwt_service_test.go
 `
-		err = os.WriteFile(filepath.Join(reviewPath, "task-001.md"), []byte(reviewContent), 0644)
+		err = os.WriteFile(filepath.Join(reviewPath, "task-001.md"), []byte(reviewContent), 0o644)
 		require.NoError(t, err)
 
 		// Verify review status
@@ -327,7 +330,7 @@ JWT service has been implemented with:
 		require.NoError(t, err)
 
 		// Update the task with new implementation
-		err = os.WriteFile(filepath.Join(donePath, "task-001.md"), []byte(updatedContent), 0644)
+		err = os.WriteFile(filepath.Join(donePath, "task-001.md"), []byte(updatedContent), 0o644)
 		require.NoError(t, err)
 
 		// Verify task is complete

@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
 )
 
 // mockEmbedder implements vector.Embedder for testing

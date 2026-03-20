@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -180,7 +180,7 @@ func TestGitBlameTool_Execute_UntrackedFile(t *testing.T) {
 
 	// Create an untracked file
 	untrackedFile := filepath.Join(tmpDir, "untracked.txt")
-	require.NoError(t, os.WriteFile(untrackedFile, []byte("untracked content"), 0644))
+	require.NoError(t, os.WriteFile(untrackedFile, []byte("untracked content"), 0o644))
 
 	tool := NewGitBlameTool(tmpDir)
 	ctx := context.Background()
@@ -335,7 +335,7 @@ line 2
 line 3
 line 4
 line 5`
-	require.NoError(t, os.WriteFile(testFile, []byte(content), 0644))
+	require.NoError(t, os.WriteFile(testFile, []byte(content), 0o644))
 
 	_, err = executeGitCommand(dir, "add", "test.txt")
 	require.NoError(t, err)
@@ -353,7 +353,7 @@ line 3 modified
 line 4
 line 5
 line 6 added`
-	require.NoError(t, os.WriteFile(testFile, []byte(modifiedContent), 0644))
+	require.NoError(t, os.WriteFile(testFile, []byte(modifiedContent), 0o644))
 
 	_, err = executeGitCommand(dir, "add", "test.txt")
 	require.NoError(t, err)

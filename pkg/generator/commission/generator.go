@@ -9,10 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/prompts"
-	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/prompts"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
 // Generator handles LLM-based generation of commissions and related documents
@@ -69,7 +69,7 @@ func (g *Generator) GenerateCommission(ctx context.Context, description string) 
 
 	// Create a temporary file to parse
 	tempFile := filepath.Join(os.TempDir(), "temp_commission.md")
-	if err := os.WriteFile(tempFile, []byte(response), 0644); err != nil {
+	if err := os.WriteFile(tempFile, []byte(response), 0o644); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write temporary commission file").
 			WithComponent("generator").
 			WithOperation("GenerateCommission").

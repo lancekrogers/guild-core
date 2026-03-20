@@ -3,7 +3,7 @@ package telemetry
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
@@ -145,15 +145,27 @@ type Link struct {
 
 // ExtractTraceContext extracts trace context for propagation
 func ExtractTraceContext(ctx context.Context) (traceID, spanID string) {
+	// First check for a real span
 	span := trace.SpanFromContext(ctx)
 	if span.SpanContext().IsValid() {
 		return span.SpanContext().TraceID().String(), span.SpanContext().SpanID().String()
 	}
-	return "", ""
+
+	// Check for injected context (for testing)
+	if tc, ok := ctx.Value(traceContextKey{}).(struct{ TraceID, SpanID string }); ok {
+		return tc.TraceID, tc.SpanID
+	}
+
+	// Return zero-filled IDs when no valid span
+	return "00000000000000000000000000000000", "0000000000000000"
 }
+
+// traceContextKey is used to store trace context in context values
+type traceContextKey struct{}
 
 // InjectTraceContext creates a new context with injected trace information
 func InjectTraceContext(ctx context.Context, traceID, spanID string) context.Context {
-	// This is a simplified version. In production, you'd use proper propagators
-	return ctx
+	// Store the trace context in the context for testing
+	// In production, you'd use proper propagators and create a real span
+	return context.WithValue(ctx, traceContextKey{}, struct{ TraceID, SpanID string }{traceID, spanID})
 }

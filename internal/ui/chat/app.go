@@ -6,51 +6,63 @@ package chat
 import (
 	"context"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
+	"golang.org/x/term"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/lancekrogers/guild/internal/daemonconn"
-	"github.com/lancekrogers/guild/internal/ui/chat/agents"
-	"github.com/lancekrogers/guild/internal/ui/chat/commands"
-	"github.com/lancekrogers/guild/internal/ui/chat/common"
-	cfig "github.com/lancekrogers/guild/internal/ui/chat/common/config"
-	"github.com/lancekrogers/guild/internal/ui/chat/common/layout"
-	"github.com/lancekrogers/guild/internal/ui/chat/common/types"
-	"github.com/lancekrogers/guild/internal/ui/chat/common/utils"
-	"github.com/lancekrogers/guild/internal/ui/chat/completion"
-	"github.com/lancekrogers/guild/internal/ui/chat/managers"
-	"github.com/lancekrogers/guild/internal/ui/chat/messages"
-	toolmsg "github.com/lancekrogers/guild/internal/ui/chat/messages/tools"
-	"github.com/lancekrogers/guild/internal/ui/chat/panes"
-	"github.com/lancekrogers/guild/internal/ui/chat/services"
-	"github.com/lancekrogers/guild/internal/ui/chat/session"
-	"github.com/lancekrogers/guild/internal/ui/formatting"
-	uitools "github.com/lancekrogers/guild/internal/ui/tools"
-	"github.com/lancekrogers/guild/internal/ui/vim"
-	"github.com/lancekrogers/guild/internal/ui/visual"
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/campaign"
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	promptspb "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/preferences"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/registry"
-	pkgsession "github.com/lancekrogers/guild/pkg/session"
-	"github.com/lancekrogers/guild/pkg/storage"
-	"github.com/lancekrogers/guild/pkg/templates"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/lancekrogers/guild-core/internal/daemonconn"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/agents"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/commands"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common"
+	cfig "github.com/lancekrogers/guild-core/internal/ui/chat/common/config"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/layout"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/types"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/utils"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/completion"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/managers"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/messages"
+	toolmsg "github.com/lancekrogers/guild-core/internal/ui/chat/messages/tools"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/services"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/session"
+	"github.com/lancekrogers/guild-core/internal/ui/formatting"
+	uitools "github.com/lancekrogers/guild-core/internal/ui/tools"
+	viewutil "github.com/lancekrogers/guild-core/internal/ui/view"
+	"github.com/lancekrogers/guild-core/internal/ui/vim"
+	"github.com/lancekrogers/guild-core/internal/ui/visual"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	promptspb "github.com/lancekrogers/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/preferences"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	globalproj "github.com/lancekrogers/guild-core/pkg/project/global"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	pkgsession "github.com/lancekrogers/guild-core/pkg/session"
+	"github.com/lancekrogers/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/templates"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 
-	"github.com/lancekrogers/guild/tools/search"
+	"github.com/lancekrogers/guild-core/tools/search"
+)
+
+const (
+	daemonStartupRPCTimeout = 2 * time.Second
 )
 
 // App represents the main chat application
@@ -98,6 +110,11 @@ type App struct {
 	searchPattern string
 	completions   []completion.CompletionResult
 
+	// Enhanced state management (Sprint 4)
+	stateManager   *StateManager
+	stateHistory   []AppState
+	stateListeners []StateListener
+
 	// Command processing
 	commandProcessor *commands.CommandProcessor
 	commandHistory   *commands.CommandHistory
@@ -143,6 +160,7 @@ type App struct {
 	initialized bool
 	ready       bool
 	shouldQuit  bool
+	useAltScreen bool
 	errorState  error
 }
 
@@ -165,8 +183,32 @@ func NewApp(ctx context.Context, guildConfig *config.GuildConfig,
 	// Store guild config for later initialization
 	app.config = &common.ChatConfig{
 		GuildConfig: guildConfig,
-		Width:       80,
-		Height:      24,
+
+		// UI defaults
+		Width:           80,
+		Height:          24,
+		MarkdownEnabled: true,
+		WrapLines:       true,
+
+		// Feature defaults (enabled)
+		EnableCompletion:    true,
+		EnableHistory:       true,
+		EnableStatusDisplay: true,
+		EnableRichContent:   true,
+
+		// Theme defaults
+		Theme:          "dark",
+		FontSize:       12,
+		ColorScheme:    "default",
+		ShowTimestamps: true,
+		CompactMode:    false,
+
+		// AI defaults
+		DefaultProvider:  "anthropic",
+		DefaultModel:     "claude-3-sonnet-20240229",
+		Temperature:      0.7,
+		MaxTokens:        4096,
+		StreamingEnabled: true,
 	}
 
 	return app
@@ -202,8 +244,42 @@ func (app *App) Run() error {
 			WithOperation("Run")
 	}
 
-	// Create and run the Bubble Tea program
-	p := tea.NewProgram(app, tea.WithAltScreen())
+	// Create and run the Bubble Tea program.
+	//
+	// Prefer a dedicated TTY for interactive I/O so chat can run even when
+	// stdin/stdout are redirected, and so stray prints to stdio can't corrupt the
+	// TUI renderer.
+	opts := []tea.ProgramOption{
+		tea.WithContext(app.ctx),
+	}
+
+	var ttyOut *os.File
+	if tty, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
+		ttyOut = tty
+		defer ttyOut.Close()
+
+		// Prevent any stray writes to stdout/stderr from corrupting the TUI by
+		// temporarily redirecting them away from the terminal. Disable this for
+		// debugging by setting `GUILD_CHAT_DEBUG_STDIO=1`.
+		if os.Getenv("GUILD_CHAT_DEBUG_STDIO") == "" {
+			if restore, err := suppressStdIO(); err == nil {
+				defer restore()
+			}
+		}
+
+		opts = append(opts,
+			tea.WithInput(ttyOut),
+			tea.WithOutput(ttyOut),
+		)
+		app.useAltScreen = true
+	} else if term.IsTerminal(int(os.Stdout.Fd())) {
+		app.useAltScreen = true
+	} else {
+		// No usable terminal: fall back to simple output mode.
+		opts = append(opts, tea.WithoutRenderer())
+	}
+
+	p := tea.NewProgram(app, opts...)
 	if _, err := p.Run(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run chat interface").
 			WithComponent("chat.core").
@@ -215,12 +291,26 @@ func (app *App) Run() error {
 
 // initializeComponents initializes all application components
 func (app *App) initializeComponents() error {
+	// Ensure config is complete before any component init that relies on it.
+	if err := app.ensureChatConfigDefaults(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to build chat configuration").
+			WithComponent("chat.app").
+			WithOperation("initializeComponents")
+	}
+
 	// Initialize utilities
 	app.styles = utils.NewStyles()
 	app.keys = utils.NewKeyBindings()
 
 	// Initialize command history
 	app.commandHistory = commands.NewCommandHistory(1000)
+
+	// Initialize state manager (Sprint 4)
+	if err := app.initializeStateManager(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize state manager").
+			WithComponent("chat.app").
+			WithOperation("initializeComponents")
+	}
 
 	// Initialize visual components
 	if err := app.initializeVisualComponents(); err != nil {
@@ -229,15 +319,22 @@ func (app *App) initializeComponents() error {
 			WithOperation("initializeComponents")
 	}
 
-	// Initialize preferences service (Sprint 2)
-	if err := app.initializePreferences(); err != nil {
-		// Log but don't fail - preferences are optional
-		fmt.Printf("Warning: Failed to initialize preferences: %v\n", err)
-	}
-
 	// Initialize session management with Sprint 2 enhancements
 	if err := app.initializeSessionManagement(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize session management").
+			WithComponent("chat.app").
+			WithOperation("initializeComponents")
+	}
+
+	// Initialize preferences service (Sprint 2)
+	if err := app.initializePreferences(); err != nil {
+		// Log but don't fail - preferences are optional
+		observability.GetLogger(app.ctx).Warn("Failed to initialize preferences", "error", err)
+	}
+
+	// Initialize daemon-backed or local backend before services/routers.
+	if err := app.initializeBackend(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize backend").
 			WithComponent("chat.app").
 			WithOperation("initializeComponents")
 	}
@@ -253,7 +350,10 @@ func (app *App) initializeComponents() error {
 	}
 
 	// Initialize completion engine with suggestion support
-	projectRoot := "." // TODO: Get actual project root
+	projectRoot := app.config.ProjectRoot
+	if projectRoot == "" {
+		projectRoot = "."
+	}
 
 	// Try to get project root from registry if available
 	// Note: There's a type mismatch between registry.ProjectContext interface
@@ -293,15 +393,20 @@ func (app *App) initializeComponents() error {
 		app.completionEngine.SetCommandProcessor(app.commandProcessor)
 	}
 
-	// Initialize services
+	// Initialize services (optional in direct mode / global mode)
 	if err := app.initializeServices(); err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize services").
-			WithComponent("chat.app").
-			WithOperation("initializeComponents")
+		observability.GetLogger(app.ctx).Warn("Failed to initialize chat services", "error", err)
 	}
 
-	// Initialize agent router
-	app.agentRouter = agents.NewAgentRouter(app.ctx, app.guildClient)
+	// Initialize agent router (requires backend)
+	if app.guildClient != nil {
+		app.agentRouter = agents.NewAgentRouter(app.ctx, app.guildClient)
+
+		// Set agent router on command processor for campaign commands
+		if app.commandProcessor != nil {
+			app.commandProcessor.SetAgentRouter(app.agentRouter)
+		}
+	}
 
 	// Initialize layout manager
 	app.layoutManager = layout.NewManager(app.config.Width, app.config.Height)
@@ -318,14 +423,105 @@ func (app *App) initializeComponents() error {
 			WithOperation("initializeComponents")
 	}
 
-	// Initialize daemon connection
-	if err := app.initializeDaemonConnection(); err != nil {
-		// Enable direct mode fallback
-		app.enableDirectMode()
-	}
+	// Update connection status display now that panes exist.
+	app.updateConnectionStatus()
 
 	app.initialized = true
 	return nil
+}
+
+func (app *App) ensureChatConfigDefaults() error {
+	if app.config == nil {
+		return gerror.New(gerror.ErrCodeInvalidInput, "chat config is nil", nil).
+			WithComponent("chat.app").
+			WithOperation("ensureChatConfigDefaults")
+	}
+
+	// Basic UI defaults
+	if app.config.Width <= 0 {
+		app.config.Width = 80
+	}
+	if app.config.Height <= 0 {
+		app.config.Height = 24
+	}
+
+	// Feature defaults (opt-out later via preferences)
+	app.config.MarkdownEnabled = true
+	app.config.WrapLines = true
+	app.config.EnableCompletion = true
+	app.config.EnableHistory = true
+	app.config.EnableStatusDisplay = true
+	app.config.EnableRichContent = true
+
+	// Ensure we have a usable project root (used for tools/search/completions)
+	if app.config.ProjectRoot == "" {
+		if cwd, err := os.Getwd(); err == nil {
+			app.config.ProjectRoot = cwd
+		} else {
+			app.config.ProjectRoot = "."
+		}
+	}
+
+	// Resolve campaign root if present; otherwise, run in global mode.
+	if root, err := project.FindProjectRoot(app.config.ProjectRoot); err == nil && root != "" {
+		app.config.ProjectRoot = root
+		if app.config.DatabasePath == "" {
+			app.config.DatabasePath = filepath.Join(root, paths.DefaultCampaignDir, paths.DefaultMemoryDB)
+		}
+		if app.config.HistoryPath == "" {
+			app.config.HistoryPath = filepath.Join(root, paths.DefaultCampaignDir, "chat_history.txt")
+		}
+		if app.config.ConfigPath == "" {
+			app.config.ConfigPath = filepath.Join(root, paths.DefaultCampaignDir, "campaign.yaml")
+		}
+	} else {
+		// Global mode uses the global Guild directory for state.
+		globalDir := globalproj.GlobalGuildDir()
+		if err := globalproj.EnsureGlobalInitialized(); err != nil {
+			// Don't block chat startup on global initialization issues.
+			// Fall back to in-memory persistence and disable file-based history.
+			if app.config.DatabasePath == "" {
+				app.config.DatabasePath = ":memory:"
+			}
+			if app.config.HistoryPath == "" {
+				app.config.HistoryPath = ""
+			}
+			if app.config.ConfigPath == "" {
+				app.config.ConfigPath = filepath.Join(globalDir, "config.yaml")
+			}
+		} else {
+			if app.config.DatabasePath == "" {
+				app.config.DatabasePath = filepath.Join(globalDir, paths.DefaultMemoryDB)
+			}
+			if app.config.HistoryPath == "" {
+				app.config.HistoryPath = filepath.Join(globalDir, "chat_history.txt")
+			}
+			if app.config.ConfigPath == "" {
+				app.config.ConfigPath = filepath.Join(globalDir, "config.yaml")
+			}
+		}
+	}
+
+	// Ensure GuildConfig exists (NewApp should set it, but keep safe defaults).
+	if app.config.GuildConfig == nil {
+		app.config.GuildConfig = config.DefaultGuildTemplate()
+	}
+
+	return nil
+}
+
+func (app *App) initializeBackend() error {
+	// Prefer daemon when available, but always fall back to direct mode.
+	if app.config != nil && app.config.CampaignID != "" {
+		if err := app.initializeDaemonConnection(); err == nil {
+			app.directMode = false
+			return nil
+		}
+	}
+
+	app.directMode = true
+	app.connectionStatus = false
+	return app.initializeDirectMode()
 }
 
 // initializeSessionManagement initializes enhanced session persistence from Sprint 2
@@ -334,9 +530,14 @@ func (app *App) initializeSessionManagement() error {
 	if app.storageRegistry == nil {
 		storageReg, memStore, err := storage.InitializeSQLiteStorageForRegistry(app.ctx, app.config.DatabasePath)
 		if err != nil {
-			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize storage registry").
-				WithComponent("chat.app").
-				WithOperation("initializeSessionManagement")
+			// Fall back to an in-memory DB so the chat UI can still start.
+			storageReg, memStore, err = storage.InitializeSQLiteStorageForRegistry(app.ctx, ":memory:")
+			if err != nil {
+				return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize storage registry").
+					WithComponent("chat.app").
+					WithOperation("initializeSessionManagement")
+			}
+			app.config.DatabasePath = ":memory:"
 		}
 		app.storageRegistry = storageReg
 		// memStore is available if needed for memory operations
@@ -361,14 +562,16 @@ func (app *App) initializeSessionManagement() error {
 	sessionManager := pkgsession.NewSessionManager(app.sessionStore,
 		pkgsession.WithAutoSaveInterval(30*time.Second))
 
-	// Create recovery manager for crash recovery
-	recoveryDir := filepath.Join(filepath.Dir(app.config.DatabasePath), "recovery")
-	recoveryManager, err := pkgsession.NewRecoveryManager(sessionManager, recoveryDir)
-	if err != nil {
-		// Log but don't fail - recovery is optional
-		fmt.Printf("Warning: Failed to create recovery manager: %v\n", err)
+	// Create recovery manager for crash recovery (skip for in-memory DBs)
+	if app.config.DatabasePath != ":memory:" {
+		recoveryDir := filepath.Join(filepath.Dir(app.config.DatabasePath), "recovery")
+		recoveryManager, err := pkgsession.NewRecoveryManager(sessionManager, recoveryDir)
+		if err != nil {
+			// Log but don't fail - recovery is optional
+			observability.GetLogger(app.ctx).Warn("Failed to create recovery manager", "error", err)
+		}
+		app.recoveryManager = recoveryManager
 	}
-	app.recoveryManager = recoveryManager
 
 	// Create multi-session manager
 	app.multiSessionMgr = pkgsession.NewMultiSessionManager(sessionManager, nil, 10)
@@ -415,7 +618,11 @@ func (app *App) initializeSessionManagement() error {
 			// Convert session messages to chat messages
 			for _, msg := range messages {
 				chatMsg := app.convertPkgSessionMessage(msg)
-				app.messages = append(app.messages, chatMsg)
+				if app.stateManager != nil {
+					app.addMessageWithState(chatMsg)
+				} else {
+					app.messages = append(app.messages, chatMsg)
+				}
 			}
 		}
 	}
@@ -451,9 +658,14 @@ func (app *App) initializePreferences() error {
 		enhancedConfig, err := configManager.LoadChatConfig(app.ctx, app.config.UserID,
 			app.config.CampaignID, app.config.SessionID)
 		if err == nil {
-			// Preserve existing values but apply preferences
+			// Preserve core runtime paths/IDs but apply preference fields.
 			enhancedConfig.Width = app.config.Width
 			enhancedConfig.Height = app.config.Height
+			enhancedConfig.ProjectRoot = app.config.ProjectRoot
+			enhancedConfig.DatabasePath = app.config.DatabasePath
+			enhancedConfig.HistoryPath = app.config.HistoryPath
+			enhancedConfig.ConfigPath = app.config.ConfigPath
+			enhancedConfig.GuildConfig = app.config.GuildConfig
 			app.config = enhancedConfig
 		}
 	}
@@ -647,8 +859,23 @@ func (app *App) setupInputCallbacks() {
 								cmd = app.agentRouter.SendToAgent(target.ID, target.Message)
 							}
 						} else {
-							// No agent mention, send to default agent (elena-guild-master)
-							cmd = app.agentRouter.SendToAgent("elena-guild-master", input)
+							// No agent mention: prefer the configured manager, otherwise broadcast.
+							defaultAgentID := ""
+							if app.config != nil && app.config.GuildConfig != nil {
+								if app.config.GuildConfig.Manager.Override != "" {
+									defaultAgentID = app.config.GuildConfig.Manager.Override
+								} else if app.config.GuildConfig.Manager.Default != "" {
+									defaultAgentID = app.config.GuildConfig.Manager.Default
+								} else if len(app.config.GuildConfig.Agents) > 0 {
+									defaultAgentID = app.config.GuildConfig.Agents[0].ID
+								}
+							}
+
+							if defaultAgentID == "" || defaultAgentID == "all" {
+								cmd = app.agentRouter.BroadcastToAll(input)
+							} else {
+								cmd = app.agentRouter.SendToAgent(defaultAgentID, input)
+							}
 						}
 
 						// Execute the command and handle the result
@@ -962,30 +1189,38 @@ func (app *App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View renders the application
-func (app *App) View() string {
+func (app *App) View() tea.View {
 	if !app.ready {
-		return "Initializing Guild Chat..."
+		view := tea.NewView("Initializing Guild Chat...")
+		view.AltScreen = app.useAltScreen
+		return view
 	}
 
 	if app.shouldQuit {
-		return "Goodbye! 🏰"
+		view := tea.NewView("Goodbye! 🏰")
+		view.AltScreen = app.useAltScreen
+		return view
 	}
 
 	if app.errorState != nil {
-		return fmt.Sprintf("Error: %v", app.errorState)
+		view := tea.NewView(fmt.Sprintf("Error: %v", app.errorState))
+		view.AltScreen = app.useAltScreen
+		return view
 	}
 
 	// Get pane views
-	outputView := app.outputPane.View()
-	inputView := app.inputPane.View()
-	statusView := app.statusPane.View()
+	outputView := viewutil.String(app.outputPane.View())
+	inputView := viewutil.String(app.inputPane.View())
+	statusView := viewutil.String(app.statusPane.View())
 
 	// Use layout manager to compose the final view
-	return app.layoutManager.Render(map[string]string{
+	view := tea.NewView(app.layoutManager.Render(map[string]string{
 		"output": outputView,
 		"input":  inputView,
 		"status": statusView,
-	})
+	}))
+	view.AltScreen = app.useAltScreen
+	return view
 }
 
 // generateWelcomeMessage creates the welcome message for new sessions
@@ -1620,6 +1855,11 @@ func (app *App) refreshAllAgentStatuses() tea.Cmd {
 				cmds = append(cmds, app.agentRouter.GetAgentStatus(agentID))
 			}
 
+			batch := tea.Batch(cmds...)
+			if batch == nil {
+				return nil
+			}
+
 			// Schedule next refresh in 10 seconds
 			time.AfterFunc(10*time.Second, func() {
 				// This would trigger the next refresh cycle in a real implementation
@@ -1627,7 +1867,7 @@ func (app *App) refreshAllAgentStatuses() tea.Cmd {
 				// message scheduling in the TUI framework
 			})
 
-			return tea.Batch(cmds...)()
+			return batch()
 		},
 	)
 }
@@ -1649,7 +1889,7 @@ func (app *App) initializeSuggestionSystem() error {
 	llmClient, err := app.getLLMClient()
 	if err != nil {
 		// Continue without suggestions if LLM client fails
-		fmt.Printf("Warning: Failed to get LLM client for suggestions: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to get LLM client for suggestions", "error", err)
 		return nil
 	}
 
@@ -1657,7 +1897,7 @@ func (app *App) initializeSuggestionSystem() error {
 	memoryManager, err := app.getMemoryManager()
 	if err != nil {
 		// Continue without suggestions if memory manager fails
-		fmt.Printf("Warning: Failed to get memory manager for suggestions: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to get memory manager for suggestions", "error", err)
 		return nil
 	}
 
@@ -1665,7 +1905,7 @@ func (app *App) initializeSuggestionSystem() error {
 	toolRegistry, err := app.getToolRegistry()
 	if err != nil {
 		// Continue without suggestions if tool registry fails
-		fmt.Printf("Warning: Failed to get tool registry for suggestions: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to get tool registry for suggestions", "error", err)
 		return nil
 	}
 
@@ -1673,7 +1913,7 @@ func (app *App) initializeSuggestionSystem() error {
 	commissionManager, err := app.getCommissionManager()
 	if err != nil {
 		// Continue without suggestions if commission manager fails
-		fmt.Printf("Warning: Failed to get commission manager for suggestions: %v\n", err)
+		observability.GetLogger(app.ctx).Warn("Failed to get commission manager for suggestions", "error", err)
 		return nil
 	}
 
@@ -1850,14 +2090,18 @@ func (app *App) addSystemMessage(message string) {
 			Timestamp: time.Now(),
 			Metadata:  map[string]string{"source": "daemon"},
 		}
-		app.messages = append(app.messages, systemMsg)
+		if app.stateManager != nil {
+			app.addMessageWithState(systemMsg)
+		} else {
+			app.messages = append(app.messages, systemMsg)
+		}
 	}
 }
 
 // initializeDaemonConnection establishes connection to the Guild daemon
 func (app *App) initializeDaemonConnection() error {
 	// Try to connect to daemon
-	err := app.connManager.Connect(app.ctx)
+	err := app.connManager.ConnectForCampaign(app.ctx, app.config.CampaignID)
 	if err != nil {
 		app.connectionStatus = false
 		app.updateConnectionStatus()
@@ -1929,7 +2173,10 @@ func (app *App) loadSessionFromDaemon() error {
 		Limit:      1, // Get most recent session
 	}
 
-	listResp, err := app.sessionClient.ListSessions(app.ctx, listReq)
+	rpcCtx, cancel := context.WithTimeout(app.ctx, daemonStartupRPCTimeout)
+	defer cancel()
+
+	listResp, err := app.sessionClient.ListSessions(rpcCtx, listReq)
 	if err != nil {
 		// Can't list sessions, create new one
 		return app.createNewSession()
@@ -1967,7 +2214,10 @@ func (app *App) createNewSession() error {
 		},
 	}
 
-	session, err := app.sessionClient.CreateSession(app.ctx, createReq)
+	rpcCtx, cancel := context.WithTimeout(app.ctx, daemonStartupRPCTimeout)
+	defer cancel()
+
+	session, err := app.sessionClient.CreateSession(rpcCtx, createReq)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to create new session").
 			WithComponent("chat.app").
@@ -1984,34 +2234,29 @@ func (app *App) loadMessagesFromSession(sessionID string) error {
 	// Get messages from last 24 hours
 	since := timestamppb.New(time.Now().Add(-24 * time.Hour))
 
-	streamReq := &pb.StreamMessagesRequest{
-		SessionId: sessionID,
-		Since:     since,
-	}
+	rpcCtx, cancel := context.WithTimeout(app.ctx, daemonStartupRPCTimeout)
+	defer cancel()
 
-	stream, err := app.sessionClient.StreamMessages(app.ctx, streamReq)
+	resp, err := app.sessionClient.GetMessagesAfter(rpcCtx, &pb.GetMessagesAfterRequest{
+		SessionId: sessionID,
+		After:     since,
+	})
 	if err != nil {
-		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to stream messages").
+		return gerror.Wrap(err, gerror.ErrCodeConnection, "failed to load messages").
 			WithComponent("chat.app").
 			WithOperation("loadMessagesFromSession").
 			WithDetails("session_id", sessionID)
 	}
 
 	var messageCount int
-	for {
-		msg, err := stream.Recv()
-		if err != nil {
-			if err.Error() == "EOF" {
-				break
-			}
-			return gerror.Wrap(err, gerror.ErrCodeConnection, "stream receive error").
-				WithComponent("chat.app").
-				WithOperation("loadMessagesFromSession")
-		}
-
+	for _, msg := range resp.Messages {
 		// Convert protobuf message to internal format
 		chatMsg := app.convertProtoMessage(msg)
-		app.messages = append(app.messages, chatMsg)
+		if app.stateManager != nil {
+			app.addMessageWithState(chatMsg)
+		} else {
+			app.messages = append(app.messages, chatMsg)
+		}
 		messageCount++
 	}
 
@@ -2076,14 +2321,18 @@ func (app *App) enableDirectMode() {
 
 // initializeDirectMode sets up direct orchestrator for when daemon is unavailable
 func (app *App) initializeDirectMode() error {
-	// Create mock/direct gRPC clients for local operation
-	// This would integrate with the existing orchestrator package
-	// For now, we'll create a simple local implementation
+	client, err := newLocalGuildClient(app.config.GuildConfig)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize local guild client").
+			WithComponent("chat.app").
+			WithOperation("initializeDirectMode")
+	}
 
-	// NOTE: This is where we'd integrate with pkg/orchestrator for direct mode
-	// The orchestrator package already has local execution capabilities
+	app.guildClient = client
+	app.chatClient = nil
+	app.sessionClient = nil
+	app.promptsClient = nil
 
-	app.addSystemMessage("Direct mode initialized - commands will run locally")
 	return nil
 }
 
@@ -2103,7 +2352,11 @@ func (app *App) sendMessageDirect(ctx context.Context, content string) error {
 		Timestamp: time.Now(),
 		Metadata:  map[string]string{"mode": "direct"},
 	}
-	app.messages = append(app.messages, userMsg)
+	if app.stateManager != nil {
+		app.addMessageWithState(userMsg)
+	} else {
+		app.messages = append(app.messages, userMsg)
+	}
 
 	// Process message locally using orchestrator
 	// This would integrate with the existing orchestrator package
@@ -2117,7 +2370,11 @@ func (app *App) sendMessageDirect(ctx context.Context, content string) error {
 		Timestamp: time.Now(),
 		Metadata:  map[string]string{"mode": "direct"},
 	}
-	app.messages = append(app.messages, responseMsg)
+	if app.stateManager != nil {
+		app.addMessageWithState(responseMsg)
+	} else {
+		app.messages = append(app.messages, responseMsg)
+	}
 
 	return nil
 }
@@ -2215,7 +2472,11 @@ func (app *App) handleChatResponses(stream pb.ChatService_ChatClient) {
 		case *pb.ChatResponse_Message:
 			// Add message to chat
 			msg := app.convertChatMessage(r.Message)
-			app.messages = append(app.messages, msg)
+			if app.stateManager != nil {
+				app.addMessageWithState(msg)
+			} else {
+				app.messages = append(app.messages, msg)
+			}
 		case *pb.ChatResponse_Thinking:
 			// Show agent thinking indicator
 			app.addSystemMessage(fmt.Sprintf("%s is %s", r.Thinking.AgentName, r.Thinking.State.String()))
@@ -2586,4 +2847,331 @@ func (app *App) convertPkgSessionMessage(msg *pkgsession.Message) common.ChatMes
 		Timestamp: msg.Timestamp,
 		Metadata:  metadata,
 	}
+}
+
+// Sprint 4: Enhanced State Management
+
+// AppState represents a snapshot of the application state
+type AppState struct {
+	ID          string                           `json:"id"`
+	Timestamp   time.Time                        `json:"timestamp"`
+	Messages    []common.ChatMessage             `json:"messages"`
+	ActiveTools map[string]*common.ToolExecution `json:"active_tools"`
+	ViewMode    common.ViewMode                  `json:"view_mode"`
+	SessionID   string                           `json:"session_id"`
+	Context     map[string]interface{}           `json:"context"`
+}
+
+// StateListener is notified of state changes
+type StateListener interface {
+	OnStateChange(oldState, newState *AppState)
+}
+
+// StateManager manages application state with history and listeners
+type StateManager struct {
+	ctx            context.Context
+	currentState   *AppState
+	history        []AppState
+	maxHistory     int
+	listeners      []StateListener
+	mu             sync.RWMutex
+	persistenceKey string
+}
+
+// NewStateManager creates a new state manager
+func NewStateManager(ctx context.Context) *StateManager {
+	return &StateManager{
+		ctx:        ctx,
+		maxHistory: 100, // Keep last 100 states
+		history:    make([]AppState, 0, 100),
+		listeners:  make([]StateListener, 0),
+		currentState: &AppState{
+			ID:          fmt.Sprintf("state-%d", time.Now().UnixNano()),
+			Timestamp:   time.Now(),
+			Messages:    make([]common.ChatMessage, 0),
+			ActiveTools: make(map[string]*common.ToolExecution),
+			ViewMode:    common.ViewModeNormal,
+			Context:     make(map[string]interface{}),
+		},
+	}
+}
+
+// GetCurrentState returns a copy of the current state
+func (sm *StateManager) GetCurrentState() *AppState {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+
+	return sm.copyCurrentStateLocked()
+}
+
+func (sm *StateManager) copyCurrentStateLocked() *AppState {
+	// Deep copy the state
+	stateCopy := *sm.currentState
+	stateCopy.Messages = make([]common.ChatMessage, len(sm.currentState.Messages))
+	copy(stateCopy.Messages, sm.currentState.Messages)
+
+	stateCopy.ActiveTools = make(map[string]*common.ToolExecution)
+	for k, v := range sm.currentState.ActiveTools {
+		toolCopy := *v
+		stateCopy.ActiveTools[k] = &toolCopy
+	}
+
+	stateCopy.Context = make(map[string]interface{})
+	for k, v := range sm.currentState.Context {
+		stateCopy.Context[k] = v
+	}
+
+	return &stateCopy
+}
+
+// UpdateState updates the current state and notifies listeners
+func (sm *StateManager) UpdateState(updater func(*AppState) *AppState) error {
+	if err := sm.ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("state-manager").
+			WithOperation("UpdateState")
+	}
+
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+
+	// Create a copy of current state
+	oldState := sm.copyCurrentStateLocked()
+
+	// Apply the update
+	newState := updater(oldState)
+	if newState == nil {
+		return gerror.New(gerror.ErrCodeInvalidInput, "updater returned nil state", nil).
+			WithComponent("state-manager").
+			WithOperation("UpdateState")
+	}
+
+	// Set new state ID and timestamp
+	newState.ID = fmt.Sprintf("state-%d", time.Now().UnixNano())
+	newState.Timestamp = time.Now()
+
+	// Update current state
+	sm.currentState = newState
+
+	// Add to history
+	sm.history = append(sm.history, *newState)
+	if len(sm.history) > sm.maxHistory {
+		sm.history = sm.history[len(sm.history)-sm.maxHistory:]
+	}
+
+	// Notify listeners
+	for _, listener := range sm.listeners {
+		go listener.OnStateChange(oldState, newState)
+	}
+
+	return nil
+}
+
+// AddListener adds a state change listener
+func (sm *StateManager) AddListener(listener StateListener) {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+	sm.listeners = append(sm.listeners, listener)
+}
+
+// RemoveListener removes a state change listener
+func (sm *StateManager) RemoveListener(listener StateListener) {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+
+	for i, l := range sm.listeners {
+		if l == listener {
+			sm.listeners = append(sm.listeners[:i], sm.listeners[i+1:]...)
+			break
+		}
+	}
+}
+
+// GetHistory returns the state history
+func (sm *StateManager) GetHistory() []AppState {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+
+	historyCopy := make([]AppState, len(sm.history))
+	copy(historyCopy, sm.history)
+	return historyCopy
+}
+
+// Restore restores a previous state by ID
+func (sm *StateManager) Restore(stateID string) error {
+	sm.mu.Lock()
+	defer sm.mu.Unlock()
+
+	for i := len(sm.history) - 1; i >= 0; i-- {
+		if sm.history[i].ID == stateID {
+			sm.currentState = &sm.history[i]
+			return nil
+		}
+	}
+
+	return gerror.New(gerror.ErrCodeNotFound, "state not found", nil).
+		WithComponent("state-manager").
+		WithOperation("Restore").
+		WithDetails("state_id", stateID)
+}
+
+// Enhanced app methods for state management
+
+// initializeStateManager initializes the enhanced state management
+func (app *App) initializeStateManager() error {
+	app.stateManager = NewStateManager(app.ctx)
+
+	// Add app as a listener to its own state changes
+	app.stateManager.AddListener(app)
+
+	// Initialize state from current app data
+	return app.stateManager.UpdateState(func(state *AppState) *AppState {
+		state.Messages = app.messages
+		state.ActiveTools = app.activeTools
+		state.ViewMode = app.currentView
+		state.SessionID = app.config.SessionID
+		return state
+	})
+}
+
+// OnStateChange implements StateListener interface
+func (app *App) OnStateChange(oldState, newState *AppState) {
+	// Auto-save session on state change
+	if app.sessionManager != nil && app.currentSession != nil {
+		go func() {
+			if err := app.sessionManager.SaveSession(app.currentSession); err != nil {
+				// Log error but don't fail
+				if app.statusPane != nil {
+					app.statusPane.UpdateStatus("Failed to auto-save session", "warning")
+				}
+			}
+		}()
+	}
+
+	// Update UI components if needed
+	if oldState.ViewMode != newState.ViewMode {
+		// View mode changes are handled by the panes themselves
+		// during the regular Update cycle
+	}
+
+	// Persist state for recovery
+	if app.recoveryManager != nil {
+		go func() {
+			if err := app.persistStateForRecovery(newState); err != nil {
+				// Log error but don't fail
+				observability.GetLogger(app.ctx).Warn("Failed to persist state for recovery", "error", err)
+			}
+		}()
+	}
+}
+
+// persistStateForRecovery saves state for crash recovery
+func (app *App) persistStateForRecovery(state *AppState) error {
+	if app.recoveryManager == nil || app.currentSession == nil {
+		return nil
+	}
+
+	// Get the active session from the multi-session manager
+	pkgSession, err := app.multiSessionMgr.GetActiveSession()
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to get active session for checkpoint").
+			WithComponent("chat.app").
+			WithOperation("persistStateForRecovery")
+	}
+
+	// Create checkpoint using the current session
+	return app.recoveryManager.CreateCheckpoint(app.ctx, pkgSession)
+}
+
+// updateAppState updates the app state through the state manager
+func (app *App) updateAppState(updater func(*AppState) *AppState) error {
+	if app.stateManager == nil {
+		return gerror.New(gerror.ErrCodeNotFound, "state manager not initialized", nil).
+			WithComponent("chat.app").
+			WithOperation("updateAppState")
+	}
+
+	return app.stateManager.UpdateState(updater)
+}
+
+// addMessageWithState adds a message and updates state atomically
+func (app *App) addMessageWithState(msg common.ChatMessage) error {
+	// Update local state
+	app.messages = append(app.messages, msg)
+
+	// Update managed state
+	return app.updateAppState(func(state *AppState) *AppState {
+		state.Messages = append(state.Messages, msg)
+		return state
+	})
+}
+
+// updateToolStateWithState updates tool execution state atomically
+func (app *App) updateToolStateWithState(toolID string, execution *common.ToolExecution) error {
+	// Update local state
+	if execution == nil {
+		delete(app.activeTools, toolID)
+	} else {
+		app.activeTools[toolID] = execution
+	}
+
+	// Update managed state
+	return app.updateAppState(func(state *AppState) *AppState {
+		if execution == nil {
+			delete(state.ActiveTools, toolID)
+		} else {
+			state.ActiveTools[toolID] = execution
+		}
+		return state
+	})
+}
+
+// setViewModeWithState sets view mode and updates state atomically
+func (app *App) setViewModeWithState(mode common.ViewMode) error {
+	// Update local state
+	app.currentView = mode
+
+	// Update managed state
+	return app.updateAppState(func(state *AppState) *AppState {
+		state.ViewMode = mode
+		return state
+	})
+}
+
+// getStateHistory returns the application state history
+func (app *App) getStateHistory() []AppState {
+	if app.stateManager == nil {
+		return []AppState{}
+	}
+	return app.stateManager.GetHistory()
+}
+
+// restoreState restores a previous application state
+func (app *App) restoreState(stateID string) error {
+	if app.stateManager == nil {
+		return gerror.New(gerror.ErrCodeNotFound, "state manager not initialized", nil).
+			WithComponent("chat.app").
+			WithOperation("restoreState")
+	}
+
+	if err := app.stateManager.Restore(stateID); err != nil {
+		return err
+	}
+
+	// Update local state from restored state
+	restoredState := app.stateManager.GetCurrentState()
+	app.messages = restoredState.Messages
+	app.activeTools = restoredState.ActiveTools
+	app.currentView = restoredState.ViewMode
+
+	// Update UI by clearing and re-adding messages
+	if app.outputPane != nil {
+		app.outputPane.Clear()
+		for _, msg := range app.messages {
+			app.outputPane.AddMessage(msg)
+		}
+	}
+	// View mode changes will be handled in the next Update cycle
+
+	return nil
 }

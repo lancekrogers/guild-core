@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package suggestions_test
 
 import (
@@ -11,15 +14,15 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/completion"
-	"github.com/lancekrogers/guild/internal/ui/chat/services"
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/suggestions"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/completion"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/services"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 )
 
 // TestEndToEndSuggestionFlow tests the complete suggestion flow from user input to suggestion display

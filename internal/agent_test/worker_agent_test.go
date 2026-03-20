@@ -10,11 +10,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/agents/core/mocks"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/tools"
-	toolmocks "github.com/lancekrogers/guild/tools/mocks"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/mocks"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/tools"
+	toolmocks "github.com/lancekrogers/guild-core/tools/mocks"
 )
 
 // TestWorkerAgentWithContext tests WorkerAgent with context handling

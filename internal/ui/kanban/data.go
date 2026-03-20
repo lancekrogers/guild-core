@@ -8,8 +8,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // Object pools for frequently allocated structs to reduce GC pressure

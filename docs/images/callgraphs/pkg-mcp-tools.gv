@@ -1,0 +1,73 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        fontsize="18";
+bgcolor="#e6ecfa";
+label="tools";
+labelloc="t";
+labeljust="c";
+        
+        "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).GetTool" [ tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).GetTool | defined in registry.go:148\nat registry.go:157: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat registry.go:154: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat registry.go:155: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat registry.go:156: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" fillcolor="lightblue" label="(*MemoryRegistry).GetTool" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).RegisterTool" [ fillcolor="lightblue" label="(*MemoryRegistry).RegisterTool" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).RegisterTool | defined in registry.go:87\nat registry.go:89: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat registry.go:99: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat registry.go:102: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat registry.go:91: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat registry.go:101: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat registry.go:90: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat registry.go:100: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).Execute" [ fillcolor="lightblue" label="(*BaseTool).Execute" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).Execute | defined in registry.go:323\nat registry.go:325: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat registry.go:335: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat registry.go:328: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat registry.go:338: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat registry.go:339: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat registry.go:326: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat registry.go:336: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat registry.go:327: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat registry.go:337: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).HealthCheck" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).HealthCheck | defined in registry.go:348\nat registry.go:353: calling [(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).Execute]" fillcolor="lightblue" label="(*BaseTool).HealthCheck" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).DeregisterTool" [ fillcolor="lightblue" label="(*MemoryRegistry).DeregisterTool" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).DeregisterTool | defined in registry.go:118\nat registry.go:124: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat registry.go:125: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat registry.go:127: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat registry.go:137: calling [(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).removeFromSlice]\nat registry.go:126: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).removeFromSlice" [ tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).removeFromSlice | defined in registry.go:260" fillcolor="lightblue" label="(*MemoryRegistry).removeFromSlice" penwidth="0.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).UpdateToolStatus" [ tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).UpdateToolStatus | defined in registry.go:244\nat registry.go:252: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat registry.go:249: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat registry.go:251: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat registry.go:250: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" fillcolor="lightblue" label="(*MemoryRegistry).UpdateToolStatus" penwidth="1.5" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        fontsize="16";
+style="filled";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
+rank="sink";
+label="gerror";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ fillcolor="moccasin" label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).UpdateToolStatus" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at registry.go:252: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).GetTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at registry.go:157: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).RegisterTool" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at registry.go:89: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat registry.go:99: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).RegisterTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at registry.go:102: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).Execute" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at registry.go:325: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat registry.go:335: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).Execute" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at registry.go:328: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat registry.go:338: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat registry.go:339: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).HealthCheck" -> "(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).Execute" [ tooltip="at registry.go:353: calling [(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).Execute]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).DeregisterTool" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at registry.go:124: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).UpdateToolStatus" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at registry.go:249: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).GetTool" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at registry.go:154: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).GetTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ tooltip="at registry.go:155: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).DeregisterTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at registry.go:125: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).DeregisterTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at registry.go:127: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).DeregisterTool" -> "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).removeFromSlice" [ tooltip="at registry.go:137: calling [(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).removeFromSlice]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).UpdateToolStatus" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at registry.go:251: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).GetTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at registry.go:156: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).RegisterTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at registry.go:91: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat registry.go:101: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).DeregisterTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at registry.go:126: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).RegisterTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at registry.go:90: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat registry.go:100: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).Execute" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at registry.go:326: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat registry.go:336: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.BaseTool).Execute" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ tooltip="at registry.go:327: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat registry.go:337: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/tools.MemoryRegistry).UpdateToolStatus" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at registry.go:250: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+}

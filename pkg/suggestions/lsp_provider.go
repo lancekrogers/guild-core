@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/lsp"
+	"github.com/lancekrogers/guild-core/pkg/lsp"
 )
 
 // LSPSuggestionProvider provides code intelligence suggestions using Language Server Protocol

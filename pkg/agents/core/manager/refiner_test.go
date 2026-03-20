@@ -12,8 +12,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/agents/core/manager"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/manager"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 // Mock implementations for testing

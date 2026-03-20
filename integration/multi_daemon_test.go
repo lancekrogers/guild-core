@@ -20,11 +20,11 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	"github.com/lancekrogers/guild/pkg/client"
-	daemonPkg "github.com/lancekrogers/guild/pkg/daemon"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/paths"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	"github.com/lancekrogers/guild-core/pkg/client"
+	daemonPkg "github.com/lancekrogers/guild-core/pkg/daemon"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/paths"
 )
 
 // TestMultiDaemonLifecycle tests the full lifecycle of multiple daemon instances
@@ -370,7 +370,7 @@ func TestSocketCleanup(t *testing.T) {
 
 			// Create directory if needed
 			socketDir := filepath.Dir(socketPath)
-			os.MkdirAll(socketDir, 0755)
+			os.MkdirAll(socketDir, 0o755)
 
 			// Create empty file to simulate stale socket
 			file, err := os.Create(socketPath)

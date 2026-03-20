@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator/interfaces"
 )
 
 // TaskStatus represents the current state of a task

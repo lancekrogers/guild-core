@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/internal/ui"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/internal/ui"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 func TestNewThemeManager(t *testing.T) {
@@ -292,7 +292,7 @@ func TestThemeManager_LoadThemeFromFile(t *testing.T) {
 					"updated_at": "2025-01-01T00:00:00Z"
 				}`
 
-				err := os.WriteFile(themeFile, []byte(themeJSON), 0644)
+				err := os.WriteFile(themeFile, []byte(themeJSON), 0o644)
 				if err != nil {
 					t.Fatalf("failed to create test theme file: %v", err)
 				}
@@ -315,7 +315,7 @@ func TestThemeManager_LoadThemeFromFile(t *testing.T) {
 				tmpDir := t.TempDir()
 				themeFile := filepath.Join(tmpDir, "invalid-theme.json")
 
-				err := os.WriteFile(themeFile, []byte("invalid json"), 0644)
+				err := os.WriteFile(themeFile, []byte("invalid json"), 0o644)
 				if err != nil {
 					t.Fatalf("failed to create invalid theme file: %v", err)
 				}

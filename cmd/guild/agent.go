@@ -13,15 +13,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
-var (
-	agentNoDaemon bool // Don't auto-start the Guild server
-)
+var agentNoDaemon bool // Don't auto-start the Guild server
 
 // agentListCmd represents the agent list command
 var agentListCmd = &cobra.Command{

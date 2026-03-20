@@ -14,8 +14,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/lsp"
-	lsptools "github.com/lancekrogers/guild/pkg/lsp/tools"
+	"github.com/lancekrogers/guild-core/pkg/lsp"
+	lsptools "github.com/lancekrogers/guild-core/pkg/lsp/tools"
 )
 
 func TestLSPToolsIntegration(t *testing.T) {
@@ -69,7 +69,7 @@ func (c *Calculator) Format(value float64) string {
 	return fmt.Sprintf(format, value)
 }
 `
-	err = os.WriteFile(testFile, []byte(testContent), 0644)
+	err = os.WriteFile(testFile, []byte(testContent), 0o644)
 	require.NoError(t, err)
 
 	// Create go.mod
@@ -77,7 +77,7 @@ func (c *Calculator) Format(value float64) string {
 
 go 1.21
 `
-	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goModContent), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goModContent), 0o644)
 	require.NoError(t, err)
 
 	// Create LSP manager

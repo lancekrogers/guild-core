@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/session"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/session"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // sqliteSessionRepository implements SessionRepository by adapting the existing session.SessionStore

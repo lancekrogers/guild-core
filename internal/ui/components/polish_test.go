@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/common/utils"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/utils"
 	"go.uber.org/zap"
 )
 

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 	"github.com/stretchr/testify/assert"
 )
 

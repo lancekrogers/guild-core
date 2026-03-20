@@ -8,13 +8,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	jsonparser "github.com/lancekrogers/guild/pkg/tools/parser/json"
-	xmlparser "github.com/lancekrogers/guild/pkg/tools/parser/xml"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	jsonparser "github.com/lancekrogers/guild-core/pkg/tools/parser/json"
+	xmlparser "github.com/lancekrogers/guild-core/pkg/tools/parser/xml"
 )
 
 // RobustParser implements ResponseParser with proper format detection and validation
@@ -142,7 +144,7 @@ func (p *RobustParser) ExtractWithContext(ctx context.Context, response string) 
 
 	if !exists {
 		p.parseFailures++
-		return nil, gerror.New(gerror.ErrCodeNotFound, "no parser for format", nil).
+		return []ToolCall{}, gerror.New(gerror.ErrCodeNotFound, "no parser for format", nil).
 			WithComponent("parser").
 			WithOperation("ExtractToolCalls").
 			WithDetails("format", string(format))
@@ -207,10 +209,26 @@ func (p *RobustParser) normalizeInput(input []byte) []byte {
 	// Remove BOM if present
 	input = bytes.TrimPrefix(input, []byte{0xEF, 0xBB, 0xBF})
 
+	// Handle invalid UTF-8 by replacing invalid sequences with spaces
+	// This ensures the parser can still process the valid parts
+	if !utf8.Valid(input) {
+		cleaned := make([]byte, 0, len(input))
+		for i := 0; i < len(input); {
+			r, size := utf8.DecodeRune(input[i:])
+			if r == utf8.RuneError && size == 1 {
+				// Invalid UTF-8 sequence, replace with space
+				cleaned = append(cleaned, ' ')
+				i++
+			} else {
+				cleaned = append(cleaned, input[i:i+size]...)
+				i += size
+			}
+		}
+		input = cleaned
+	}
+
 	// Trim excessive whitespace
 	input = bytes.TrimSpace(input)
-
-	// Handle common encoding issues would go here
 
 	return input
 }
@@ -233,6 +251,11 @@ func (p *RobustParser) postProcess(calls []ToolCall) []ToolCall {
 		// Validate function name
 		if call.Function.Name == "" {
 			continue // Skip invalid calls
+		}
+
+		// Sanitize function name - remove potential XSS vectors
+		if strings.Contains(call.Function.Name, "<script>") || strings.Contains(call.Function.Name, "</script>") {
+			continue // Skip calls with script tags
 		}
 
 		// Ensure arguments is valid JSON

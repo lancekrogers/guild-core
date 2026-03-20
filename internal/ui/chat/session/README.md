@@ -19,20 +19,25 @@ The package follows a layered architecture:
 ## Core Components
 
 ### SessionStore Interface
+
 Defines the contract for persistent storage operations:
+
 - Session CRUD operations
 - Message storage and retrieval
 - Bookmark management
 - Search functionality
 
 ### SessionManager Interface
+
 Provides high-level session operations:
+
 - Session lifecycle management
 - Message streaming
 - Context management
 - Export/Import functionality
 
 ### Data Models
+
 - **Session**: Represents a chat conversation
 - **Message**: Individual messages with role, content, and tool calls
 - **Bookmark**: Marked messages for easy retrieval
@@ -227,6 +232,7 @@ go test -run Integration ./pkg/chat/session/...
 ## Error Handling
 
 All errors use the gerror package with appropriate error codes:
+
 - `ErrCodeNotFound`: Session/message/bookmark not found
 - `ErrCodeStorage`: Database operation failed
 - `ErrCodeInternal`: Internal errors (e.g., JSON marshaling)

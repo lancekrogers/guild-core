@@ -4,7 +4,7 @@
 package events
 
 import (
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Event validation errors

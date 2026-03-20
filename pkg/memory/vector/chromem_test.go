@@ -162,5 +162,4 @@ func TestChromemStore(t *testing.T) {
 		assert.Equal(t, "exact match", results[0].Text)
 		assert.Equal(t, "close match", results[1].Text)
 	})
-
 }

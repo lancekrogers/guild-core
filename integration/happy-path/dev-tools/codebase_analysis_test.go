@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package dev_tools
 
 import (
@@ -212,7 +215,7 @@ func TestCodebaseAnalysisPerformance_HappyPath(t *testing.T) {
 
 			// PHASE 5: Memory Usage Validation
 			memoryUsage := framework.MeasureMemoryUsage()
-			assert.LessOrEqual(t, memoryUsage.CurrentBytes, scenario.expectedMemoryUsage,
+			assert.LessOrEqual(t, int64(memoryUsage.CurrentBytes), scenario.expectedMemoryUsage,
 				"Memory usage exceeded target: %d > %d bytes", memoryUsage.CurrentBytes, scenario.expectedMemoryUsage)
 
 			// Check for memory leaks

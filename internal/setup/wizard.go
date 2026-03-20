@@ -10,8 +10,8 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Config holds the setup wizard configuration
@@ -352,7 +352,7 @@ func saveCampaignStructure(ctx context.Context, projectPath string, guildConfig 
 		filepath.Join(projectPath, ".campaign", "agents"),
 	}
 	for _, dir := range dirs {
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create directories").
 				WithComponent("setup").
 				WithOperation("saveCampaignStructure").
@@ -376,7 +376,7 @@ func saveCampaignStructure(ctx context.Context, projectPath string, guildConfig 
 			WithOperation("saveCampaignStructure")
 	}
 	campaignPath := filepath.Join(projectPath, ".campaign", "campaign.yaml")
-	if err := os.WriteFile(campaignPath, campaignYAML, 0644); err != nil {
+	if err := os.WriteFile(campaignPath, campaignYAML, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign.yaml").
 			WithComponent("setup").
 			WithOperation("saveCampaignStructure").
@@ -407,7 +407,7 @@ func saveCampaignStructure(ctx context.Context, projectPath string, guildConfig 
 			WithOperation("saveCampaignStructure")
 	}
 	guildPath := filepath.Join(projectPath, ".campaign", "guilds", guildConfig.Name+".yaml")
-	if err := os.WriteFile(guildPath, guildYAML, 0644); err != nil {
+	if err := os.WriteFile(guildPath, guildYAML, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild.yaml").
 			WithComponent("setup").
 			WithOperation("saveCampaignStructure").
@@ -424,7 +424,7 @@ func saveCampaignStructure(ctx context.Context, projectPath string, guildConfig 
 				WithDetails("agent", agent.ID)
 		}
 		agentPath := filepath.Join(projectPath, ".campaign", "agents", agent.ID+".yaml")
-		if err := os.WriteFile(agentPath, agentYAML, 0644); err != nil {
+		if err := os.WriteFile(agentPath, agentYAML, 0o644); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent.yaml").
 				WithComponent("setup").
 				WithOperation("saveCampaignStructure").

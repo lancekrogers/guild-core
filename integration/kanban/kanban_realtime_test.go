@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package kanban
 
 import (
@@ -15,22 +18,23 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	kanbanui "github.com/lancekrogers/guild/internal/ui/kanban"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/project/local"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	kanbanui "github.com/lancekrogers/guild-core/internal/ui/kanban"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/project/local"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // kanbanTestEnvironment provides integrated testing for kanban UI and event streaming
 type kanbanTestEnvironment struct {
 	ctx               context.Context
 	cancel            context.CancelFunc
-	registry          registry.ComponentRegistry
+	registry          kanban.ComponentRegistry
 	kanbanManager     *kanban.Manager
 	board             *kanban.Board
 	conn              *grpc.ClientConn
@@ -551,53 +555,155 @@ func (env *kanbanTestEnvironment) cleanup(ctx context.Context) {
 	env.logger.InfoContext(ctx, "Kanban test environment cleanup complete")
 }
 
-// testKanbanComponentRegistry implements ComponentRegistry for testing
+// testKanbanComponentRegistry implements kanban.ComponentRegistry for testing
 type testKanbanComponentRegistry struct {
 	componentReg registry.ComponentRegistry
 }
 
+// Storage implements kanban.ComponentRegistry
 func (r *testKanbanComponentRegistry) Storage() kanban.StorageRegistry {
-	return r.componentReg.Storage()
+	return &testStorageRegistry{storageReg: r.componentReg.Storage()}
 }
 
-func (r *testKanbanComponentRegistry) Agents() registry.AgentRegistry {
-	return r.componentReg.Agents()
+// testStorageRegistry implements kanban.StorageRegistry for testing
+type testStorageRegistry struct {
+	storageReg registry.StorageRegistry
 }
 
-func (r *testKanbanComponentRegistry) Tools() registry.ToolRegistry {
-	return r.componentReg.Tools()
+// GetKanbanCampaignRepository implements kanban.StorageRegistry
+func (r *testStorageRegistry) GetKanbanCampaignRepository() kanban.CampaignRepository {
+	return &testCampaignRepository{}
 }
 
-func (r *testKanbanComponentRegistry) Providers() registry.ProviderRegistry {
-	return r.componentReg.Providers()
+// GetKanbanCommissionRepository implements kanban.StorageRegistry
+func (r *testStorageRegistry) GetKanbanCommissionRepository() kanban.CommissionRepository {
+	return &testCommissionRepository{}
 }
 
-func (r *testKanbanComponentRegistry) Memory() registry.MemoryRegistry {
-	return r.componentReg.Memory()
+// GetBoardRepository implements kanban.StorageRegistry
+func (r *testStorageRegistry) GetBoardRepository() kanban.BoardRepository {
+	return &testBoardRepository{storageReg: r.storageReg}
 }
 
-func (r *testKanbanComponentRegistry) Project() registry.ProjectRegistry {
-	return r.componentReg.Project()
+// GetKanbanTaskRepository implements kanban.StorageRegistry
+func (r *testStorageRegistry) GetKanbanTaskRepository() kanban.TaskRepository {
+	return &testTaskRepository{storageReg: r.storageReg}
 }
 
-func (r *testKanbanComponentRegistry) Prompts() *registry.PromptRegistry {
-	return r.componentReg.Prompts()
+// GetMemoryStore implements kanban.StorageRegistry
+func (r *testStorageRegistry) GetMemoryStore() kanban.MemoryStore {
+	// The storage registry returns interface{}, need to cast to memory.Store
+	memStore := r.storageReg.GetMemoryStore()
+	if store, ok := memStore.(memory.Store); ok {
+		return &testMemoryStore{store: store}
+	}
+	// Return a minimal implementation if cast fails
+	return &testMemoryStore{store: nil}
 }
 
-func (r *testKanbanComponentRegistry) GetPromptManager() (registry.LayeredPromptManager, error) {
-	return r.componentReg.GetPromptManager()
+// testCampaignRepository implements kanban.CampaignRepository for testing
+type testCampaignRepository struct{}
+
+func (r *testCampaignRepository) CreateCampaign(ctx context.Context, campaign interface{}) error {
+	return nil // No-op for testing
 }
 
-func (r *testKanbanComponentRegistry) Orchestrator() interface{} {
-	return r.componentReg.Orchestrator()
+// testCommissionRepository implements kanban.CommissionRepository for testing
+type testCommissionRepository struct{}
+
+func (r *testCommissionRepository) CreateCommission(ctx context.Context, commission interface{}) error {
+	return nil // No-op for testing
 }
 
-func (r *testKanbanComponentRegistry) Initialize(ctx context.Context, config interface{}) error {
-	return r.componentReg.Initialize(ctx, config)
+func (r *testCommissionRepository) GetCommission(ctx context.Context, id string) (interface{}, error) {
+	return nil, gerror.New(gerror.ErrCodeNotFound, "commission not found", nil)
 }
 
-func (r *testKanbanComponentRegistry) Shutdown(ctx context.Context) error {
-	return r.componentReg.Shutdown(ctx)
+// testBoardRepository implements kanban.BoardRepository for testing
+type testBoardRepository struct {
+	storageReg registry.StorageRegistry
+}
+
+func (r *testBoardRepository) CreateBoard(ctx context.Context, board interface{}) error {
+	// For kanban integration, delegate to the kanban board repository
+	return r.storageReg.GetBoardRepository().CreateBoard(ctx, board)
+}
+
+func (r *testBoardRepository) GetBoard(ctx context.Context, id string) (interface{}, error) {
+	return r.storageReg.GetBoardRepository().GetBoard(ctx, id)
+}
+
+func (r *testBoardRepository) UpdateBoard(ctx context.Context, board interface{}) error {
+	// For kanban integration, delegate to the kanban board repository
+	return r.storageReg.GetBoardRepository().UpdateBoard(ctx, board)
+}
+
+func (r *testBoardRepository) DeleteBoard(ctx context.Context, id string) error {
+	return r.storageReg.GetBoardRepository().DeleteBoard(ctx, id)
+}
+
+func (r *testBoardRepository) ListBoards(ctx context.Context) ([]interface{}, error) {
+	return r.storageReg.GetBoardRepository().ListBoards(ctx)
+}
+
+// testTaskRepository implements kanban.TaskRepository for testing
+type testTaskRepository struct {
+	storageReg registry.StorageRegistry
+}
+
+func (r *testTaskRepository) CreateTask(ctx context.Context, task interface{}) error {
+	// For kanban integration, delegate to the kanban task repository
+	return r.storageReg.GetKanbanTaskRepository().CreateTask(ctx, task)
+}
+
+func (r *testTaskRepository) UpdateTask(ctx context.Context, task interface{}) error {
+	// For kanban integration, delegate to the kanban task repository
+	return r.storageReg.GetKanbanTaskRepository().UpdateTask(ctx, task)
+}
+
+func (r *testTaskRepository) DeleteTask(ctx context.Context, id string) error {
+	return r.storageReg.GetKanbanTaskRepository().DeleteTask(ctx, id)
+}
+
+func (r *testTaskRepository) ListTasksByBoard(ctx context.Context, boardID string) ([]interface{}, error) {
+	return r.storageReg.GetKanbanTaskRepository().ListTasksByBoard(ctx, boardID)
+}
+
+func (r *testTaskRepository) RecordTaskEvent(ctx context.Context, event interface{}) error {
+	return nil // No-op for testing
+}
+
+// testMemoryStore implements kanban.MemoryStore for testing
+type testMemoryStore struct {
+	store memory.Store
+}
+
+func (r *testMemoryStore) Get(ctx context.Context, bucket, key string) ([]byte, error) {
+	if r.store == nil {
+		return nil, gerror.New(gerror.ErrCodeNotFound, "memory store not available", nil)
+	}
+	return r.store.Get(ctx, bucket, key)
+}
+
+func (r *testMemoryStore) Put(ctx context.Context, bucket, key string, value []byte) error {
+	if r.store == nil {
+		return gerror.New(gerror.ErrCodeInternal, "memory store not available", nil)
+	}
+	return r.store.Put(ctx, bucket, key, value)
+}
+
+func (r *testMemoryStore) Delete(ctx context.Context, bucket, key string) error {
+	if r.store == nil {
+		return gerror.New(gerror.ErrCodeInternal, "memory store not available", nil)
+	}
+	return r.store.Delete(ctx, bucket, key)
+}
+
+func (r *testMemoryStore) List(ctx context.Context, bucket string) ([]string, error) {
+	if r.store == nil {
+		return nil, gerror.New(gerror.ErrCodeInternal, "memory store not available", nil)
+	}
+	return r.store.List(ctx, bucket)
 }
 
 // containsIgnoreCase checks if a string contains a substring (case-insensitive)

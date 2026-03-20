@@ -5,9 +5,11 @@ The agent status tracking system provides real-time monitoring and visualization
 ## Components
 
 ### 1. StatusTracker (`tracker.go`)
+
 The core tracking component that maintains agent state and activity history.
 
 **Features:**
+
 - Agent registration and lifecycle management
 - Status updates with reason tracking
 - Activity logging with configurable history size
@@ -15,6 +17,7 @@ The core tracking component that maintains agent state and activity history.
 - Inactive agent purging
 
 **Usage:**
+
 ```go
 tracker := status.NewStatusTracker(ctx)
 
@@ -35,15 +38,18 @@ fmt.Printf("Active agents: %d/%d\n", stats.ActiveAgents, stats.TotalAgents)
 ```
 
 ### 2. AgentDisplay (`display.go`)
+
 Formatting component for rendering agent status in various formats.
 
 **Features:**
+
 - Multiple display formats (detailed, compact, summary)
 - Status-based color coding using lipgloss
 - Icon mapping for visual status indicators
 - Agent grouping by status
 
 **Usage:**
+
 ```go
 display := status.NewAgentDisplay()
 
@@ -56,15 +62,18 @@ list := display.FormatAgentList(agents)
 ```
 
 ### 3. IndicatorManager (`indicators.go`)
+
 Manages animated indicators for active agents.
 
 **Indicator Types:**
+
 - **Spinner**: Rotating animation for general activity
 - **Pulse**: Pulsing dot for thinking/processing
 - **Progress**: Progress bar for task execution
 - **Dots**: Animated dots for loading states
 
 **Usage:**
+
 ```go
 indicators := status.NewIndicatorManager()
 
@@ -79,15 +88,18 @@ frame := indicators.GetIndicator("agent-1")
 ```
 
 ### 4. StatusIntegration (`integration.go`)
+
 Connects the status tracking system to the UI and orchestrator events.
 
 **Features:**
+
 - Orchestrator event handling
 - Bubble Tea message processing
 - Automatic UI updates
 - Status pane integration
 
 **Usage:**
+
 ```go
 integration, _ := status.NewStatusIntegration(ctx, statusPane)
 
@@ -135,6 +147,7 @@ The status tracking system integrates with the chat UI through the StatusPane:
 ## Testing
 
 The package includes comprehensive tests and examples:
+
 - Unit tests for each component
 - Integration tests for UI interaction
 - Example usage in `example_test.go`

@@ -95,7 +95,7 @@ syntax = "proto3";
 
 package guild.v1;
 
-option go_package = "github.com/guild-ventures/guild-core/pkg/grpc/pb/guild/v1";
+option go_package = "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1";
 
 service GuildService {
   rpc CreateGuild(CreateGuildRequest) returns (CreateGuildResponse);

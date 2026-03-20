@@ -38,8 +38,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/orchestrator"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator"
 	"go.uber.org/zap"
 )
 
@@ -135,10 +135,12 @@ const (
 )
 
 // Callback types
-type EventHandler func(ctx context.Context, event *Event) error
-type EventFilter func(event *Event) bool
-type EventTransformer func(event *Event) (*Event, error)
-type RouteMiddleware func(ctx context.Context, event *Event, next func() error) error
+type (
+	EventHandler     func(ctx context.Context, event *Event) error
+	EventFilter      func(event *Event) bool
+	EventTransformer func(event *Event) (*Event, error)
+	RouteMiddleware  func(ctx context.Context, event *Event, next func() error) error
+)
 
 // NewEventBusIntegrator creates integration layer for all performance optimization components
 func NewEventBusIntegrator(bus orchestrator.EventBus, logger *zap.Logger) *EventBusIntegrator {

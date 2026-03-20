@@ -37,21 +37,25 @@ The glob tool provides fast file pattern matching with support for recursive dir
 #### Examples
 
 1. **Find all Go files recursively**:
+
    ```json
    {"pattern": "**/*.go"}
    ```
 
 2. **Find JavaScript files in src directory**:
+
    ```json
    {"pattern": "src/**/*.js", "path": "./my-project"}
    ```
 
 3. **Find TypeScript files excluding node_modules**:
+
    ```json
    {"pattern": "**/*.{ts,tsx}", "exclude": ["node_modules/**", ".git/**"]}
    ```
 
 4. **Find test files**:
+
    ```json
    {"pattern": "**/*_test.go", "exclude": ["**/mock_*"]}
    ```

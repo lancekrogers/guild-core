@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // SLATestFramework provides comprehensive SLA validation infrastructure

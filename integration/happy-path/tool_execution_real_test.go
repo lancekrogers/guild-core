@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package happypath
 
 import (
@@ -10,11 +13,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/tools"
-	"github.com/lancekrogers/guild/pkg/tools/executor"
-	"github.com/lancekrogers/guild/pkg/tools/parser"
-	"github.com/lancekrogers/guild/pkg/tools/parser/types"
-	"github.com/lancekrogers/guild/tools/fs"
+	"github.com/lancekrogers/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/tools/executor"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/tools/fs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -29,7 +32,7 @@ func TestRealToolExecution(t *testing.T) {
 
 		// Create a test file
 		testFile := filepath.Join(tmpDir, "test.txt")
-		err = os.WriteFile(testFile, []byte("Hello from Guild!"), 0644)
+		err = os.WriteFile(testFile, []byte("Hello from Guild!"), 0o644)
 		require.NoError(t, err)
 
 		// Setup
@@ -76,7 +79,7 @@ func TestRealToolExecution(t *testing.T) {
 		// Create test files
 		for i := 0; i < 3; i++ {
 			filename := filepath.Join(tmpDir, "test"+string(rune('0'+i))+".go")
-			err = os.WriteFile(filename, []byte("package test"), 0644)
+			err = os.WriteFile(filename, []byte("package test"), 0o644)
 			require.NoError(t, err)
 		}
 

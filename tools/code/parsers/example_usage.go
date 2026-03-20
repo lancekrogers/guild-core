@@ -12,8 +12,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/lancekrogers/guild/tools/code"
-	"github.com/lancekrogers/guild/tools/code/parsers"
+	"github.com/lancekrogers/guild-core/tools/code"
+	"github.com/lancekrogers/guild-core/tools/code/parsers"
 )
 
 func main() {

@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // SearchInterface provides an interactive search UI for corpus content
@@ -123,7 +123,7 @@ func (si *SearchInterface) GetFilters() SearchFilters {
 }
 
 // View renders the search interface
-func (si *SearchInterface) View() string {
+func (si *SearchInterface) View() tea.View {
 	_ = observability.WithOperation(si.ctx, "View")
 
 	var b strings.Builder
@@ -159,7 +159,7 @@ func (si *SearchInterface) View() string {
 	help := si.renderHelp()
 	b.WriteString(help)
 
-	return b.String()
+	return tea.NewView(b.String())
 }
 
 // Update handles input events

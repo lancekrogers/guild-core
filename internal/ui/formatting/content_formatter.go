@@ -7,11 +7,14 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode/utf8"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/internal/ui/visual"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/templates"
+	"charm.land/lipgloss/v2"
+	"github.com/charmbracelet/x/ansi"
+	"github.com/lancekrogers/guild-core/internal/ui/visual"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/templates"
 )
 
 // ContentFormatter provides high-level content formatting for different message types
@@ -435,23 +438,21 @@ func (cf *ContentFormatter) InferLanguage(code string) string {
 
 // OptimizeContentLength truncates long content with "show more" indicator
 func (cf *ContentFormatter) OptimizeContentLength(content string) string {
-	if !cf.showMoreEnabled || len(content) <= cf.maxContentLength {
+	if !cf.showMoreEnabled || cf.maxContentLength <= 0 {
 		return content
 	}
 
-	// Find a good truncation point (end of line or sentence)
-	truncateAt := cf.maxContentLength
-
-	// Try to find end of line
-	if idx := strings.LastIndex(content[:truncateAt], "\n"); idx > truncateAt*3/4 {
-		truncateAt = idx
-	} else if idx := strings.LastIndex(content[:truncateAt], ". "); idx > truncateAt*3/4 {
-		// Try to find end of sentence
-		truncateAt = idx + 1
+	plain := ansi.Strip(content)
+	if utf8.RuneCountInString(plain) <= cf.maxContentLength {
+		return content
 	}
 
-	truncated := content[:truncateAt]
-	remaining := len(content) - truncateAt
+	truncated := ansi.Truncate(content, cf.maxContentLength, "")
+	truncatedPlain := ansi.Strip(truncated)
+	remaining := utf8.RuneCountInString(plain) - utf8.RuneCountInString(truncatedPlain)
+	if remaining < 0 {
+		remaining = 0
+	}
 
 	// Add "show more" indicator
 	showMoreStyle := lipgloss.NewStyle().
@@ -511,8 +512,7 @@ func (cf *ContentFormatter) FormatMessage(messageType, content string, metadata 
 	// Apply error boundaries - never crash on malformed content
 	defer func() {
 		if r := recover(); r != nil {
-			// Log the error (in production, this would go to a logger)
-			fmt.Printf("Error formatting message: %v\n", r)
+			observability.NewLogger(nil).Error("panic formatting message", "panic", fmt.Sprint(r))
 		}
 	}()
 

@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	jsonparser "github.com/lancekrogers/guild/pkg/tools/parser/json"
-	xmlparser "github.com/lancekrogers/guild/pkg/tools/parser/xml"
+	jsonparser "github.com/lancekrogers/guild-core/pkg/tools/parser/json"
+	xmlparser "github.com/lancekrogers/guild-core/pkg/tools/parser/xml"
 )
 
 // FuzzParser_ExtractToolCalls fuzzes the main parser entry point

@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // TaskBridge converts parsed commission structures into kanban tasks
@@ -249,7 +249,7 @@ func (tb *TaskBridge) WriteRefinedFiles(refined *RefinedCommission, outputDir st
 
 		// Create directory if needed
 		dir := filepath.Dir(filePath)
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to create directory %s", dir).
 				WithComponent("manager").
 				WithOperation("WriteRefinedFiles").
@@ -257,7 +257,7 @@ func (tb *TaskBridge) WriteRefinedFiles(refined *RefinedCommission, outputDir st
 		}
 
 		// Write file
-		if err := os.WriteFile(filePath, []byte(file.Content), 0644); err != nil {
+		if err := os.WriteFile(filePath, []byte(file.Content), 0o644); err != nil {
 			return gerror.Wrapf(err, gerror.ErrCodeInternal, "failed to write file %s", filePath).
 				WithComponent("manager").
 				WithOperation("WriteRefinedFiles").

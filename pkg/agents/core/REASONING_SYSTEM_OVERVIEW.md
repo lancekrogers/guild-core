@@ -37,6 +37,7 @@ The Guild Framework Reasoning System is a production-ready, staff engineer-quali
 ## Key Features
 
 ### Production-Ready Design
+
 - **Thread Safety**: All components are thread-safe for concurrent use
 - **Context Propagation**: Proper context handling throughout the stack
 - **Error Handling**: Comprehensive error handling with gerror
@@ -44,6 +45,7 @@ The Guild Framework Reasoning System is a production-ready, staff engineer-quali
 - **Performance**: Caching, connection pooling, and optimized queries
 
 ### Reasoning Extraction
+
 - Extracts `<thinking>` blocks from LLM responses
 - Captures confidence levels automatically
 - Handles multiple reasoning blocks
@@ -51,6 +53,7 @@ The Guild Framework Reasoning System is a production-ready, staff engineer-quali
 - Cache support for repeated queries
 
 ### Persistent Storage
+
 - SQLite database with full migration support
 - Foreign key constraints for data integrity
 - JSON metadata support for extensibility
@@ -58,6 +61,7 @@ The Guild Framework Reasoning System is a production-ready, staff engineer-quali
 - Query optimization with proper indexes
 
 ### Analytics & Insights
+
 - Real-time pattern identification
 - Confidence-success correlation analysis
 - Task type performance tracking
@@ -100,18 +104,21 @@ for _, insight := range insights {
 ## Database Schema
 
 ### reasoning_chains
+
 - Stores individual reasoning instances
 - Links to agents and sessions
 - Tracks performance metrics
 - Supports metadata extension
 
 ### reasoning_patterns
+
 - Learned patterns from multiple chains
 - Success rate tracking
 - Example chain references
 - Task type categorization
 
 ### reasoning_analytics
+
 - Cached aggregated statistics
 - Time-range based analytics
 - Distribution data
@@ -120,6 +127,7 @@ for _, insight := range insights {
 ## Performance Benchmarks
 
 Based on production benchmarks:
+
 - **Store Operation**: ~428µs average
 - **Query Operation**: ~1.99ms average (10 records)
 - **Stats Calculation**: ~15.8µs average
@@ -144,6 +152,7 @@ These metrics demonstrate excellent performance suitable for high-throughput pro
 ## Testing
 
 Comprehensive test coverage including:
+
 - Unit tests for all components
 - Integration tests with SQLite
 - Concurrent operation tests
@@ -153,12 +162,14 @@ Comprehensive test coverage including:
 ## Maintenance
 
 The system includes automatic maintenance:
+
 - Retention cleanup (configurable)
 - Analytics aggregation (hourly)
 - Cache management
 - Pattern learning updates
 
 This reasoning system represents staff engineer-quality work with attention to:
+
 - Clean architecture and SOLID principles
 - Production-ready error handling
 - Performance optimization

@@ -6,12 +6,12 @@ package init
 import (
 	"fmt"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/spinner"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/spinner"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // InitState represents different stages of the initialization process
@@ -205,23 +205,15 @@ func (m *InitTUIModelV2) updateValidating(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m *InitTUIModelV2) updateComplete(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if k, ok := msg.(tea.KeyMsg); ok {
-		switch k.Type {
-		case tea.KeyEnter:
-			return m, tea.Quit
-		case tea.KeyCtrlC, tea.KeyEsc:
-			return m, tea.Quit
-		default:
-			// For any other key, also quit to make it easier to exit
-			return m, tea.Quit
-		}
+	if _, ok := msg.(tea.KeyMsg); ok {
+		return m, tea.Quit
 	}
 	return m, nil
 }
 
 func (m *InitTUIModelV2) updateError(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if k, ok := msg.(tea.KeyMsg); ok {
-		if k.Type == tea.KeyEnter || key.Matches(k, keys.Quit) {
+		if k.Key().Code == tea.KeyEnter || key.Matches(k, keys.Quit) {
 			return m, tea.Quit
 		}
 	}

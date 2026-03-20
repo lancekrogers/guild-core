@@ -32,6 +32,7 @@ For tests, the schema is duplicated in `pkg/storage/init.go` in the `createTestS
 ### Future Migrations
 
 When adding new migrations:
+
 1. Create new numbered migration files (e.g., `000002_add_feature.up.sql`)
 2. Always include both `.up.sql` and `.down.sql` files
 3. Test migrations thoroughly before committing

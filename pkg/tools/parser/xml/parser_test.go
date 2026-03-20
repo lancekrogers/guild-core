@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
 )
 
 func TestXMLParser_Parse(t *testing.T) {
@@ -457,7 +457,7 @@ func TestXMLParser_EdgeCases(t *testing.T) {
 					<ns:parameter name="arg">value</ns:parameter>
 				</ns:invoke>
 			</ns:function_calls>`,
-			wantCalls: 0, // May not parse with namespace
+			wantCalls: 1, // Parser handles namespaces correctly
 		},
 	}
 

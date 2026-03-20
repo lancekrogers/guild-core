@@ -7,16 +7,16 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/charmbracelet/bubbles/help"
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/list"
-	"github.com/charmbracelet/bubbles/progress"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/help"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/list"
+	"charm.land/bubbles/v2/progress"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/internal/setup"
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild-core/internal/setup"
+	"github.com/lancekrogers/guild-core/pkg/config"
 )
 
 // WizardInterface defines the interface for the setup wizard
@@ -206,11 +206,11 @@ func NewWizardTUIModel(ctx context.Context, wizard WizardInterface) *WizardTUIMo
 	ti.Placeholder = "Enter your choice..."
 	ti.Focus()
 	ti.CharLimit = 256
-	ti.Width = 50
+	ti.SetWidth(50)
 
 	// Initialize progress bar
-	prog := progress.New(progress.WithDefaultGradient())
-	prog.Width = 60
+	prog := progress.New(progress.WithDefaultBlend())
+	prog.SetWidth(60)
 
 	// Initialize help
 	h := help.New()
@@ -248,7 +248,7 @@ func (m *WizardTUIModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.height = msg.Height
 		m.list.SetWidth(msg.Width - 4)
 		m.list.SetHeight(msg.Height - 8)
-		m.progressBar.Width = msg.Width - 10
+		m.progressBar.SetWidth(msg.Width - 10)
 		return m, nil
 
 	case tea.KeyMsg:
@@ -320,31 +320,37 @@ func (m *WizardTUIModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View renders the current state of the wizard
-func (m *WizardTUIModel) View() string {
+func (m *WizardTUIModel) View() tea.View {
+	var content string
 	if m.width == 0 {
-		return "Initializing..."
+		content = "Initializing..."
+	} else {
+		switch m.state {
+		case stateWelcome:
+			content = m.renderWelcome()
+		case stateProviderDetection:
+			content = m.renderProviderDetection()
+		case stateProviderSelection:
+			content = m.renderProviderSelection()
+		case stateModelSelection:
+			content = m.renderModelSelection()
+		case stateAgentCreation:
+			content = m.renderAgentCreation()
+		case stateProgress:
+			content = m.renderProgress()
+		case stateCompletion:
+			content = m.renderCompletion()
+		case stateError:
+			content = m.renderError()
+		default:
+			content = "Unknown state"
+		}
 	}
 
-	switch m.state {
-	case stateWelcome:
-		return m.renderWelcome()
-	case stateProviderDetection:
-		return m.renderProviderDetection()
-	case stateProviderSelection:
-		return m.renderProviderSelection()
-	case stateModelSelection:
-		return m.renderModelSelection()
-	case stateAgentCreation:
-		return m.renderAgentCreation()
-	case stateProgress:
-		return m.renderProgress()
-	case stateCompletion:
-		return m.renderCompletion()
-	case stateError:
-		return m.renderError()
-	default:
-		return "Unknown state"
-	}
+	view := tea.NewView(content)
+	view.AltScreen = true
+	view.MouseMode = tea.MouseModeCellMotion
+	return view
 }
 
 // Styling

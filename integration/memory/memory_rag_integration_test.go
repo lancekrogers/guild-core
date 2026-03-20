@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package memory
 
 import (
@@ -16,13 +19,13 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/interfaces"
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // TestCorpusScanningAndIndexing tests scanning project files and indexing in vector store
@@ -99,9 +102,9 @@ Returns details for a specific product.`,
 	// Create test files
 	for path, content := range testFiles {
 		fullPath := filepath.Join(projectDir, path)
-		err := os.MkdirAll(filepath.Dir(fullPath), 0755)
+		err := os.MkdirAll(filepath.Dir(fullPath), 0o755)
 		require.NoError(t, err)
-		err = os.WriteFile(fullPath, []byte(content), 0644)
+		err = os.WriteFile(fullPath, []byte(content), 0o644)
 		require.NoError(t, err)
 	}
 
@@ -124,8 +127,8 @@ Returns details for a specific product.`,
 		if err != nil || info.IsDir() {
 			return nil
 		}
-		// Skip files in .guild directory
-		if strings.Contains(path, filepath.Join(projectDir, ".guild")) {
+		// Skip files in .campaign directory
+		if strings.Contains(path, filepath.Join(projectDir, ".campaign")) {
 			return nil
 		}
 		// Filter by extension

@@ -13,13 +13,13 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/internal/ui/chat/common/config"
-	"github.com/lancekrogers/guild/internal/ui/chat/panes"
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/observability"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/config"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // CorpusHandler handles corpus-related commands
@@ -1218,7 +1218,7 @@ func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 
 		// Generate export filename with timestamp
 		timestamp := time.Now().Format("2006-01-02_15-04-05")
-		exportPath := filepath.Join(".guild", fmt.Sprintf("knowledge_export_%s.md", timestamp))
+		exportPath := filepath.Join(".campaign", fmt.Sprintf("knowledge_export_%s.md", timestamp))
 
 		var export strings.Builder
 		export.WriteString("# Guild Knowledge Export\n\n")
@@ -1275,7 +1275,7 @@ func (h *KnowledgeHandler) handleExport(ctx context.Context) tea.Cmd {
 		}
 
 		// Write export file
-		err = os.WriteFile(exportPath, []byte(export.String()), 0644)
+		err = os.WriteFile(exportPath, []byte(export.String()), 0o644)
 		if err != nil {
 			return panes.StatusUpdateMsg{
 				Message: fmt.Sprintf("Failed to write export file: %v", gerror.Wrap(err, gerror.ErrCodeInternal, "file write error")),

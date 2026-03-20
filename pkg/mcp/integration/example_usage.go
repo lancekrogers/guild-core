@@ -9,11 +9,11 @@ import (
 	"log"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/mcp/protocol"
-	"github.com/lancekrogers/guild/pkg/mcp/tools"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/tools/fs"
-	"github.com/lancekrogers/guild/tools/shell"
+	"github.com/lancekrogers/guild-core/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild-core/pkg/mcp/tools"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/tools/fs"
+	"github.com/lancekrogers/guild-core/tools/shell"
 )
 
 // Example demonstrates how to use the ToolBridge to synchronize tools

@@ -8,13 +8,14 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // Minimal interfaces to avoid import cycles
@@ -75,6 +76,9 @@ type Board struct {
 	registry           ComponentRegistry
 	eventManager       *EventManager
 	taskEventPublisher TaskEventPublisherInterface
+
+	// Synchronization
+	mu sync.RWMutex // protects Metadata and UpdatedAt fields
 }
 
 // EventType represents the type of event that occurred
@@ -182,6 +186,9 @@ func (b *Board) saveToSQLite(ctx context.Context) error {
 	}
 
 	// Store the board's campaign association in metadata
+	b.mu.Lock()
+	defer b.mu.Unlock()
+
 	if b.Metadata == nil {
 		b.Metadata = make(map[string]string)
 	}
@@ -197,6 +204,9 @@ func (b *Board) saveToSQLite(ctx context.Context) error {
 // getCampaignID determines which campaign this board belongs to
 func (b *Board) getCampaignID() string {
 	// Check if campaign ID is already set in metadata
+	b.mu.RLock()
+	defer b.mu.RUnlock()
+
 	if b.Metadata != nil {
 		if campaignID, exists := b.Metadata["campaign_id"]; exists && campaignID != "" {
 			return campaignID
@@ -546,15 +556,18 @@ func (b *Board) createTaskSQLite(ctx context.Context, title, description string)
 
 	// Also record legacy task creation event for backward compatibility
 	if err := b.recordTaskEvent(ctx, task.ID, "created", "", string(task.Status), "Task created on board"); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to record legacy task event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("createTaskSQLite")
+		logger.WithError(err).Warn("Failed to record legacy task event", "task_id", task.ID)
 	}
 
 	// Update the board's last updated time
+	b.mu.Lock()
 	b.UpdatedAt = time.Now().UTC()
+	b.mu.Unlock()
+
 	if err := b.saveToSQLite(ctx); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("createTaskSQLite")
+		logger.WithError(err).Warn("Failed to update board timestamp", "board_id", b.ID)
 	}
 
 	return task, nil
@@ -704,6 +717,7 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 
 	// Find the specific task
 	for _, taskInterface := range taskInterfaces {
+		// Handle storage.Task type
 		if storageTask, ok := taskInterface.(*storage.Task); ok && storageTask.ID == taskID {
 			// Convert storage.Task back to kanban.Task
 			task := &Task{
@@ -725,6 +739,50 @@ func (b *Board) getTaskSQLite(ctx context.Context, taskID string) (*Task, error)
 			task.Metadata["board_id"] = b.ID
 
 			return task, nil
+		}
+
+		// Handle map[string]interface{} type (from mock repositories)
+		if taskMap, ok := taskInterface.(map[string]interface{}); ok {
+			if id, ok := taskMap["ID"].(string); ok && id == taskID {
+				// Convert from map format
+				task := &Task{
+					ID:       id,
+					Metadata: make(map[string]string),
+				}
+
+				if title, ok := taskMap["Title"].(string); ok {
+					task.Title = title
+				}
+
+				if desc, ok := taskMap["Description"].(*string); ok && desc != nil {
+					task.Description = *desc
+				} else if desc, ok := taskMap["Description"].(string); ok {
+					task.Description = desc
+				}
+
+				if status, ok := taskMap["Status"].(string); ok {
+					task.Status = b.mapStorageStatusToKanbanStatus(status)
+				}
+
+				if assignedAgent, ok := taskMap["AssignedAgentID"].(*string); ok && assignedAgent != nil {
+					task.AssignedTo = *assignedAgent
+				} else if assignedAgent, ok := taskMap["AssignedAgentID"].(string); ok {
+					task.AssignedTo = assignedAgent
+				}
+
+				if createdAt, ok := taskMap["CreatedAt"].(time.Time); ok {
+					task.CreatedAt = createdAt
+				}
+
+				if updatedAt, ok := taskMap["UpdatedAt"].(time.Time); ok {
+					task.UpdatedAt = updatedAt
+				}
+
+				// Add board ID to metadata for compatibility
+				task.Metadata["board_id"] = b.ID
+
+				return task, nil
+			}
 		}
 	}
 
@@ -836,15 +894,18 @@ func (b *Board) updateTaskSQLite(ctx context.Context, task *Task) error {
 
 	// Record task update event
 	if err := b.recordTaskEvent(ctx, task.ID, "updated", "", string(task.Status), "Task updated via kanban board"); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to record task event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("updateTaskSQLite")
+		logger.WithError(err).Warn("Failed to record task event", "task_id", task.ID)
 	}
 
 	// Update the board's last updated time
+	b.mu.Lock()
 	b.UpdatedAt = time.Now().UTC()
+	b.mu.Unlock()
+
 	if err := b.saveToSQLite(ctx); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("updateTaskSQLite")
+		logger.WithError(err).Warn("Failed to update board timestamp", "board_id", b.ID)
 	}
 
 	return nil
@@ -888,15 +949,18 @@ func (b *Board) DeleteTask(ctx context.Context, taskID string) error {
 
 	// Record legacy task deletion event for backward compatibility
 	if err := b.recordTaskEvent(ctx, taskID, "deleted", string(task.Status), "", "Task deleted from kanban board"); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to record legacy task event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("DeleteTask")
+		logger.WithError(err).Warn("Failed to record legacy task event", "task_id", taskID)
 	}
 
 	// Update the board's last updated time
+	b.mu.Lock()
 	b.UpdatedAt = time.Now().UTC()
+	b.mu.Unlock()
+
 	if err := b.saveToSQLite(ctx); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to update board timestamp: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("DeleteTask")
+		logger.WithError(err).Warn("Failed to update board timestamp", "board_id", b.ID)
 	}
 
 	return nil
@@ -997,25 +1061,64 @@ func (b *Board) GetAllTasks(ctx context.Context) ([]*Task, error) {
 	// Convert storage tasks to kanban tasks
 	var allTasks []*Task
 	for _, taskInterface := range taskInterfaces {
-		// Cast to storage.Task
-		storageTask, ok := taskInterface.(*storage.Task)
-		if !ok {
-			continue // Skip invalid tasks
-		}
+		var task *Task
 
-		task := &Task{
-			ID:          storageTask.ID,
-			Title:       storageTask.Title,
-			Description: *storageTask.Description,
-			Status:      TaskStatus(storageTask.Status),
-			CreatedAt:   storageTask.CreatedAt,
-			UpdatedAt:   storageTask.UpdatedAt,
-			Metadata:    make(map[string]string),
-		}
+		// Try to cast to storage.Task first
+		if storageTask, ok := taskInterface.(*storage.Task); ok {
+			task = &Task{
+				ID:          storageTask.ID,
+				Title:       storageTask.Title,
+				Description: *storageTask.Description,
+				Status:      TaskStatus(storageTask.Status),
+				CreatedAt:   storageTask.CreatedAt,
+				UpdatedAt:   storageTask.UpdatedAt,
+				Metadata:    make(map[string]string),
+			}
 
-		// Set assigned agent if available
-		if storageTask.AssignedAgentID != nil {
-			task.AssignedTo = *storageTask.AssignedAgentID
+			// Set assigned agent if available
+			if storageTask.AssignedAgentID != nil {
+				task.AssignedTo = *storageTask.AssignedAgentID
+			}
+		} else if taskMap, ok := taskInterface.(map[string]interface{}); ok {
+			// Handle map[string]interface{} type (from mock repositories)
+			task = &Task{
+				Metadata: make(map[string]string),
+			}
+
+			if id, ok := taskMap["ID"].(string); ok {
+				task.ID = id
+			}
+
+			if title, ok := taskMap["Title"].(string); ok {
+				task.Title = title
+			}
+
+			if desc, ok := taskMap["Description"].(*string); ok && desc != nil {
+				task.Description = *desc
+			} else if desc, ok := taskMap["Description"].(string); ok {
+				task.Description = desc
+			}
+
+			if status, ok := taskMap["Status"].(string); ok {
+				task.Status = b.mapStorageStatusToKanbanStatus(status)
+			}
+
+			if assignedAgent, ok := taskMap["AssignedAgentID"].(*string); ok && assignedAgent != nil {
+				task.AssignedTo = *assignedAgent
+			} else if assignedAgent, ok := taskMap["AssignedAgentID"].(string); ok {
+				task.AssignedTo = assignedAgent
+			}
+
+			if createdAt, ok := taskMap["CreatedAt"].(time.Time); ok {
+				task.CreatedAt = createdAt
+			}
+
+			if updatedAt, ok := taskMap["UpdatedAt"].(time.Time); ok {
+				task.UpdatedAt = updatedAt
+			}
+		} else {
+			// Skip invalid tasks
+			continue
 		}
 
 		// Add board ID to metadata for compatibility
@@ -1160,8 +1263,8 @@ func (b *Board) AssignTask(ctx context.Context, taskID, assignee, changedBy, com
 		},
 	}
 	if err := b.emitEvent(ctx, event); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to emit legacy event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("AssignTask")
+		logger.WithError(err).Warn("Failed to emit legacy event", "event_type", event.EventType, "task_id", taskID)
 	}
 
 	return nil
@@ -1211,8 +1314,8 @@ func (b *Board) AddTaskBlocker(ctx context.Context, taskID, blockerID, changedBy
 		},
 	}
 	if err := b.emitEvent(ctx, event); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to emit legacy event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("AddTaskBlocker")
+		logger.WithError(err).Warn("Failed to emit legacy event", "event_type", event.EventType, "task_id", taskID)
 	}
 
 	return nil
@@ -1262,8 +1365,8 @@ func (b *Board) RemoveTaskBlocker(ctx context.Context, taskID, blockerID, change
 		},
 	}
 	if err := b.emitEvent(ctx, event); err != nil {
-		// Log but don't fail
-		fmt.Printf("warning: failed to emit legacy event: %v\n", err)
+		logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("RemoveTaskBlocker")
+		logger.WithError(err).Warn("Failed to emit legacy event", "event_type", event.EventType, "task_id", taskID)
 	}
 
 	return nil
@@ -1274,8 +1377,8 @@ func (b *Board) emitEvent(ctx context.Context, event BoardEvent) error {
 	// If event manager is available, publish the event
 	if b.eventManager != nil {
 		if pubErr := b.eventManager.PublishEvent(&event); pubErr != nil {
-			// Log but don't fail the operation if publishing fails
-			fmt.Printf("warning: failed to publish event: %v\n", pubErr)
+			logger := observability.GetLogger(ctx).WithComponent("Board").WithOperation("emitEvent")
+			logger.WithError(pubErr).Warn("Failed to publish event", "event_type", event.EventType, "board_id", event.BoardID, "task_id", event.TaskID)
 		}
 	}
 

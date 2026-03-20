@@ -7,11 +7,11 @@ import (
 	"context"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/panes"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	orchinterfaces "github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	orchinterfaces "github.com/lancekrogers/guild-core/pkg/orchestrator/interfaces"
 )
 
 // StatusIntegration connects agent status tracking to the UI

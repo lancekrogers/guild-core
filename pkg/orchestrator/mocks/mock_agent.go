@@ -7,7 +7,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
 )
 
 // MockAgent is a mock implementation of the core.Agent interface

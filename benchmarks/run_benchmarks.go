@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lancekrogers/guild/benchmarks"
+	"github.com/lancekrogers/guild-core/benchmarks"
 )
 
 func main() {
@@ -29,7 +29,7 @@ func main() {
 
 	// Create reports directory
 	reportsDir := "benchmarks/reports"
-	if err := os.MkdirAll(reportsDir, 0755); err != nil {
+	if err := os.MkdirAll(reportsDir, 0o755); err != nil {
 		log.Fatalf("Failed to create reports directory: %v", err)
 	}
 
@@ -44,7 +44,7 @@ func main() {
 	// Generate and save markdown report
 	markdownContent := benchmarks.GenerateMarkdownReport(report)
 	mdFile := filepath.Join(reportsDir, fmt.Sprintf("performance_report_%s.md", timestamp))
-	if err := os.WriteFile(mdFile, []byte(markdownContent), 0644); err != nil {
+	if err := os.WriteFile(mdFile, []byte(markdownContent), 0o644); err != nil {
 		log.Fatalf("Failed to save markdown report: %v", err)
 	}
 	fmt.Printf("✅ Markdown report saved to: %s\n", mdFile)
@@ -56,7 +56,7 @@ func main() {
 	}
 
 	latestMD := filepath.Join(reportsDir, "latest_performance_report.md")
-	if err := os.WriteFile(latestMD, []byte(markdownContent), 0644); err != nil {
+	if err := os.WriteFile(latestMD, []byte(markdownContent), 0o644); err != nil {
 		log.Printf("Warning: Failed to save latest markdown report: %v", err)
 	}
 

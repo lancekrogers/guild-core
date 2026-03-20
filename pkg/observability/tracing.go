@@ -19,7 +19,7 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
 	"go.opentelemetry.io/otel/trace"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // TracerProvider wraps OpenTelemetry tracer provider
@@ -133,7 +133,7 @@ func (tp *TracerProvider) Shutdown(ctx context.Context) error {
 
 // StartSpan starts a new span
 func StartSpan(ctx context.Context, name string, opts ...trace.SpanStartOption) (context.Context, trace.Span) {
-	tracer := otel.Tracer("github.com/lancekrogers/guild")
+	tracer := otel.Tracer("github.com/lancekrogers/guild-core")
 	return tracer.Start(ctx, name, opts...)
 }
 

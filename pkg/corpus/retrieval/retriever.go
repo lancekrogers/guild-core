@@ -7,8 +7,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // RetrieverImpl implements multi-strategy document retrieval with sophisticated ranking

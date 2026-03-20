@@ -5,8 +5,9 @@ package utils
 
 import (
 	"fmt"
+	"image/color"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 )
 
 // Styles provides centralized styling for the Guild Chat interface
@@ -597,7 +598,7 @@ func (s *Styles) FormatTimestamp(timestamp string) string {
 func (s *Styles) FormatAgentName(name string) string {
 	// Use agent-specific colors when available
 	agentColor := s.GetAgentColor(name)
-	if agentColor != "" {
+	if agentColor != nil {
 		return lipgloss.NewStyle().
 			Foreground(agentColor).
 			Bold(true).
@@ -607,7 +608,7 @@ func (s *Styles) FormatAgentName(name string) string {
 }
 
 // GetAgentColor returns the color for a specific agent
-func (s *Styles) GetAgentColor(agentName string) lipgloss.Color {
+func (s *Styles) GetAgentColor(agentName string) color.Color {
 	// Define agent-specific colors that work across themes
 	switch agentName {
 	case "elena", "Elena":
@@ -619,7 +620,7 @@ func (s *Styles) GetAgentColor(agentName string) lipgloss.Color {
 	case "system", "System":
 		return lipgloss.Color("#858585") // Gray
 	default:
-		return ""
+		return nil
 	}
 }
 

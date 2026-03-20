@@ -191,7 +191,7 @@ logs/
 log/
 
 # Debug files
-debug/
+/debug/
 *.debug
 debug.test
 __debug_bin
@@ -270,4 +270,10 @@ hash-test/
 # Build artifacts
 bin/guild
 .test-*.tmp
+demo
 
+
+# Binary files should only be in bin/
+/guild
+*.test
+*.out

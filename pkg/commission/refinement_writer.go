@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // RefinementWriter generates refined commission documentation in markdown format
@@ -60,7 +60,7 @@ func (rw *RefinementWriter) WriteRefined(ctx context.Context, refined *RefinedCo
 
 	// Create refined directory structure
 	refinedDir := filepath.Join(rw.outputDir, "refined", sanitizeFilename(refined.Original.Title))
-	err := os.MkdirAll(refinedDir, 0755)
+	err := os.MkdirAll(refinedDir, 0o755)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create refined directory").
 			WithComponent("commission.refinement_writer").
@@ -735,7 +735,7 @@ func (rw *RefinementWriter) writeReadme(ctx context.Context, filepath string, re
 // Helper functions
 
 func writeFile(filepath, content string) error {
-	return os.WriteFile(filepath, []byte(content), 0644)
+	return os.WriteFile(filepath, []byte(content), 0o644)
 }
 
 func getComplexityLabel(complexity int) string {

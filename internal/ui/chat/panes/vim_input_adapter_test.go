@@ -6,8 +6,8 @@ package panes
 import (
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/internal/ui/vim"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/ui/vim"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -61,23 +61,23 @@ func TestVimInputAdapter_KeyHandling(t *testing.T) {
 	adapter.SetEnabled(true)
 
 	// Test escape key in normal mode (should stay in normal mode)
-	_, _ = adapter.Update(tea.KeyMsg{Type: tea.KeyEscape})
+	_, _ = adapter.Update(tea.KeyPressMsg{Code: tea.KeyEscape})
 	assert.Equal(t, vim.ModeNormal, vimManager.GetState().Mode)
 
 	// Test 'i' key to enter insert mode
-	_, _ = adapter.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'i'}})
+	_, _ = adapter.Update(tea.KeyPressMsg{Text: "i", Code: 'i'})
 	assert.Equal(t, vim.ModeInsert, vimManager.GetState().Mode)
 
 	// Test escape key in insert mode (should return to normal mode)
-	_, _ = adapter.Update(tea.KeyMsg{Type: tea.KeyEscape})
+	_, _ = adapter.Update(tea.KeyPressMsg{Code: tea.KeyEscape})
 	assert.Equal(t, vim.ModeNormal, vimManager.GetState().Mode)
 
 	// Test movement keys in normal mode
-	_, _ = adapter.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'h'}})
+	_, _ = adapter.Update(tea.KeyPressMsg{Text: "h", Code: 'h'})
 	assert.Equal(t, vim.ModeNormal, vimManager.GetState().Mode)
 
 	// Test entering command mode
-	_, _ = adapter.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{':'}})
+	_, _ = adapter.Update(tea.KeyPressMsg{Text: ":", Code: ':'})
 	assert.Equal(t, vim.ModeCommand, vimManager.GetState().Mode)
 }
 
@@ -102,7 +102,7 @@ func TestVimInputAdapter_InsertModeTyping(t *testing.T) {
 
 	// Type some text
 	adapter.SetValue("")
-	_, _ = adapter.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{'h', 'e', 'l', 'l', 'o'}})
+	_, _ = adapter.Update(tea.KeyPressMsg{Text: "hello", Code: tea.KeyExtended})
 
 	// The text should be passed through to the input pane
 	// Note: In this test, we're not actually simulating the full textarea behavior,

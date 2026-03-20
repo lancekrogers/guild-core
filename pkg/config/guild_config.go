@@ -10,8 +10,8 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
 )
 
 // GuildConfigFile represents the guild configuration file structure
@@ -92,7 +92,7 @@ func SaveGuildConfigFile(ctx context.Context, projectPath string, config *GuildC
 	configPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "guild.yml")
 
 	// Ensure directory exists
-	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(configPath), 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guild directory").
 			WithComponent("GuildConfigFile").
 			WithOperation("SaveGuildConfigFile")
@@ -105,7 +105,7 @@ func SaveGuildConfigFile(ctx context.Context, projectPath string, config *GuildC
 			WithOperation("SaveGuildConfigFile")
 	}
 
-	if err := os.WriteFile(configPath, data, 0644); err != nil {
+	if err := os.WriteFile(configPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
 			WithComponent("GuildConfigFile").
 			WithOperation("SaveGuildConfigFile").

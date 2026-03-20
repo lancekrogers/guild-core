@@ -7,7 +7,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/corpus/retrieval"
+	"github.com/lancekrogers/guild-core/pkg/corpus/retrieval"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"

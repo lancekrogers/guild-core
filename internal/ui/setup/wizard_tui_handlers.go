@@ -7,11 +7,11 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/charmbracelet/bubbles/list"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/list"
+	tea "charm.land/bubbletea/v2"
 
-	"github.com/lancekrogers/guild/internal/setup"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/setup"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // handleKeyPress handles key press events based on current state

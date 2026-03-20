@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // ReasoningChainEnhanced represents a complete reasoning flow with rich metadata

@@ -7,6 +7,7 @@
 The Guild Framework has substantial infrastructure implemented but several core features have build issues or are incomplete.
 
 ### What Works Now
+
 - ✅ **Project initialization** (`guild init`) - Fully functional with auto-detection
 - ✅ **Chat interface** - 1,951-line production TUI with streaming, markdown rendering, and tool execution
 - ✅ **Corpus scanning and indexing** (`guild corpus scan/query`) - RAG system working
@@ -17,6 +18,7 @@ The Guild Framework has substantial infrastructure implemented but several core 
 - ✅ **Tool execution framework** - Safe workspace isolation implemented
 
 ### What Has Issues
+
 - ❌ **gRPC services** - Build failures due to interface mismatches
 - ❌ **Multi-agent orchestration** - Framework exists but integration issues
 - ⚠️ **Campaign workflows** - Core implemented but some commands disabled
@@ -89,6 +91,7 @@ guild info
 Here's what you can demonstrate with the current implementation:
 
 ### 1. Project Initialization Demo
+
 ```bash
 ./bin/guild init demo-project
 cd demo-project
@@ -96,11 +99,13 @@ ls -la .guild/  # Show created structure
 ```
 
 ### 2. Chat Interface Demo (Main Feature)
+
 ```bash
 ../bin/guild chat
 ```
 
 **Demonstrates**:
+
 - Professional TUI with streaming responses
 - Markdown rendering with syntax highlighting
 - Multiple LLM provider support
@@ -108,23 +113,27 @@ ls -la .guild/  # Show created structure
 - Session persistence
 
 ### 3. Corpus Management Demo
+
 ```bash
 ../bin/guild corpus scan
 ../bin/guild corpus query "authentication patterns"
 ```
 
 **Demonstrates**:
+
 - Document indexing and RAG capabilities
 - Vector search functionality
 - Project-aware documentation retrieval
 
 ### 4. Commission System Demo
+
 ```bash
 ../bin/guild commission create "Build REST API"
 ../bin/guild commission refine [commission-file]
 ```
 
 **Demonstrates**:
+
 - Markdown-based commission parsing
 - Objective hierarchy management
 - Task breakdown capabilities

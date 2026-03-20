@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guild-Core Callgraph Viewer</title>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/viewer.css">
+</head>
+<body>
+    
+<header class="header">
+    <div class="header-content">
+        <h1 class="header-title">Guild-Core Callgraph Viewer</h1>
+        <div class="header-meta">
+            <span class="graph-count">156 graphs</span>
+            <span class="generated-time">Generated: 2026-01-09 01:13:39</span>
+        </div>
+    </div>
+    <div class="header-search">
+        <input type="text" id="search" placeholder="Search graphs..." autocomplete="off">
+    </div>
+</header>
+
+
+    <div class="container">
+        
+<nav id="navigation" class="sidebar">
+    <div class="navigation-tree">
+        
+        <details class="category" open>
+            <summary class="category-title">internal (20)</summary>
+            <div class="domain-list">
+                
+                
+                <details class="domain" open>
+                    <summary class="domain-title">buildutil (3)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-buildutil" class="graph-link" data-graph-id="internal-buildutil" data-graph-path="svgs/internal-buildutil.svg">
+                                <span class="graph-title">internal/buildutil</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-buildutil-tasks" class="graph-link" data-graph-id="internal-buildutil-tasks" data-graph-path="svgs/internal-buildutil-tasks.svg">
+                                <span class="graph-title">internal/buildutil/tasks</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-buildutil-ui" class="graph-link" data-graph-id="internal-buildutil-ui" data-graph-path="svgs/internal-buildutil-ui.svg">
+                                <span class="graph-title">internal/buildutil/ui</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">daemon (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-daemon" class="graph-link" data-graph-id="internal-daemon" data-graph-path="svgs/internal-daemon.svg">
+                                <span class="graph-title">internal/daemon</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">daemonconn (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-daemonconn" class="graph-link" data-graph-id="internal-daemonconn" data-graph-path="svgs/internal-daemonconn.svg">
+                                <span class="graph-title">internal/daemonconn</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">integration (7)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-integration-bootstrap" class="graph-link" data-graph-id="internal-integration-bootstrap" data-graph-path="svgs/internal-integration-bootstrap.svg">
+                                <span class="graph-title">internal/integration/bootstrap</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-integration-bridges" class="graph-link" data-graph-id="internal-integration-bridges" data-graph-path="svgs/internal-integration-bridges.svg">
+                                <span class="graph-title">internal/integration/bridges</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-integration-config" class="graph-link" data-graph-id="internal-integration-config" data-graph-path="svgs/internal-integration-config.svg">
+                                <span class="graph-title">internal/integration/config</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-integration-events" class="graph-link" data-graph-id="internal-integration-events" data-graph-path="svgs/internal-integration-events.svg">
+                                <span class="graph-title">internal/integration/events</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-integration-example" class="graph-link" data-graph-id="internal-integration-example" data-graph-path="svgs/internal-integration-example.svg">
+                                <span class="graph-title">internal/integration/example</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-integration-services" class="graph-link" data-graph-id="internal-integration-services" data-graph-path="svgs/internal-integration-services.svg">
+                                <span class="graph-title">internal/integration/services</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-integration-tests" class="graph-link" data-graph-id="internal-integration-tests" data-graph-path="svgs/internal-integration-tests.svg">
+                                <span class="graph-title">internal/integration/tests</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">qa (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-qa" class="graph-link" data-graph-id="internal-qa" data-graph-path="svgs/internal-qa.svg">
+                                <span class="graph-title">internal/qa</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">scaffoldlite (3)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-scaffoldlite" class="graph-link" data-graph-id="internal-scaffoldlite" data-graph-path="svgs/internal-scaffoldlite.svg">
+                                <span class="graph-title">internal/scaffoldlite</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-scaffoldlite-cli" class="graph-link" data-graph-id="internal-scaffoldlite-cli" data-graph-path="svgs/internal-scaffoldlite-cli.svg">
+                                <span class="graph-title">internal/scaffoldlite/cli</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#internal-scaffoldlite-templates" class="graph-link" data-graph-id="internal-scaffoldlite-templates" data-graph-path="svgs/internal-scaffoldlite-templates.svg">
+                                <span class="graph-title">internal/scaffoldlite/templates</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">setup (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-setup" class="graph-link" data-graph-id="internal-setup" data-graph-path="svgs/internal-setup.svg">
+                                <span class="graph-title">internal/setup</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">teatest (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-teatest" class="graph-link" data-graph-id="internal-teatest" data-graph-path="svgs/internal-teatest.svg">
+                                <span class="graph-title">internal/teatest</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">testing (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-testing" class="graph-link" data-graph-id="internal-testing" data-graph-path="svgs/internal-testing.svg">
+                                <span class="graph-title">internal/testing</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">testutil (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#internal-testutil" class="graph-link" data-graph-id="internal-testutil" data-graph-path="svgs/internal-testutil.svg">
+                                <span class="graph-title">internal/testutil</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+            </div>
+        </details>
+        
+        <details class="category" open>
+            <summary class="category-title">other (1)</summary>
+            <div class="domain-list">
+                
+                
+                <details class="domain" open>
+                    <summary class="domain-title">other (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#daemon-lifecycle" class="graph-link" data-graph-id="daemon-lifecycle" data-graph-path="svgs/daemon-lifecycle.svg">
+                                <span class="graph-title">daemon-lifecycle</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+            </div>
+        </details>
+        
+        <details class="category" open>
+            <summary class="category-title">pkg (135)</summary>
+            <div class="domain-list">
+                
+                
+                <details class="domain" open>
+                    <summary class="domain-title">agents (9)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-agents" class="graph-link" data-graph-id="pkg-agents" data-graph-path="svgs/pkg-agents.svg">
+                                <span class="graph-title">pkg/agents</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-agents-backstory" class="graph-link" data-graph-id="pkg-agents-backstory" data-graph-path="svgs/pkg-agents-backstory.svg">
+                                <span class="graph-title">pkg/agents/backstory</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-agents-backstory-templates" class="graph-link" data-graph-id="pkg-agents-backstory-templates" data-graph-path="svgs/pkg-agents-backstory-templates.svg">
+                                <span class="graph-title">pkg/agents/backstory/templates</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-agents-core" class="graph-link" data-graph-id="pkg-agents-core" data-graph-path="svgs/pkg-agents-core.svg">
+                                <span class="graph-title">pkg/agents/core</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-agents-core-elena" class="graph-link" data-graph-id="pkg-agents-core-elena" data-graph-path="svgs/pkg-agents-core-elena.svg">
+                                <span class="graph-title">pkg/agents/core/elena</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-agents-core-executor" class="graph-link" data-graph-id="pkg-agents-core-executor" data-graph-path="svgs/pkg-agents-core-executor.svg">
+                                <span class="graph-title">pkg/agents/core/executor</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-agents-core-manager" class="graph-link" data-graph-id="pkg-agents-core-manager" data-graph-path="svgs/pkg-agents-core-manager.svg">
+                                <span class="graph-title">pkg/agents/core/manager</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-agents-core-mocks" class="graph-link" data-graph-id="pkg-agents-core-mocks" data-graph-path="svgs/pkg-agents-core-mocks.svg">
+                                <span class="graph-title">pkg/agents/core/mocks</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-agents-creation" class="graph-link" data-graph-id="pkg-agents-creation" data-graph-path="svgs/pkg-agents-creation.svg">
+                                <span class="graph-title">pkg/agents/creation</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">cache (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-cache" class="graph-link" data-graph-id="pkg-cache" data-graph-path="svgs/pkg-cache.svg">
+                                <span class="graph-title">pkg/cache</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">campaign (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-campaign" class="graph-link" data-graph-id="pkg-campaign" data-graph-path="svgs/pkg-campaign.svg">
+                                <span class="graph-title">pkg/campaign</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">client (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-client" class="graph-link" data-graph-id="pkg-client" data-graph-path="svgs/pkg-client.svg">
+                                <span class="graph-title">pkg/client</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">commission (4)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-commission" class="graph-link" data-graph-id="pkg-commission" data-graph-path="svgs/pkg-commission.svg">
+                                <span class="graph-title">pkg/commission</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-commission-agentobj" class="graph-link" data-graph-id="pkg-commission-agentobj" data-graph-path="svgs/pkg-commission-agentobj.svg">
+                                <span class="graph-title">pkg/commission/agentobj</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-commission-guildobj" class="graph-link" data-graph-id="pkg-commission-guildobj" data-graph-path="svgs/pkg-commission-guildobj.svg">
+                                <span class="graph-title">pkg/commission/guildobj</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-commission-mocks" class="graph-link" data-graph-id="pkg-commission-mocks" data-graph-path="svgs/pkg-commission-mocks.svg">
+                                <span class="graph-title">pkg/commission/mocks</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">comms (3)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-comms" class="graph-link" data-graph-id="pkg-comms" data-graph-path="svgs/pkg-comms.svg">
+                                <span class="graph-title">pkg/comms</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-comms-channel" class="graph-link" data-graph-id="pkg-comms-channel" data-graph-path="svgs/pkg-comms-channel.svg">
+                                <span class="graph-title">pkg/comms/channel</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-comms-transport" class="graph-link" data-graph-id="pkg-comms-transport" data-graph-path="svgs/pkg-comms-transport.svg">
+                                <span class="graph-title">pkg/comms/transport</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">config (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-config" class="graph-link" data-graph-id="pkg-config" data-graph-path="svgs/pkg-config.svg">
+                                <span class="graph-title">pkg/config</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">context (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-context" class="graph-link" data-graph-id="pkg-context" data-graph-path="svgs/pkg-context.svg">
+                                <span class="graph-title">pkg/context</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">corpus (8)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-corpus" class="graph-link" data-graph-id="pkg-corpus" data-graph-path="svgs/pkg-corpus.svg">
+                                <span class="graph-title">pkg/corpus</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-corpus-agent" class="graph-link" data-graph-id="pkg-corpus-agent" data-graph-path="svgs/pkg-corpus-agent.svg">
+                                <span class="graph-title">pkg/corpus/agent</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-corpus-extraction" class="graph-link" data-graph-id="pkg-corpus-extraction" data-graph-path="svgs/pkg-corpus-extraction.svg">
+                                <span class="graph-title">pkg/corpus/extraction</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-corpus-graph" class="graph-link" data-graph-id="pkg-corpus-graph" data-graph-path="svgs/pkg-corpus-graph.svg">
+                                <span class="graph-title">pkg/corpus/graph</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-corpus-injection" class="graph-link" data-graph-id="pkg-corpus-injection" data-graph-path="svgs/pkg-corpus-injection.svg">
+                                <span class="graph-title">pkg/corpus/injection</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-corpus-retrieval" class="graph-link" data-graph-id="pkg-corpus-retrieval" data-graph-path="svgs/pkg-corpus-retrieval.svg">
+                                <span class="graph-title">pkg/corpus/retrieval</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-corpus-scoring" class="graph-link" data-graph-id="pkg-corpus-scoring" data-graph-path="svgs/pkg-corpus-scoring.svg">
+                                <span class="graph-title">pkg/corpus/scoring</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-corpus-validation" class="graph-link" data-graph-id="pkg-corpus-validation" data-graph-path="svgs/pkg-corpus-validation.svg">
+                                <span class="graph-title">pkg/corpus/validation</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">cost (2)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-cost" class="graph-link" data-graph-id="pkg-cost" data-graph-path="svgs/pkg-cost.svg">
+                                <span class="graph-title">pkg/cost</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-cost-dashboard" class="graph-link" data-graph-id="pkg-cost-dashboard" data-graph-path="svgs/pkg-cost-dashboard.svg">
+                                <span class="graph-title">pkg/cost/dashboard</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">daemon (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-daemon" class="graph-link" data-graph-id="pkg-daemon" data-graph-path="svgs/pkg-daemon.svg">
+                                <span class="graph-title">pkg/daemon</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">eventbus (2)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-eventbus" class="graph-link" data-graph-id="pkg-eventbus" data-graph-path="svgs/pkg-eventbus.svg">
+                                <span class="graph-title">pkg/eventbus</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-eventbus-testing" class="graph-link" data-graph-id="pkg-eventbus-testing" data-graph-path="svgs/pkg-eventbus-testing.svg">
+                                <span class="graph-title">pkg/eventbus/testing</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">events (4)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-events" class="graph-link" data-graph-id="pkg-events" data-graph-path="svgs/pkg-events.svg">
+                                <span class="graph-title">pkg/events</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-events-debug" class="graph-link" data-graph-id="pkg-events-debug" data-graph-path="svgs/pkg-events-debug.svg">
+                                <span class="graph-title">pkg/events/debug</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-events-routing" class="graph-link" data-graph-id="pkg-events-routing" data-graph-path="svgs/pkg-events-routing.svg">
+                                <span class="graph-title">pkg/events/routing</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-events-types" class="graph-link" data-graph-id="pkg-events-types" data-graph-path="svgs/pkg-events-types.svg">
+                                <span class="graph-title">pkg/events/types</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">export (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-export" class="graph-link" data-graph-id="pkg-export" data-graph-path="svgs/pkg-export.svg">
+                                <span class="graph-title">pkg/export</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">generator (2)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-generator" class="graph-link" data-graph-id="pkg-generator" data-graph-path="svgs/pkg-generator.svg">
+                                <span class="graph-title">pkg/generator</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-generator-commission" class="graph-link" data-graph-id="pkg-generator-commission" data-graph-path="svgs/pkg-generator-commission.svg">
+                                <span class="graph-title">pkg/generator/commission</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">gerror (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-gerror" class="graph-link" data-graph-id="pkg-gerror" data-graph-path="svgs/pkg-gerror.svg">
+                                <span class="graph-title">pkg/gerror</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">git (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-git-worktree" class="graph-link" data-graph-id="pkg-git-worktree" data-graph-path="svgs/pkg-git-worktree.svg">
+                                <span class="graph-title">pkg/git/worktree</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">grpc (4)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-grpc" class="graph-link" data-graph-id="pkg-grpc" data-graph-path="svgs/pkg-grpc.svg">
+                                <span class="graph-title">pkg/grpc</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-grpc-pb-guild-v1" class="graph-link" data-graph-id="pkg-grpc-pb-guild-v1" data-graph-path="svgs/pkg-grpc-pb-guild-v1.svg">
+                                <span class="graph-title">pkg/grpc/pb/guild/v1</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-grpc-pb-mcp-v1" class="graph-link" data-graph-id="pkg-grpc-pb-mcp-v1" data-graph-path="svgs/pkg-grpc-pb-mcp-v1.svg">
+                                <span class="graph-title">pkg/grpc/pb/mcp/v1</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-grpc-pb-prompts-v1" class="graph-link" data-graph-id="pkg-grpc-pb-prompts-v1" data-graph-path="svgs/pkg-grpc-pb-prompts-v1.svg">
+                                <span class="graph-title">pkg/grpc/pb/prompts/v1</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">integration (2)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-integration" class="graph-link" data-graph-id="pkg-integration" data-graph-path="svgs/pkg-integration.svg">
+                                <span class="graph-title">pkg/integration</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-integration-commission_kanban" class="graph-link" data-graph-id="pkg-integration-commission_kanban" data-graph-path="svgs/pkg-integration-commission_kanban.svg">
+                                <span class="graph-title">pkg/integration/commission_kanban</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">interfaces (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-interfaces" class="graph-link" data-graph-id="pkg-interfaces" data-graph-path="svgs/pkg-interfaces.svg">
+                                <span class="graph-title">pkg/interfaces</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">kanban (2)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-kanban" class="graph-link" data-graph-id="pkg-kanban" data-graph-path="svgs/pkg-kanban.svg">
+                                <span class="graph-title">pkg/kanban</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-kanban-mocks" class="graph-link" data-graph-id="pkg-kanban-mocks" data-graph-path="svgs/pkg-kanban-mocks.svg">
+                                <span class="graph-title">pkg/kanban/mocks</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">logging (3)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-logging" class="graph-link" data-graph-id="pkg-logging" data-graph-path="svgs/pkg-logging.svg">
+                                <span class="graph-title">pkg/logging</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-logging-hooks" class="graph-link" data-graph-id="pkg-logging-hooks" data-graph-path="svgs/pkg-logging-hooks.svg">
+                                <span class="graph-title">pkg/logging/hooks</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-logging-writers" class="graph-link" data-graph-id="pkg-logging-writers" data-graph-path="svgs/pkg-logging-writers.svg">
+                                <span class="graph-title">pkg/logging/writers</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">lsp (3)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-lsp" class="graph-link" data-graph-id="pkg-lsp" data-graph-path="svgs/pkg-lsp.svg">
+                                <span class="graph-title">pkg/lsp</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-lsp-mocks" class="graph-link" data-graph-id="pkg-lsp-mocks" data-graph-path="svgs/pkg-lsp-mocks.svg">
+                                <span class="graph-title">pkg/lsp/mocks</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-lsp-tools" class="graph-link" data-graph-id="pkg-lsp-tools" data-graph-path="svgs/pkg-lsp-tools.svg">
+                                <span class="graph-title">pkg/lsp/tools</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">mcp (11)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-mcp" class="graph-link" data-graph-id="pkg-mcp" data-graph-path="svgs/pkg-mcp.svg">
+                                <span class="graph-title">pkg/mcp</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-client" class="graph-link" data-graph-id="pkg-mcp-client" data-graph-path="svgs/pkg-mcp-client.svg">
+                                <span class="graph-title">pkg/mcp/client</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-config" class="graph-link" data-graph-id="pkg-mcp-config" data-graph-path="svgs/pkg-mcp-config.svg">
+                                <span class="graph-title">pkg/mcp/config</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-cost" class="graph-link" data-graph-id="pkg-mcp-cost" data-graph-path="svgs/pkg-mcp-cost.svg">
+                                <span class="graph-title">pkg/mcp/cost</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-grpc" class="graph-link" data-graph-id="pkg-mcp-grpc" data-graph-path="svgs/pkg-mcp-grpc.svg">
+                                <span class="graph-title">pkg/mcp/grpc</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-integration" class="graph-link" data-graph-id="pkg-mcp-integration" data-graph-path="svgs/pkg-mcp-integration.svg">
+                                <span class="graph-title">pkg/mcp/integration</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-prompt" class="graph-link" data-graph-id="pkg-mcp-prompt" data-graph-path="svgs/pkg-mcp-prompt.svg">
+                                <span class="graph-title">pkg/mcp/prompt</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-protocol" class="graph-link" data-graph-id="pkg-mcp-protocol" data-graph-path="svgs/pkg-mcp-protocol.svg">
+                                <span class="graph-title">pkg/mcp/protocol</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-server" class="graph-link" data-graph-id="pkg-mcp-server" data-graph-path="svgs/pkg-mcp-server.svg">
+                                <span class="graph-title">pkg/mcp/server</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-tools" class="graph-link" data-graph-id="pkg-mcp-tools" data-graph-path="svgs/pkg-mcp-tools.svg">
+                                <span class="graph-title">pkg/mcp/tools</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-mcp-transport" class="graph-link" data-graph-id="pkg-mcp-transport" data-graph-path="svgs/pkg-mcp-transport.svg">
+                                <span class="graph-title">pkg/mcp/transport</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">memory (4)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-memory" class="graph-link" data-graph-id="pkg-memory" data-graph-path="svgs/pkg-memory.svg">
+                                <span class="graph-title">pkg/memory</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-memory-mocks" class="graph-link" data-graph-id="pkg-memory-mocks" data-graph-path="svgs/pkg-memory-mocks.svg">
+                                <span class="graph-title">pkg/memory/mocks</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-memory-rag" class="graph-link" data-graph-id="pkg-memory-rag" data-graph-path="svgs/pkg-memory-rag.svg">
+                                <span class="graph-title">pkg/memory/rag</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-memory-vector" class="graph-link" data-graph-id="pkg-memory-vector" data-graph-path="svgs/pkg-memory-vector.svg">
+                                <span class="graph-title">pkg/memory/vector</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">monitoring (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-monitoring" class="graph-link" data-graph-id="pkg-monitoring" data-graph-path="svgs/pkg-monitoring.svg">
+                                <span class="graph-title">pkg/monitoring</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">observability (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-observability" class="graph-link" data-graph-id="pkg-observability" data-graph-path="svgs/pkg-observability.svg">
+                                <span class="graph-title">pkg/observability</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">orchestrator (4)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-orchestrator" class="graph-link" data-graph-id="pkg-orchestrator" data-graph-path="svgs/pkg-orchestrator.svg">
+                                <span class="graph-title">pkg/orchestrator</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-orchestrator-interfaces" class="graph-link" data-graph-id="pkg-orchestrator-interfaces" data-graph-path="svgs/pkg-orchestrator-interfaces.svg">
+                                <span class="graph-title">pkg/orchestrator/interfaces</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-orchestrator-mocks" class="graph-link" data-graph-id="pkg-orchestrator-mocks" data-graph-path="svgs/pkg-orchestrator-mocks.svg">
+                                <span class="graph-title">pkg/orchestrator/mocks</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-orchestrator-scheduler" class="graph-link" data-graph-id="pkg-orchestrator-scheduler" data-graph-path="svgs/pkg-orchestrator-scheduler.svg">
+                                <span class="graph-title">pkg/orchestrator/scheduler</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">paths (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-paths" class="graph-link" data-graph-id="pkg-paths" data-graph-path="svgs/pkg-paths.svg">
+                                <span class="graph-title">pkg/paths</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">performance (3)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-performance" class="graph-link" data-graph-id="pkg-performance" data-graph-path="svgs/pkg-performance.svg">
+                                <span class="graph-title">pkg/performance</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-performance-cpu" class="graph-link" data-graph-id="pkg-performance-cpu" data-graph-path="svgs/pkg-performance-cpu.svg">
+                                <span class="graph-title">pkg/performance/cpu</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-performance-memory" class="graph-link" data-graph-id="pkg-performance-memory" data-graph-path="svgs/pkg-performance-memory.svg">
+                                <span class="graph-title">pkg/performance/memory</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">preferences (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-preferences" class="graph-link" data-graph-id="pkg-preferences" data-graph-path="svgs/pkg-preferences.svg">
+                                <span class="graph-title">pkg/preferences</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">project (3)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-project" class="graph-link" data-graph-id="pkg-project" data-graph-path="svgs/pkg-project.svg">
+                                <span class="graph-title">pkg/project</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-project-global" class="graph-link" data-graph-id="pkg-project-global" data-graph-path="svgs/pkg-project-global.svg">
+                                <span class="graph-title">pkg/project/global</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-project-local" class="graph-link" data-graph-id="pkg-project-local" data-graph-path="svgs/pkg-project-local.svg">
+                                <span class="graph-title">pkg/project/local</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">prompts (10)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-prompts" class="graph-link" data-graph-id="pkg-prompts" data-graph-path="svgs/pkg-prompts.svg">
+                                <span class="graph-title">pkg/prompts</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-prompts-adapters" class="graph-link" data-graph-id="pkg-prompts-adapters" data-graph-path="svgs/pkg-prompts-adapters.svg">
+                                <span class="graph-title">pkg/prompts/adapters</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-prompts-layered" class="graph-link" data-graph-id="pkg-prompts-layered" data-graph-path="svgs/pkg-prompts-layered.svg">
+                                <span class="graph-title">pkg/prompts/layered</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-prompts-layered-commission" class="graph-link" data-graph-id="pkg-prompts-layered-commission" data-graph-path="svgs/pkg-prompts-layered-commission.svg">
+                                <span class="graph-title">pkg/prompts/layered/commission</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-prompts-layered-context" class="graph-link" data-graph-id="pkg-prompts-layered-context" data-graph-path="svgs/pkg-prompts-layered-context.svg">
+                                <span class="graph-title">pkg/prompts/layered/context</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-prompts-standard" class="graph-link" data-graph-id="pkg-prompts-standard" data-graph-path="svgs/pkg-prompts-standard.svg">
+                                <span class="graph-title">pkg/prompts/standard</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-prompts-standard-evaluation" class="graph-link" data-graph-id="pkg-prompts-standard-evaluation" data-graph-path="svgs/pkg-prompts-standard-evaluation.svg">
+                                <span class="graph-title">pkg/prompts/standard/evaluation</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-prompts-standard-templates-agent-execution" class="graph-link" data-graph-id="pkg-prompts-standard-templates-agent-execution" data-graph-path="svgs/pkg-prompts-standard-templates-agent-execution.svg">
+                                <span class="graph-title">pkg/prompts/standard/templates/agent/execution</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-prompts-standard-templates-agent-extraction" class="graph-link" data-graph-id="pkg-prompts-standard-templates-agent-extraction" data-graph-path="svgs/pkg-prompts-standard-templates-agent-extraction.svg">
+                                <span class="graph-title">pkg/prompts/standard/templates/agent/extraction</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-prompts-standard-templates-commission" class="graph-link" data-graph-id="pkg-prompts-standard-templates-commission" data-graph-path="svgs/pkg-prompts-standard-templates-commission.svg">
+                                <span class="graph-title">pkg/prompts/standard/templates/commission</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">providers (13)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-providers" class="graph-link" data-graph-id="pkg-providers" data-graph-path="svgs/pkg-providers.svg">
+                                <span class="graph-title">pkg/providers</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-anthropic" class="graph-link" data-graph-id="pkg-providers-anthropic" data-graph-path="svgs/pkg-providers-anthropic.svg">
+                                <span class="graph-title">pkg/providers/anthropic</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-base" class="graph-link" data-graph-id="pkg-providers-base" data-graph-path="svgs/pkg-providers-base.svg">
+                                <span class="graph-title">pkg/providers/base</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-claudecode" class="graph-link" data-graph-id="pkg-providers-claudecode" data-graph-path="svgs/pkg-providers-claudecode.svg">
+                                <span class="graph-title">pkg/providers/claudecode</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-deepinfra" class="graph-link" data-graph-id="pkg-providers-deepinfra" data-graph-path="svgs/pkg-providers-deepinfra.svg">
+                                <span class="graph-title">pkg/providers/deepinfra</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-deepseek" class="graph-link" data-graph-id="pkg-providers-deepseek" data-graph-path="svgs/pkg-providers-deepseek.svg">
+                                <span class="graph-title">pkg/providers/deepseek</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-interfaces" class="graph-link" data-graph-id="pkg-providers-interfaces" data-graph-path="svgs/pkg-providers-interfaces.svg">
+                                <span class="graph-title">pkg/providers/interfaces</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-mock" class="graph-link" data-graph-id="pkg-providers-mock" data-graph-path="svgs/pkg-providers-mock.svg">
+                                <span class="graph-title">pkg/providers/mock</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-mocks" class="graph-link" data-graph-id="pkg-providers-mocks" data-graph-path="svgs/pkg-providers-mocks.svg">
+                                <span class="graph-title">pkg/providers/mocks</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-ollama" class="graph-link" data-graph-id="pkg-providers-ollama" data-graph-path="svgs/pkg-providers-ollama.svg">
+                                <span class="graph-title">pkg/providers/ollama</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-openai" class="graph-link" data-graph-id="pkg-providers-openai" data-graph-path="svgs/pkg-providers-openai.svg">
+                                <span class="graph-title">pkg/providers/openai</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-ora" class="graph-link" data-graph-id="pkg-providers-ora" data-graph-path="svgs/pkg-providers-ora.svg">
+                                <span class="graph-title">pkg/providers/ora</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-providers-testing" class="graph-link" data-graph-id="pkg-providers-testing" data-graph-path="svgs/pkg-providers-testing.svg">
+                                <span class="graph-title">pkg/providers/testing</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">reasoning (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-reasoning" class="graph-link" data-graph-id="pkg-reasoning" data-graph-path="svgs/pkg-reasoning.svg">
+                                <span class="graph-title">pkg/reasoning</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">registry (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-registry" class="graph-link" data-graph-id="pkg-registry" data-graph-path="svgs/pkg-registry.svg">
+                                <span class="graph-title">pkg/registry</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">search (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-search" class="graph-link" data-graph-id="pkg-search" data-graph-path="svgs/pkg-search.svg">
+                                <span class="graph-title">pkg/search</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">security (4)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-security-access" class="graph-link" data-graph-id="pkg-security-access" data-graph-path="svgs/pkg-security-access.svg">
+                                <span class="graph-title">pkg/security/access</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-security-audit" class="graph-link" data-graph-id="pkg-security-audit" data-graph-path="svgs/pkg-security-audit.svg">
+                                <span class="graph-title">pkg/security/audit</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-security-permissions" class="graph-link" data-graph-id="pkg-security-permissions" data-graph-path="svgs/pkg-security-permissions.svg">
+                                <span class="graph-title">pkg/security/permissions</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-security-sandbox" class="graph-link" data-graph-id="pkg-security-sandbox" data-graph-path="svgs/pkg-security-sandbox.svg">
+                                <span class="graph-title">pkg/security/sandbox</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">session (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-session" class="graph-link" data-graph-id="pkg-session" data-graph-path="svgs/pkg-session.svg">
+                                <span class="graph-title">pkg/session</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">storage (4)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-storage" class="graph-link" data-graph-id="pkg-storage" data-graph-path="svgs/pkg-storage.svg">
+                                <span class="graph-title">pkg/storage</span>
+                                <span class="size-indicator size-large">
+                                    ●
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-storage-db" class="graph-link" data-graph-id="pkg-storage-db" data-graph-path="svgs/pkg-storage-db.svg">
+                                <span class="graph-title">pkg/storage/db</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-storage-optimization" class="graph-link" data-graph-id="pkg-storage-optimization" data-graph-path="svgs/pkg-storage-optimization.svg">
+                                <span class="graph-title">pkg/storage/optimization</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-storage-promptchain" class="graph-link" data-graph-id="pkg-storage-promptchain" data-graph-path="svgs/pkg-storage-promptchain.svg">
+                                <span class="graph-title">pkg/storage/promptchain</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">suggestions (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-suggestions" class="graph-link" data-graph-id="pkg-suggestions" data-graph-path="svgs/pkg-suggestions.svg">
+                                <span class="graph-title">pkg/suggestions</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">telemetry (2)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-telemetry" class="graph-link" data-graph-id="pkg-telemetry" data-graph-path="svgs/pkg-telemetry.svg">
+                                <span class="graph-title">pkg/telemetry</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-telemetry-collectors" class="graph-link" data-graph-id="pkg-telemetry-collectors" data-graph-path="svgs/pkg-telemetry-collectors.svg">
+                                <span class="graph-title">pkg/telemetry/collectors</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">templates (1)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-templates" class="graph-link" data-graph-id="pkg-templates" data-graph-path="svgs/pkg-templates.svg">
+                                <span class="graph-title">pkg/templates</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">terminal (3)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-terminal" class="graph-link" data-graph-id="pkg-terminal" data-graph-path="svgs/pkg-terminal.svg">
+                                <span class="graph-title">pkg/terminal</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-terminal-features" class="graph-link" data-graph-id="pkg-terminal-features" data-graph-path="svgs/pkg-terminal-features.svg">
+                                <span class="graph-title">pkg/terminal/features</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-terminal-profiles" class="graph-link" data-graph-id="pkg-terminal-profiles" data-graph-path="svgs/pkg-terminal-profiles.svg">
+                                <span class="graph-title">pkg/terminal/profiles</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+                <details class="domain" open>
+                    <summary class="domain-title">tools (6)</summary>
+                    <ul class="graph-list">
+                        
+                        <li>
+                            <a href="#pkg-tools" class="graph-link" data-graph-id="pkg-tools" data-graph-path="svgs/pkg-tools.svg">
+                                <span class="graph-title">pkg/tools</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-tools-executor" class="graph-link" data-graph-id="pkg-tools-executor" data-graph-path="svgs/pkg-tools-executor.svg">
+                                <span class="graph-title">pkg/tools/executor</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-tools-parser" class="graph-link" data-graph-id="pkg-tools-parser" data-graph-path="svgs/pkg-tools-parser.svg">
+                                <span class="graph-title">pkg/tools/parser</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-tools-parser-json" class="graph-link" data-graph-id="pkg-tools-parser-json" data-graph-path="svgs/pkg-tools-parser-json.svg">
+                                <span class="graph-title">pkg/tools/parser/json</span>
+                                <span class="size-indicator size-medium">
+                                    ◐
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-tools-parser-types" class="graph-link" data-graph-id="pkg-tools-parser-types" data-graph-path="svgs/pkg-tools-parser-types.svg">
+                                <span class="graph-title">pkg/tools/parser/types</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href="#pkg-tools-parser-xml" class="graph-link" data-graph-id="pkg-tools-parser-xml" data-graph-path="svgs/pkg-tools-parser-xml.svg">
+                                <span class="graph-title">pkg/tools/parser/xml</span>
+                                <span class="size-indicator size-small">
+                                    ○
+                                </span>
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </details>
+                
+            </div>
+        </details>
+        
+    </div>
+</nav>
+
+        
+<main id="viewer-container" class="viewer">
+    <div id="viewer" class="svg-container">
+        <div class="empty-state">
+            <p>Select a graph from the sidebar to view</p>
+        </div>
+    </div>
+    <div class="viewer-controls">
+        <button id="zoom-in" title="Zoom in">+</button>
+        <button id="zoom-out" title="Zoom out">−</button>
+        <button id="reset-zoom" title="Reset view">⟲</button>
+    </div>
+</main>
+
+    </div>
+
+    <script src="assets/js/vendor/svg-pan-zoom.min.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>

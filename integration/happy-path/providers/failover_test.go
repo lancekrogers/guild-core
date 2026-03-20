@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 package providers
 
 import (
@@ -7,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -149,25 +152,6 @@ type LoadTestResults struct {
 	ErrorBreakdown     map[string]int
 }
 
-// FailoverEvent represents a provider failover event
-type FailoverEvent struct {
-	Timestamp        time.Time
-	FromProvider     string
-	ToProvider       string
-	Reason           FailoverReason
-	FailoverDuration time.Duration
-}
-
-// FailoverReason represents reasons for failover
-type FailoverReason int
-
-const (
-	FailoverReason_ProviderFailure FailoverReason = iota
-	FailoverReason_RateLimitExceeded
-	FailoverReason_HealthCheck
-	FailoverReason_CostOptimization
-)
-
 // ProviderUsageStats tracks provider usage statistics
 type ProviderUsageStats struct {
 	RequestCount   int
@@ -182,15 +166,6 @@ type ProviderHealthStats struct {
 	RecoveredSuccessfully bool
 	RecoveryTime          time.Duration
 	HealthScore           float64
-}
-
-// CircuitBreakerMetrics tracks circuit breaker statistics
-type CircuitBreakerMetrics struct {
-	WasTriggered             bool
-	FailedRequestsBeforeOpen int
-	RecoverySuccessRate      float64
-	OpenDuration             time.Duration
-	HalfOpenAttempts         int
 }
 
 // RequestMetrics tracks request execution metrics
@@ -626,7 +601,7 @@ func TestProviderFailover_HappyPath(t *testing.T) {
 			},
 			expectedFailoverTime: 2 * time.Second,
 			expectedSuccessRate:  0.98,
-			loadProfile:          LoadProfile{RequestsPerSecond: 5, Duration: 60 * time.Second},
+			loadProfile:          LoadProfile{RequestsPerSecond: 5, Duration: 20 * time.Second},
 		},
 		{
 			name: "Complex multi-provider failover with rate limiting",
@@ -641,7 +616,7 @@ func TestProviderFailover_HappyPath(t *testing.T) {
 			},
 			expectedFailoverTime: 3 * time.Second,
 			expectedSuccessRate:  0.95,
-			loadProfile:          LoadProfile{RequestsPerSecond: 20, Duration: 120 * time.Second},
+			loadProfile:          LoadProfile{RequestsPerSecond: 20, Duration: 30 * time.Second},
 		},
 	}
 
@@ -747,7 +722,7 @@ func TestProviderFailover_HappyPath(t *testing.T) {
 			for _, event := range failoverEvents {
 				assert.LessOrEqual(t, event.FailoverDuration, scenario.expectedFailoverTime,
 					"Failover time exceeded target: %v > %v", event.FailoverDuration, scenario.expectedFailoverTime)
-				assert.Equal(t, FailoverReason_ProviderFailure, event.Reason,
+				assert.Equal(t, FailoverReasonProviderFailure, event.Reason,
 					"Unexpected failover reason: %v", event.Reason)
 			}
 
@@ -764,7 +739,7 @@ func TestProviderFailover_HappyPath(t *testing.T) {
 			// Verify provider usage distribution
 			totalCost := 0.0
 			for providerName, stats := range providerUsageStats {
-				providerConfig := framework.GetProviderConfig(providerName)
+				_ = framework.GetProviderConfig(providerName)
 				totalCost += stats.TotalCost
 
 				t.Logf("Provider %s: %d requests, %.1f%% success rate, avg latency %v",

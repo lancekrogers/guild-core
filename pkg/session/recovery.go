@@ -12,7 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // RecoveryManager handles crash recovery with checkpoint support
@@ -37,7 +38,7 @@ type Checkpoint struct {
 // NewRecoveryManager creates a new recovery manager
 func NewRecoveryManager(manager *SessionManager, checkpointDir string) (*RecoveryManager, error) {
 	// Ensure checkpoint directory exists
-	if err := os.MkdirAll(checkpointDir, 0755); err != nil {
+	if err := os.MkdirAll(checkpointDir, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create checkpoint directory")
 	}
 
@@ -50,7 +51,7 @@ func NewRecoveryManager(manager *SessionManager, checkpointDir string) (*Recover
 	// Load existing checkpoints
 	if err := rm.loadCheckpoints(); err != nil {
 		// Log but don't fail
-		fmt.Printf("Warning: failed to load checkpoints: %v\n", err)
+		observability.NewLogger(nil).Warn("failed to load checkpoints", "error", err)
 	}
 
 	return rm, nil
@@ -115,7 +116,7 @@ func (rm *RecoveryManager) RecoverSession(ctx context.Context, sessionID string)
 	if len(checkpoint.UnsavedChanges) > 0 {
 		for _, change := range checkpoint.UnsavedChanges {
 			if err := rm.applyChange(session, change); err != nil {
-				fmt.Printf("Warning: failed to apply change: %v\n", err)
+				observability.GetLogger(ctx).Warn("failed to apply change during recovery", "error", err, "session_id", sessionID)
 			}
 		}
 	}
@@ -246,7 +247,7 @@ func (rm *RecoveryManager) saveCheckpoint(checkpoint *Checkpoint) error {
 
 	// Write atomically
 	tmpFile := filename + ".tmp"
-	if err := os.WriteFile(tmpFile, data, 0644); err != nil {
+	if err := os.WriteFile(tmpFile, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write checkpoint")
 	}
 
@@ -294,7 +295,7 @@ func (rm *RecoveryManager) loadCheckpoints() error {
 			sessionID := filename[11 : len(filename)-5]
 			checkpoint, err := rm.loadCheckpoint(sessionID)
 			if err != nil {
-				fmt.Printf("Warning: failed to load checkpoint %s: %v\n", sessionID, err)
+				observability.NewLogger(nil).Warn("failed to load checkpoint", "error", err, "session_id", sessionID)
 				continue
 			}
 			rm.checkpoints[sessionID] = checkpoint
@@ -309,7 +310,7 @@ func (rm *RecoveryManager) removeCheckpoint(sessionID string) {
 
 	filename := filepath.Join(rm.checkpointDir, fmt.Sprintf("checkpoint_%s.json", sessionID))
 	if err := os.Remove(filename); err != nil && !os.IsNotExist(err) {
-		fmt.Printf("Warning: failed to remove checkpoint file: %v\n", err)
+		observability.NewLogger(nil).Warn("failed to remove checkpoint file", "error", err, "session_id", sessionID)
 	}
 }
 

@@ -400,7 +400,7 @@ func SaveReport(report *PerformanceReport, filename string) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(filename, data, 0644)
+	return os.WriteFile(filename, data, 0o644)
 }
 
 // GenerateMarkdownReport creates a human-readable markdown report

@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package grpc
 
 import (
@@ -8,10 +11,10 @@ import (
 	"sync"
 	"testing"
 
-	guildgrpc "github.com/lancekrogers/guild/pkg/grpc"
-	guildpb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/tools"
+	guildgrpc "github.com/lancekrogers/guild-core/pkg/grpc"
+	guildpb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
@@ -37,6 +40,7 @@ func (t *TestTool) Schema() map[string]interface{} {
 		},
 	}
 }
+
 func (t *TestTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	t.mu.Lock()
 	t.executed = true
@@ -46,14 +50,22 @@ func (t *TestTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 		Success: true,
 	}, nil
 }
+
 func (t *TestTool) Examples() []string {
 	return []string{"test input"}
 }
+
 func (t *TestTool) Category() string {
 	return "test"
 }
+
 func (t *TestTool) RequiresAuth() bool {
 	return false
+}
+
+func (t *TestTool) HealthCheck() error {
+	// Test tool is always healthy
+	return nil
 }
 
 // IsExecuted safely checks if the tool was executed

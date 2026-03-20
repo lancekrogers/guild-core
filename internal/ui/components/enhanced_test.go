@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/animation"
-	"github.com/lancekrogers/guild/internal/ui/theme"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/ui/animation"
+	"github.com/lancekrogers/guild-core/internal/ui/theme"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 func TestNewComponentLibrary(t *testing.T) {
@@ -647,7 +647,6 @@ func TestComponentLibrary_ErrorHandling(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			cl := tt.setup()
 			err := tt.action(cl)
-
 			// Should handle errors gracefully
 			if err != nil {
 				var gErr *gerror.GuildError

@@ -8,7 +8,7 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // LoadConfig loads configuration from a YAML file
@@ -53,7 +53,7 @@ func SaveConfig(config *Config, filename string) error {
 			WithOperation("SaveConfig")
 	}
 
-	if err := os.WriteFile(filename, data, 0644); err != nil {
+	if err := os.WriteFile(filename, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write config file").
 			WithComponent("registry").
 			WithOperation("SaveConfig").

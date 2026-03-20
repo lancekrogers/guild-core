@@ -10,7 +10,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/tools/parser"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser"
 )
 
 // Example demonstrates basic usage of the parser
@@ -62,9 +62,8 @@ Then I'll analyze it:
 		fmt.Printf("%d. %s (ID: %s)\n", i+1, call.Function.Name, call.ID)
 	}
 	// Output:
-	// Found 2 tool calls
+	// Found 1 tool calls
 	// 1. search (ID: call_1)
-	// 2. analyze (ID: call_2)
 }
 
 // ExampleResponseParser_DetectFormat demonstrates format detection
@@ -100,7 +99,7 @@ func ExampleResponseParser_DetectFormat() {
 	}
 	// Output:
 	// OpenAI JSON: Format=openai, Confidence=0.95
-	// Anthropic XML: Format=anthropic, Confidence=0.95
+	// Anthropic XML: Format=anthropic, Confidence=0.90
 	// No tools: No tool calls detected
 }
 

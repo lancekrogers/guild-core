@@ -12,8 +12,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 // TestProjectIntegration tests the full project workflow
@@ -31,11 +31,11 @@ func TestProjectIntegration(t *testing.T) {
 
 		// Verify structure was created
 		expectedDirs := []string{
-			".guild",
-			".guild/corpus",
-			".guild/embeddings",
-			".guild/agents",
-			".guild/commissions",
+			".campaign",
+			".campaign/agents",
+			".campaign/guilds",
+			".campaign/memory",
+			".campaign/prompts",
 		}
 
 		for _, dir := range expectedDirs {
@@ -82,7 +82,7 @@ func TestProjectIntegration(t *testing.T) {
 			t.Fatalf("Failed to get corpus config: %v", err)
 		}
 
-		expectedCorpusPath := filepath.Join(tempDir, ".guild", "corpus")
+		expectedCorpusPath := filepath.Join(tempDir, ".campaign", "corpus")
 		// Resolve symlinks for comparison
 		expectedPath, _ := filepath.EvalSymlinks(expectedCorpusPath)
 		actualPath, _ := filepath.EvalSymlinks(cfg.CorpusPath)
@@ -147,7 +147,7 @@ func TestProjectIntegration(t *testing.T) {
 	t.Run("SubdirectoryDetection", func(t *testing.T) {
 		// Create subdirectory
 		subDir := filepath.Join(tempDir, "src", "components")
-		os.MkdirAll(subDir, 0755)
+		os.MkdirAll(subDir, 0o755)
 
 		// Change to subdirectory
 		oldCwd, _ := os.Getwd()
@@ -178,12 +178,12 @@ func TestProjectMigration(t *testing.T) {
 
 	// Set up fake global corpus
 	globalCorpusDir := filepath.Join(globalDir, "corpus", "docs")
-	os.MkdirAll(globalCorpusDir, 0755)
+	os.MkdirAll(globalCorpusDir, 0o755)
 
 	// Create test files in global
 	testFile := filepath.Join(globalCorpusDir, "test.md")
 	content := []byte("# Test Document\n\nThis is a test.")
-	if err := os.WriteFile(testFile, content, 0644); err != nil {
+	if err := os.WriteFile(testFile, content, 0o644); err != nil {
 		t.Fatalf("Failed to create test file: %v", err)
 	}
 
@@ -211,7 +211,7 @@ func TestProjectMigration(t *testing.T) {
 	}
 
 	// Check file exists in project
-	projectFile := filepath.Join(projectDir, ".guild", "corpus", "docs", "test.md")
+	projectFile := filepath.Join(projectDir, ".campaign", "corpus", "docs", "test.md")
 	if _, err := os.Stat(projectFile); os.IsNotExist(err) {
 		t.Error("Migrated file not found in project")
 	}

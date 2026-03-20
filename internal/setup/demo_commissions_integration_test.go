@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/commission"
 )
 
 // TestDemoCommissionIntegration tests that generated demo commissions can be parsed
@@ -45,7 +45,7 @@ func TestDemoCommissionIntegration(t *testing.T) {
 
 			// Write to file
 			filename := filepath.Join(tempDir, string(demoType)+".md")
-			err = os.WriteFile(filename, []byte(content), 0644)
+			err = os.WriteFile(filename, []byte(content), 0o644)
 			require.NoError(t, err)
 
 			// Parse the commission

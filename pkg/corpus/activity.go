@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ActivityLog represents a collection of user view records
@@ -38,7 +38,7 @@ func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error 
 		activitiesDir = filepath.Join(cfg.CorpusPath, ViewLogDirName)
 	}
 
-	if err := os.MkdirAll(activitiesDir, 0755); err != nil {
+	if err := os.MkdirAll(activitiesDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("track_user_view").WithOperation("failed to create activities directory")
 	}
 
@@ -91,7 +91,7 @@ func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error 
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("track_user_view").WithOperation("failed to serialize activity log")
 	}
 
-	if err := os.WriteFile(activityLogPath, data, 0644); err != nil {
+	if err := os.WriteFile(activityLogPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("track_user_view").WithOperation("failed to save activity log")
 	}
 
@@ -107,7 +107,7 @@ func TrackUserView(ctx context.Context, user, docPath string, cfg Config) error 
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("track_user_view").WithOperation("failed to marshal user log")
 	}
 
-	if err := os.WriteFile(userLogPath, userData, 0644); err != nil {
+	if err := os.WriteFile(userLogPath, userData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("track_user_view").WithOperation("failed to save user log")
 	}
 

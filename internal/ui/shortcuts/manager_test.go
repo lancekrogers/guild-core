@@ -8,9 +8,9 @@ import (
 	"sync"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/internal/ui"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/ui"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"go.uber.org/zap"
 )
 

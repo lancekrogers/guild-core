@@ -6,7 +6,7 @@ package core
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/interfaces"
 )
 
 // CostManagerInterface defines the interface for tracking and managing agent operation costs

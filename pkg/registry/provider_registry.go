@@ -6,8 +6,8 @@ package registry
 import (
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
 // DefaultProviderRegistry implements the ProviderRegistry interface

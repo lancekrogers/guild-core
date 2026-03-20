@@ -5,6 +5,7 @@ This document describes the integration of the SuggestionService into the ChatSe
 ## Overview
 
 The ChatService has been enhanced with integrated suggestion capabilities that provide:
+
 - **Pre-execution suggestions**: Suggestions before sending messages to agents
 - **Post-execution suggestions**: Follow-up suggestions after receiving responses
 - **Token optimization**: Automatic message truncation to fit within token budgets
@@ -13,7 +14,9 @@ The ChatService has been enhanced with integrated suggestion capabilities that p
 ## Key Features
 
 ### 1. Token Optimization
+
 The ChatService automatically optimizes messages to fit within configured token budgets:
+
 ```go
 // Set token budget
 chatService.SetTokenBudget(4096)
@@ -23,7 +26,9 @@ cmd := chatService.SendMessage("agent", veryLongMessage)
 ```
 
 ### 2. Suggestion Modes
+
 Four modes control when suggestions are generated:
+
 - `SuggestionModeNone`: No suggestions
 - `SuggestionModePre`: Only before execution
 - `SuggestionModePost`: Only after execution
@@ -34,6 +39,7 @@ chatService.SetSuggestionMode(SuggestionModeBoth)
 ```
 
 ### 3. Integrated Suggestion Flow
+
 ```go
 // Send message with automatic suggestion handling
 cmd := chatService.SendMessageWithSuggestions(
@@ -46,6 +52,7 @@ cmd := chatService.SendMessageWithSuggestions(
 ## Usage Examples
 
 ### Basic Integration
+
 ```go
 // Create chat service with suggestions
 chatService, err := NewChatServiceWithSuggestions(
@@ -61,6 +68,7 @@ chatService.SetTokenBudget(4096)
 ```
 
 ### Manual Suggestion Handling
+
 ```go
 // Get pre-execution suggestions
 preCmd := chatService.GetPreExecutionSuggestions(message, conversationID)
@@ -106,6 +114,7 @@ processCmd := chatService.ProcessAgentResponse(agentResponse, originalMessage)
 ## Statistics and Monitoring
 
 The integrated service provides comprehensive statistics:
+
 ```go
 stats := chatService.GetStats()
 // Includes:
@@ -119,6 +128,7 @@ stats := chatService.GetStats()
 ## Testing
 
 Comprehensive tests cover:
+
 - Basic integration setup
 - All suggestion modes
 - Token optimization
@@ -127,6 +137,7 @@ Comprehensive tests cover:
 - Statistics tracking
 
 Run tests:
+
 ```bash
 go test ./internal/chat/v2/services/
 ```

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Legacy event type aliases for backward compatibility

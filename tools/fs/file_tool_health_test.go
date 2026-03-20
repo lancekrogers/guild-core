@@ -75,7 +75,7 @@ func TestFileTool_HealthCheck(t *testing.T) {
 		require.NoError(t, err)
 		defer func() {
 			// Restore permissions before cleanup
-			os.Chmod(tmpDir, 0755)
+			os.Chmod(tmpDir, 0o755)
 			os.RemoveAll(tmpDir)
 		}()
 
@@ -83,7 +83,7 @@ func TestFileTool_HealthCheck(t *testing.T) {
 		tool := NewFileTool(tmpDir)
 
 		// Remove read permissions
-		err = os.Chmod(tmpDir, 0000)
+		err = os.Chmod(tmpDir, 0o000)
 		require.NoError(t, err)
 
 		// Health check should fail

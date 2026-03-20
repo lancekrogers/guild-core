@@ -13,8 +13,8 @@ import (
 	"github.com/stretchr/testify/require"
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/paths"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 func TestCreateEnhancedCampaignStructure(t *testing.T) {
@@ -76,7 +76,7 @@ func TestCreateCampaignConfig(t *testing.T) {
 
 	// Create campaign directory first
 	campaignDir := filepath.Join(tmpDir, paths.DefaultCampaignDir)
-	err := os.MkdirAll(campaignDir, 0755)
+	err := os.MkdirAll(campaignDir, 0o755)
 	require.NoError(t, err)
 
 	// Test creating campaign config
@@ -127,7 +127,7 @@ func TestCreateSocketRegistry(t *testing.T) {
 
 	// Create campaign directory
 	campaignDir := filepath.Join(tmpDir, paths.DefaultCampaignDir)
-	err := os.MkdirAll(campaignDir, 0755)
+	err := os.MkdirAll(campaignDir, 0o755)
 	require.NoError(t, err)
 
 	// Test creating socket registry
@@ -165,7 +165,7 @@ func TestCreateDefaultGuildConfig(t *testing.T) {
 
 	// Create required directories
 	guildsDir := filepath.Join(tmpDir, paths.DefaultCampaignDir, "guilds")
-	err := os.MkdirAll(guildsDir, 0755)
+	err := os.MkdirAll(guildsDir, 0o755)
 	require.NoError(t, err)
 
 	// Test creating guild config
@@ -219,7 +219,7 @@ func TestCreateEnhancedAgentConfigs(t *testing.T) {
 
 	// Create agents directory
 	agentsDir := filepath.Join(tmpDir, paths.DefaultCampaignDir, "agents")
-	err := os.MkdirAll(agentsDir, 0755)
+	err := os.MkdirAll(agentsDir, 0o755)
 	require.NoError(t, err)
 
 	// Create project type
@@ -313,7 +313,7 @@ func TestAdaptAgentConfigsToProjectType(t *testing.T) {
 
 	// Create agents directory and Marcus config
 	agentsDir := filepath.Join(tmpDir, paths.DefaultCampaignDir, "agents")
-	err := os.MkdirAll(agentsDir, 0755)
+	err := os.MkdirAll(agentsDir, 0o755)
 	require.NoError(t, err)
 
 	// Create a basic Marcus config
@@ -329,7 +329,7 @@ func TestAdaptAgentConfigsToProjectType(t *testing.T) {
 	marcusPath := filepath.Join(agentsDir, "marcus-developer.yaml")
 	data, err := yaml.Marshal(marcusConfig)
 	require.NoError(t, err)
-	err = os.WriteFile(marcusPath, data, 0644)
+	err = os.WriteFile(marcusPath, data, 0o644)
 	require.NoError(t, err)
 
 	// Test adaptation for Go project

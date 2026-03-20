@@ -14,8 +14,8 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // ReasoningExtractor provides thread-safe, context-aware reasoning extraction
@@ -82,7 +82,7 @@ func NewReasoningExtractor(config ReasoningConfig) (*ReasoningExtractor, error) 
 	}
 
 	// Compile regex patterns
-	thinkingPattern, err := regexp.Compile(`(?s)<thinking>(.*?)</thinking>`)
+	thinkingPattern, err := regexp.Compile(`(?s)<thinking(?:\s+[^>]*)?>(.+?)</thinking>`)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to compile thinking pattern").
 			WithComponent("reasoning").

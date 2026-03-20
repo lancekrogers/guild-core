@@ -12,15 +12,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
-var (
-	fastInitForce bool
-)
+var fastInitForce bool
 
 // initCmd represents the fast init command
 var initCmd = &cobra.Command{

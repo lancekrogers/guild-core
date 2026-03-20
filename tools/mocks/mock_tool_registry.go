@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // MockToolRegistry is a mock implementation of the tools.ToolRegistry type.

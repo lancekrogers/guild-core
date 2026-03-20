@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ResourceUsage is a placeholder for metrics - replaced by agent metrics

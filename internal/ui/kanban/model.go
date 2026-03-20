@@ -9,13 +9,13 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"google.golang.org/grpc"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // Column represents a kanban board column
@@ -420,7 +420,8 @@ func (m *Model) handleNormalMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 
 // handleSearchMode handles key presses in search mode
 func (m *Model) handleSearchMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
-	switch msg.Type {
+	key := msg.Key()
+	switch key.Code {
 	case tea.KeyEscape:
 		m.viewportState.SearchMode = false
 		m.viewportState.SearchFilter = ""
@@ -437,8 +438,8 @@ func (m *Model) handleSearchMode(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 
 	default:
-		if msg.Type == tea.KeyRunes {
-			m.viewportState.SearchFilter += string(msg.Runes)
+		if key.Text != "" {
+			m.viewportState.SearchFilter += key.Text
 			m.updateColumns()
 		}
 	}

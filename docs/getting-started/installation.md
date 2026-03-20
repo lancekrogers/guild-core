@@ -41,6 +41,7 @@ go build -o bin/guild cmd/guild/main.go
 ### Current Build Issues
 
 The following packages currently have build errors:
+
 - `pkg/grpc` - Interface mismatches with Campaign/Objectives
 - `cmd/guild` - Some commands disabled due to gRPC issues  
 - `internal/chat` - Build dependencies

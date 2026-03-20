@@ -77,12 +77,14 @@ go tool cover -html=coverage.out -o coverage.html
 #### Daemon Lifecycle Test (`daemon_lifecycle_test.go`)
 
 **Scenarios Tested:**
+
 - Clean daemon lifecycle with health monitoring
 - Daemon crash recovery with automatic restart
 - Network partition recovery with graceful degradation
 - Resource exhaustion handling with circuit breakers
 
 **Success Criteria:**
+
 - ≥99.9% daemon uptime with automated recovery
 - ≤3 seconds recovery time from process crashes
 - ≤5 seconds recovery from network partitions  
@@ -91,6 +93,7 @@ go tool cover -html=coverage.out -o coverage.html
 - CPU usage ≤50% under normal operations
 
 **Key Validations:**
+
 - Connection pooling and retry logic
 - Health check responsiveness (≤1 second detection)
 - Concurrent client handling (up to 20 clients)
@@ -100,11 +103,13 @@ go tool cover -html=coverage.out -o coverage.html
 #### Streaming Backpressure Test (`streaming_backpressure_test.go`)
 
 **Scenarios Tested:**
+
 - Low volume streaming (5 streams, 1KB messages)
 - High volume with backpressure (20 streams, 4KB messages)
 - Large message streaming (10 streams, 64KB messages)
 
 **Success Criteria:**
+
 - ≥5000 messages/second throughput for high volume
 - ≤500ms average latency across all streams
 - ≤10% backpressure event rate
@@ -112,6 +117,7 @@ go tool cover -html=coverage.out -o coverage.html
 - CPU usage ≤80% under load
 
 **Key Validations:**
+
 - Flow control window management
 - Backpressure detection and handling
 - Message batching effectiveness
@@ -123,12 +129,14 @@ go tool cover -html=coverage.out -o coverage.html
 #### Multi-Provider Failover Test (`failover_test.go`)
 
 **Scenarios Tested:**
+
 - Simple failover between two providers (OpenAI → Anthropic)
 - Complex multi-provider cascade (OpenAI → Anthropic → Local)
 - Rate limiting and cost optimization
 - Provider health monitoring and recovery
 
 **Success Criteria:**
+
 - ≤2 seconds failover time with zero request loss
 - ≥95% overall success rate during failures
 - Cost-aware provider selection (±10% optimal)
@@ -136,6 +144,7 @@ go tool cover -html=coverage.out -o coverage.html
 - Automatic failback after recovery
 
 **Key Validations:**
+
 - Intelligent provider selection algorithms
 - Circuit breaker state management
 - Request routing during failures
@@ -147,12 +156,14 @@ go tool cover -html=coverage.out -o coverage.html
 #### Network Resilience Test (`resilience_test.go`)
 
 **Scenarios Tested:**
+
 - Intermittent connectivity (packet loss, high latency)
 - Complete network partitions with auth token expiry
 - TLS certificate rotation and validation
 - Authentication server failures
 
 **Success Criteria:**
+
 - ≥95% communication success rate overall
 - ≤60 seconds recovery from network partitions
 - ≤5 authentication attempts for recovery
@@ -160,6 +171,7 @@ go tool cover -html=coverage.out -o coverage.html
 - TLS 1.3 enforcement with mutual authentication
 
 **Key Validations:**
+
 - Exponential backoff implementation
 - Authentication token renewal
 - Certificate validation and rotation
@@ -264,24 +276,28 @@ Tests include baseline performance validation:
 All tests must pass these quality gates:
 
 ### System Reliability
+
 - [ ] ≥99.9% daemon uptime during tests
 - [ ] ≤2 second average recovery time
 - [ ] Zero data loss during failures
 - [ ] Resource usage within limits
 
 ### Provider Integration
+
 - [ ] ≤2 second failover time
 - [ ] ≥95% request success rate
 - [ ] Cost variance ≤10% from optimal
 - [ ] Circuit breaker effectiveness
 
 ### Network Resilience  
+
 - [ ] ≥95% communication success rate
 - [ ] Zero security violations
 - [ ] TLS integrity maintained
 - [ ] Graceful auth recovery
 
 ### Test Quality
+
 - [ ] ≥90% test coverage
 - [ ] All scenarios pass consistently
 - [ ] Performance targets met
@@ -307,6 +323,7 @@ When adding new integration tests:
 ### Medieval Naming Support
 
 The codebase supports medieval terminology where appropriate:
+
 - Agents = Artisans
 - Agent pools = Guilds  
 - Tasks = Commissions

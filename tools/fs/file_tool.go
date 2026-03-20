@@ -12,8 +12,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // FileTool provides file system operations for agents
@@ -38,7 +38,7 @@ func NewFileTool(basePath string) *FileTool {
 
 	// Ensure the base path exists
 	if _, err := os.Stat(basePath); os.IsNotExist(err) {
-		os.MkdirAll(basePath, 0755)
+		os.MkdirAll(basePath, 0o755)
 	}
 
 	schema := map[string]interface{}{
@@ -183,14 +183,14 @@ func (t *FileTool) readFile(path string) (string, error) {
 func (t *FileTool) writeFile(path string, content string) (string, error) {
 	// Create parent directories if they don't exist
 	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to create directories").
 			WithComponent("file_tool").
 			WithOperation("write_file")
 	}
 
 	// Write content to file
-	if err := ioutil.WriteFile(path, []byte(content), 0644); err != nil {
+	if err := ioutil.WriteFile(path, []byte(content), 0o644); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write to file").
 			WithComponent("file_tool").
 			WithOperation("write_file")

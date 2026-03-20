@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/storage/db"
+	"github.com/lancekrogers/guild-core/pkg/storage/db"
 )
 
 // KnowledgeType represents different categories of extracted knowledge

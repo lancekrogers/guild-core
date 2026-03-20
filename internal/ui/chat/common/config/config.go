@@ -7,10 +7,10 @@ import (
 	"context"
 	"path/filepath"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/preferences"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/preferences"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 // ChatConfig holds configuration specific to the chat interface
@@ -132,9 +132,9 @@ func (cm *ConfigManager) LoadChatConfig(ctx context.Context, userID, campaignID,
 		StreamingEnabled: true,
 
 		// Paths
-		DatabasePath: filepath.Join(".guild", "memory.db"),
-		HistoryPath:  filepath.Join(".guild", "chat_history.txt"),
-		ConfigPath:   filepath.Join(".guild", "guild.yaml"),
+		DatabasePath: filepath.Join(".campaign", "memory.db"),
+		HistoryPath:  filepath.Join(".campaign", "chat_history.txt"),
+		ConfigPath:   filepath.Join(".campaign", "campaign.yaml"),
 	}
 
 	// Apply any overrides from guild config

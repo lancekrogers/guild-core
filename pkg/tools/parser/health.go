@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	jsonparser "github.com/lancekrogers/guild/pkg/tools/parser/json"
-	xmlparser "github.com/lancekrogers/guild/pkg/tools/parser/xml"
+	jsonparser "github.com/lancekrogers/guild-core/pkg/tools/parser/json"
+	xmlparser "github.com/lancekrogers/guild-core/pkg/tools/parser/xml"
 )
 
 // HealthStatus represents the health status of the parser
@@ -155,10 +155,10 @@ func (h *HealthMonitor) Check(ctx context.Context) HealthCheck {
 func (h *HealthMonitor) checkBasicParsing(ctx context.Context) CheckResult {
 	start := time.Now()
 
-	// Test with a simple JSON tool call
-	testInput := `{"function": {"name": "test_tool", "arguments": "{}"}}`
+	// Test with a simple JSON tool call in OpenAI format
+	testInput := `{"tool_calls": [{"id": "test_123", "type": "function", "function": {"name": "test_tool", "arguments": "{}"}}]}`
 
-	_, err := h.parser.ExtractWithContext(ctx, testInput)
+	calls, err := h.parser.ExtractWithContext(ctx, testInput)
 
 	latency := time.Since(start)
 
@@ -168,6 +168,15 @@ func (h *HealthMonitor) checkBasicParsing(ctx context.Context) CheckResult {
 			Message: "Basic parsing test failed",
 			Latency: latency,
 			Error:   err.Error(),
+		}
+	}
+
+	// For basic parsing, we expect to get at least one tool call
+	if len(calls) == 0 {
+		return CheckResult{
+			Status:  HealthStatusDegraded,
+			Message: "Basic parsing returned no tool calls",
+			Latency: latency,
 		}
 	}
 
@@ -192,7 +201,8 @@ func (h *HealthMonitor) checkJSONDetector(ctx context.Context) CheckResult {
 	start := time.Now()
 
 	detector := NewJSONDetector()
-	testInput := []byte(`{"function": {"name": "test"}}`)
+	// Use a proper OpenAI format for the test
+	testInput := []byte(`{"tool_calls": [{"id": "test_123", "type": "function", "function": {"name": "test", "arguments": "{}"}}]}`)
 
 	canParse := detector.CanParse(testInput)
 	latency := time.Since(start)
@@ -266,7 +276,7 @@ func (h *HealthMonitor) checkFormatDetection(ctx context.Context) CheckResult {
 		expected ProviderFormat
 	}{
 		{
-			`{"function": {"name": "test", "arguments": "{}"}}`,
+			`{"tool_calls": [{"id": "test_123", "type": "function", "function": {"name": "test", "arguments": "{}"}}]}`,
 			ProviderFormatOpenAI,
 		},
 		{

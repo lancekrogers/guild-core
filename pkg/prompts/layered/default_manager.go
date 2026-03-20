@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // DefaultManager is the default implementation of the Manager interface

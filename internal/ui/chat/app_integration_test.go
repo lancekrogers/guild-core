@@ -12,18 +12,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
 	// "github.com/charmbracelet/x/exp/teatest" // TODO: Use for future TUI tests
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	// grpcpkg "github.com/lancekrogers/guild/pkg/grpc" // TODO: Use for grpc utilities
-	guildv1 "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	// "github.com/lancekrogers/guild/pkg/registry" // TODO: Use for registry functionality
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	// grpcpkg "github.com/lancekrogers/guild-core/pkg/grpc" // TODO: Use for grpc utilities
+	guildv1 "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	// "github.com/lancekrogers/guild-core/pkg/registry" // TODO: Use for registry functionality
 )
 
 // mockGuildServer implements a test gRPC server for chat integration testing
@@ -617,16 +617,16 @@ func TestGuildChatUIIntegration(t *testing.T) {
 		// Test typing a message
 		testMessage := "Hello agents!"
 		for _, char := range testMessage {
-			input, _ = input.Update(tea.KeyMsg{
-				Type:  tea.KeyRunes,
-				Runes: []rune{char},
+			input, _ = input.Update(tea.KeyPressMsg{
+				Text: string(char),
+				Code: char,
 			})
 		}
 
 		assert.Equal(t, testMessage, input.Value(), "Input should contain typed message")
 
 		// Test Enter key
-		input, _ = input.Update(tea.KeyMsg{Type: tea.KeyEnter})
+		input, _ = input.Update(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 		// After Enter, input should be ready for submission
 		// (actual submission handling would be in the parent model)

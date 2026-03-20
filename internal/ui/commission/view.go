@@ -8,7 +8,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 // Define medieval Guild-themed styles
@@ -81,7 +82,7 @@ var (
 )
 
 // View renders the UI
-func (m CommissionChamber) View() string {
+func (m CommissionChamber) View() tea.View {
 	var b strings.Builder
 
 	// Get title based on current commission
@@ -142,7 +143,7 @@ func (m CommissionChamber) View() string {
 		b.WriteString(helpHint)
 	}
 
-	return b.String()
+	return tea.NewView(b.String())
 }
 
 // renderViewingState renders the main commission viewing state

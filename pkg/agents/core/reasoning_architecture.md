@@ -70,6 +70,7 @@ type ThinkingBlock struct {
 ```
 
 **Key Features:**
+
 - 7 distinct thinking types (Analysis, Planning, Decision Making, etc.)
 - Rich metadata for learning and analysis
 - Hierarchical relationships between thoughts
@@ -92,6 +93,7 @@ type ReasoningChainEnhanced struct {
 ```
 
 **Key Features:**
+
 - Strategy tracking with adaptations
 - Multi-dimensional quality scoring
 - Performance metrics for optimization
@@ -113,6 +115,7 @@ type ReasoningStreamer struct {
 ```
 
 **Key Features:**
+
 - Event-based streaming architecture
 - Backpressure handling
 - Graceful interruption (ESC key)
@@ -133,6 +136,7 @@ type TokenManager struct {
 ```
 
 **Key Features:**
+
 - Provider-specific token counting
 - Safety margins (85% soft limit, 95% hard limit)
 - Automatic compaction triggers
@@ -153,6 +157,7 @@ type PatternLearner struct {
 ```
 
 **Key Features:**
+
 - Automatic pattern discovery
 - Reinforcement learning with decay
 - Cross-domain pattern transfer
@@ -184,6 +189,7 @@ type ReasoningDisplay struct {
 ```
 
 **Key Features:**
+
 - Multiple layout options (bottom, right, overlay, split)
 - Rich styling with lipgloss
 - Real-time updates with spinner
@@ -200,6 +206,7 @@ type ReasoningDisplay struct {
 **Decision**: Implement structured ThinkingBlock with typed content and metadata.
 
 **Consequences**:
+
 - ✅ Enables sophisticated analysis and pattern learning
 - ✅ Provides rich context for debugging and improvement
 - ❌ Increases complexity and storage requirements
@@ -213,6 +220,7 @@ type ReasoningDisplay struct {
 **Decision**: Use channel-based event streaming with dedicated goroutines.
 
 **Consequences**:
+
 - ✅ Non-blocking UI updates
 - ✅ Clean separation of concerns
 - ✅ Supports interruption
@@ -227,6 +235,7 @@ type ReasoningDisplay struct {
 **Decision**: Implement provider-specific token counters with common interface.
 
 **Consequences**:
+
 - ✅ Accurate token counts per provider
 - ✅ Prevents unexpected truncation
 - ❌ Requires maintaining multiple implementations
@@ -240,6 +249,7 @@ type ReasoningDisplay struct {
 **Decision**: Use SQLite with structured schema and migrations.
 
 **Consequences**:
+
 - ✅ Zero-dependency persistence
 - ✅ ACID compliance
 - ✅ Easy backup and portability
@@ -254,6 +264,7 @@ type ReasoningDisplay struct {
 **Decision**: Implement reinforcement learning with temporal decay.
 
 **Consequences**:
+
 - ✅ Adapts to changing requirements
 - ✅ Prevents stale patterns
 - ❌ Requires tuning decay parameters
@@ -355,24 +366,28 @@ suggestions, err := learner.ApplySuggestions(ctx, currentContext)
 ## Performance Considerations
 
 ### Token Management
+
 - **Soft limit** at 85% triggers compaction
 - **Hard limit** at 95% forces immediate action
 - **Emergency limit** at 98% prevents overflow
 - Token prediction helps avoid limits
 
 ### Memory Management
+
 - Concurrent-safe operations with sync.Map
 - Lazy loading of pattern data
 - Configurable retention policies
 - Background cleanup tasks
 
 ### Streaming Performance
+
 - Buffered channels (default 1024)
 - Custom splitting for optimal chunks
 - Flush intervals (100ms default)
 - Backpressure handling
 
 ### Storage Optimization
+
 - JSON compression for large blocks
 - Indexed queries on common fields
 - Batch operations for efficiency
@@ -381,18 +396,21 @@ suggestions, err := learner.ApplySuggestions(ctx, currentContext)
 ## Future Enhancements
 
 ### Short-term (Next Sprint)
+
 1. **Distributed Reasoning**: Multi-agent reasoning coordination
 2. **Advanced Visualizations**: Reasoning graph visualization
 3. **Export Formats**: Export chains as markdown, JSON, or PDF
 4. **Pattern Marketplace**: Share and import reasoning patterns
 
 ### Medium-term (Next Quarter)
+
 1. **Reasoning Debugger**: Step-through reasoning with breakpoints
 2. **A/B Testing**: Compare reasoning strategies
 3. **Custom Thinking Types**: Domain-specific reasoning types
 4. **Reasoning Metrics Dashboard**: Real-time analytics
 
 ### Long-term (Next Year)
+
 1. **Reasoning Compiler**: Compile patterns into optimized prompts
 2. **Federated Learning**: Learn from distributed deployments
 3. **Reasoning Certification**: Validate reasoning quality

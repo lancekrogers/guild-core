@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package prompts.v1;
 
-option go_package = "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1";
+option go_package = "github.com/guild-framework/guild-core/pkg/grpc/pb/prompts/v1";
 
 import "google/protobuf/timestamp.proto";
 

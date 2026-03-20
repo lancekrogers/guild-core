@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
-	daemonPkg "github.com/lancekrogers/guild/pkg/daemon"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	daemonPkg "github.com/lancekrogers/guild-core/pkg/daemon"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Manager handles multiple daemon instances
@@ -109,14 +109,14 @@ func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig)
 	// Set up logging
 	if config.LogFile != "" {
 		logDir := getDirFromPath(config.LogFile)
-		if err := os.MkdirAll(logDir, 0755); err != nil {
+		if err := os.MkdirAll(logDir, 0o755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create log directory").
 				WithComponent("daemon").
 				WithOperation("startCampaignDaemon").
 				WithDetails("directory", logDir)
 		}
 
-		logFile, err := os.OpenFile(config.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+		logFile, err := os.OpenFile(config.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open log file").
 				WithComponent("daemon").
@@ -144,7 +144,7 @@ func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig)
 	// Write PID file if configured
 	if config.PIDFile != "" {
 		pidDir := getDirFromPath(config.PIDFile)
-		if err := os.MkdirAll(pidDir, 0755); err != nil {
+		if err := os.MkdirAll(pidDir, 0o755); err != nil {
 			cmd.Process.Kill()
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create PID directory").
 				WithComponent("daemon").
@@ -152,7 +152,7 @@ func (m *Manager) startCampaignDaemon(ctx context.Context, config *DaemonConfig)
 				WithDetails("directory", pidDir)
 		}
 
-		if err := os.WriteFile(config.PIDFile, []byte(strconv.Itoa(cmd.Process.Pid)), 0644); err != nil {
+		if err := os.WriteFile(config.PIDFile, []byte(strconv.Itoa(cmd.Process.Pid)), 0o644); err != nil {
 			cmd.Process.Kill()
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write PID file").
 				WithComponent("daemon").

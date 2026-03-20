@@ -10,15 +10,15 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/help"
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/list"
-	"github.com/charmbracelet/bubbles/textinput"
-	"github.com/charmbracelet/bubbles/viewport"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/help"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/list"
+	"charm.land/bubbles/v2/textinput"
+	"charm.land/bubbles/v2/viewport"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
 )
 
 // UI modes
@@ -254,13 +254,13 @@ func NewModel(ctx context.Context, corpusManager CorpusManager, config CorpusCon
 	searchInput := textinput.New()
 	searchInput.Placeholder = "Search documents..."
 	searchInput.CharLimit = 100
-	searchInput.Width = 30
+	searchInput.SetWidth(30)
 
 	// Initialize the command input
 	commandInput := textinput.New()
 	commandInput.Placeholder = "Enter command..."
 	commandInput.CharLimit = 100
-	commandInput.Width = 30
+	commandInput.SetWidth(30)
 
 	// Document list with custom styling
 	docDelegate := list.NewDefaultDelegate()
@@ -289,7 +289,10 @@ func NewModel(ctx context.Context, corpusManager CorpusManager, config CorpusCon
 	tagList.SetShowHelp(false)
 
 	// Viewport for document viewing
-	viewPort := viewport.New(80, 20)
+	viewPort := viewport.New(
+		viewport.WithWidth(80),
+		viewport.WithHeight(20),
+	)
 	viewPort.Style = lipgloss.NewStyle().
 		BorderStyle(lipgloss.RoundedBorder()).
 		BorderForeground(lipgloss.Color("62"))

@@ -6,7 +6,7 @@ package mocks
 import (
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
 )
 
 // MockCostManager implements the core.CostManagerInterface for testing

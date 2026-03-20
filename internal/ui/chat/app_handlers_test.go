@@ -10,11 +10,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/commands"
-	"github.com/lancekrogers/guild/internal/ui/chat/common"
-	"github.com/lancekrogers/guild/internal/ui/chat/messages"
-	"github.com/lancekrogers/guild/internal/ui/chat/panes"
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/commands"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/messages"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/panes"
+	"github.com/lancekrogers/guild-core/pkg/config"
 )
 
 func newMinimalApp(t *testing.T) *App {
@@ -53,7 +53,7 @@ func TestApp_HandleGlobalSearch(t *testing.T) {
 	}
 	dir := t.TempDir()
 	data := []byte("hello world")
-	require.NoError(t, os.WriteFile(filepath.Join(dir, "test.txt"), data, 0644))
+	require.NoError(t, os.WriteFile(filepath.Join(dir, "test.txt"), data, 0o644))
 
 	app := newMinimalApp(t)
 	app.config.ProjectRoot = dir

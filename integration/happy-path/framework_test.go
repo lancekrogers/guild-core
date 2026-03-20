@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 package happypath
 
 import (
@@ -8,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"github.com/stretchr/testify/require"
 )
 
@@ -78,7 +81,7 @@ func NewHappyPathTestFramework(t *testing.T) *HappyPathTestFramework {
 	return &HappyPathTestFramework{
 		t:           t,
 		cleanup:     make([]func(), 0),
-		portManager: NewPortManager(8000),
+		portManager: NewPortManager(8001),
 	}
 }
 

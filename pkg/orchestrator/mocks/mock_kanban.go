@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // MockKanbanManager is a mock implementation of the kanban.Manager
@@ -286,9 +286,20 @@ func (m *MockKanbanManager) GetBoard(ctx context.Context, boardID string) (*kanb
 		return nil, nil
 	}
 
-	// Return a copy
-	boardCopy := *board
-	return &boardCopy, nil
+	// Return a copy (avoid copying mutex)
+	boardCopy := &kanban.Board{
+		ID:          board.ID,
+		Name:        board.Name,
+		Description: board.Description,
+		CreatedAt:   board.CreatedAt,
+		UpdatedAt:   board.UpdatedAt,
+		Metadata:    make(map[string]string),
+	}
+	// Copy metadata
+	for k, v := range board.Metadata {
+		boardCopy.Metadata[k] = v
+	}
+	return boardCopy, nil
 }
 
 // DeleteBoard deletes a board
@@ -311,8 +322,20 @@ func (m *MockKanbanManager) ListBoards(ctx context.Context) ([]*kanban.Board, er
 
 	var boards []*kanban.Board
 	for _, board := range m.boards {
-		boardCopy := *board
-		boards = append(boards, &boardCopy)
+		// Create a copy without copying mutex
+		boardCopy := &kanban.Board{
+			ID:          board.ID,
+			Name:        board.Name,
+			Description: board.Description,
+			CreatedAt:   board.CreatedAt,
+			UpdatedAt:   board.UpdatedAt,
+			Metadata:    make(map[string]string),
+		}
+		// Copy metadata
+		for k, v := range board.Metadata {
+			boardCopy.Metadata[k] = v
+		}
+		boards = append(boards, boardCopy)
 	}
 
 	return boards, nil

@@ -12,12 +12,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/messages"
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/search"
-	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/messages"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/search"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
 )
 
 // CompletionEngine provides intelligent command and agent auto-completion for core

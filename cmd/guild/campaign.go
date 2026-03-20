@@ -12,16 +12,16 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	"github.com/lancekrogers/guild/pkg/campaign"
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/orchestrator"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 var (
@@ -277,7 +277,7 @@ func createCampaign(cmd *cobra.Command, args []string) error {
 
 	// Save campaign (TODO: Use campaign repository)
 	campaignPath := filepath.Join(projCtx.GetGuildPath(), "campaigns", campaignModel.ID+".json")
-	if err := os.MkdirAll(filepath.Dir(campaignPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(campaignPath), 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("cli").
 			WithOperation("campaign.create").

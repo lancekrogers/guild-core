@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/common/layout"
-	"github.com/lancekrogers/guild/internal/ui/chat/components"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/layout"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/components"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // StatusPane displays system status, agent information, and notifications
@@ -182,7 +182,8 @@ type statusPaneImpl struct {
 
 // NewStatusPane creates a new status pane
 func NewStatusPane(width, height int) (StatusPane, error) {
-	if width < 20 || height < 1 {
+	// Height may be 0 when the status pane starts hidden.
+	if width < 20 || height < 0 {
 		return nil, gerror.Newf(gerror.ErrCodeInvalidInput, "status pane dimensions too small: %dx%d", width, height).
 			WithComponent("panes.status").
 			WithOperation("NewStatusPane")
@@ -397,14 +398,14 @@ func (sp *statusPaneImpl) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View renders the status pane
-func (sp *statusPaneImpl) View() string {
+func (sp *statusPaneImpl) View() tea.View {
 	rect := sp.GetRect()
 
 	if sp.compactMode {
-		return sp.renderCompactStatus(rect.Width)
+		return tea.NewView(sp.renderCompactStatus(rect.Width))
 	}
 
-	return sp.renderDetailedStatus(rect.Width)
+	return tea.NewView(sp.renderDetailedStatus(rect.Width))
 }
 
 // renderCompactStatus renders a single-line status bar

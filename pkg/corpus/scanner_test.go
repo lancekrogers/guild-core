@@ -209,17 +209,17 @@ func main() {}`,
 
 	for name, content := range testFiles {
 		path := filepath.Join(tmpDir, name)
-		err := os.WriteFile(path, []byte(content), 0644)
+		err := os.WriteFile(path, []byte(content), 0o644)
 		require.NoError(t, err)
 	}
 
 	// Create subdirectory to test
 	subDir := filepath.Join(tmpDir, "subdir")
-	err := os.MkdirAll(subDir, 0755)
+	err := os.MkdirAll(subDir, 0o755)
 	require.NoError(t, err)
 
 	subFile := filepath.Join(subDir, "sub.md")
-	err = os.WriteFile(subFile, []byte("# Subdirectory Document"), 0644)
+	err = os.WriteFile(subFile, []byte("# Subdirectory Document"), 0o644)
 	require.NoError(t, err)
 
 	// Create scanner and scan
@@ -280,7 +280,7 @@ func TestDocumentScanner_StreamProcessing(t *testing.T) {
 	for i := 0; i < 20; i++ {
 		name := filepath.Join(tmpDir, fmt.Sprintf("doc%d.md", i))
 		content := fmt.Sprintf("# Document %d\nContent for document %d", i, i)
-		err := os.WriteFile(name, []byte(content), 0644)
+		err := os.WriteFile(name, []byte(content), 0o644)
 		require.NoError(t, err)
 	}
 
@@ -316,7 +316,7 @@ func TestDocumentScanner_ChangeDetection(t *testing.T) {
 	// Create a test file
 	testFile := filepath.Join(tmpDir, "test.md")
 	content1 := []byte("Original content")
-	err = os.WriteFile(testFile, content1, 0644)
+	err = os.WriteFile(testFile, content1, 0o644)
 	require.NoError(t, err)
 
 	// Get initial checksum
@@ -330,7 +330,7 @@ func TestDocumentScanner_ChangeDetection(t *testing.T) {
 
 	// Modify file
 	content2 := []byte("Modified content")
-	err = os.WriteFile(testFile, content2, 0644)
+	err = os.WriteFile(testFile, content2, 0o644)
 	require.NoError(t, err)
 
 	// Check change detected
@@ -345,22 +345,22 @@ func TestDocumentScanner_IgnorePatterns(t *testing.T) {
 
 	// Create test structure
 	gitDir := filepath.Join(tmpDir, ".git")
-	err := os.MkdirAll(gitDir, 0755)
+	err := os.MkdirAll(gitDir, 0o755)
 	require.NoError(t, err)
 
 	nodeDir := filepath.Join(tmpDir, "node_modules")
-	err = os.MkdirAll(nodeDir, 0755)
+	err = os.MkdirAll(nodeDir, 0o755)
 	require.NoError(t, err)
 
 	// Create files in ignored directories
-	err = os.WriteFile(filepath.Join(gitDir, "config"), []byte("git config"), 0644)
+	err = os.WriteFile(filepath.Join(gitDir, "config"), []byte("git config"), 0o644)
 	require.NoError(t, err)
 
-	err = os.WriteFile(filepath.Join(nodeDir, "package.json"), []byte("{}"), 0644)
+	err = os.WriteFile(filepath.Join(nodeDir, "package.json"), []byte("{}"), 0o644)
 	require.NoError(t, err)
 
 	// Create normal file
-	err = os.WriteFile(filepath.Join(tmpDir, "readme.md"), []byte("# README"), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "readme.md"), []byte("# README"), 0o644)
 	require.NoError(t, err)
 
 	scanner, err := NewDocumentScanner(tmpDir)
@@ -383,7 +383,7 @@ type mockFileInfo struct {
 
 func (m *mockFileInfo) Name() string       { return m.name }
 func (m *mockFileInfo) Size() int64        { return m.size }
-func (m *mockFileInfo) Mode() os.FileMode  { return 0644 }
+func (m *mockFileInfo) Mode() os.FileMode  { return 0o644 }
 func (m *mockFileInfo) ModTime() time.Time { return m.modTime }
 func (m *mockFileInfo) IsDir() bool        { return false }
 func (m *mockFileInfo) Sys() interface{}   { return nil }

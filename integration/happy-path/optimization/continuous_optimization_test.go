@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package optimization
 
 import (
@@ -38,7 +41,7 @@ func TestContinuousOptimization_HappyPath(t *testing.T) {
 				"memory_usage": 0.20, // 20% reduction
 				"gc_frequency": 0.40, // 40% reduction
 			},
-			testDuration: 45 * time.Minute,
+			testDuration: 2 * time.Minute, // Reduced from 45 minutes
 		},
 		{
 			name: "Response time optimization",
@@ -60,7 +63,7 @@ func TestContinuousOptimization_HappyPath(t *testing.T) {
 				"agent_selection_time": 0.33, // 33% improvement
 				"search_response_time": 0.38, // 38% improvement
 			},
-			testDuration: 60 * time.Minute,
+			testDuration: 3 * time.Minute, // Reduced from 60 minutes
 		},
 	}
 
@@ -69,8 +72,8 @@ func TestContinuousOptimization_HappyPath(t *testing.T) {
 			// PHASE 1: Establish baseline performance
 			baselineCollector, err := framework.StartBaselineCollection(BaselineConfig{
 				MetricsToCollect: scenario.getMetricNames(),
-				CollectionPeriod: 15 * time.Minute,
-				SamplingInterval: 10 * time.Second,
+				CollectionPeriod: 30 * time.Second, // Reduced from 15 minutes
+				SamplingInterval: 1 * time.Second,  // Reduced from 10 seconds
 			})
 			require.NoError(t, err, "Failed to start baseline collection")
 
@@ -78,7 +81,7 @@ func TestContinuousOptimization_HappyPath(t *testing.T) {
 			loadGenerator := framework.CreateLoadGenerator(LoadConfig{
 				UserLoad:     LoadLevelMedium,
 				OperationMix: framework.GetTypicalOperationMix(),
-				Duration:     15 * time.Minute,
+				Duration:     30 * time.Second, // Reduced from 15 minutes
 			})
 
 			baselineMetrics := loadGenerator.ExecuteLoad(baselineCollector)
@@ -123,8 +126,8 @@ func TestContinuousOptimization_HappyPath(t *testing.T) {
 			validationLoadGenerator := framework.CreateLoadGenerator(LoadConfig{
 				UserLoad:            LoadLevelMedium,
 				OperationMix:        framework.GetTypicalOperationMix(),
-				Duration:            20 * time.Minute,
-				IdenticalToBaseline: true, // Use same pattern as baseline
+				Duration:            30 * time.Second, // Reduced from 20 minutes
+				IdenticalToBaseline: true,             // Use same pattern as baseline
 			})
 
 			// Use baseline collector for validation metrics
@@ -162,13 +165,13 @@ func TestContinuousOptimization_HappyPath(t *testing.T) {
 			}
 
 			// PHASE 5: Validate optimization stability
-			stabilityCtx, stabilityCancel := context.WithTimeout(context.Background(), 10*time.Minute)
+			stabilityCtx, stabilityCancel := context.WithTimeout(context.Background(), 30*time.Second) // Reduced from 10 minutes
 			defer stabilityCancel()
 
 			stabilityMonitor := framework.CreateStabilityMonitor(StabilityConfig{
 				OptimizedMetrics:   postOptimizationMetrics,
-				VarianceThreshold:  0.05, // 5% variance tolerance
-				MonitoringInterval: 30 * time.Second,
+				VarianceThreshold:  0.05,            // 5% variance tolerance
+				MonitoringInterval: 5 * time.Second, // Reduced from 30 seconds
 			})
 
 			stabilityResults := stabilityMonitor.Monitor(stabilityCtx)

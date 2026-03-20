@@ -6,24 +6,19 @@ package main
 import (
 	"context"
 	"fmt"
-	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/spf13/cobra"
+	"google.golang.org/grpc"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	"github.com/lancekrogers/guild/internal/daemonconn"
-	kanbanui "github.com/lancekrogers/guild/internal/ui/kanban"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/project/local"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/internal/daemonconn"
+	kanbanui "github.com/lancekrogers/guild-core/internal/ui/kanban"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
-var (
-	kanbanNoDaemon bool // Don't auto-start the Guild server
-)
+var kanbanNoDaemon bool // Disable daemon event stream for the UI
 
 // kanbanCmd represents the kanban command group
 var kanbanCmd = &cobra.Command{
@@ -92,7 +87,7 @@ func init() {
 	kanbanCmd.AddCommand(kanbanCreateCmd)
 
 	// Add flags
-	kanbanCmd.PersistentFlags().BoolVar(&kanbanNoDaemon, "no-daemon", false, "Don't auto-start the Guild server")
+	kanbanCmd.PersistentFlags().BoolVar(&kanbanNoDaemon, "no-daemon", false, "Don't connect to the daemon event stream")
 }
 
 // initializeKanbanManager creates a properly initialized kanban manager with SQLite storage
@@ -102,17 +97,6 @@ func initializeKanbanManager(ctx context.Context) (*kanban.Manager, error) {
 	if err := reg.Initialize(ctx, registry.Config{}); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize registry").
 			WithComponent("cli").WithOperation("initializeKanbanManager")
-	}
-
-	// Get database path - check current directory for .guild setup
-	dbPath := local.LocalDatabasePath(".")
-
-	// Initialize SQLite storage
-	_, _, err := storage.InitializeSQLiteStorageForRegistry(ctx, dbPath)
-	if err != nil {
-		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to initialize SQLite storage").
-			WithComponent("cli").WithOperation("initializeKanbanManager").
-			WithDetails("db_path", dbPath)
 	}
 
 	// Create kanban manager using registry
@@ -129,28 +113,6 @@ func initializeKanbanManager(ctx context.Context) (*kanban.Manager, error) {
 // listKanbanBoards lists all available kanban boards
 func listKanbanBoards(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-
-	// Auto-start daemon unless --no-daemon flag is set
-	if !kanbanNoDaemon {
-		if !daemon.IsReachable(ctx) {
-			fmt.Println("🚀 Starting Guild server...")
-			if err := daemon.EnsureRunning(ctx); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
-					WithComponent("cli").
-					WithOperation("kanban.list.daemon_start")
-			}
-			// Give the server a moment to fully initialize
-			time.Sleep(500 * time.Millisecond)
-		}
-	}
-
-	// Check if server is reachable
-	if !daemon.IsReachable(ctx) {
-		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
-			WithComponent("cli").
-			WithOperation("kanban.list").
-			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
-	}
 
 	// Initialize kanban manager with storage
 	kanbanMgr, err := initializeKanbanManager(ctx)
@@ -210,28 +172,6 @@ func listKanbanBoards(cmd *cobra.Command, args []string) error {
 func viewKanbanBoard(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
 
-	// Auto-start daemon unless --no-daemon flag is set
-	if !kanbanNoDaemon {
-		if !daemon.IsReachable(ctx) {
-			fmt.Println("🚀 Starting Guild server...")
-			if err := daemon.EnsureRunning(ctx); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
-					WithComponent("cli").
-					WithOperation("kanban.view.daemon_start")
-			}
-			// Give the server a moment to fully initialize
-			time.Sleep(500 * time.Millisecond)
-		}
-	}
-
-	// Check if server is reachable
-	if !daemon.IsReachable(ctx) {
-		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
-			WithComponent("cli").
-			WithOperation("kanban.view").
-			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
-	}
-
 	// Determine board ID
 	boardID := "main-board" // Default board
 	if len(args) > 0 {
@@ -266,18 +206,24 @@ func viewKanbanBoard(cmd *cobra.Command, args []string) error {
 
 	// Try to connect to daemon for event streaming
 	var model *kanbanui.Model
-	conn, _, err := daemonconn.Discover(ctx)
-	if err != nil {
-		// No daemon connection, use basic model without events
-		fmt.Println("   ⚠️  Running without event stream (daemon not available)")
+	var conn *grpc.ClientConn
+	if kanbanNoDaemon {
 		model = kanbanui.New(ctx, kanbanMgr, board.ID)
 	} else {
-		// Use model with event streaming
-		fmt.Println("   🟢 Connected to event stream for real-time updates")
-		model = kanbanui.NewWithEventClient(ctx, kanbanMgr, board.ID, conn)
+		var err error
+		conn, _, err = daemonconn.Discover(ctx)
+		if err != nil {
+			// No daemon connection, use basic model without events
+			fmt.Println("   ⚠️  Running without event stream (daemon not available)")
+			model = kanbanui.New(ctx, kanbanMgr, board.ID)
+		} else {
+			// Use model with event streaming
+			fmt.Println("   🟢 Connected to event stream for real-time updates")
+			model = kanbanui.NewWithEventClient(ctx, kanbanMgr, board.ID, conn)
+		}
 	}
 
-	p := tea.NewProgram(model, tea.WithAltScreen())
+	p := tea.NewProgram(model)
 
 	if _, err := p.Run(); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run kanban UI").
@@ -295,28 +241,6 @@ func viewKanbanBoard(cmd *cobra.Command, args []string) error {
 // createKanbanBoard creates a new kanban board
 func createKanbanBoard(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-
-	// Auto-start daemon unless --no-daemon flag is set
-	if !kanbanNoDaemon {
-		if !daemon.IsReachable(ctx) {
-			fmt.Println("🚀 Starting Guild server...")
-			if err := daemon.EnsureRunning(ctx); err != nil {
-				return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to start Guild server").
-					WithComponent("cli").
-					WithOperation("kanban.create.daemon_start")
-			}
-			// Give the server a moment to fully initialize
-			time.Sleep(500 * time.Millisecond)
-		}
-	}
-
-	// Check if server is reachable
-	if !daemon.IsReachable(ctx) {
-		return gerror.New(gerror.ErrCodeConnection, "Guild server is not reachable", nil).
-			WithComponent("cli").
-			WithOperation("kanban.create").
-			WithDetails("help", "Try running 'guild serve' manually or check 'guild status'")
-	}
 
 	name := args[0]
 	description := "Kanban board for tracking tasks"

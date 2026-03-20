@@ -6,15 +6,15 @@ package commission
 import (
 	"context"
 
-	"github.com/charmbracelet/bubbles/help"
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/list"
-	"github.com/charmbracelet/bubbles/textarea"
-	"github.com/charmbracelet/bubbles/textinput"
-	"github.com/charmbracelet/bubbles/viewport"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/help"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/list"
+	"charm.land/bubbles/v2/textarea"
+	"charm.land/bubbles/v2/textinput"
+	"charm.land/bubbles/v2/viewport"
+	tea "charm.land/bubbletea/v2"
 
-	commissionpkg "github.com/lancekrogers/guild/pkg/commission"
+	commissionpkg "github.com/lancekrogers/guild-core/pkg/commission"
 )
 
 // Define UI states
@@ -170,7 +170,10 @@ func NewModel(ctx context.Context, commissionPath string, manager CommissionMana
 	parchment.CharLimit = 250
 
 	// Initialize viewport for displaying content
-	viewport := viewport.New(80, 20)
+	viewport := viewport.New(
+		viewport.WithWidth(80),
+		viewport.WithHeight(20),
+	)
 	viewport.SetContent("Welcome to the Guild Hall Commission Chamber")
 
 	// Initialize commissions list

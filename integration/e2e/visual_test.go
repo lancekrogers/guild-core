@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package e2e
 
 import (
@@ -286,7 +289,7 @@ func TestVisualRegressionReference(t *testing.T) {
 		}
 
 		referencesDir := filepath.Join("testdata", "visual", "references")
-		os.MkdirAll(referencesDir, 0755)
+		os.MkdirAll(referencesDir, 0o755)
 
 		for _, cmd := range commands {
 			result := env.RunGuild(cmd...)
@@ -294,7 +297,7 @@ func TestVisualRegressionReference(t *testing.T) {
 				filename := strings.Join(cmd, "_") + ".txt"
 				filepath := filepath.Join(referencesDir, filename)
 
-				err := os.WriteFile(filepath, []byte(result.Stdout), 0644)
+				err := os.WriteFile(filepath, []byte(result.Stdout), 0o644)
 				if err == nil {
 					t.Logf("Saved reference output: %s", filepath)
 				}

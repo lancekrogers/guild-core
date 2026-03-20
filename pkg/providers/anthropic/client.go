@@ -12,9 +12,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // Latest Anthropic Claude models as of May 2025
@@ -293,6 +293,16 @@ func (c *Client) makeRequest(ctx context.Context, endpoint string, payload inter
 	return body, nil
 }
 
+// handleError handles HTTP error responses
+func (c *Client) handleError(resp *http.Response) error {
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeProvider, "failed to read error response").
+			WithComponent("providers.anthropic")
+	}
+	return c.parseError(resp.StatusCode, body)
+}
+
 // parseError parses Anthropic API error responses
 func (c *Client) parseError(statusCode int, body []byte) error {
 	err := &interfaces.ProviderError{
@@ -371,4 +381,46 @@ func (c *Client) Complete(ctx context.Context, prompt string) (string, error) {
 	}
 
 	return "", nil
+}
+
+// anthropicRequest represents an Anthropic API request
+type anthropicRequest struct {
+	Model         string             `json:"model"`
+	Messages      []anthropicMessage `json:"messages"`
+	System        string             `json:"system,omitempty"`
+	MaxTokens     int                `json:"max_tokens"`
+	Temperature   float64            `json:"temperature,omitempty"`
+	TopP          float64            `json:"top_p,omitempty"`
+	Stream        bool               `json:"stream,omitempty"`
+	StopSequences []string           `json:"stop_sequences,omitempty"`
+}
+
+// anthropicMessage represents a message in Anthropic format
+type anthropicMessage struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+// anthropicResponse represents an Anthropic API response
+type anthropicResponse struct {
+	ID           string             `json:"id"`
+	Type         string             `json:"type"`
+	Role         string             `json:"role"`
+	Content      []anthropicContent `json:"content"`
+	Model        string             `json:"model"`
+	StopReason   string             `json:"stop_reason"`
+	StopSequence *string            `json:"stop_sequence"`
+	Usage        anthropicUsage     `json:"usage"`
+}
+
+// anthropicContent represents content in an Anthropic response
+type anthropicContent struct {
+	Type string `json:"type"`
+	Text string `json:"text"`
+}
+
+// anthropicUsage represents usage information
+type anthropicUsage struct {
+	InputTokens  int `json:"input_tokens"`
+	OutputTokens int `json:"output_tokens"`
 }

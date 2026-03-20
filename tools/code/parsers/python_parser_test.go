@@ -7,7 +7,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lancekrogers/guild/tools/code/parsers"
+	"github.com/lancekrogers/guild-core/tools/code/parsers"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

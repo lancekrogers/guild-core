@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // KanbanTaskRepositoryAdapter adapts storage.TaskRepository to handle interface{} calls from kanban

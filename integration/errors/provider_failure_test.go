@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package errors
 
 import (
@@ -14,11 +17,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // TestLLMProviderFailures tests various provider failure scenarios
@@ -311,7 +314,6 @@ func TestProviderRecoveryPatterns(t *testing.T) {
 
 			// Attempt call
 			_, err := provider.Complete(ctx, "test message")
-
 			if err != nil {
 				failures++
 				lastFailureTime = time.Now()

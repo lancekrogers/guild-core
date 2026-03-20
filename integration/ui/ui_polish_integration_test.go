@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package ui
 
 import (
@@ -11,16 +14,16 @@ import (
 	"testing"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/internal/ui/animation"
-	"github.com/lancekrogers/guild/internal/ui/components"
-	"github.com/lancekrogers/guild/internal/ui/shortcuts"
-	"github.com/lancekrogers/guild/internal/ui/theme"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/internal/ui/animation"
+	"github.com/lancekrogers/guild-core/internal/ui/components"
+	"github.com/lancekrogers/guild-core/internal/ui/shortcuts"
+	"github.com/lancekrogers/guild-core/internal/ui/theme"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // UIIntegrationSuite provides comprehensive UI integration tests

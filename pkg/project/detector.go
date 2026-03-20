@@ -9,9 +9,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
 )
 
 // ProjectType represents different types of projects that can be detected
@@ -397,7 +397,6 @@ func (d *ProjectDetector) SeedCorpusFromProject(projectType *ProjectType, projec
 
 		return nil
 	})
-
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to scan project for corpus files").
 			WithComponent("project").

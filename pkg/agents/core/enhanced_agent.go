@@ -6,12 +6,12 @@ package core
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/suggestions"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 )
 
 // EnhancedGuildArtisan extends GuildArtisan with suggestion capabilities
@@ -53,7 +53,6 @@ func NewSuggestionAwareWorkerAgent(
 	costManager CostManagerInterface,
 	suggestionManager suggestions.SuggestionManager,
 ) *SuggestionAwareWorkerAgent {
-
 	baseAgent := newWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
 
 	return &SuggestionAwareWorkerAgent{

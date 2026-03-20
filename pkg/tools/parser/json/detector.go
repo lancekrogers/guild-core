@@ -11,7 +11,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/lancekrogers/guild/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
 )
 
 // Detector detects OpenAI-style JSON tool call format with confidence scoring
@@ -61,7 +61,8 @@ func (d *Detector) CanParse(input []byte) bool {
 	inputStr := string(input)
 	return strings.Contains(inputStr, `"tool_calls"`) ||
 		strings.Contains(inputStr, `"function_call"`) ||
-		strings.Contains(inputStr, `"tools"`)
+		strings.Contains(inputStr, `"tools"`) ||
+		(strings.Contains(inputStr, `"type"`) && strings.Contains(inputStr, `"function"`))
 }
 
 // Detect analyzes input and returns detection result with confidence score
@@ -189,6 +190,8 @@ func (d *Detector) findJSONStarts(input []byte) []int {
 				ahead := string(input[i:min(i+50, len(input))])
 				if strings.Contains(ahead, `"tool_calls"`) ||
 					strings.Contains(ahead, `"function_call"`) ||
+					strings.Contains(ahead, `"function"`) ||
+					strings.Contains(ahead, `"choices"`) ||
 					strings.Contains(ahead, `"type"`) {
 					positions = append(positions, i)
 				}
@@ -340,6 +343,17 @@ func (d *Detector) analyzeOpenAIStructure(doc interface{}) float64 {
 func (d *Detector) analyzeOpenAIObject(obj map[string]interface{}) float64 {
 	confidence := 0.0
 
+	// Check for single tool call format (e.g., {"id": "...", "type": "function", "function": {...}})
+	if _, hasID := obj["id"]; hasID {
+		if objType, hasType := obj["type"].(string); hasType && objType == "function" {
+			if funcObj, hasFunc := obj["function"].(map[string]interface{}); hasFunc {
+				if funcObj["name"] != nil && funcObj["arguments"] != nil {
+					confidence = max(confidence, 0.9) // High confidence for single tool call
+				}
+			}
+		}
+	}
+
 	// Check for tool_calls field (strongest indicator)
 	if toolCalls, exists := obj["tool_calls"]; exists {
 		if arr, ok := toolCalls.([]interface{}); ok {
@@ -355,6 +369,29 @@ func (d *Detector) analyzeOpenAIObject(obj map[string]interface{}) float64 {
 		if fc, ok := funcCall.(map[string]interface{}); ok {
 			if fc["name"] != nil && fc["arguments"] != nil {
 				confidence = max(confidence, 0.8)
+			}
+		}
+	}
+
+	// Check for function field (even older format)
+	if funcObj, exists := obj["function"]; exists {
+		if fc, ok := funcObj.(map[string]interface{}); ok {
+			if fc["name"] != nil && fc["arguments"] != nil {
+				confidence = max(confidence, 0.8)
+			}
+		}
+	}
+
+	// Check for OpenAI chat completion format with choices
+	if choices, exists := obj["choices"]; exists {
+		if choicesArr, ok := choices.([]interface{}); ok && len(choicesArr) > 0 {
+			// Check first choice for message with tool_calls
+			if choice, ok := choicesArr[0].(map[string]interface{}); ok {
+				if msg, ok := choice["message"].(map[string]interface{}); ok {
+					// Recursively analyze the message
+					msgConf := d.analyzeOpenAIObject(msg)
+					confidence = max(confidence, msgConf*0.9) // Slightly lower confidence for nested
+				}
 			}
 		}
 	}

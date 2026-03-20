@@ -10,7 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
+	viewutil "github.com/lancekrogers/guild-core/internal/ui/view"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // setupKanbanWithCards creates a kanban model with the specified number of cards
@@ -559,7 +560,7 @@ func BenchmarkDemo200Plus(b *testing.B) {
 
 			for i := 0; i < b.N; i++ {
 				start := time.Now()
-				view := model.View()
+				view := viewutil.String(model.View())
 				renderTime := time.Since(start)
 				totalRenderTime += renderTime
 				renderCount++

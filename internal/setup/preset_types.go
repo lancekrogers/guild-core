@@ -4,7 +4,7 @@
 package setup
 
 import (
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/config"
 )
 
 // PresetType defines the type of preset collection

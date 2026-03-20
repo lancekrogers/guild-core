@@ -11,8 +11,8 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agents/core/elena"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/elena"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Generator is responsible for generating objectives

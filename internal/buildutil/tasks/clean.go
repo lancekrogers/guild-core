@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/buildutil/ui"
+	"github.com/lancekrogers/guild-core/internal/buildutil/ui"
 )
 
 // Clean removes build artifacts

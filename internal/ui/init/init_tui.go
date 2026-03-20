@@ -7,18 +7,18 @@ import (
 	"context"
 	"path/filepath"
 
-	"github.com/charmbracelet/bubbles/help"
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/progress"
-	"github.com/charmbracelet/bubbles/spinner"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/glamour"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/help"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/progress"
+	"charm.land/bubbles/v2/spinner"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
+	"github.com/charmbracelet/glamour/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/internal/setup"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild-core/internal/setup"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
 // InitTUIModelV2 represents the improved initialization TUI with better practices
@@ -65,6 +65,9 @@ type InitTUIModelV2 struct {
 	// UI dimensions
 	width  int
 	height int
+
+	useAltScreen bool
+	mouseMode    tea.MouseMode
 }
 
 // Config holds initialization configuration
@@ -100,7 +103,7 @@ func NewInitTUIModelV2(ctx context.Context, cfg Config, deps InitDependencies, t
 
 	if ttyAvailable {
 		renderer, err = glamour.NewTermRenderer(
-			glamour.WithAutoStyle(),
+			glamour.WithEnvironmentConfig(),
 			glamour.WithWordWrap(80),
 		)
 		if err != nil {
@@ -131,12 +134,18 @@ func NewInitTUIModelV2(ctx context.Context, cfg Config, deps InitDependencies, t
 
 	// Create progress bar
 	p := progress.New(
-		progress.WithDefaultGradient(),
+		progress.WithDefaultBlend(),
 		progress.WithWidth(60),
 	)
 
 	// Get demo options
 	demoOptions := deps.DemoGen.GetAvailableTypes()
+
+	useAltScreen := ttyAvailable && !cfg.QuickMode
+	mouseMode := tea.MouseModeNone
+	if useAltScreen {
+		mouseMode = tea.MouseModeCellMotion
+	}
 
 	return &InitTUIModelV2{
 		ctx:           ctx,
@@ -157,6 +166,8 @@ func NewInitTUIModelV2(ctx context.Context, cfg Config, deps InitDependencies, t
 		demoOptions:   demoOptions,
 		width:         80,
 		height:        24,
+		useAltScreen:  useAltScreen,
+		mouseMode:     mouseMode,
 	}, nil
 }
 
@@ -193,7 +204,7 @@ func (m *InitTUIModelV2) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if msg, ok := msg.(tea.WindowSizeMsg); ok {
 		m.width = msg.Width
 		m.height = msg.Height
-		m.progress.Width = min(msg.Width-10, 60)
+		m.progress.SetWidth(min(msg.Width-10, 60))
 		return m, nil
 	}
 
@@ -225,16 +236,19 @@ func (m *InitTUIModelV2) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View renders the current state
-func (m *InitTUIModelV2) View() string {
+func (m *InitTUIModelV2) View() tea.View {
 	// Always use lipgloss for consistent rendering
 	content := m.renderCurrentState()
 
 	// Apply container styling
-	return lipgloss.Place(
+	view := tea.NewView(lipgloss.Place(
 		m.width, m.height,
 		lipgloss.Center, lipgloss.Center,
 		content,
-	)
+	))
+	view.AltScreen = m.useAltScreen
+	view.MouseMode = m.mouseMode
+	return view
 }
 
 // GetError returns any error that occurred
@@ -251,7 +265,7 @@ func createInputs(projectPath string) map[string]textinput.Model {
 	campaign := textinput.New()
 	campaign.Placeholder = "guild-demo"
 	campaign.CharLimit = 50
-	campaign.Width = 40
+	campaign.SetWidth(40)
 	campaign.Prompt = "📋 "
 	inputs["campaign"] = campaign
 
@@ -259,7 +273,7 @@ func createInputs(projectPath string) map[string]textinput.Model {
 	project := textinput.New()
 	project.Placeholder = filepath.Base(projectPath)
 	project.CharLimit = 50
-	project.Width = 40
+	project.SetWidth(40)
 	project.Prompt = "📁 "
 	inputs["project"] = project
 

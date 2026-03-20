@@ -1,0 +1,86 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        bgcolor="#e6ecfa";
+label="grpc";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+        
+        "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).QueryCosts" [ label="(*MCPService).QueryCosts" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).QueryCosts | defined in service.go:222\nat service.go:232: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetCostObserver]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).Ping" [ fillcolor="lightblue" label="(*MCPService).Ping" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).Ping | defined in service.go:272\nat service.go:275: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetConfig]" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).RegisterTool" [ fillcolor="lightblue" label="(*MCPService).RegisterTool" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).RegisterTool | defined in service.go:36\nat service.go:47: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParameters]\nat service.go:48: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParameters]\nat service.go:49: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfile]\nat service.go:63: calling [github.com/guild-framework/guild-core/pkg/mcp/tools.NewBaseTool]\nat service.go:76: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" ]
+        "github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParameters" [ fillcolor="lightblue" label="convertParameters" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParameters | defined in service.go:304" ]
+        "github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfile" [ label="convertCostProfile" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfile | defined in service.go:341" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).GetSystemInfo" [ fillcolor="lightblue" label="(*MCPService).GetSystemInfo" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).GetSystemInfo | defined in service.go:280\nat service.go:281: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetConfig]\nat service.go:294: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).ExecuteTool" [ tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).ExecuteTool | defined in service.go:136\nat service.go:142: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" fillcolor="lightblue" label="(*MCPService).ExecuteTool" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).CheckToolHealth" [ fillcolor="lightblue" label="(*MCPService).CheckToolHealth" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).CheckToolHealth | defined in service.go:177\nat service.go:182: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).ReportCost" [ fillcolor="lightblue" label="(*MCPService).ReportCost" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).ReportCost | defined in service.go:196\nat service.go:214: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetCostObserver]" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).DiscoverTools" [ fillcolor="lightblue" label="(*MCPService).DiscoverTools" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).DiscoverTools | defined in service.go:102\nat service.go:124: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParametersToGRPC]\nat service.go:125: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParametersToGRPC]\nat service.go:126: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfileToGRPC]\nat service.go:111: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" ]
+        "github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParametersToGRPC" [ fillcolor="lightblue" label="convertParametersToGRPC" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParametersToGRPC | defined in service.go:318" ]
+        "github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfileToGRPC" [ fillcolor="lightblue" label="convertCostProfileToGRPC" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfileToGRPC | defined in service.go:353" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).DeregisterTool" [ fillcolor="lightblue" label="(*MCPService).DeregisterTool" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).DeregisterTool | defined in service.go:87\nat service.go:92: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/mcp/server" {
+        rank="sink";
+tooltip="package: github.com/guild-framework/guild-core/pkg/mcp/server";
+fontsize="16";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+label="server";
+URL="/?f=github.com/guild-framework/guild-core/pkg/mcp/server";
+penwidth="0.8";
+style="filled";
+        
+        "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetCostObserver" [ label="(*Server).GetCostObserver" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetCostObserver | defined in server.go:841" fillcolor="moccasin" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetConfig" [ fillcolor="moccasin" label="(*Server).GetConfig" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetConfig | defined in server.go:831" ]
+        "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry" [ fillcolor="moccasin" label="(*Server).GetToolRegistry" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry | defined in server.go:836" ]
+        
+    }
+
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/mcp/tools" {
+        fillcolor="lightyellow";
+rank="sink";
+label="tools";
+tooltip="package: github.com/guild-framework/guild-core/pkg/mcp/tools";
+penwidth="0.8";
+style="filled";
+fontname="Tahoma bold";
+URL="/?f=github.com/guild-framework/guild-core/pkg/mcp/tools";
+fontsize="16";
+        
+        "github.com/guild-framework/guild-core/pkg/mcp/tools.NewBaseTool" [ fillcolor="moccasin" label="NewBaseTool" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/mcp/tools.NewBaseTool | defined in registry.go:282" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).GetSystemInfo" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetConfig" [ color="saddlebrown" tooltip="at service.go:281: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetConfig]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).DiscoverTools" -> "github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParametersToGRPC" [ tooltip="at service.go:124: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParametersToGRPC]\nat service.go:125: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParametersToGRPC]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).DeregisterTool" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry" [ color="saddlebrown" tooltip="at service.go:92: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).Ping" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetConfig" [ color="saddlebrown" tooltip="at service.go:275: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetConfig]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).RegisterTool" -> "github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParameters" [ tooltip="at service.go:47: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParameters]\nat service.go:48: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertParameters]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).GetSystemInfo" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry" [ color="saddlebrown" tooltip="at service.go:294: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).RegisterTool" -> "github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfile" [ tooltip="at service.go:49: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfile]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).RegisterTool" -> "github.com/guild-framework/guild-core/pkg/mcp/tools.NewBaseTool" [ tooltip="at service.go:63: calling [github.com/guild-framework/guild-core/pkg/mcp/tools.NewBaseTool]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).RegisterTool" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry" [ tooltip="at service.go:76: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).CheckToolHealth" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry" [ tooltip="at service.go:182: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).ReportCost" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetCostObserver" [ color="saddlebrown" tooltip="at service.go:214: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetCostObserver]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).DiscoverTools" -> "github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfileToGRPC" [ tooltip="at service.go:126: calling [github.com/guild-framework/guild-core/pkg/mcp/grpc.convertCostProfileToGRPC]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).QueryCosts" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetCostObserver" [ color="saddlebrown" tooltip="at service.go:232: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetCostObserver]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).ExecuteTool" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry" [ color="saddlebrown" tooltip="at service.go:142: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" ]
+    "(*github.com/guild-framework/guild-core/pkg/mcp/grpc.MCPService).DiscoverTools" -> "(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry" [ color="saddlebrown" tooltip="at service.go:111: calling [(*github.com/guild-framework/guild-core/pkg/mcp/server.Server).GetToolRegistry]" ]
+}

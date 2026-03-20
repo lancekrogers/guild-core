@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/internal/ui/chat/common/utils"
-	"github.com/lancekrogers/guild/internal/ui/chat/components"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/utils"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/components"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"go.uber.org/zap"
 )
 

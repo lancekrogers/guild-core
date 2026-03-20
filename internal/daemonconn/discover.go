@@ -13,7 +13,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
 )
 
 const (
@@ -82,6 +83,42 @@ func Discover(ctx context.Context) (*grpc.ClientConn, *ConnectionInfo, error) {
 	return conn, info, nil
 }
 
+// DiscoverForCampaign attempts to find and connect to a daemon for a specific campaign.
+//
+// Order:
+// 1) `GUILD_DAEMON_ADDR` override (TCP)
+// 2) Campaign Unix socket(s) under `~/.guild/run` (sessions 0-9)
+// 3) Legacy fallback: `Discover` (default Unix socket, then TCP)
+func DiscoverForCampaign(ctx context.Context, campaign string) (*grpc.ClientConn, *ConnectionInfo, error) {
+	// Preserve env override behavior.
+	if addr := os.Getenv("GUILD_DAEMON_ADDR"); addr != "" {
+		return Discover(ctx)
+	}
+
+	if campaign != "" {
+		for session := 0; session < 10; session++ {
+			socketPath, err := paths.GetCampaignSocket(campaign, session)
+			if err != nil {
+				continue
+			}
+			if _, err := os.Stat(socketPath); err != nil {
+				continue
+			}
+
+			conn, err := connectUnix(ctx, socketPath)
+			if err == nil {
+				info := &ConnectionInfo{
+					Address: socketPath,
+					Type:    "unix",
+				}
+				return conn, info, nil
+			}
+		}
+	}
+
+	return Discover(ctx)
+}
+
 // connectUnix establishes connection to Unix socket
 func connectUnix(ctx context.Context, socketPath string) (*grpc.ClientConn, error) {
 	dialCtx, cancel := context.WithTimeout(ctx, DefaultTimeout)
@@ -89,6 +126,7 @@ func connectUnix(ctx context.Context, socketPath string) (*grpc.ClientConn, erro
 
 	conn, err := grpc.DialContext(dialCtx, "unix://"+socketPath,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(),
 	)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "Unix socket connection failed").
@@ -107,6 +145,7 @@ func connectTCP(ctx context.Context, address string) (*grpc.ClientConn, error) {
 
 	conn, err := grpc.DialContext(dialCtx, address,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithBlock(),
 	)
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeConnection, "TCP connection failed").

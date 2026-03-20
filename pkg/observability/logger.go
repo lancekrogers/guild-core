@@ -14,8 +14,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
 )
 
 // LogLevel represents logging levels
@@ -167,7 +167,7 @@ func createLogFile() io.Writer {
 
 	// Create logs subdirectory
 	logDir := filepath.Join(guildDir, "logs")
-	if err := os.MkdirAll(logDir, 0755); err != nil {
+	if err := os.MkdirAll(logDir, 0o755); err != nil {
 		// If we can't create the directory, skip file logging silently
 		return nil
 	}
@@ -178,7 +178,7 @@ func createLogFile() io.Writer {
 	logPath := filepath.Join(logDir, logFileName)
 
 	// Open or create log file with append mode
-	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
 	if err != nil {
 		// If we can't create the file, skip file logging silently
 		return nil

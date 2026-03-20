@@ -20,6 +20,7 @@ make test PKG=./pkg/lsp
 ```
 
 **Features of Unit Tests:**
+
 - ✅ No external LSP servers required
 - ✅ Fast execution (< 1 second)
 - ✅ Predictable results
@@ -40,6 +41,7 @@ go test -tags="integration,lsp" ./pkg/lsp/...
 ```
 
 **Features of Integration Tests:**
+
 - ⚠️ Requires gopls installed: `go install golang.org/x/tools/gopls@latest`
 - ⚠️ Slower execution (10-30 seconds)
 - ⚠️ May fail due to external factors
@@ -137,6 +139,7 @@ For CI/CD pipelines, exclude integration tests by default:
 ### Tests Still Hanging?
 
 1. Check you're not running integration tests accidentally:
+
    ```bash
    # This will run integration tests too!
    go test -tags=integration ./...
@@ -150,6 +153,7 @@ For CI/CD pipelines, exclude integration tests by default:
    - Integration tests: 30-second timeout per test
 
 3. Check for gopls processes:
+
    ```bash
    ps aux | grep gopls
    # Kill any hanging gopls processes

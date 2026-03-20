@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/orchestrator/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator/interfaces"
 )
 
 func TestEventBusSubscribe(t *testing.T) {
@@ -167,7 +167,6 @@ func TestEventBusUnsubscribe(t *testing.T) {
 }
 
 func TestEventBusJSON(t *testing.T) {
-
 	// Original event with complex data
 	originalEvent := Event{
 		Type:   EventType("json.test"),

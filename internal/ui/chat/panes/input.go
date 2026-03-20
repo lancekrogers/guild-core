@@ -8,13 +8,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/textarea"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/internal/ui/chat/common/layout"
-	"github.com/lancekrogers/guild/internal/ui/chat/completion"
-	"github.com/lancekrogers/guild/internal/ui/vim"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"charm.land/bubbles/v2/textarea"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/layout"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/completion"
+	"github.com/lancekrogers/guild-core/internal/ui/vim"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // InputPane handles user input with auto-completion and history
@@ -104,7 +104,7 @@ func NewInputPane(width, height int, completionEnabled bool) (InputPane, error) 
 		textarea:         ta,
 		completions:      make([]completion.CompletionResult, 0),
 		history:          make([]string, 0),
-		historyIndex:     -1,
+		historyIndex:     0,
 		multilineEnabled: false,
 		placeholder:      "Message agents with @agent-name or use /commands...",
 		normalStyle:      createInputStyle(),
@@ -538,7 +538,7 @@ func (ip *inputPaneImpl) cycleNextCompletion() {
 }
 
 // View renders the input pane
-func (ip *inputPaneImpl) View() string {
+func (ip *inputPaneImpl) View() tea.View {
 	// Choose style based on current mode
 	var style lipgloss.Style
 	var modeIndicator string
@@ -573,7 +573,7 @@ func (ip *inputPaneImpl) View() string {
 
 	// Apply final styling
 	rect := ip.GetRect()
-	return style.Width(rect.Width).Height(rect.Height).Render(textareaView)
+	return tea.NewView(style.Width(rect.Width).Height(rect.Height).Render(textareaView))
 }
 
 // renderCompletions renders the completion popup

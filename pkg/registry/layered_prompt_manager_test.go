@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 func TestGetPromptManager(t *testing.T) {

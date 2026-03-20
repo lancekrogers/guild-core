@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/tools"
-	"github.com/lancekrogers/guild/pkg/tools/parser"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser"
 )
 
 // toolExecutor implements parser.ToolExecutor with proper context handling

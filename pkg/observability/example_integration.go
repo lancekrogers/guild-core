@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ExampleAgentExecution shows how to integrate observability into agent execution

@@ -12,8 +12,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // MaintenanceManager handles automated database maintenance
@@ -83,7 +83,7 @@ func NewMaintenanceManager(db *sql.DB, dbPath string, metrics *observability.Met
 
 	// Ensure backup directory exists
 	if config.BackupPath != "" {
-		if err := os.MkdirAll(config.BackupPath, 0755); err != nil {
+		if err := os.MkdirAll(config.BackupPath, 0o755); err != nil {
 			return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create backup directory").
 				WithComponent("MaintenanceManager").
 				WithDetails("path", config.BackupPath)
@@ -288,7 +288,7 @@ func (m *MaintenanceManager) CreateBackup(ctx context.Context) (string, error) {
 	event.Details["backup_path"] = backupPath
 
 	// Create backup using SQLite backup API
-	backupDB, err := sql.Open("sqlite3", backupPath)
+	backupDB, err := sql.Open("sqlite", backupPath)
 	if err != nil {
 		event.Success = false
 		event.Error = err

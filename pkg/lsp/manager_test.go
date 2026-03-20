@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/lsp"
+	"github.com/lancekrogers/guild-core/pkg/lsp"
 )
 
 func TestLSPManager(t *testing.T) {
@@ -57,7 +57,7 @@ func greet(name string) string {
 	return fmt.Sprintf("Hello, %s!", name)
 }
 `
-	err = os.WriteFile(testFile, []byte(testContent), 0644)
+	err = os.WriteFile(testFile, []byte(testContent), 0o644)
 	require.NoError(t, err)
 
 	// Create go.mod for the test workspace
@@ -65,7 +65,7 @@ func greet(name string) string {
 
 go 1.21
 `
-	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goModContent), 0644)
+	err = os.WriteFile(filepath.Join(tmpDir, "go.mod"), []byte(goModContent), 0o644)
 	require.NoError(t, err)
 
 	// Create LSP manager
@@ -184,16 +184,16 @@ func TestLSPConfig(t *testing.T) {
 		// Create nested structure with go.mod at root
 		projectDir := filepath.Join(tmpDir, "myproject")
 		srcDir := filepath.Join(projectDir, "src")
-		err = os.MkdirAll(srcDir, 0755)
+		err = os.MkdirAll(srcDir, 0o755)
 		require.NoError(t, err)
 
 		// Create go.mod at project root
-		err = os.WriteFile(filepath.Join(projectDir, "go.mod"), []byte("module test\n"), 0644)
+		err = os.WriteFile(filepath.Join(projectDir, "go.mod"), []byte("module test\n"), 0o644)
 		require.NoError(t, err)
 
 		// Create a file in src
 		testFile := filepath.Join(srcDir, "main.go")
-		err = os.WriteFile(testFile, []byte("package main\n"), 0644)
+		err = os.WriteFile(testFile, []byte("package main\n"), 0o644)
 		require.NoError(t, err)
 
 		// Test finding root from nested file

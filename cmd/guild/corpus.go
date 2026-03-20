@@ -14,8 +14,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // corpusCmd represents the corpus command
@@ -410,8 +410,8 @@ var corpusConfigSetCmd = &cobra.Command{
 		}
 
 		// Save the configuration
-		configDir := filepath.Join(".guild")
-		if err := os.MkdirAll(configDir, 0755); err != nil {
+		configDir := filepath.Join(".campaign")
+		if err := os.MkdirAll(configDir, 0o755); err != nil {
 			fmt.Printf("Error creating config directory: %v\n", err)
 			return
 		}

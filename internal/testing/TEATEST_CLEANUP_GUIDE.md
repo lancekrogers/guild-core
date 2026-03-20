@@ -3,12 +3,14 @@
 ## Problem
 
 When running teatest tests, the terminal can become corrupted if:
+
 - Tests are interrupted with Ctrl-C
 - Tests fail to call `WaitFinished` properly
 - Tests don't properly quit the Bubble Tea program
 - Terminal state isn't restored after alternate screen mode
 
 This results in:
+
 - Box drawing characters appearing broken (└ becomes â)
 - Ctrl-C not working properly in the terminal
 - Need to open new terminal tabs
@@ -30,6 +32,7 @@ import (
 ### Step 2: Replace direct teatest usage
 
 **Before:**
+
 ```go
 func TestMyComponent(t *testing.T) {
     model := createTestModel()
@@ -48,6 +51,7 @@ func TestMyComponent(t *testing.T) {
 ```
 
 **After:**
+
 ```go
 func TestMyComponent(t *testing.T) {
     helper := testing.NewTeaTestHelper(t)
@@ -65,6 +69,7 @@ func TestMyComponent(t *testing.T) {
 ### Step 3: Update test patterns
 
 1. **Always ensure models can quit gracefully:**
+
    ```go
    func (m *MyModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
        switch msg := msg.(type) {
@@ -79,6 +84,7 @@ func TestMyComponent(t *testing.T) {
    ```
 
 2. **Use helper functions for common operations:**
+
    ```go
    // Wait for specific output
    testing.WaitForOutput(t, tm, func(b []byte) bool {
@@ -90,6 +96,7 @@ func TestMyComponent(t *testing.T) {
    ```
 
 3. **For tests that need to verify quit behavior:**
+
    ```go
    helper.RunTeaTest(model, func(tm *teatest.TestModel) {
        // Do test actions...
@@ -122,17 +129,20 @@ The following files need to be updated to use the new test helpers:
 If your terminal is already corrupted:
 
 1. **Quick fix:**
+
    ```bash
    reset
    ```
 
 2. **Alternative fix:**
+
    ```bash
    stty sane
    tput reset
    ```
 
 3. **Clear screen and reset:**
+
    ```bash
    printf '\033[?1049l\033[?25h\033[0m\033[H\033[2J'
    ```
@@ -155,7 +165,7 @@ import (
     "testing"
     "time"
     
-    tea "github.com/charmbracelet/bubbletea"
+    tea "charm.land/bubbletea/v2"
     "github.com/guild-ventures/guild-core/internal/testing"
 )
 
@@ -189,16 +199,19 @@ func TestMyFeature(t *testing.T) {
 If you're still experiencing issues:
 
 1. **Check for goroutine leaks:**
+
    ```go
    defer goleak.VerifyNone(t)
    ```
 
 2. **Add debug logging:**
+
    ```go
    t.Logf("Terminal state before test: %v", os.Getenv("TERM"))
    ```
 
 3. **Use verbose test output:**
+
    ```bash
    go test -v ./internal/chat/... 2>&1 | tee test.log
    ```

@@ -7,11 +7,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -251,9 +251,11 @@ type testCommissionManager struct{}
 func (t *testCommissionManager) CreateCommission(ctx context.Context, commission commission.Commission) (*commission.Commission, error) {
 	return &commission, nil
 }
+
 func (t *testCommissionManager) GetCommission(ctx context.Context, id string) (*commission.Commission, error) {
 	return nil, nil
 }
+
 func (t *testCommissionManager) UpdateCommission(ctx context.Context, commission commission.Commission) error {
 	return nil
 }
@@ -261,15 +263,19 @@ func (t *testCommissionManager) DeleteCommission(ctx context.Context, id string)
 func (t *testCommissionManager) ListCommissions(ctx context.Context) ([]*commission.Commission, error) {
 	return []*commission.Commission{}, nil
 }
+
 func (t *testCommissionManager) SaveCommission(ctx context.Context, commission *commission.Commission) error {
 	return nil
 }
+
 func (t *testCommissionManager) LoadCommissionFromFile(ctx context.Context, path string) (*commission.Commission, error) {
 	return nil, nil
 }
+
 func (t *testCommissionManager) GetCommissionsByTag(ctx context.Context, tag string) ([]*commission.Commission, error) {
 	return []*commission.Commission{}, nil
 }
+
 func (t *testCommissionManager) SetCommission(ctx context.Context, commissionID string) error {
 	return nil
 }
@@ -285,33 +291,43 @@ type testMemoryManager struct{}
 func (t *testMemoryManager) CreateChain(ctx context.Context, agentID, taskID string) (string, error) {
 	return "chain-id", nil
 }
+
 func (t *testMemoryManager) GetChain(ctx context.Context, chainID string) (*memory.PromptChain, error) {
 	return nil, nil
 }
+
 func (t *testMemoryManager) AddMessage(ctx context.Context, chainID string, message memory.Message) error {
 	return nil
 }
+
 func (t *testMemoryManager) GetChainsByAgent(ctx context.Context, agentID string) ([]*memory.PromptChain, error) {
 	return []*memory.PromptChain{}, nil
 }
+
 func (t *testMemoryManager) GetChainsByTask(ctx context.Context, taskID string) ([]*memory.PromptChain, error) {
 	return []*memory.PromptChain{}, nil
 }
+
 func (t *testMemoryManager) BuildContext(ctx context.Context, agentID, taskID string, maxTokens int) ([]memory.Message, error) {
 	return []memory.Message{}, nil
 }
+
 func (t *testMemoryManager) DeleteChain(ctx context.Context, chainID string) error {
 	return nil
 }
+
 func (t *testMemoryManager) AddInteraction(ctx context.Context, userInput, assistantResponse string) error {
 	return nil
 }
+
 func (t *testMemoryManager) GetRecentMessages(ctx context.Context, limit int) ([]memory.Message, error) {
 	return []memory.Message{}, nil
 }
+
 func (t *testMemoryManager) Clear(ctx context.Context) error {
 	return nil
 }
+
 func (t *testMemoryManager) GetMessageCount(ctx context.Context) (int, error) {
 	return 0, nil
 }

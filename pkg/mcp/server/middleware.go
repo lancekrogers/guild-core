@@ -10,7 +10,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild-core/pkg/mcp/protocol"
 )
 
 // loggingMiddleware logs requests and responses
@@ -223,7 +223,6 @@ func tracingMiddleware(next HandlerFunc) HandlerFunc {
 		defer span.finish()
 
 		response, err := next(ctx, msg)
-
 		// Record span result
 		if err != nil {
 			span.setError(err)

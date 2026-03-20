@@ -13,18 +13,21 @@ The `SuggestionService` provides intelligent, context-aware suggestions for the 
 ## Key Features
 
 ### 1. Token Optimization
+
 - Configurable token budgets
 - Automatic context truncation
 - Token usage tracking
 - Cost-aware operations
 
 ### 2. Smart Caching
+
 - TTL-based cache management
 - Cache hit/miss tracking
 - Periodic cleanup
 - Thread-safe operations
 
 ### 3. Context Building
+
 - Conversation history integration
 - File context support
 - User preference handling
@@ -105,6 +108,7 @@ stats := service.GetStats()
 ## Testing
 
 The service includes comprehensive tests covering:
+
 - Basic functionality
 - Error handling
 - Cache management
@@ -113,6 +117,7 @@ The service includes comprehensive tests covering:
 - Performance benchmarks
 
 Run tests with:
+
 ```bash
 go test -v ./internal/chat/v2/services -run "Test.*Suggestion"
 ```

@@ -17,14 +17,14 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	"github.com/lancekrogers/guild/pkg/campaign"
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	grpcpkg "github.com/lancekrogers/guild/pkg/grpc"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	grpcpkg "github.com/lancekrogers/guild-core/pkg/grpc"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 var (
@@ -178,13 +178,13 @@ func runServe(cmd *cobra.Command, args []string) error {
 			logPath = daemon.GetLogFilePath()
 		}
 		logDir := filepath.Dir(logPath)
-		if err := os.MkdirAll(logDir, 0755); err != nil {
+		if err := os.MkdirAll(logDir, 0o755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create log directory").
 				WithComponent("cli").
 				WithOperation("serve.daemon")
 		}
 
-		logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+		logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o644)
 		if err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeIO, "failed to open log file").
 				WithComponent("cli").
@@ -203,9 +203,11 @@ func runServe(cmd *cobra.Command, args []string) error {
 			WithOperation("serve.run")
 	}
 
-	// Initialize registry with minimal working configuration
+	// Initialize registry with configuration, preferring YAML from .campaign
 	reg := registry.NewComponentRegistry()
 	logger.InfoContext(ctx, "Initializing component registry")
+
+	// Start with a minimal working config
 	registryConfig := &registry.Config{
 		Agents: registry.AgentConfigYaml{
 			DefaultType: "worker",
@@ -243,6 +245,22 @@ func runServe(cmd *cobra.Command, args []string) error {
 				},
 			},
 		},
+	}
+
+	// Attempt to load provider/memory config from YAML
+	if cfgPath := filepath.Join(cwd, ".campaign", "campaign.yaml"); true {
+		if data, err := os.ReadFile(cfgPath); err == nil && len(data) > 0 {
+			if yamlCfg, err := registry.LoadConfigFromBytes(data); err == nil {
+				// Overlay providers when present
+				if yamlCfg.Providers.DefaultProvider != "" || len(yamlCfg.Providers.Providers) > 0 {
+					registryConfig.Providers = yamlCfg.Providers
+				}
+				// Overlay memory when present
+				if yamlCfg.Memory.DefaultMemoryStore != "" || yamlCfg.Memory.DefaultVectorStore != "" || len(yamlCfg.Memory.Stores) > 0 {
+					registryConfig.Memory = yamlCfg.Memory
+				}
+			}
+		}
 	}
 
 	if err := reg.Initialize(ctx, *registryConfig); err != nil {
@@ -352,7 +370,7 @@ func runServe(cmd *cobra.Command, args []string) error {
 	// Start the server (this blocks until context is cancelled)
 	// Ensure socket directory exists and clean stale sockets
 	socketDir := filepath.Dir(daemonConfig.SocketPath)
-	if err := os.MkdirAll(socketDir, 0755); err != nil {
+	if err := os.MkdirAll(socketDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create socket directory").
 			WithComponent("cli").
 			WithOperation("serve.run")
@@ -446,7 +464,7 @@ func forkDaemon(daemonConfig *daemon.DaemonConfig) error {
 	}
 
 	// Redirect output to log file
-	logFile, err := os.OpenFile(daemonConfig.LogFile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	logFile, err := os.OpenFile(daemonConfig.LogFile, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to open log file").
 			WithComponent("cli").
@@ -467,7 +485,7 @@ func forkDaemon(daemonConfig *daemon.DaemonConfig) error {
 
 	// Write PID file
 	pidFile := filepath.Join(filepath.Dir(daemonConfig.SocketPath), fmt.Sprintf("guild-%s.pid", daemonConfig.Campaign))
-	if err := os.WriteFile(pidFile, []byte(strconv.Itoa(cmd.Process.Pid)), 0644); err != nil {
+	if err := os.WriteFile(pidFile, []byte(strconv.Itoa(cmd.Process.Pid)), 0o644); err != nil {
 		// Non-fatal error - just log it
 		fmt.Printf("⚠️  Warning: Could not write PID file: %v\n", err)
 	}

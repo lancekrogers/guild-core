@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package demo
 
 import (
@@ -30,7 +33,7 @@ func TestVisualRegressionSuite(t *testing.T) {
 
 		// Write test content
 		contentFile := filepath.Join(workDir, "test-visual.md")
-		err := os.WriteFile(contentFile, []byte(content), 0644)
+		err := os.WriteFile(contentFile, []byte(content), 0o644)
 		require.NoError(t, err)
 
 		// Read back and verify structure
@@ -58,7 +61,7 @@ func TestVisualRegressionSuite(t *testing.T) {
 		agentConfig := createAdvancedAgentConfig()
 
 		configPath := filepath.Join(workDir, ".guild", "guild.yaml")
-		err := os.WriteFile(configPath, []byte(agentConfig), 0644)
+		err := os.WriteFile(configPath, []byte(agentConfig), 0o644)
 		require.NoError(t, err)
 
 		// Create status simulation content
@@ -85,7 +88,7 @@ func TestVisualRegressionSuite(t *testing.T) {
 This tests that **status displays** work with *markdown rendering*.`
 
 		statusFile := filepath.Join(workDir, "status-test.md")
-		err = os.WriteFile(statusFile, []byte(statusContent), 0644)
+		err = os.WriteFile(statusFile, []byte(statusContent), 0o644)
 		require.NoError(t, err)
 
 		// Verify content structure
@@ -139,7 +142,7 @@ This should work alongside rich markdown and status displays.`,
 					strings.Join(scenario.expected, ", "))
 
 				testFile := filepath.Join(workDir, "completion-test.md")
-				err := os.WriteFile(testFile, []byte(testContent), 0644)
+				err := os.WriteFile(testFile, []byte(testContent), 0o644)
 				require.NoError(t, err)
 
 				// Verify structure
@@ -163,7 +166,7 @@ This should work alongside rich markdown and status displays.`,
 		historyFile := filepath.Join(workDir, "command-history.txt")
 		historyContent := strings.Join(historyCommands, "\n")
 
-		err := os.WriteFile(historyFile, []byte(historyContent), 0644)
+		err := os.WriteFile(historyFile, []byte(historyContent), 0o644)
 		require.NoError(t, err)
 
 		// Read back and verify preservation
@@ -224,7 +227,7 @@ Error should display clearly without breaking visual formatting.`,
 					scenario.error)
 
 				errorFile := filepath.Join(workDir, scenario.name+"-error.md")
-				err := os.WriteFile(errorFile, []byte(errorContent), 0644)
+				err := os.WriteFile(errorFile, []byte(errorContent), 0o644)
 				require.NoError(t, err)
 
 				// Verify error formatting
@@ -262,7 +265,7 @@ func TestDemoVisualStability(t *testing.T) {
 		largeContent := strings.Join(contentParts, "")
 
 		contentFile := filepath.Join(workDir, "large-content.md")
-		err := os.WriteFile(contentFile, []byte(largeContent), 0644)
+		err := os.WriteFile(contentFile, []byte(largeContent), 0o644)
 		require.NoError(t, err)
 
 		// Verify it can be processed
@@ -278,7 +281,7 @@ func TestDemoVisualStability(t *testing.T) {
 	t.Run("rapid_content_updates", func(t *testing.T) {
 		// Simulate rapid content changes during demo
 		baseDir := filepath.Join(workDir, "rapid-updates")
-		err := os.MkdirAll(baseDir, 0755)
+		err := os.MkdirAll(baseDir, 0o755)
 		require.NoError(t, err)
 
 		// Create multiple content files rapidly
@@ -299,7 +302,7 @@ func TestDemoVisualStability(t *testing.T) {
 				strings.Repeat("█", i%20))
 
 			filename := filepath.Join(baseDir, fmt.Sprintf("update-%d.md", i))
-			err := os.WriteFile(filename, []byte(content), 0644)
+			err := os.WriteFile(filename, []byte(content), 0o644)
 			require.NoError(t, err)
 		}
 
@@ -336,7 +339,7 @@ func TestDemoVisualStability(t *testing.T) {
 		}
 
 		statusFile := filepath.Join(workDir, "multi-agent-status.md")
-		err := os.WriteFile(statusFile, []byte(statusContent), 0644)
+		err := os.WriteFile(statusFile, []byte(statusContent), 0o644)
 		require.NoError(t, err)
 
 		// Verify status display structure
@@ -380,6 +383,9 @@ Ordered list:
 
 ### Go Code
 ` + "```go" + `
+//go:build integration
+// +build integration
+
 package main
 
 import (

@@ -8,8 +8,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/interfaces"
 )
 
 // CostProfile is an alias to interfaces.CostProfile

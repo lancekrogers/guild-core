@@ -395,8 +395,10 @@ type ReferenceContext struct {
 }
 
 // Type aliases for consistency
-type HoverParams = TextDocumentPositionParams
-type DefinitionParams = TextDocumentPositionParams
+type (
+	HoverParams      = TextDocumentPositionParams
+	DefinitionParams = TextDocumentPositionParams
+)
 
 // DocumentSymbolParams represents parameters for textDocument/documentSymbol
 type DocumentSymbolParams struct {

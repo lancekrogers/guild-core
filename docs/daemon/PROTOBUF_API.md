@@ -34,6 +34,7 @@ service ChatService {
 ### Core Chat Messages
 
 #### ChatRequest
+
 Main request message for the bidirectional chat stream.
 
 ```protobuf
@@ -47,6 +48,7 @@ message ChatRequest {
 ```
 
 #### ChatResponse
+
 Response message containing various types of chat events.
 
 ```protobuf
@@ -62,6 +64,7 @@ message ChatResponse {
 ```
 
 #### ChatMessage
+
 Core message structure for user and agent communication.
 
 ```protobuf
@@ -86,6 +89,7 @@ message ChatMessage {
 ```
 
 **Fields:**
+
 - `session_id`: Unique identifier for the chat session
 - `sender_id`: ID of the message sender (agent ID or "user")
 - `sender_name`: Display name of the sender
@@ -97,6 +101,7 @@ message ChatMessage {
 ### Agent Communication
 
 #### AgentThinking
+
 Indicates agent processing state during response generation.
 
 ```protobuf
@@ -123,6 +128,7 @@ message AgentThinking {
 Sent during agent processing to provide real-time feedback on agent activity. Clients can display thinking indicators based on the state.
 
 #### ToolExecution
+
 Status and progress information for tool execution.
 
 ```protobuf
@@ -156,6 +162,7 @@ message ToolExecution {
 ### Session Management
 
 #### ChatSession
+
 Complete session metadata and status.
 
 ```protobuf
@@ -180,6 +187,7 @@ message ChatSession {
 ```
 
 #### SessionContext
+
 Contextual information about the session environment.
 
 ```protobuf
@@ -195,6 +203,7 @@ message SessionContext {
 ### Control Messages
 
 #### ChatControl
+
 Session lifecycle and flow control.
 
 ```protobuf
@@ -215,6 +224,7 @@ message ChatControl {
 ```
 
 #### ToolApproval
+
 User approval/rejection for tool execution requests.
 
 ```protobuf
@@ -230,6 +240,7 @@ message ToolApproval {
 ### Events and Errors
 
 #### ChatEvent
+
 System events during chat sessions.
 
 ```protobuf
@@ -256,6 +267,7 @@ message ChatEvent {
 ```
 
 #### ChatError
+
 Error information with context and recovery suggestions.
 
 ```protobuf
@@ -284,6 +296,7 @@ message ChatError {
 ### Session Management RPCs
 
 #### CreateChatSession
+
 Creates a new chat session with specified agents and context.
 
 ```protobuf
@@ -299,6 +312,7 @@ message CreateChatSessionRequest {
 **Response:** `ChatSession`
 
 #### EndChatSession
+
 Gracefully terminates a chat session.
 
 ```protobuf
@@ -315,6 +329,7 @@ message EndChatSessionResponse {
 ```
 
 #### ListChatSessions
+
 Retrieves active and optionally ended sessions.
 
 ```protobuf
@@ -331,6 +346,7 @@ message ListChatSessionsResponse {
 ```
 
 #### GetChatHistory
+
 Retrieves message history for a session with pagination.
 
 ```protobuf
@@ -352,6 +368,7 @@ message GetChatHistoryResponse {
 ### Summary Information
 
 #### ChatSessionSummary
+
 Aggregate statistics about a completed session.
 
 ```protobuf
@@ -481,16 +498,16 @@ stream, err := client.Chat(ctx)
 
 1. **INVALID_SESSION**: Session ID not found or expired
    - **Action**: Create new session or list available sessions
-   
+
 2. **AGENT_UNAVAILABLE**: Requested agent not online
    - **Action**: Check agent status or select different agent
-   
+
 3. **TOOL_EXECUTION_FAILED**: Tool encountered an error
    - **Action**: Check tool parameters and retry or use alternative
-   
+
 4. **RATE_LIMITED**: Too many requests in time window
    - **Action**: Implement exponential backoff and retry
-   
+
 5. **CONTEXT_TOO_LARGE**: Message or context exceeds size limits
    - **Action**: Truncate content or summarize previous context
 
@@ -521,17 +538,20 @@ func sendMessageWithRetry(stream pb.ChatService_ChatClient, req *pb.ChatRequest,
 ## Performance Considerations
 
 ### Message Size Limits
+
 - **Maximum message content**: 1MB
 - **Maximum metadata size**: 64KB
 - **Maximum concurrent streams per client**: 100
 
 ### Streaming Best Practices
+
 - Use client-side buffering for high-frequency messages
 - Implement proper backpressure handling
 - Close streams gracefully when done
 - Monitor connection health with periodic pings
 
 ### Connection Management
+
 - Use connection pooling for multiple concurrent sessions
 - Implement exponential backoff for reconnections
 - Set appropriate timeouts (recommended: 30s for requests, 5m for streams)

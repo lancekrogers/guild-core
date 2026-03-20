@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package errors
 
 import (
@@ -15,10 +18,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	// "github.com/lancekrogers/guild/pkg/workspace" // Package doesn't exist
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	// "github.com/lancekrogers/guild-core/pkg/workspace" // Package doesn't exist
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // Tool implementations for testing
@@ -167,7 +170,7 @@ func (t *writeToolImpl) Execute(ctx context.Context, input string) (*tools.ToolR
 	path := params["path"].(string)
 	content := params["content"].(string)
 
-	err := os.WriteFile(path, []byte(content), 0644)
+	err := os.WriteFile(path, []byte(content), 0o644)
 	if err != nil {
 		return nil, gerror.New(gerror.ErrCodeValidation, "write permission denied", err).
 			WithDetails("path", path).
@@ -547,13 +550,13 @@ func TestToolExecutionFailures(t *testing.T) {
 		t.Run("FileSystemPermissions", func(t *testing.T) {
 			// Create read-only file
 			readOnlyFile := filepath.Join(projCtx.GetRootPath(), "readonly.txt")
-			err := os.WriteFile(readOnlyFile, []byte("Read only content"), 0644)
+			err := os.WriteFile(readOnlyFile, []byte("Read only content"), 0o644)
 			require.NoError(t, err)
 
 			// Make it read-only
-			err = os.Chmod(readOnlyFile, 0444)
+			err = os.Chmod(readOnlyFile, 0o444)
 			require.NoError(t, err)
-			defer os.Chmod(readOnlyFile, 0644) // Restore permissions
+			defer os.Chmod(readOnlyFile, 0o644) // Restore permissions
 
 			// Tool that tries to write to read-only file
 			writeTool := &writeToolImpl{

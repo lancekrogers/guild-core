@@ -44,7 +44,7 @@ import (
     "google.golang.org/grpc"
     "google.golang.org/grpc/credentials/insecure"
     
-    pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+    pb "github.com/guild-framework/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 func main() {
@@ -471,6 +471,7 @@ export GUILD_DATABASE_PATH="/custom/path/memory.db"
 ### Common Issues
 
 1. **Socket Permission Denied**
+
    ```bash
    # Check socket permissions
    ls -la /tmp/guild*.sock
@@ -480,6 +481,7 @@ export GUILD_DATABASE_PATH="/custom/path/memory.db"
    ```
 
 2. **Connection Refused**
+
    ```bash
    # Check daemon status
    guild status
@@ -489,6 +491,7 @@ export GUILD_DATABASE_PATH="/custom/path/memory.db"
    ```
 
 3. **Stream Disconnections**
+
    ```bash
    # Check daemon logs
    tail -f ~/.guild/daemon.log
@@ -516,18 +519,21 @@ netstat -an | grep guild
 ## Best Practices
 
 ### Performance
+
 - Use connection pooling for multiple concurrent requests
 - Implement client-side message batching for high throughput
 - Monitor memory usage in long-running streams
 - Use appropriate timeout values for your use case
 
 ### Reliability
+
 - Implement exponential backoff for reconnections
 - Handle partial message delivery gracefully
 - Persist client state across connection failures
 - Monitor daemon health and restart if necessary
 
 ### Security
+
 - Validate all message content before sending
 - Use appropriate Unix socket permissions
 - Sanitize data before database storage

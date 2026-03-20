@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package kanban
 
 import (
@@ -14,23 +17,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
-
-// KanbanTestFramework provides comprehensive integration testing for kanban systems
-type KanbanTestFramework struct {
-	registry registry.ComponentRegistry
-	boards   map[string]*kanban.Board
-	managers map[string]*kanban.Manager
-	clients  map[string]*Client
-	testDir  string
-	logger   observability.Logger
-	metrics  *PerformanceMetrics
-	mu       sync.RWMutex
-	t        *testing.T
-}
 
 // OperationMix defines the distribution of operations for testing
 type OperationMix struct {
@@ -70,26 +59,6 @@ type Operation struct {
 	TaskID   string
 	Data     map[string]interface{}
 	ClientID string
-}
-
-// BoardComplexity defines complexity parameters for persistence testing
-type BoardComplexity struct {
-	Tasks   int
-	Columns int
-	Users   int
-}
-
-// CheckpointConfig defines checkpointing configuration
-type CheckpointConfig struct {
-	Frequency       int
-	VerifyIntegrity bool
-}
-
-// Checkpoint represents a state checkpoint
-type Checkpoint struct {
-	Index         int
-	ExpectedState *BoardState
-	Timestamp     time.Time
 }
 
 // PerformanceMetrics tracks performance data
@@ -324,24 +293,6 @@ func TestKanbanRealTimeSync_HappyPath(t *testing.T) {
 	}
 }
 
-// NewKanbanTestFramework creates a new test framework instance
-func NewKanbanTestFramework(t *testing.T) *KanbanTestFramework {
-	return &KanbanTestFramework{
-		boards:   make(map[string]*kanban.Board),
-		managers: make(map[string]*kanban.Manager),
-		clients:  make(map[string]*Client),
-		testDir:  t.TempDir(),
-		metrics:  &PerformanceMetrics{},
-		t:        t,
-	}
-}
-
-// Cleanup cleans up the test framework
-func (f *KanbanTestFramework) Cleanup() {
-	// Implementation would close all managers, clients, and clean up resources
-	f.t.Logf("Cleaning up Kanban test framework")
-}
-
 // CreateTestBoard creates a test board with the specified configuration
 func (f *KanbanTestFramework) CreateTestBoard(name string, config BoardConfig) *kanban.Board {
 	// Implementation would create a board using the kanban manager
@@ -488,16 +439,6 @@ func (c *Client) GetBoardState(boardID string) (*BoardState, error) {
 type Board struct {
 	ID   string
 	Name string
-}
-
-type BoardState struct {
-	Tasks []Task
-}
-
-type Task struct {
-	ID     string
-	Title  string
-	Status string
 }
 
 type PermissionSettings struct {

@@ -11,8 +11,9 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // GRPCEventPublisher publishes kanban events to the gRPC event service
@@ -98,8 +99,7 @@ func (p *GRPCEventPublisher) WrapEventManager(em *EventManager) *EventManager {
 		// Publish to gRPC in background to avoid blocking
 		go func() {
 			if err := p.PublishTaskEvent(event); err != nil {
-				// Log error but don't fail
-				fmt.Printf("Failed to publish event to gRPC: %v\n", err)
+				observability.GetLogger(p.ctx).Warn("failed to publish kanban event to gRPC", "error", err)
 			}
 		}()
 		return nil

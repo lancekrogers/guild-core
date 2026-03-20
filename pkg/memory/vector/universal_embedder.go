@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // EmbeddingStrategy defines how to extract embeddings from a model

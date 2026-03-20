@@ -11,16 +11,16 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/help"
-	"github.com/charmbracelet/bubbles/key"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/help"
+	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/paths"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 // Guild selector key bindings
@@ -291,7 +291,7 @@ func (m *GuildSelectorModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
-		m.help.Width = msg.Width
+		m.help.SetWidth(msg.Width)
 
 	case tea.KeyMsg:
 		switch {
@@ -353,9 +353,11 @@ func (m *GuildSelectorModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View renders the guild selector
-func (m *GuildSelectorModel) View() string {
+func (m *GuildSelectorModel) View() tea.View {
 	if m.err != nil {
-		return errorStyle.Render(fmt.Sprintf("Error: %v\n\nPress 'q' to quit.", m.err))
+		view := tea.NewView(errorStyle.Render(fmt.Sprintf("Error: %v\n\nPress 'q' to quit.", m.err)))
+		view.AltScreen = true
+		return view
 	}
 
 	var b strings.Builder
@@ -433,7 +435,9 @@ func (m *GuildSelectorModel) View() string {
 		}
 	}
 
-	return content
+	view := tea.NewView(content)
+	view.AltScreen = true
+	return view
 }
 
 // Selected returns the selected guild name
@@ -474,7 +478,7 @@ func (m *GuildSelectorModel) createDefaultGuild() tea.Msg {
 
 	// Create guilds directory if it doesn't exist
 	guildsDir := filepath.Join(m.projectPath, paths.DefaultCampaignDir, "guilds")
-	if err := os.MkdirAll(guildsDir, 0755); err != nil {
+	if err := os.MkdirAll(guildsDir, 0o755); err != nil {
 		return errMsg{gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guilds directory")}
 	}
 
@@ -485,7 +489,7 @@ func (m *GuildSelectorModel) createDefaultGuild() tea.Msg {
 		return errMsg{gerror.Wrap(err, gerror.ErrCodeInternal, "failed to marshal guild definition")}
 	}
 
-	if err := os.WriteFile(guildPath, data, 0644); err != nil {
+	if err := os.WriteFile(guildPath, data, 0o644); err != nil {
 		return errMsg{gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save guild file")}
 	}
 
@@ -529,7 +533,7 @@ func RunGuildSelector(ctx context.Context) (string, error) {
 		return "", err
 	}
 
-	p := tea.NewProgram(model, tea.WithAltScreen())
+	p := tea.NewProgram(model)
 	if _, err := p.Run(); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to run guild selector").
 			WithComponent("GuildSelector").

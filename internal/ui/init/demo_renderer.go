@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/glamour"
-	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/glamour/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/internal/setup"
+	"github.com/lancekrogers/guild-core/internal/setup"
 )
 
 // DemoRenderer handles rich rendering of demo commissions
@@ -24,7 +24,7 @@ type DemoRenderer struct {
 func NewDemoRenderer(width int, styles *Styles) (*DemoRenderer, error) {
 	// Use auto style for theme detection
 	renderer, err := glamour.NewTermRenderer(
-		glamour.WithAutoStyle(),
+		glamour.WithEnvironmentConfig(),
 		glamour.WithWordWrap(width-4),
 	)
 	if err != nil {

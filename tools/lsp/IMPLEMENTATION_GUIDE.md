@@ -7,7 +7,9 @@ This guide explains how to complete the implementation of the LSP tools once the
 The following needs to be added to `pkg/lsp/`:
 
 ### 1. Manager Methods
+
 Add these methods to `pkg/lsp/manager.go`:
+
 - `GetDocumentSymbols(ctx, filePath) ([]DocumentSymbol, error)`
 - `GetWorkspaceSymbols(ctx, query) ([]SymbolInformation, error)`
 - `GetCodeActions(ctx, filePath, startLine, startChar, endLine, endChar) ([]CodeAction, error)`
@@ -15,7 +17,9 @@ Add these methods to `pkg/lsp/manager.go`:
 - `FormatDocument(ctx, filePath, options) ([]TextEdit, error)`
 
 ### 2. Protocol Types
+
 Add missing types to `pkg/lsp/protocol.go`:
+
 - `WorkspaceSymbolParams`
 - `SymbolInformation`
 - `CodeActionContext`
@@ -26,7 +30,9 @@ Add missing types to `pkg/lsp/protocol.go`:
 - `FormattingOptions`
 
 ### 3. Public Methods
+
 Either:
+
 - Make `Client.request()` public by renaming to `Request()`
 - OR add a public wrapper method to Server/Client
 

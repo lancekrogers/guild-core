@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // LifecycleManager handles the commission lifecycle operations
@@ -53,7 +53,7 @@ func DefaultLifecycleManagerFactory(manager *Manager, basePath string) *Lifecycl
 // CreateCommissionFromDescription creates a new commission from a natural language description
 func (l *LifecycleManager) CreateCommissionFromDescription(ctx context.Context, description string) (*Commission, error) {
 	// First, ensure commissions directory exists
-	if err := os.MkdirAll(l.commissionsPath, 0755); err != nil {
+	if err := os.MkdirAll(l.commissionsPath, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create commissions directory").WithComponent("commission").WithOperation("CreateCommissionFromDescription")
 	}
 
@@ -72,7 +72,7 @@ func (l *LifecycleManager) CreateCommissionFromDescription(ctx context.Context, 
 	content := formatCommissionMarkdown(obj)
 
 	// Write to file
-	if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(filePath, []byte(content), 0o644); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write commission file").WithComponent("commission").WithOperation("CreateCommissionFromDescription")
 	}
 
@@ -130,7 +130,7 @@ func (l *LifecycleManager) AddContext(ctx context.Context, commissionID, context
 	obj.Content = content
 
 	// Save changes to file
-	if err := os.WriteFile(obj.FilePath, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(obj.FilePath, []byte(content), 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update commission file").WithComponent("commission").WithOperation("AddContext")
 	}
 
@@ -158,11 +158,11 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, commiss
 	aiDocsDir := filepath.Join(projectDir, "ai_docs")
 	specsDir := filepath.Join(projectDir, "specs")
 
-	if err := os.MkdirAll(aiDocsDir, 0755); err != nil {
+	if err := os.MkdirAll(aiDocsDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create ai_docs directory").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
-	if err := os.MkdirAll(specsDir, 0755); err != nil {
+	if err := os.MkdirAll(specsDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create specs directory").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
@@ -177,7 +177,7 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, commiss
 		filepath.Base(obj.FilePath),
 		obj.Description)
 
-	if err := os.WriteFile(aiDocsReadme, []byte(aiDocsContent), 0644); err != nil {
+	if err := os.WriteFile(aiDocsReadme, []byte(aiDocsContent), 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write ai_docs README").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
@@ -192,7 +192,7 @@ func (l *LifecycleManager) GenerateProjectStructure(ctx context.Context, commiss
 		specsContent += fmt.Sprintf("- %s\n", req)
 	}
 
-	if err := os.WriteFile(specsReadme, []byte(specsContent), 0644); err != nil {
+	if err := os.WriteFile(specsReadme, []byte(specsContent), 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write specs README").WithComponent("commission").WithOperation("GenerateProjectStructure")
 	}
 
@@ -238,7 +238,7 @@ func (l *LifecycleManager) MarkCommissionReady(ctx context.Context, commissionID
 
 	// Write current time to the ready file
 	readyContent := fmt.Sprintf("Commission marked ready at: %s\n", time.Now().Format(time.RFC3339))
-	if err := os.WriteFile(readyFile, []byte(readyContent), 0644); err != nil {
+	if err := os.WriteFile(readyFile, []byte(readyContent), 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create ready file").WithComponent("commission").WithOperation("MarkCommissionReady")
 	}
 
@@ -295,7 +295,7 @@ func (l *LifecycleManager) MarkCommissionCompleted(ctx context.Context, commissi
 
 	// Append completion time to the ready file
 	completionContent := fmt.Sprintf("Commission completed at: %s\n", time.Now().Format(time.RFC3339))
-	f, err := os.OpenFile(readyFile, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
+	f, err := os.OpenFile(readyFile, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0o644)
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to open ready file").WithComponent("commission").WithOperation("MarkCommissionCompleted")
 	}

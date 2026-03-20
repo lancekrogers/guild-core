@@ -9,8 +9,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // ResponseParserImpl implements the ResponseParser interface
@@ -296,8 +296,10 @@ func (p *ResponseParserImpl) looksLikeTask(line string) bool {
 	}
 
 	// Look for action verbs at the beginning
-	actionVerbs := []string{"implement", "create", "add", "update", "fix", "remove",
-		"design", "build", "test", "deploy", "configure", "setup", "install"}
+	actionVerbs := []string{
+		"implement", "create", "add", "update", "fix", "remove",
+		"design", "build", "test", "deploy", "configure", "setup", "install",
+	}
 
 	lowerLine := strings.ToLower(line)
 	for _, verb := range actionVerbs {

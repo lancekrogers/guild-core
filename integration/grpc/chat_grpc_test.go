@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package grpc
 
 import (
@@ -8,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	guildgrpc "github.com/lancekrogers/guild/pkg/grpc"
-	guildpb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/registry"
+	guildgrpc "github.com/lancekrogers/guild-core/pkg/grpc"
+	guildpb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // CodeAnalyzer extracts knowledge from code changes and git commits

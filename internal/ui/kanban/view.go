@@ -7,13 +7,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // View renders the kanban board
-func (m *Model) View() string {
+func (m *Model) View() tea.View {
 	// Start profiling if enabled
 	var profilingDone func()
 	if m.profiler != nil && m.profiler.IsEnabled() {
@@ -30,34 +31,34 @@ func (m *Model) View() string {
 		}
 	}
 
+	var content string
 	if m.error != nil {
-		return m.renderError()
+		content = m.renderError()
+	} else if m.loading {
+		content = m.renderLoading()
+	} else if m.showHelp {
+		content = m.renderHelp()
+	} else {
+		// Build the main board view
+		var sections []string
+
+		// Header
+		sections = append(sections, m.renderHeader())
+
+		// Column headers
+		sections = append(sections, m.renderColumnHeaders())
+
+		// Task columns (now optimized)
+		sections = append(sections, m.renderTaskColumnsOptimized())
+
+		// Status bar
+		sections = append(sections, m.renderStatusBar())
+
+		content = lipgloss.JoinVertical(lipgloss.Left, sections...)
 	}
-
-	if m.loading {
-		return m.renderLoading()
-	}
-
-	if m.showHelp {
-		return m.renderHelp()
-	}
-
-	// Build the main board view
-	var sections []string
-
-	// Header
-	sections = append(sections, m.renderHeader())
-
-	// Column headers
-	sections = append(sections, m.renderColumnHeaders())
-
-	// Task columns (now optimized)
-	sections = append(sections, m.renderTaskColumnsOptimized())
-
-	// Status bar
-	sections = append(sections, m.renderStatusBar())
-
-	return lipgloss.JoinVertical(lipgloss.Left, sections...)
+	view := tea.NewView(content)
+	view.AltScreen = true
+	return view
 }
 
 // renderHeader renders the board header

@@ -4,8 +4,8 @@
 package parsers
 
 import (
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools/code"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools/code"
 	sitter "github.com/smacker/go-tree-sitter"
 	"github.com/smacker/go-tree-sitter/bash"
 	"github.com/smacker/go-tree-sitter/c"
@@ -340,7 +340,8 @@ func (p *UniversalParser) GetClasses(result *code.ParseResult) ([]*code.Class, e
 // RegisterAllParsers registers parsers for all supported languages with an AST tool
 func RegisterAllParsers(astTool interface {
 	RegisterParser(code.Language, code.Parser)
-}) error {
+},
+) error {
 	for language := range languageGrammars {
 		parser, err := CreateParser(language)
 		if err != nil {

@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package chat
 
 import (
@@ -19,48 +22,14 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/config"
-	grpcpkg "github.com/lancekrogers/guild/pkg/grpc"
-	guildv1 "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	grpcpkg "github.com/lancekrogers/guild-core/pkg/grpc"
+	guildv1 "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
-
-// eventBusAdapter wraps MockEventBus to match the gRPC EventBus interface
-type eventBusAdapter struct {
-	mock *testutil.MockEventBus
-}
-
-// simpleMockAgent is a minimal mock agent for testing
-type simpleMockAgent struct {
-	id       string
-	name     string
-	response string
-}
-
-func (m *simpleMockAgent) GetID() string             { return m.id }
-func (m *simpleMockAgent) GetName() string           { return m.name }
-func (m *simpleMockAgent) GetType() string           { return "worker" }
-func (m *simpleMockAgent) GetCapabilities() []string { return []string{"task-breakdown"} }
-func (m *simpleMockAgent) Execute(ctx context.Context, input string) (string, error) {
-	return m.response, nil
-}
-
-func (a *eventBusAdapter) Publish(event interface{}) {
-	// Extract type from event if possible, otherwise use generic type
-	eventType := "generic"
-	if typed, ok := event.(map[string]interface{}); ok {
-		if t, exists := typed["type"]; exists {
-			eventType = fmt.Sprintf("%v", t)
-		}
-	}
-	a.mock.Publish(eventType, event)
-}
-
-func (a *eventBusAdapter) Subscribe(eventType string, handler func(event interface{})) {
-	a.mock.Subscribe(eventType, handler)
-}
 
 // TestChatServiceBasicsFixed tests basic chat service functionality with proper project setup
 func TestChatServiceBasicsFixed(t *testing.T) {
@@ -175,9 +144,9 @@ func TestChatServiceBasicsFixed(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	// Create event bus adapter
-	mockEventBus := testutil.NewMockEventBus()
-	eventBusAdapter := &eventBusAdapter{mock: mockEventBus}
+	// Create unified event bus and adapter
+	unifiedEventBus := events.NewMemoryEventBus(events.EventBusConfig{})
+	eventBusAdapter := grpcpkg.NewEventBusAdapter(unifiedEventBus)
 
 	// Start server
 	server := grpcpkg.NewServer(reg, eventBusAdapter)

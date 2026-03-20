@@ -318,7 +318,7 @@ func TestGetRecommendedDemo(t *testing.T) {
 				"detected_tech": []string{"pandas", "jupyter"},
 			},
 			expectedType: DemoTypeDataAnalysis,
-			reasonCheck:  "pandas data tool",
+			reasonCheck:  "pandas for data analysis",
 		},
 		{
 			name: "No hints - default",

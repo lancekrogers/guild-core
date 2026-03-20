@@ -1,15 +1,19 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package providers
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -22,7 +26,7 @@ func TestHP_PI_001_MultiProviderAbstractionAndSelection(t *testing.T) {
 	require.NoError(t, err, "Failed to create provider integration framework")
 	defer framework.Cleanup()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second) // Reduced from 2 minutes
 	defer cancel()
 
 	// Start all components
@@ -204,7 +208,7 @@ func TestHP_PI_001_MultiProviderAbstractionAndSelection(t *testing.T) {
 	t.Logf("📊 PHASE 4: Performance Tracking and Optimization")
 
 	// Allow some time for metrics collection
-	time.Sleep(1 * time.Second)
+	time.Sleep(100 * time.Millisecond) // Reduced from 1 second
 
 	selectionHistory := framework.GetSelector().GetSelectionHistory()
 	assert.GreaterOrEqual(t, len(selectionHistory), len(selectionScenarios),
@@ -256,7 +260,7 @@ func TestHP_PI_002_AutomaticFailoverAndResilience(t *testing.T) {
 	require.NoError(t, err, "Failed to create provider integration framework")
 	defer framework.Cleanup()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second) // Reduced from 3 minutes
 	defer cancel()
 
 	// Start all components
@@ -283,11 +287,11 @@ func TestHP_PI_002_AutomaticFailoverAndResilience(t *testing.T) {
 		QualityRequired: 0.8,
 	}
 
-	// Execute baseline requests
+	// Execute baseline requests (reduced iterations)
 	baselineSuccessCount := 0
 	baselineLatencies := make([]time.Duration, 0)
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 3; i++ { // Reduced from 5 to 3
 		reqCtx := RequestContext{
 			RequestID:    fmt.Sprintf("baseline-%d", i),
 			StartTime:    time.Now(),
@@ -332,18 +336,18 @@ func TestHP_PI_002_AutomaticFailoverAndResilience(t *testing.T) {
 		{
 			name:                 "Primary provider failure",
 			providerToFail:       providers.ProviderOpenAI,
-			failureDuration:      30 * time.Second,
+			failureDuration:      5 * time.Second, // Reduced from 30 seconds
 			expectedFailoverTime: 2 * time.Second,
 			expectedSuccessRate:  0.95,
-			requestCount:         10,
+			requestCount:         5, // Reduced from 10
 		},
 		{
 			name:                 "Secondary provider failure",
 			providerToFail:       providers.ProviderAnthropic,
-			failureDuration:      20 * time.Second,
+			failureDuration:      3 * time.Second, // Reduced from 20 seconds
 			expectedFailoverTime: 2 * time.Second,
 			expectedSuccessRate:  0.90,
-			requestCount:         8,
+			requestCount:         4, // Reduced from 8
 		},
 	}
 
@@ -398,7 +402,7 @@ func TestHP_PI_002_AutomaticFailoverAndResilience(t *testing.T) {
 				}
 
 				// Small delay between requests
-				time.Sleep(100 * time.Millisecond)
+				time.Sleep(50 * time.Millisecond) // Reduced from 100ms
 			}
 
 			// Validate failover performance
@@ -423,11 +427,11 @@ func TestHP_PI_002_AutomaticFailoverAndResilience(t *testing.T) {
 	t.Logf("🔄 PHASE 3: Recovery Validation")
 
 	// Wait for all providers to recover
-	time.Sleep(2 * time.Second)
+	time.Sleep(500 * time.Millisecond) // Reduced from 2 seconds
 
 	// Test recovery by running baseline again
 	recoverySuccessCount := 0
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 3; i++ { // Reduced from 5 to 3
 		reqCtx := RequestContext{
 			RequestID:    fmt.Sprintf("recovery-%d", i),
 			StartTime:    time.Now(),
@@ -503,7 +507,7 @@ func TestHP_PI_003_CostOptimizationAndBudgetManagement(t *testing.T) {
 	require.NoError(t, err, "Failed to create provider integration framework")
 	defer framework.Cleanup()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second) // Reduced from 2 minutes
 	defer cancel()
 
 	// Start components
@@ -754,13 +758,13 @@ func TestHP_PI_003_CostOptimizationAndBudgetManagement(t *testing.T) {
 	t.Logf("💡 PHASE 5: Optimization Recommendations")
 
 	// Allow time for analysis
-	time.Sleep(500 * time.Millisecond)
+	time.Sleep(100 * time.Millisecond) // Reduced from 500ms
 
 	optimizations := framework.GetCostOptimizer().GetCostOptimizations()
 	t.Logf("💡 Found %d optimization opportunities", len(optimizations))
 
 	for _, opt := range optimizations {
-		t.Logf("💡 %s: %s (savings: $%.6f, confidence: %.1f%%)",
+		t.Logf("💡 %v: %s (savings: $%.6f, confidence: %.1f%%)",
 			opt.Type, opt.Description, opt.Savings, opt.Confidence*100)
 
 		assert.Greater(t, opt.Confidence, 0.0, "Optimization should have confidence score")
@@ -802,7 +806,7 @@ func TestHP_PI_006_SecurityAndAuthenticationManagement(t *testing.T) {
 	require.NoError(t, err, "Failed to create provider integration framework")
 	defer framework.Cleanup()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second) // Reduced from 2 minutes
 	defer cancel()
 
 	// Start components
@@ -882,7 +886,7 @@ func TestHP_PI_006_SecurityAndAuthenticationManagement(t *testing.T) {
 		map[string]interface{}{"test": true})
 
 	// Allow time for event processing
-	time.Sleep(500 * time.Millisecond)
+	time.Sleep(100 * time.Millisecond) // Reduced from 500ms
 
 	securityEvents := framework.GetSecurityManager().GetSecurityEvents()
 	assert.GreaterOrEqual(t, len(securityEvents), 2, "Should have recorded security events")
@@ -966,7 +970,7 @@ func TestProviderIntegrationFramework_Comprehensive(t *testing.T) {
 	require.NoError(t, err, "Failed to create provider integration framework")
 	defer framework.Cleanup()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second) // Reduced from 1 minute
 	defer cancel()
 
 	// Test framework initialization

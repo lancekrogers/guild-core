@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

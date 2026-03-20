@@ -6,8 +6,8 @@ package manager
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 // IntelligentParser uses either pattern matching or LLM extraction based on configuration

@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package integration
 
 import (
@@ -13,8 +16,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 func TestMockProviderIntegration(t *testing.T) {
@@ -135,7 +138,6 @@ func TestMockProviderCommandLineIntegration(t *testing.T) {
 		// Run guild init
 		cmd := exec.Command("guild", "init", "--name", "test-project")
 		output, err := cmd.CombinedOutput()
-
 		if err != nil {
 			t.Logf("Guild init output: %s", string(output))
 			// If init fails, it might be due to missing dependencies
@@ -223,7 +225,7 @@ func TestMockProviderCustomResponses(t *testing.T) {
     delay_ms: 10
     tokens: 25`
 
-	err := os.WriteFile(customResponsesPath, []byte(customYAML), 0644)
+	err := os.WriteFile(customResponsesPath, []byte(customYAML), 0o644)
 	require.NoError(t, err)
 
 	// Set environment variable to use custom responses

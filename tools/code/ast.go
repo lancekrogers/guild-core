@@ -11,8 +11,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // ASTTool provides abstract syntax tree parsing and analysis
@@ -370,7 +370,6 @@ func (t *ASTTool) analyzeDirectory(ctx context.Context, params ASTParams) ([]*AS
 		results = append(results, result)
 		return nil
 	})
-
 	if err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeInternal, "failed to walk directory").
 			WithComponent("ast_tool").

@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Effect represents whether a permission allows or denies access

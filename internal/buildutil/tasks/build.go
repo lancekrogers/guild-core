@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/buildutil/ui"
+	"github.com/lancekrogers/guild-core/internal/buildutil/ui"
 )
 
 // PackageResult tracks build results for a package
@@ -66,7 +66,7 @@ func Build(verbose bool) error {
 		// Build
 		ui.Progress(i+1, total, fmt.Sprintf("Building %s", shortName))
 		start = time.Now()
-		cmd = exec.Command("go", "build", "-o", "/dev/null", pkg)
+		cmd = exec.Command("go", "build", "-o", os.DevNull, pkg)
 		if verbose {
 			cmd.Stdout = os.Stdout
 			cmd.Stderr = os.Stderr
@@ -86,7 +86,7 @@ func Build(verbose bool) error {
 	start := time.Now()
 
 	// Create bin directory
-	os.MkdirAll("bin", 0755)
+	os.MkdirAll("bin", 0o755)
 
 	cmd := exec.Command("go", "build", "-o", "bin/guild", "./cmd/guild")
 	if verbose {
@@ -188,9 +188,9 @@ func Build(verbose bool) error {
 // discoverPackages finds all Go packages in the project
 func discoverPackages() ([]string, error) {
 	cmd := exec.Command("go", "list", "./...")
-	output, err := cmd.Output()
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("go list ./...: %w\n%s", err, strings.TrimSpace(string(output)))
 	}
 
 	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
@@ -242,7 +242,7 @@ func BuildOnly(verbose bool) error {
 	ui.Section("Building Guild Framework")
 
 	// Create bin directory
-	if err := os.MkdirAll("bin", 0755); err != nil {
+	if err := os.MkdirAll("bin", 0o755); err != nil {
 		return fmt.Errorf("failed to create bin directory: %w", err)
 	}
 

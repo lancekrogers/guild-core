@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package chat
 
 import (
@@ -17,11 +20,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	grpcpkg "github.com/lancekrogers/guild/pkg/grpc"
-	guildv1 "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	grpcpkg "github.com/lancekrogers/guild-core/pkg/grpc"
+	guildv1 "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // mockEventBus is a simple mock implementation for testing
@@ -93,8 +97,9 @@ func TestGRPCServerStartup(t *testing.T) {
 	err = reg.Initialize(ctx, *registryConfig)
 	require.NoError(t, err)
 
-	// Create a mock event bus
-	eventBus := &mockEventBus{}
+	// Create a real event bus with adapter
+	realEventBus := events.NewMemoryEventBus(events.DefaultEventBusConfig())
+	eventBus := grpcpkg.NewEventBusAdapter(realEventBus)
 
 	// Start gRPC server in goroutine
 	server := grpcpkg.NewServer(reg, eventBus)
@@ -515,7 +520,8 @@ func TestGRPCServerServicesDiscoverable(t *testing.T) {
 	require.NoError(t, err)
 
 	// Create event bus (same as serve.go)
-	eventBus := &mockEventBus{}
+	realEventBus := events.NewMemoryEventBus(events.DefaultEventBusConfig())
+	eventBus := grpcpkg.NewEventBusAdapter(realEventBus)
 
 	// Start gRPC server in goroutine
 	server := grpcpkg.NewServer(reg, eventBus)
@@ -677,7 +683,8 @@ func TestCompleteServerClientWorkflow(t *testing.T) {
 	require.NoError(t, err, "Registry initialization should succeed (same as serve.go)")
 
 	// Create event bus (same as serve.go)
-	eventBus := &mockEventBus{}
+	realEventBus := events.NewMemoryEventBus(events.DefaultEventBusConfig())
+	eventBus := grpcpkg.NewEventBusAdapter(realEventBus)
 
 	// Start server (same as serve.go)
 	server := grpcpkg.NewServer(reg, eventBus)

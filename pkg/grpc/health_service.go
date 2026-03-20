@@ -10,7 +10,7 @@ import (
 
 	"google.golang.org/grpc/health/grpc_health_v1"
 
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // HealthService implements the gRPC health checking protocol

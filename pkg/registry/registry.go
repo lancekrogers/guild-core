@@ -9,12 +9,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/paths"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	globalproj "github.com/lancekrogers/guild-core/pkg/project/global"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // layeredManagerWrapper wraps a basic manager to implement LayeredManager interface
@@ -1362,8 +1363,12 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 	// Get project context to load guild configuration
 	projectCtx, err := r.projectRegistry.GetCurrentContext(ctx)
 	if err != nil {
-		// No project context available, use default SQLite backend
-		return r.initializeSQLiteStorage(ctx, filepath.Join(paths.DefaultCampaignDir, "memory.db"))
+		// No project context available: use global-mode SQLite backend.
+		// If global initialization fails (permissions, etc), fall back to in-memory storage to avoid blocking CLI usage.
+		if err := globalproj.EnsureGlobalInitialized(); err != nil {
+			return r.initializeSQLiteStorage(ctx, ":memory:")
+		}
+		return r.initializeSQLiteStorage(ctx, filepath.Join(globalproj.GlobalGuildDir(), paths.DefaultMemoryDB))
 	}
 
 	// Load guild configuration to determine storage backend
@@ -1385,7 +1390,6 @@ func (r *DefaultComponentRegistry) initializeStorage(ctx context.Context) error 
 }
 
 func (r *DefaultComponentRegistry) initializeSQLiteStorage(ctx context.Context, dbPath string) error {
-
 	// Initialize SQLite storage using the storage package's initialization function
 	storageReg, memoryStoreAdapter, err := storage.InitializeSQLiteStorageForRegistry(ctx, dbPath)
 	if err != nil {

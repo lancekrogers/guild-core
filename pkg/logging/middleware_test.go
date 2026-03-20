@@ -227,7 +227,6 @@ func TestGRPCUnaryServerInterceptor(t *testing.T) {
 		}
 
 		resp, err := interceptor(ctx, "request", info, handler)
-
 		if err != nil {
 			t.Errorf("Unexpected error: %v", err)
 		}
@@ -358,7 +357,6 @@ func TestGRPCStreamServerInterceptor(t *testing.T) {
 		}
 
 		err := interceptor(nil, stream, info, handler)
-
 		if err != nil {
 			t.Errorf("Unexpected error: %v", err)
 		}

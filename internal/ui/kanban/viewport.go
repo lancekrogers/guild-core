@@ -6,8 +6,8 @@ package kanban
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // Viewport manages the visible portion of the kanban board for performance optimization

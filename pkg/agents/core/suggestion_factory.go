@@ -4,14 +4,14 @@
 package core
 
 import (
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/lsp"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/suggestions"
-	"github.com/lancekrogers/guild/pkg/templates"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/lsp"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/pkg/templates"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 )
 
 // SuggestionAwareAgentFactory creates agents with suggestion capabilities
@@ -32,7 +32,6 @@ func NewSuggestionAwareAgentFactory(
 	commissionManager commission.CommissionManager,
 	costManager CostManagerInterface,
 ) *SuggestionAwareAgentFactory {
-
 	// Create suggestion manager with all providers
 	suggestionManager := createDefaultSuggestionManager(toolRegistry)
 
@@ -102,7 +101,6 @@ func (f *SuggestionAwareAgentFactory) ConfigureSuggestionProviders(
 	lspManager *lsp.Manager,
 	customProviders ...suggestions.SuggestionProvider,
 ) error {
-
 	// Create new suggestion manager with custom configuration
 	manager := suggestions.NewSuggestionManager()
 

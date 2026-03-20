@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/agents/backstory/templates"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/agents/backstory/templates"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 // PersonalityDemo demonstrates how different agent personalities respond to the same scenario
@@ -273,7 +273,6 @@ func (demo *PersonalityDemo) showAgentResponse(agentID, agentName, role, prompt 
 		"Please provide your professional advice on this matter.",
 		turnContext,
 	)
-
 	if err != nil {
 		fmt.Printf("❌ Error getting response from %s: %v\n\n", agentName, err)
 		return

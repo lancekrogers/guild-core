@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // ReasoningSystemConfig configures the complete reasoning system
@@ -91,8 +91,8 @@ func NewReasoningSystem(ctx context.Context, config ReasoningSystemConfig) (*Rea
 		// Determine database path
 		dbPath := config.DatabasePath
 		if dbPath == "" {
-			// Use default guild database
-			dbPath = filepath.Join(".guild", "memory.db")
+			// Use default campaign database
+			dbPath = filepath.Join(".campaign", "memory.db")
 		}
 
 		// Create or open database

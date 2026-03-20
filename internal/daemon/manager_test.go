@@ -50,7 +50,7 @@ func TestEnsureDaemonRunning(t *testing.T) {
 			setupFunc: func(t *testing.T, campaign string) {
 				// Create campaign directory
 				campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
-				require.NoError(t, os.MkdirAll(campaignDir, 0755))
+				require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 				// Create active socket
 				socketPath := filepath.Join(campaignDir, "guild.sock")
@@ -82,11 +82,11 @@ func TestEnsureDaemonRunning(t *testing.T) {
 			setupFunc: func(t *testing.T, campaign string) {
 				// Create campaign directory
 				campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
-				require.NoError(t, os.MkdirAll(campaignDir, 0755))
+				require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 				// Create stale socket file
 				socketPath := filepath.Join(campaignDir, "guild.sock")
-				require.NoError(t, os.WriteFile(socketPath, []byte{}, 0600))
+				require.NoError(t, os.WriteFile(socketPath, []byte{}, 0o600))
 			},
 			wantSession: 0,
 			wantErr:     false,
@@ -295,7 +295,7 @@ func TestStopCampaign(t *testing.T) {
 			campaign: "multi-session-campaign",
 			setupFunc: func(t *testing.T, campaign string) {
 				campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
-				require.NoError(t, os.MkdirAll(campaignDir, 0755))
+				require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 				// Create multiple active sockets
 				for i := 0; i < 3; i++ {
@@ -372,7 +372,7 @@ func TestStopAll(t *testing.T) {
 	campaigns := []string{"campaign-a", "campaign-b", "campaign-c"}
 	for _, campaign := range campaigns {
 		campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
-		require.NoError(t, os.MkdirAll(campaignDir, 0755))
+		require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 		// Create a socket for each campaign
 		socketPath := filepath.Join(campaignDir, "guild.sock")
@@ -424,7 +424,7 @@ func TestListRunning(t *testing.T) {
 
 	for campaign, sessions := range activeCampaigns {
 		campaignDir := filepath.Join(homeDir, ".guild", "campaigns", campaign)
-		require.NoError(t, os.MkdirAll(campaignDir, 0755))
+		require.NoError(t, os.MkdirAll(campaignDir, 0o755))
 
 		for _, session := range sessions {
 			var socketPath string
@@ -455,7 +455,7 @@ func TestListRunning(t *testing.T) {
 
 	// Also create an inactive campaign
 	inactiveCampaignDir := filepath.Join(homeDir, ".guild", "campaigns", "inactive")
-	require.NoError(t, os.MkdirAll(inactiveCampaignDir, 0755))
+	require.NoError(t, os.MkdirAll(inactiveCampaignDir, 0o755))
 
 	manager := NewManager()
 	running, err := manager.ListRunning()

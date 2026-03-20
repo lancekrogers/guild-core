@@ -6,8 +6,8 @@ package vim
 import (
 	"fmt"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 )
 
 // VimMode represents the current vim mode
@@ -227,7 +227,7 @@ func (v *VimModeManager) handleNormalMode(msg tea.KeyMsg, m VimCapable) (tea.Mod
 
 // handleInsertMode processes keys in insert mode
 func (v *VimModeManager) handleInsertMode(msg tea.KeyMsg, m VimCapable) (tea.Model, tea.Cmd) {
-	if msg.Type == tea.KeyEscape {
+	if msg.Key().Code == tea.KeyEscape {
 		v.state.Mode = ModeNormal
 		return m, nil
 	}
@@ -237,7 +237,7 @@ func (v *VimModeManager) handleInsertMode(msg tea.KeyMsg, m VimCapable) (tea.Mod
 
 // handleVisualMode processes keys in visual mode
 func (v *VimModeManager) handleVisualMode(msg tea.KeyMsg, m VimCapable) (tea.Model, tea.Cmd) {
-	switch msg.Type {
+	switch msg.Key().Code {
 	case tea.KeyEscape:
 		v.state.Mode = ModeNormal
 		m.ClearSelection()
@@ -259,7 +259,7 @@ func (v *VimModeManager) handleVisualMode(msg tea.KeyMsg, m VimCapable) (tea.Mod
 
 // handleCommandMode processes keys in command mode
 func (v *VimModeManager) handleCommandMode(msg tea.KeyMsg, m VimCapable) (tea.Model, tea.Cmd) {
-	switch msg.Type {
+	switch msg.Key().Code {
 	case tea.KeyEscape:
 		v.state.Mode = ModeNormal
 		v.state.CommandBuffer = ""

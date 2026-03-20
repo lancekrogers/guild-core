@@ -1,0 +1,5271 @@
+{
+  "graphs": [
+    {
+      "id": "daemon-lifecycle",
+      "title": "daemon-lifecycle",
+      "filePath": "svgs/daemon-lifecycle.svg",
+      "category": "other",
+      "domain": "other",
+      "sizeBytes": 237018,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-06T12:22:14.475058553-07:00"
+    },
+    {
+      "id": "internal-buildutil",
+      "title": "internal/buildutil",
+      "filePath": "svgs/internal-buildutil.svg",
+      "category": "internal",
+      "domain": "buildutil",
+      "sizeBytes": 41846,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:38.25622386-07:00"
+    },
+    {
+      "id": "internal-buildutil-tasks",
+      "title": "internal/buildutil/tasks",
+      "filePath": "svgs/internal-buildutil-tasks.svg",
+      "category": "internal",
+      "domain": "buildutil",
+      "sizeBytes": 89483,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:38.669882497-07:00"
+    },
+    {
+      "id": "internal-buildutil-ui",
+      "title": "internal/buildutil/ui",
+      "filePath": "svgs/internal-buildutil-ui.svg",
+      "category": "internal",
+      "domain": "buildutil",
+      "sizeBytes": 38739,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:39.077464535-07:00"
+    },
+    {
+      "id": "internal-daemon",
+      "title": "internal/daemon",
+      "filePath": "svgs/internal-daemon.svg",
+      "category": "internal",
+      "domain": "daemon",
+      "sizeBytes": 230183,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:39.620658099-07:00"
+    },
+    {
+      "id": "internal-daemonconn",
+      "title": "internal/daemonconn",
+      "filePath": "svgs/internal-daemonconn.svg",
+      "category": "internal",
+      "domain": "daemonconn",
+      "sizeBytes": 44421,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:40.401045375-07:00"
+    },
+    {
+      "id": "internal-integration-bootstrap",
+      "title": "internal/integration/bootstrap",
+      "filePath": "svgs/internal-integration-bootstrap.svg",
+      "category": "internal",
+      "domain": "integration",
+      "sizeBytes": 134029,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:42.65731427-07:00"
+    },
+    {
+      "id": "internal-integration-bridges",
+      "title": "internal/integration/bridges",
+      "filePath": "svgs/internal-integration-bridges.svg",
+      "category": "internal",
+      "domain": "integration",
+      "sizeBytes": 272363,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:44.70555903-07:00"
+    },
+    {
+      "id": "internal-integration-config",
+      "title": "internal/integration/config",
+      "filePath": "svgs/internal-integration-config.svg",
+      "category": "internal",
+      "domain": "integration",
+      "sizeBytes": 40806,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:46.768547413-07:00"
+    },
+    {
+      "id": "internal-integration-events",
+      "title": "internal/integration/events",
+      "filePath": "svgs/internal-integration-events.svg",
+      "category": "internal",
+      "domain": "integration",
+      "sizeBytes": 18995,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:47.208611246-07:00"
+    },
+    {
+      "id": "internal-integration-example",
+      "title": "internal/integration/example",
+      "filePath": "svgs/internal-integration-example.svg",
+      "category": "internal",
+      "domain": "integration",
+      "sizeBytes": 35623,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:49.30330792-07:00"
+    },
+    {
+      "id": "internal-integration-services",
+      "title": "internal/integration/services",
+      "filePath": "svgs/internal-integration-services.svg",
+      "category": "internal",
+      "domain": "integration",
+      "sizeBytes": 538982,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:51.471877041-07:00"
+    },
+    {
+      "id": "internal-integration-tests",
+      "title": "internal/integration/tests",
+      "filePath": "svgs/internal-integration-tests.svg",
+      "category": "internal",
+      "domain": "integration",
+      "sizeBytes": 33504,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:52.375884978-07:00"
+    },
+    {
+      "id": "internal-qa",
+      "title": "internal/qa",
+      "filePath": "svgs/internal-qa.svg",
+      "category": "internal",
+      "domain": "qa",
+      "sizeBytes": 59765,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:53.393186673-07:00"
+    },
+    {
+      "id": "internal-scaffoldlite",
+      "title": "internal/scaffoldlite",
+      "filePath": "svgs/internal-scaffoldlite.svg",
+      "category": "internal",
+      "domain": "scaffoldlite",
+      "sizeBytes": 215296,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:53.871797858-07:00"
+    },
+    {
+      "id": "internal-scaffoldlite-cli",
+      "title": "internal/scaffoldlite/cli",
+      "filePath": "svgs/internal-scaffoldlite-cli.svg",
+      "category": "internal",
+      "domain": "scaffoldlite",
+      "sizeBytes": 10581,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:54.328302151-07:00"
+    },
+    {
+      "id": "internal-scaffoldlite-templates",
+      "title": "internal/scaffoldlite/templates",
+      "filePath": "svgs/internal-scaffoldlite-templates.svg",
+      "category": "internal",
+      "domain": "scaffoldlite",
+      "sizeBytes": 3909,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:54.750005518-07:00"
+    },
+    {
+      "id": "internal-setup",
+      "title": "internal/setup",
+      "filePath": "svgs/internal-setup.svg",
+      "category": "internal",
+      "domain": "setup",
+      "sizeBytes": 580762,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:56.800493951-07:00"
+    },
+    {
+      "id": "internal-teatest",
+      "title": "internal/teatest",
+      "filePath": "svgs/internal-teatest.svg",
+      "category": "internal",
+      "domain": "teatest",
+      "sizeBytes": 19631,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:57.319892577-07:00"
+    },
+    {
+      "id": "internal-testing",
+      "title": "internal/testing",
+      "filePath": "svgs/internal-testing.svg",
+      "category": "internal",
+      "domain": "testing",
+      "sizeBytes": 53069,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:57.833950314-07:00"
+    },
+    {
+      "id": "internal-testutil",
+      "title": "internal/testutil",
+      "filePath": "svgs/internal-testutil.svg",
+      "category": "internal",
+      "domain": "testutil",
+      "sizeBytes": 91491,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:08:59.740523449-07:00"
+    },
+    {
+      "id": "pkg-agents",
+      "title": "pkg/agents",
+      "filePath": "svgs/pkg-agents.svg",
+      "category": "pkg",
+      "domain": "agents",
+      "sizeBytes": 137849,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:00.648491646-07:00"
+    },
+    {
+      "id": "pkg-agents-backstory",
+      "title": "pkg/agents/backstory",
+      "filePath": "svgs/pkg-agents-backstory.svg",
+      "category": "pkg",
+      "domain": "agents",
+      "sizeBytes": 172582,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:01.55761268-07:00"
+    },
+    {
+      "id": "pkg-agents-backstory-templates",
+      "title": "pkg/agents/backstory/templates",
+      "filePath": "svgs/pkg-agents-backstory-templates.svg",
+      "category": "pkg",
+      "domain": "agents",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:02.318615696-07:00"
+    },
+    {
+      "id": "pkg-agents-core",
+      "title": "pkg/agents/core",
+      "filePath": "svgs/pkg-agents-core.svg",
+      "category": "pkg",
+      "domain": "agents",
+      "sizeBytes": 1551863,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:04.468597309-07:00"
+    },
+    {
+      "id": "pkg-agents-core-elena",
+      "title": "pkg/agents/core/elena",
+      "filePath": "svgs/pkg-agents-core-elena.svg",
+      "category": "pkg",
+      "domain": "agents",
+      "sizeBytes": 39593,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:04.918753544-07:00"
+    },
+    {
+      "id": "pkg-agents-core-executor",
+      "title": "pkg/agents/core/executor",
+      "filePath": "svgs/pkg-agents-core-executor.svg",
+      "category": "pkg",
+      "domain": "agents",
+      "sizeBytes": 207787,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:07.066791027-07:00"
+    },
+    {
+      "id": "pkg-agents-core-manager",
+      "title": "pkg/agents/core/manager",
+      "filePath": "svgs/pkg-agents-core-manager.svg",
+      "category": "pkg",
+      "domain": "agents",
+      "sizeBytes": 967640,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:09.155111477-07:00"
+    },
+    {
+      "id": "pkg-agents-core-mocks",
+      "title": "pkg/agents/core/mocks",
+      "filePath": "svgs/pkg-agents-core-mocks.svg",
+      "category": "pkg",
+      "domain": "agents",
+      "sizeBytes": 36606,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:11.166630765-07:00"
+    },
+    {
+      "id": "pkg-agents-creation",
+      "title": "pkg/agents/creation",
+      "filePath": "svgs/pkg-agents-creation.svg",
+      "category": "pkg",
+      "domain": "agents",
+      "sizeBytes": 138360,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:12.065521438-07:00"
+    },
+    {
+      "id": "pkg-cache",
+      "title": "pkg/cache",
+      "filePath": "svgs/pkg-cache.svg",
+      "category": "pkg",
+      "domain": "cache",
+      "sizeBytes": 233461,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:12.520538477-07:00"
+    },
+    {
+      "id": "pkg-campaign",
+      "title": "pkg/campaign",
+      "filePath": "svgs/pkg-campaign.svg",
+      "category": "pkg",
+      "domain": "campaign",
+      "sizeBytes": 308902,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:14.766359511-07:00"
+    },
+    {
+      "id": "pkg-client",
+      "title": "pkg/client",
+      "filePath": "svgs/pkg-client.svg",
+      "category": "pkg",
+      "domain": "client",
+      "sizeBytes": 38339,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:15.497361156-07:00"
+    },
+    {
+      "id": "pkg-commission",
+      "title": "pkg/commission",
+      "filePath": "svgs/pkg-commission.svg",
+      "category": "pkg",
+      "domain": "commission",
+      "sizeBytes": 568985,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:17.411504477-07:00"
+    },
+    {
+      "id": "pkg-commission-agentobj",
+      "title": "pkg/commission/agentobj",
+      "filePath": "svgs/pkg-commission-agentobj.svg",
+      "category": "pkg",
+      "domain": "commission",
+      "sizeBytes": 6629,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:19.351571701-07:00"
+    },
+    {
+      "id": "pkg-commission-guildobj",
+      "title": "pkg/commission/guildobj",
+      "filePath": "svgs/pkg-commission-guildobj.svg",
+      "category": "pkg",
+      "domain": "commission",
+      "sizeBytes": 6628,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:21.356757555-07:00"
+    },
+    {
+      "id": "pkg-commission-mocks",
+      "title": "pkg/commission/mocks",
+      "filePath": "svgs/pkg-commission-mocks.svg",
+      "category": "pkg",
+      "domain": "commission",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:23.141195867-07:00"
+    },
+    {
+      "id": "pkg-comms",
+      "title": "pkg/comms",
+      "filePath": "svgs/pkg-comms.svg",
+      "category": "pkg",
+      "domain": "comms",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:23.410024995-07:00"
+    },
+    {
+      "id": "pkg-comms-channel",
+      "title": "pkg/comms/channel",
+      "filePath": "svgs/pkg-comms-channel.svg",
+      "category": "pkg",
+      "domain": "comms",
+      "sizeBytes": 44914,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:23.862910029-07:00"
+    },
+    {
+      "id": "pkg-comms-transport",
+      "title": "pkg/comms/transport",
+      "filePath": "svgs/pkg-comms-transport.svg",
+      "category": "pkg",
+      "domain": "comms",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:24.114519613-07:00"
+    },
+    {
+      "id": "pkg-config",
+      "title": "pkg/config",
+      "filePath": "svgs/pkg-config.svg",
+      "category": "pkg",
+      "domain": "config",
+      "sizeBytes": 390692,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:25.142398003-07:00"
+    },
+    {
+      "id": "pkg-context",
+      "title": "pkg/context",
+      "filePath": "svgs/pkg-context.svg",
+      "category": "pkg",
+      "domain": "context",
+      "sizeBytes": 313913,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:25.683077893-07:00"
+    },
+    {
+      "id": "pkg-corpus",
+      "title": "pkg/corpus",
+      "filePath": "svgs/pkg-corpus.svg",
+      "category": "pkg",
+      "domain": "corpus",
+      "sizeBytes": 451492,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:27.675144255-07:00"
+    },
+    {
+      "id": "pkg-corpus-agent",
+      "title": "pkg/corpus/agent",
+      "filePath": "svgs/pkg-corpus-agent.svg",
+      "category": "pkg",
+      "domain": "corpus",
+      "sizeBytes": 36380,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:29.658343759-07:00"
+    },
+    {
+      "id": "pkg-corpus-extraction",
+      "title": "pkg/corpus/extraction",
+      "filePath": "svgs/pkg-corpus-extraction.svg",
+      "category": "pkg",
+      "domain": "corpus",
+      "sizeBytes": 386338,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:30.164018016-07:00"
+    },
+    {
+      "id": "pkg-corpus-graph",
+      "title": "pkg/corpus/graph",
+      "filePath": "svgs/pkg-corpus-graph.svg",
+      "category": "pkg",
+      "domain": "corpus",
+      "sizeBytes": 142627,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:30.619442347-07:00"
+    },
+    {
+      "id": "pkg-corpus-injection",
+      "title": "pkg/corpus/injection",
+      "filePath": "svgs/pkg-corpus-injection.svg",
+      "category": "pkg",
+      "domain": "corpus",
+      "sizeBytes": 57305,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:31.644774272-07:00"
+    },
+    {
+      "id": "pkg-corpus-retrieval",
+      "title": "pkg/corpus/retrieval",
+      "filePath": "svgs/pkg-corpus-retrieval.svg",
+      "category": "pkg",
+      "domain": "corpus",
+      "sizeBytes": 80147,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:32.523738934-07:00"
+    },
+    {
+      "id": "pkg-corpus-scoring",
+      "title": "pkg/corpus/scoring",
+      "filePath": "svgs/pkg-corpus-scoring.svg",
+      "category": "pkg",
+      "domain": "corpus",
+      "sizeBytes": 33069,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:33.403008514-07:00"
+    },
+    {
+      "id": "pkg-corpus-validation",
+      "title": "pkg/corpus/validation",
+      "filePath": "svgs/pkg-corpus-validation.svg",
+      "category": "pkg",
+      "domain": "corpus",
+      "sizeBytes": 110755,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:33.888544634-07:00"
+    },
+    {
+      "id": "pkg-cost",
+      "title": "pkg/cost",
+      "filePath": "svgs/pkg-cost.svg",
+      "category": "pkg",
+      "domain": "cost",
+      "sizeBytes": 368812,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:35.870750469-07:00"
+    },
+    {
+      "id": "pkg-cost-dashboard",
+      "title": "pkg/cost/dashboard",
+      "filePath": "svgs/pkg-cost-dashboard.svg",
+      "category": "pkg",
+      "domain": "cost",
+      "sizeBytes": 147959,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:37.743739598-07:00"
+    },
+    {
+      "id": "pkg-daemon",
+      "title": "pkg/daemon",
+      "filePath": "svgs/pkg-daemon.svg",
+      "category": "pkg",
+      "domain": "daemon",
+      "sizeBytes": 67144,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:38.224011455-07:00"
+    },
+    {
+      "id": "pkg-eventbus",
+      "title": "pkg/eventbus",
+      "filePath": "svgs/pkg-eventbus.svg",
+      "category": "pkg",
+      "domain": "eventbus",
+      "sizeBytes": 199146,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:38.671392223-07:00"
+    },
+    {
+      "id": "pkg-eventbus-testing",
+      "title": "pkg/eventbus/testing",
+      "filePath": "svgs/pkg-eventbus-testing.svg",
+      "category": "pkg",
+      "domain": "eventbus",
+      "sizeBytes": 30797,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:39.121395124-07:00"
+    },
+    {
+      "id": "pkg-events",
+      "title": "pkg/events",
+      "filePath": "svgs/pkg-events.svg",
+      "category": "pkg",
+      "domain": "events",
+      "sizeBytes": 125760,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:39.554405437-07:00"
+    },
+    {
+      "id": "pkg-events-debug",
+      "title": "pkg/events/debug",
+      "filePath": "svgs/pkg-events-debug.svg",
+      "category": "pkg",
+      "domain": "events",
+      "sizeBytes": 87229,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:39.979593481-07:00"
+    },
+    {
+      "id": "pkg-events-routing",
+      "title": "pkg/events/routing",
+      "filePath": "svgs/pkg-events-routing.svg",
+      "category": "pkg",
+      "domain": "events",
+      "sizeBytes": 82865,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:40.42994684-07:00"
+    },
+    {
+      "id": "pkg-events-types",
+      "title": "pkg/events/types",
+      "filePath": "svgs/pkg-events-types.svg",
+      "category": "pkg",
+      "domain": "events",
+      "sizeBytes": 215351,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:40.888784515-07:00"
+    },
+    {
+      "id": "pkg-export",
+      "title": "pkg/export",
+      "filePath": "svgs/pkg-export.svg",
+      "category": "pkg",
+      "domain": "export",
+      "sizeBytes": 122928,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:41.328658638-07:00"
+    },
+    {
+      "id": "pkg-generator",
+      "title": "pkg/generator",
+      "filePath": "svgs/pkg-generator.svg",
+      "category": "pkg",
+      "domain": "generator",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:43.051232245-07:00"
+    },
+    {
+      "id": "pkg-generator-commission",
+      "title": "pkg/generator/commission",
+      "filePath": "svgs/pkg-generator-commission.svg",
+      "category": "pkg",
+      "domain": "generator",
+      "sizeBytes": 40383,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:44.84163478-07:00"
+    },
+    {
+      "id": "pkg-gerror",
+      "title": "pkg/gerror",
+      "filePath": "svgs/pkg-gerror.svg",
+      "category": "pkg",
+      "domain": "gerror",
+      "sizeBytes": 19068,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:45.272498172-07:00"
+    },
+    {
+      "id": "pkg-git-worktree",
+      "title": "pkg/git/worktree",
+      "filePath": "svgs/pkg-git-worktree.svg",
+      "category": "pkg",
+      "domain": "git",
+      "sizeBytes": 424990,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:46.113813859-07:00"
+    },
+    {
+      "id": "pkg-grpc",
+      "title": "pkg/grpc",
+      "filePath": "svgs/pkg-grpc.svg",
+      "category": "pkg",
+      "domain": "grpc",
+      "sizeBytes": 528778,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:48.191286155-07:00"
+    },
+    {
+      "id": "pkg-grpc-pb-guild-v1",
+      "title": "pkg/grpc/pb/guild/v1",
+      "filePath": "svgs/pkg-grpc-pb-guild-v1.svg",
+      "category": "pkg",
+      "domain": "grpc",
+      "sizeBytes": 249098,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:48.977467238-07:00"
+    },
+    {
+      "id": "pkg-grpc-pb-mcp-v1",
+      "title": "pkg/grpc/pb/mcp/v1",
+      "filePath": "svgs/pkg-grpc-pb-mcp-v1.svg",
+      "category": "pkg",
+      "domain": "grpc",
+      "sizeBytes": 51190,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:49.748438364-07:00"
+    },
+    {
+      "id": "pkg-grpc-pb-prompts-v1",
+      "title": "pkg/grpc/pb/prompts/v1",
+      "filePath": "svgs/pkg-grpc-pb-prompts-v1.svg",
+      "category": "pkg",
+      "domain": "grpc",
+      "sizeBytes": 57499,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:50.59015326-07:00"
+    },
+    {
+      "id": "pkg-integration",
+      "title": "pkg/integration",
+      "filePath": "svgs/pkg-integration.svg",
+      "category": "pkg",
+      "domain": "integration",
+      "sizeBytes": 41658,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:52.907599609-07:00"
+    },
+    {
+      "id": "pkg-integration-commission_kanban",
+      "title": "pkg/integration/commission_kanban",
+      "filePath": "svgs/pkg-integration-commission_kanban.svg",
+      "category": "pkg",
+      "domain": "integration",
+      "sizeBytes": 96822,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:55.150114134-07:00"
+    },
+    {
+      "id": "pkg-interfaces",
+      "title": "pkg/interfaces",
+      "filePath": "svgs/pkg-interfaces.svg",
+      "category": "pkg",
+      "domain": "interfaces",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:55.463985924-07:00"
+    },
+    {
+      "id": "pkg-kanban",
+      "title": "pkg/kanban",
+      "filePath": "svgs/pkg-kanban.svg",
+      "category": "pkg",
+      "domain": "kanban",
+      "sizeBytes": 593376,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:57.690427906-07:00"
+    },
+    {
+      "id": "pkg-kanban-mocks",
+      "title": "pkg/kanban/mocks",
+      "filePath": "svgs/pkg-kanban-mocks.svg",
+      "category": "pkg",
+      "domain": "kanban",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:58.048373772-07:00"
+    },
+    {
+      "id": "pkg-logging",
+      "title": "pkg/logging",
+      "filePath": "svgs/pkg-logging.svg",
+      "category": "pkg",
+      "domain": "logging",
+      "sizeBytes": 191650,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:58.842158791-07:00"
+    },
+    {
+      "id": "pkg-logging-hooks",
+      "title": "pkg/logging/hooks",
+      "filePath": "svgs/pkg-logging-hooks.svg",
+      "category": "pkg",
+      "domain": "logging",
+      "sizeBytes": 17595,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:59.272505307-07:00"
+    },
+    {
+      "id": "pkg-logging-writers",
+      "title": "pkg/logging/writers",
+      "filePath": "svgs/pkg-logging-writers.svg",
+      "category": "pkg",
+      "domain": "logging",
+      "sizeBytes": 30909,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:09:59.699222312-07:00"
+    },
+    {
+      "id": "pkg-lsp",
+      "title": "pkg/lsp",
+      "filePath": "svgs/pkg-lsp.svg",
+      "category": "pkg",
+      "domain": "lsp",
+      "sizeBytes": 239230,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:01.560822411-07:00"
+    },
+    {
+      "id": "pkg-lsp-mocks",
+      "title": "pkg/lsp/mocks",
+      "filePath": "svgs/pkg-lsp-mocks.svg",
+      "category": "pkg",
+      "domain": "lsp",
+      "sizeBytes": 6121,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:03.30539695-07:00"
+    },
+    {
+      "id": "pkg-lsp-tools",
+      "title": "pkg/lsp/tools",
+      "filePath": "svgs/pkg-lsp-tools.svg",
+      "category": "pkg",
+      "domain": "lsp",
+      "sizeBytes": 46151,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:05.090583472-07:00"
+    },
+    {
+      "id": "pkg-mcp",
+      "title": "pkg/mcp",
+      "filePath": "svgs/pkg-mcp.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:05.152764845-07:00"
+    },
+    {
+      "id": "pkg-mcp-client",
+      "title": "pkg/mcp/client",
+      "filePath": "svgs/pkg-mcp-client.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 93205,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:06.058791371-07:00"
+    },
+    {
+      "id": "pkg-mcp-config",
+      "title": "pkg/mcp/config",
+      "filePath": "svgs/pkg-mcp-config.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:06.623207116-07:00"
+    },
+    {
+      "id": "pkg-mcp-cost",
+      "title": "pkg/mcp/cost",
+      "filePath": "svgs/pkg-mcp-cost.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 12694,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:07.035464416-07:00"
+    },
+    {
+      "id": "pkg-mcp-grpc",
+      "title": "pkg/mcp/grpc",
+      "filePath": "svgs/pkg-mcp-grpc.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 31419,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:09.028899281-07:00"
+    },
+    {
+      "id": "pkg-mcp-integration",
+      "title": "pkg/mcp/integration",
+      "filePath": "svgs/pkg-mcp-integration.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 170487,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:10.942391518-07:00"
+    },
+    {
+      "id": "pkg-mcp-prompt",
+      "title": "pkg/mcp/prompt",
+      "filePath": "svgs/pkg-mcp-prompt.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 62602,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:11.399013852-07:00"
+    },
+    {
+      "id": "pkg-mcp-protocol",
+      "title": "pkg/mcp/protocol",
+      "filePath": "svgs/pkg-mcp-protocol.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 25509,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:11.820828762-07:00"
+    },
+    {
+      "id": "pkg-mcp-server",
+      "title": "pkg/mcp/server",
+      "filePath": "svgs/pkg-mcp-server.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 137941,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:13.791358566-07:00"
+    },
+    {
+      "id": "pkg-mcp-tools",
+      "title": "pkg/mcp/tools",
+      "filePath": "svgs/pkg-mcp-tools.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 34523,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:14.222325417-07:00"
+    },
+    {
+      "id": "pkg-mcp-transport",
+      "title": "pkg/mcp/transport",
+      "filePath": "svgs/pkg-mcp-transport.svg",
+      "category": "pkg",
+      "domain": "mcp",
+      "sizeBytes": 81260,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:14.950296637-07:00"
+    },
+    {
+      "id": "pkg-memory",
+      "title": "pkg/memory",
+      "filePath": "svgs/pkg-memory.svg",
+      "category": "pkg",
+      "domain": "memory",
+      "sizeBytes": 50730,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:15.389521467-07:00"
+    },
+    {
+      "id": "pkg-memory-mocks",
+      "title": "pkg/memory/mocks",
+      "filePath": "svgs/pkg-memory-mocks.svg",
+      "category": "pkg",
+      "domain": "memory",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:15.92960844-07:00"
+    },
+    {
+      "id": "pkg-memory-rag",
+      "title": "pkg/memory/rag",
+      "filePath": "svgs/pkg-memory-rag.svg",
+      "category": "pkg",
+      "domain": "memory",
+      "sizeBytes": 141959,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:17.821565744-07:00"
+    },
+    {
+      "id": "pkg-memory-vector",
+      "title": "pkg/memory/vector",
+      "filePath": "svgs/pkg-memory-vector.svg",
+      "category": "pkg",
+      "domain": "memory",
+      "sizeBytes": 199400,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:18.756167346-07:00"
+    },
+    {
+      "id": "pkg-monitoring",
+      "title": "pkg/monitoring",
+      "filePath": "svgs/pkg-monitoring.svg",
+      "category": "pkg",
+      "domain": "monitoring",
+      "sizeBytes": 261502,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:19.196142762-07:00"
+    },
+    {
+      "id": "pkg-observability",
+      "title": "pkg/observability",
+      "filePath": "svgs/pkg-observability.svg",
+      "category": "pkg",
+      "domain": "observability",
+      "sizeBytes": 175069,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:20.061685722-07:00"
+    },
+    {
+      "id": "pkg-orchestrator",
+      "title": "pkg/orchestrator",
+      "filePath": "svgs/pkg-orchestrator.svg",
+      "category": "pkg",
+      "domain": "orchestrator",
+      "sizeBytes": 591712,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:22.119572133-07:00"
+    },
+    {
+      "id": "pkg-orchestrator-interfaces",
+      "title": "pkg/orchestrator/interfaces",
+      "filePath": "svgs/pkg-orchestrator-interfaces.svg",
+      "category": "pkg",
+      "domain": "orchestrator",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:22.410540069-07:00"
+    },
+    {
+      "id": "pkg-orchestrator-mocks",
+      "title": "pkg/orchestrator/mocks",
+      "filePath": "svgs/pkg-orchestrator-mocks.svg",
+      "category": "pkg",
+      "domain": "orchestrator",
+      "sizeBytes": 9558,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:24.289794132-07:00"
+    },
+    {
+      "id": "pkg-orchestrator-scheduler",
+      "title": "pkg/orchestrator/scheduler",
+      "filePath": "svgs/pkg-orchestrator-scheduler.svg",
+      "category": "pkg",
+      "domain": "orchestrator",
+      "sizeBytes": 499641,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:26.144882631-07:00"
+    },
+    {
+      "id": "pkg-paths",
+      "title": "pkg/paths",
+      "filePath": "svgs/pkg-paths.svg",
+      "category": "pkg",
+      "domain": "paths",
+      "sizeBytes": 31091,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:26.603062344-07:00"
+    },
+    {
+      "id": "pkg-performance",
+      "title": "pkg/performance",
+      "filePath": "svgs/pkg-performance.svg",
+      "category": "pkg",
+      "domain": "performance",
+      "sizeBytes": 387207,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:27.352431621-07:00"
+    },
+    {
+      "id": "pkg-performance-cpu",
+      "title": "pkg/performance/cpu",
+      "filePath": "svgs/pkg-performance-cpu.svg",
+      "category": "pkg",
+      "domain": "performance",
+      "sizeBytes": 68607,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:27.780947299-07:00"
+    },
+    {
+      "id": "pkg-performance-memory",
+      "title": "pkg/performance/memory",
+      "filePath": "svgs/pkg-performance-memory.svg",
+      "category": "pkg",
+      "domain": "performance",
+      "sizeBytes": 67420,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:28.197202652-07:00"
+    },
+    {
+      "id": "pkg-preferences",
+      "title": "pkg/preferences",
+      "filePath": "svgs/pkg-preferences.svg",
+      "category": "pkg",
+      "domain": "preferences",
+      "sizeBytes": 67599,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:29.947483206-07:00"
+    },
+    {
+      "id": "pkg-project",
+      "title": "pkg/project",
+      "filePath": "svgs/pkg-project.svg",
+      "category": "pkg",
+      "domain": "project",
+      "sizeBytes": 193102,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:31.733373104-07:00"
+    },
+    {
+      "id": "pkg-project-global",
+      "title": "pkg/project/global",
+      "filePath": "svgs/pkg-project-global.svg",
+      "category": "pkg",
+      "domain": "project",
+      "sizeBytes": 33265,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:32.169419052-07:00"
+    },
+    {
+      "id": "pkg-project-local",
+      "title": "pkg/project/local",
+      "filePath": "svgs/pkg-project-local.svg",
+      "category": "pkg",
+      "domain": "project",
+      "sizeBytes": 34675,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:32.589496831-07:00"
+    },
+    {
+      "id": "pkg-prompts",
+      "title": "pkg/prompts",
+      "filePath": "svgs/pkg-prompts.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 91802,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:33.045789165-07:00"
+    },
+    {
+      "id": "pkg-prompts-adapters",
+      "title": "pkg/prompts/adapters",
+      "filePath": "svgs/pkg-prompts-adapters.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 11446,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:33.496604776-07:00"
+    },
+    {
+      "id": "pkg-prompts-layered",
+      "title": "pkg/prompts/layered",
+      "filePath": "svgs/pkg-prompts-layered.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 246678,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:33.953518278-07:00"
+    },
+    {
+      "id": "pkg-prompts-layered-commission",
+      "title": "pkg/prompts/layered/commission",
+      "filePath": "svgs/pkg-prompts-layered-commission.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:33.997448312-07:00"
+    },
+    {
+      "id": "pkg-prompts-layered-context",
+      "title": "pkg/prompts/layered/context",
+      "filePath": "svgs/pkg-prompts-layered-context.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 15910,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:34.424826985-07:00"
+    },
+    {
+      "id": "pkg-prompts-standard",
+      "title": "pkg/prompts/standard",
+      "filePath": "svgs/pkg-prompts-standard.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 63137,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:34.869057037-07:00"
+    },
+    {
+      "id": "pkg-prompts-standard-evaluation",
+      "title": "pkg/prompts/standard/evaluation",
+      "filePath": "svgs/pkg-prompts-standard-evaluation.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 65322,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:35.331785138-07:00"
+    },
+    {
+      "id": "pkg-prompts-standard-templates-agent-execution",
+      "title": "pkg/prompts/standard/templates/agent/execution",
+      "filePath": "svgs/pkg-prompts-standard-templates-agent-execution.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 60807,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:35.798311708-07:00"
+    },
+    {
+      "id": "pkg-prompts-standard-templates-agent-extraction",
+      "title": "pkg/prompts/standard/templates/agent/extraction",
+      "filePath": "svgs/pkg-prompts-standard-templates-agent-extraction.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 15246,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:36.260381557-07:00"
+    },
+    {
+      "id": "pkg-prompts-standard-templates-commission",
+      "title": "pkg/prompts/standard/templates/commission",
+      "filePath": "svgs/pkg-prompts-standard-templates-commission.svg",
+      "category": "pkg",
+      "domain": "prompts",
+      "sizeBytes": 11103,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:36.789233042-07:00"
+    },
+    {
+      "id": "pkg-providers",
+      "title": "pkg/providers",
+      "filePath": "svgs/pkg-providers.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 165112,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:37.877121341-07:00"
+    },
+    {
+      "id": "pkg-providers-anthropic",
+      "title": "pkg/providers/anthropic",
+      "filePath": "svgs/pkg-providers-anthropic.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 53088,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:38.785640748-07:00"
+    },
+    {
+      "id": "pkg-providers-base",
+      "title": "pkg/providers/base",
+      "filePath": "svgs/pkg-providers-base.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 25942,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:39.437434516-07:00"
+    },
+    {
+      "id": "pkg-providers-claudecode",
+      "title": "pkg/providers/claudecode",
+      "filePath": "svgs/pkg-providers-claudecode.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 59539,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:39.901755163-07:00"
+    },
+    {
+      "id": "pkg-providers-deepinfra",
+      "title": "pkg/providers/deepinfra",
+      "filePath": "svgs/pkg-providers-deepinfra.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 6907,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:40.552857971-07:00"
+    },
+    {
+      "id": "pkg-providers-deepseek",
+      "title": "pkg/providers/deepseek",
+      "filePath": "svgs/pkg-providers-deepseek.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 6893,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:41.208769085-07:00"
+    },
+    {
+      "id": "pkg-providers-interfaces",
+      "title": "pkg/providers/interfaces",
+      "filePath": "svgs/pkg-providers-interfaces.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:41.512728223-07:00"
+    },
+    {
+      "id": "pkg-providers-mock",
+      "title": "pkg/providers/mock",
+      "filePath": "svgs/pkg-providers-mock.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 41572,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:41.991052241-07:00"
+    },
+    {
+      "id": "pkg-providers-mocks",
+      "title": "pkg/providers/mocks",
+      "filePath": "svgs/pkg-providers-mocks.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:42.293401375-07:00"
+    },
+    {
+      "id": "pkg-providers-ollama",
+      "title": "pkg/providers/ollama",
+      "filePath": "svgs/pkg-providers-ollama.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 39177,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:43.023783561-07:00"
+    },
+    {
+      "id": "pkg-providers-openai",
+      "title": "pkg/providers/openai",
+      "filePath": "svgs/pkg-providers-openai.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 6874,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:43.695547007-07:00"
+    },
+    {
+      "id": "pkg-providers-ora",
+      "title": "pkg/providers/ora",
+      "filePath": "svgs/pkg-providers-ora.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 25154,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:44.347211358-07:00"
+    },
+    {
+      "id": "pkg-providers-testing",
+      "title": "pkg/providers/testing",
+      "filePath": "svgs/pkg-providers-testing.svg",
+      "category": "pkg",
+      "domain": "providers",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:44.876767887-07:00"
+    },
+    {
+      "id": "pkg-reasoning",
+      "title": "pkg/reasoning",
+      "filePath": "svgs/pkg-reasoning.svg",
+      "category": "pkg",
+      "domain": "reasoning",
+      "sizeBytes": 333736,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:45.856271148-07:00"
+    },
+    {
+      "id": "pkg-registry",
+      "title": "pkg/registry",
+      "filePath": "svgs/pkg-registry.svg",
+      "category": "pkg",
+      "domain": "registry",
+      "sizeBytes": 708468,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:48.196377557-07:00"
+    },
+    {
+      "id": "pkg-search",
+      "title": "pkg/search",
+      "filePath": "svgs/pkg-search.svg",
+      "category": "pkg",
+      "domain": "search",
+      "sizeBytes": 28929,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:48.708420664-07:00"
+    },
+    {
+      "id": "pkg-security-access",
+      "title": "pkg/security/access",
+      "filePath": "svgs/pkg-security-access.svg",
+      "category": "pkg",
+      "domain": "security",
+      "sizeBytes": 86142,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:49.712246865-07:00"
+    },
+    {
+      "id": "pkg-security-audit",
+      "title": "pkg/security/audit",
+      "filePath": "svgs/pkg-security-audit.svg",
+      "category": "pkg",
+      "domain": "security",
+      "sizeBytes": 129020,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:50.726961428-07:00"
+    },
+    {
+      "id": "pkg-security-permissions",
+      "title": "pkg/security/permissions",
+      "filePath": "svgs/pkg-security-permissions.svg",
+      "category": "pkg",
+      "domain": "security",
+      "sizeBytes": 126628,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:51.67785174-07:00"
+    },
+    {
+      "id": "pkg-security-sandbox",
+      "title": "pkg/security/sandbox",
+      "filePath": "svgs/pkg-security-sandbox.svg",
+      "category": "pkg",
+      "domain": "security",
+      "sizeBytes": 334547,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:52.63050393-07:00"
+    },
+    {
+      "id": "pkg-session",
+      "title": "pkg/session",
+      "filePath": "svgs/pkg-session.svg",
+      "category": "pkg",
+      "domain": "session",
+      "sizeBytes": 449522,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:54.717896419-07:00"
+    },
+    {
+      "id": "pkg-storage",
+      "title": "pkg/storage",
+      "filePath": "svgs/pkg-storage.svg",
+      "category": "pkg",
+      "domain": "storage",
+      "sizeBytes": 883416,
+      "sizeCategory": "large",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:56.721236477-07:00"
+    },
+    {
+      "id": "pkg-storage-db",
+      "title": "pkg/storage/db",
+      "filePath": "svgs/pkg-storage-db.svg",
+      "category": "pkg",
+      "domain": "storage",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:57.042765579-07:00"
+    },
+    {
+      "id": "pkg-storage-optimization",
+      "title": "pkg/storage/optimization",
+      "filePath": "svgs/pkg-storage-optimization.svg",
+      "category": "pkg",
+      "domain": "storage",
+      "sizeBytes": 310604,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:57.997708693-07:00"
+    },
+    {
+      "id": "pkg-storage-promptchain",
+      "title": "pkg/storage/promptchain",
+      "filePath": "svgs/pkg-storage-promptchain.svg",
+      "category": "pkg",
+      "domain": "storage",
+      "sizeBytes": 29179,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:10:59.805609399-07:00"
+    },
+    {
+      "id": "pkg-suggestions",
+      "title": "pkg/suggestions",
+      "filePath": "svgs/pkg-suggestions.svg",
+      "category": "pkg",
+      "domain": "suggestions",
+      "sizeBytes": 138722,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:01.608171467-07:00"
+    },
+    {
+      "id": "pkg-telemetry",
+      "title": "pkg/telemetry",
+      "filePath": "svgs/pkg-telemetry.svg",
+      "category": "pkg",
+      "domain": "telemetry",
+      "sizeBytes": 38468,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:02.517977252-07:00"
+    },
+    {
+      "id": "pkg-telemetry-collectors",
+      "title": "pkg/telemetry/collectors",
+      "filePath": "svgs/pkg-telemetry-collectors.svg",
+      "category": "pkg",
+      "domain": "telemetry",
+      "sizeBytes": 23405,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:02.965768064-07:00"
+    },
+    {
+      "id": "pkg-templates",
+      "title": "pkg/templates",
+      "filePath": "svgs/pkg-templates.svg",
+      "category": "pkg",
+      "domain": "templates",
+      "sizeBytes": 200160,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:03.447149714-07:00"
+    },
+    {
+      "id": "pkg-terminal",
+      "title": "pkg/terminal",
+      "filePath": "svgs/pkg-terminal.svg",
+      "category": "pkg",
+      "domain": "terminal",
+      "sizeBytes": 172765,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:03.899902747-07:00"
+    },
+    {
+      "id": "pkg-terminal-features",
+      "title": "pkg/terminal/features",
+      "filePath": "svgs/pkg-terminal-features.svg",
+      "category": "pkg",
+      "domain": "terminal",
+      "sizeBytes": 107150,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:04.337901699-07:00"
+    },
+    {
+      "id": "pkg-terminal-profiles",
+      "title": "pkg/terminal/profiles",
+      "filePath": "svgs/pkg-terminal-profiles.svg",
+      "category": "pkg",
+      "domain": "terminal",
+      "sizeBytes": 151876,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:04.778904368-07:00"
+    },
+    {
+      "id": "pkg-tools",
+      "title": "pkg/tools",
+      "filePath": "svgs/pkg-tools.svg",
+      "category": "pkg",
+      "domain": "tools",
+      "sizeBytes": 62028,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:05.653305726-07:00"
+    },
+    {
+      "id": "pkg-tools-executor",
+      "title": "pkg/tools/executor",
+      "filePath": "svgs/pkg-tools-executor.svg",
+      "category": "pkg",
+      "domain": "tools",
+      "sizeBytes": 35933,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:06.746727457-07:00"
+    },
+    {
+      "id": "pkg-tools-parser",
+      "title": "pkg/tools/parser",
+      "filePath": "svgs/pkg-tools-parser.svg",
+      "category": "pkg",
+      "domain": "tools",
+      "sizeBytes": 169891,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:07.696009597-07:00"
+    },
+    {
+      "id": "pkg-tools-parser-json",
+      "title": "pkg/tools/parser/json",
+      "filePath": "svgs/pkg-tools-parser-json.svg",
+      "category": "pkg",
+      "domain": "tools",
+      "sizeBytes": 102712,
+      "sizeCategory": "medium",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:08.589720631-07:00"
+    },
+    {
+      "id": "pkg-tools-parser-types",
+      "title": "pkg/tools/parser/types",
+      "filePath": "svgs/pkg-tools-parser-types.svg",
+      "category": "pkg",
+      "domain": "tools",
+      "sizeBytes": 579,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:08.941935148-07:00"
+    },
+    {
+      "id": "pkg-tools-parser-xml",
+      "title": "pkg/tools/parser/xml",
+      "filePath": "svgs/pkg-tools-parser-xml.svg",
+      "category": "pkg",
+      "domain": "tools",
+      "sizeBytes": 47131,
+      "sizeCategory": "small",
+      "functions": 0,
+      "lastModified": "2026-01-08T22:11:09.839150275-07:00"
+    }
+  ],
+  "categories": {
+    "internal": [
+      {
+        "id": "internal-buildutil",
+        "title": "internal/buildutil",
+        "filePath": "svgs/internal-buildutil.svg",
+        "category": "internal",
+        "domain": "buildutil",
+        "sizeBytes": 41846,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:38.25622386-07:00"
+      },
+      {
+        "id": "internal-buildutil-tasks",
+        "title": "internal/buildutil/tasks",
+        "filePath": "svgs/internal-buildutil-tasks.svg",
+        "category": "internal",
+        "domain": "buildutil",
+        "sizeBytes": 89483,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:38.669882497-07:00"
+      },
+      {
+        "id": "internal-buildutil-ui",
+        "title": "internal/buildutil/ui",
+        "filePath": "svgs/internal-buildutil-ui.svg",
+        "category": "internal",
+        "domain": "buildutil",
+        "sizeBytes": 38739,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:39.077464535-07:00"
+      },
+      {
+        "id": "internal-daemon",
+        "title": "internal/daemon",
+        "filePath": "svgs/internal-daemon.svg",
+        "category": "internal",
+        "domain": "daemon",
+        "sizeBytes": 230183,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:39.620658099-07:00"
+      },
+      {
+        "id": "internal-daemonconn",
+        "title": "internal/daemonconn",
+        "filePath": "svgs/internal-daemonconn.svg",
+        "category": "internal",
+        "domain": "daemonconn",
+        "sizeBytes": 44421,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:40.401045375-07:00"
+      },
+      {
+        "id": "internal-integration-bootstrap",
+        "title": "internal/integration/bootstrap",
+        "filePath": "svgs/internal-integration-bootstrap.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 134029,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:42.65731427-07:00"
+      },
+      {
+        "id": "internal-integration-bridges",
+        "title": "internal/integration/bridges",
+        "filePath": "svgs/internal-integration-bridges.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 272363,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:44.70555903-07:00"
+      },
+      {
+        "id": "internal-integration-config",
+        "title": "internal/integration/config",
+        "filePath": "svgs/internal-integration-config.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 40806,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:46.768547413-07:00"
+      },
+      {
+        "id": "internal-integration-events",
+        "title": "internal/integration/events",
+        "filePath": "svgs/internal-integration-events.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 18995,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:47.208611246-07:00"
+      },
+      {
+        "id": "internal-integration-example",
+        "title": "internal/integration/example",
+        "filePath": "svgs/internal-integration-example.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 35623,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:49.30330792-07:00"
+      },
+      {
+        "id": "internal-integration-services",
+        "title": "internal/integration/services",
+        "filePath": "svgs/internal-integration-services.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 538982,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:51.471877041-07:00"
+      },
+      {
+        "id": "internal-integration-tests",
+        "title": "internal/integration/tests",
+        "filePath": "svgs/internal-integration-tests.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 33504,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:52.375884978-07:00"
+      },
+      {
+        "id": "internal-qa",
+        "title": "internal/qa",
+        "filePath": "svgs/internal-qa.svg",
+        "category": "internal",
+        "domain": "qa",
+        "sizeBytes": 59765,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:53.393186673-07:00"
+      },
+      {
+        "id": "internal-scaffoldlite",
+        "title": "internal/scaffoldlite",
+        "filePath": "svgs/internal-scaffoldlite.svg",
+        "category": "internal",
+        "domain": "scaffoldlite",
+        "sizeBytes": 215296,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:53.871797858-07:00"
+      },
+      {
+        "id": "internal-scaffoldlite-cli",
+        "title": "internal/scaffoldlite/cli",
+        "filePath": "svgs/internal-scaffoldlite-cli.svg",
+        "category": "internal",
+        "domain": "scaffoldlite",
+        "sizeBytes": 10581,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:54.328302151-07:00"
+      },
+      {
+        "id": "internal-scaffoldlite-templates",
+        "title": "internal/scaffoldlite/templates",
+        "filePath": "svgs/internal-scaffoldlite-templates.svg",
+        "category": "internal",
+        "domain": "scaffoldlite",
+        "sizeBytes": 3909,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:54.750005518-07:00"
+      },
+      {
+        "id": "internal-setup",
+        "title": "internal/setup",
+        "filePath": "svgs/internal-setup.svg",
+        "category": "internal",
+        "domain": "setup",
+        "sizeBytes": 580762,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:56.800493951-07:00"
+      },
+      {
+        "id": "internal-teatest",
+        "title": "internal/teatest",
+        "filePath": "svgs/internal-teatest.svg",
+        "category": "internal",
+        "domain": "teatest",
+        "sizeBytes": 19631,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:57.319892577-07:00"
+      },
+      {
+        "id": "internal-testing",
+        "title": "internal/testing",
+        "filePath": "svgs/internal-testing.svg",
+        "category": "internal",
+        "domain": "testing",
+        "sizeBytes": 53069,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:57.833950314-07:00"
+      },
+      {
+        "id": "internal-testutil",
+        "title": "internal/testutil",
+        "filePath": "svgs/internal-testutil.svg",
+        "category": "internal",
+        "domain": "testutil",
+        "sizeBytes": 91491,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:59.740523449-07:00"
+      }
+    ],
+    "other": [
+      {
+        "id": "daemon-lifecycle",
+        "title": "daemon-lifecycle",
+        "filePath": "svgs/daemon-lifecycle.svg",
+        "category": "other",
+        "domain": "other",
+        "sizeBytes": 237018,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-06T12:22:14.475058553-07:00"
+      }
+    ],
+    "pkg": [
+      {
+        "id": "pkg-agents",
+        "title": "pkg/agents",
+        "filePath": "svgs/pkg-agents.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 137849,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:00.648491646-07:00"
+      },
+      {
+        "id": "pkg-agents-backstory",
+        "title": "pkg/agents/backstory",
+        "filePath": "svgs/pkg-agents-backstory.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 172582,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:01.55761268-07:00"
+      },
+      {
+        "id": "pkg-agents-backstory-templates",
+        "title": "pkg/agents/backstory/templates",
+        "filePath": "svgs/pkg-agents-backstory-templates.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:02.318615696-07:00"
+      },
+      {
+        "id": "pkg-agents-core",
+        "title": "pkg/agents/core",
+        "filePath": "svgs/pkg-agents-core.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 1551863,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:04.468597309-07:00"
+      },
+      {
+        "id": "pkg-agents-core-elena",
+        "title": "pkg/agents/core/elena",
+        "filePath": "svgs/pkg-agents-core-elena.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 39593,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:04.918753544-07:00"
+      },
+      {
+        "id": "pkg-agents-core-executor",
+        "title": "pkg/agents/core/executor",
+        "filePath": "svgs/pkg-agents-core-executor.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 207787,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:07.066791027-07:00"
+      },
+      {
+        "id": "pkg-agents-core-manager",
+        "title": "pkg/agents/core/manager",
+        "filePath": "svgs/pkg-agents-core-manager.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 967640,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:09.155111477-07:00"
+      },
+      {
+        "id": "pkg-agents-core-mocks",
+        "title": "pkg/agents/core/mocks",
+        "filePath": "svgs/pkg-agents-core-mocks.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 36606,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:11.166630765-07:00"
+      },
+      {
+        "id": "pkg-agents-creation",
+        "title": "pkg/agents/creation",
+        "filePath": "svgs/pkg-agents-creation.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 138360,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:12.065521438-07:00"
+      },
+      {
+        "id": "pkg-cache",
+        "title": "pkg/cache",
+        "filePath": "svgs/pkg-cache.svg",
+        "category": "pkg",
+        "domain": "cache",
+        "sizeBytes": 233461,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:12.520538477-07:00"
+      },
+      {
+        "id": "pkg-campaign",
+        "title": "pkg/campaign",
+        "filePath": "svgs/pkg-campaign.svg",
+        "category": "pkg",
+        "domain": "campaign",
+        "sizeBytes": 308902,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:14.766359511-07:00"
+      },
+      {
+        "id": "pkg-client",
+        "title": "pkg/client",
+        "filePath": "svgs/pkg-client.svg",
+        "category": "pkg",
+        "domain": "client",
+        "sizeBytes": 38339,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:15.497361156-07:00"
+      },
+      {
+        "id": "pkg-commission",
+        "title": "pkg/commission",
+        "filePath": "svgs/pkg-commission.svg",
+        "category": "pkg",
+        "domain": "commission",
+        "sizeBytes": 568985,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:17.411504477-07:00"
+      },
+      {
+        "id": "pkg-commission-agentobj",
+        "title": "pkg/commission/agentobj",
+        "filePath": "svgs/pkg-commission-agentobj.svg",
+        "category": "pkg",
+        "domain": "commission",
+        "sizeBytes": 6629,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:19.351571701-07:00"
+      },
+      {
+        "id": "pkg-commission-guildobj",
+        "title": "pkg/commission/guildobj",
+        "filePath": "svgs/pkg-commission-guildobj.svg",
+        "category": "pkg",
+        "domain": "commission",
+        "sizeBytes": 6628,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:21.356757555-07:00"
+      },
+      {
+        "id": "pkg-commission-mocks",
+        "title": "pkg/commission/mocks",
+        "filePath": "svgs/pkg-commission-mocks.svg",
+        "category": "pkg",
+        "domain": "commission",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:23.141195867-07:00"
+      },
+      {
+        "id": "pkg-comms",
+        "title": "pkg/comms",
+        "filePath": "svgs/pkg-comms.svg",
+        "category": "pkg",
+        "domain": "comms",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:23.410024995-07:00"
+      },
+      {
+        "id": "pkg-comms-channel",
+        "title": "pkg/comms/channel",
+        "filePath": "svgs/pkg-comms-channel.svg",
+        "category": "pkg",
+        "domain": "comms",
+        "sizeBytes": 44914,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:23.862910029-07:00"
+      },
+      {
+        "id": "pkg-comms-transport",
+        "title": "pkg/comms/transport",
+        "filePath": "svgs/pkg-comms-transport.svg",
+        "category": "pkg",
+        "domain": "comms",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:24.114519613-07:00"
+      },
+      {
+        "id": "pkg-config",
+        "title": "pkg/config",
+        "filePath": "svgs/pkg-config.svg",
+        "category": "pkg",
+        "domain": "config",
+        "sizeBytes": 390692,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:25.142398003-07:00"
+      },
+      {
+        "id": "pkg-context",
+        "title": "pkg/context",
+        "filePath": "svgs/pkg-context.svg",
+        "category": "pkg",
+        "domain": "context",
+        "sizeBytes": 313913,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:25.683077893-07:00"
+      },
+      {
+        "id": "pkg-corpus",
+        "title": "pkg/corpus",
+        "filePath": "svgs/pkg-corpus.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 451492,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:27.675144255-07:00"
+      },
+      {
+        "id": "pkg-corpus-agent",
+        "title": "pkg/corpus/agent",
+        "filePath": "svgs/pkg-corpus-agent.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 36380,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:29.658343759-07:00"
+      },
+      {
+        "id": "pkg-corpus-extraction",
+        "title": "pkg/corpus/extraction",
+        "filePath": "svgs/pkg-corpus-extraction.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 386338,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:30.164018016-07:00"
+      },
+      {
+        "id": "pkg-corpus-graph",
+        "title": "pkg/corpus/graph",
+        "filePath": "svgs/pkg-corpus-graph.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 142627,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:30.619442347-07:00"
+      },
+      {
+        "id": "pkg-corpus-injection",
+        "title": "pkg/corpus/injection",
+        "filePath": "svgs/pkg-corpus-injection.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 57305,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:31.644774272-07:00"
+      },
+      {
+        "id": "pkg-corpus-retrieval",
+        "title": "pkg/corpus/retrieval",
+        "filePath": "svgs/pkg-corpus-retrieval.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 80147,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:32.523738934-07:00"
+      },
+      {
+        "id": "pkg-corpus-scoring",
+        "title": "pkg/corpus/scoring",
+        "filePath": "svgs/pkg-corpus-scoring.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 33069,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:33.403008514-07:00"
+      },
+      {
+        "id": "pkg-corpus-validation",
+        "title": "pkg/corpus/validation",
+        "filePath": "svgs/pkg-corpus-validation.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 110755,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:33.888544634-07:00"
+      },
+      {
+        "id": "pkg-cost",
+        "title": "pkg/cost",
+        "filePath": "svgs/pkg-cost.svg",
+        "category": "pkg",
+        "domain": "cost",
+        "sizeBytes": 368812,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:35.870750469-07:00"
+      },
+      {
+        "id": "pkg-cost-dashboard",
+        "title": "pkg/cost/dashboard",
+        "filePath": "svgs/pkg-cost-dashboard.svg",
+        "category": "pkg",
+        "domain": "cost",
+        "sizeBytes": 147959,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:37.743739598-07:00"
+      },
+      {
+        "id": "pkg-daemon",
+        "title": "pkg/daemon",
+        "filePath": "svgs/pkg-daemon.svg",
+        "category": "pkg",
+        "domain": "daemon",
+        "sizeBytes": 67144,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:38.224011455-07:00"
+      },
+      {
+        "id": "pkg-eventbus",
+        "title": "pkg/eventbus",
+        "filePath": "svgs/pkg-eventbus.svg",
+        "category": "pkg",
+        "domain": "eventbus",
+        "sizeBytes": 199146,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:38.671392223-07:00"
+      },
+      {
+        "id": "pkg-eventbus-testing",
+        "title": "pkg/eventbus/testing",
+        "filePath": "svgs/pkg-eventbus-testing.svg",
+        "category": "pkg",
+        "domain": "eventbus",
+        "sizeBytes": 30797,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:39.121395124-07:00"
+      },
+      {
+        "id": "pkg-events",
+        "title": "pkg/events",
+        "filePath": "svgs/pkg-events.svg",
+        "category": "pkg",
+        "domain": "events",
+        "sizeBytes": 125760,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:39.554405437-07:00"
+      },
+      {
+        "id": "pkg-events-debug",
+        "title": "pkg/events/debug",
+        "filePath": "svgs/pkg-events-debug.svg",
+        "category": "pkg",
+        "domain": "events",
+        "sizeBytes": 87229,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:39.979593481-07:00"
+      },
+      {
+        "id": "pkg-events-routing",
+        "title": "pkg/events/routing",
+        "filePath": "svgs/pkg-events-routing.svg",
+        "category": "pkg",
+        "domain": "events",
+        "sizeBytes": 82865,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:40.42994684-07:00"
+      },
+      {
+        "id": "pkg-events-types",
+        "title": "pkg/events/types",
+        "filePath": "svgs/pkg-events-types.svg",
+        "category": "pkg",
+        "domain": "events",
+        "sizeBytes": 215351,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:40.888784515-07:00"
+      },
+      {
+        "id": "pkg-export",
+        "title": "pkg/export",
+        "filePath": "svgs/pkg-export.svg",
+        "category": "pkg",
+        "domain": "export",
+        "sizeBytes": 122928,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:41.328658638-07:00"
+      },
+      {
+        "id": "pkg-generator",
+        "title": "pkg/generator",
+        "filePath": "svgs/pkg-generator.svg",
+        "category": "pkg",
+        "domain": "generator",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:43.051232245-07:00"
+      },
+      {
+        "id": "pkg-generator-commission",
+        "title": "pkg/generator/commission",
+        "filePath": "svgs/pkg-generator-commission.svg",
+        "category": "pkg",
+        "domain": "generator",
+        "sizeBytes": 40383,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:44.84163478-07:00"
+      },
+      {
+        "id": "pkg-gerror",
+        "title": "pkg/gerror",
+        "filePath": "svgs/pkg-gerror.svg",
+        "category": "pkg",
+        "domain": "gerror",
+        "sizeBytes": 19068,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:45.272498172-07:00"
+      },
+      {
+        "id": "pkg-git-worktree",
+        "title": "pkg/git/worktree",
+        "filePath": "svgs/pkg-git-worktree.svg",
+        "category": "pkg",
+        "domain": "git",
+        "sizeBytes": 424990,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:46.113813859-07:00"
+      },
+      {
+        "id": "pkg-grpc",
+        "title": "pkg/grpc",
+        "filePath": "svgs/pkg-grpc.svg",
+        "category": "pkg",
+        "domain": "grpc",
+        "sizeBytes": 528778,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:48.191286155-07:00"
+      },
+      {
+        "id": "pkg-grpc-pb-guild-v1",
+        "title": "pkg/grpc/pb/guild/v1",
+        "filePath": "svgs/pkg-grpc-pb-guild-v1.svg",
+        "category": "pkg",
+        "domain": "grpc",
+        "sizeBytes": 249098,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:48.977467238-07:00"
+      },
+      {
+        "id": "pkg-grpc-pb-mcp-v1",
+        "title": "pkg/grpc/pb/mcp/v1",
+        "filePath": "svgs/pkg-grpc-pb-mcp-v1.svg",
+        "category": "pkg",
+        "domain": "grpc",
+        "sizeBytes": 51190,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:49.748438364-07:00"
+      },
+      {
+        "id": "pkg-grpc-pb-prompts-v1",
+        "title": "pkg/grpc/pb/prompts/v1",
+        "filePath": "svgs/pkg-grpc-pb-prompts-v1.svg",
+        "category": "pkg",
+        "domain": "grpc",
+        "sizeBytes": 57499,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:50.59015326-07:00"
+      },
+      {
+        "id": "pkg-integration",
+        "title": "pkg/integration",
+        "filePath": "svgs/pkg-integration.svg",
+        "category": "pkg",
+        "domain": "integration",
+        "sizeBytes": 41658,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:52.907599609-07:00"
+      },
+      {
+        "id": "pkg-integration-commission_kanban",
+        "title": "pkg/integration/commission_kanban",
+        "filePath": "svgs/pkg-integration-commission_kanban.svg",
+        "category": "pkg",
+        "domain": "integration",
+        "sizeBytes": 96822,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:55.150114134-07:00"
+      },
+      {
+        "id": "pkg-interfaces",
+        "title": "pkg/interfaces",
+        "filePath": "svgs/pkg-interfaces.svg",
+        "category": "pkg",
+        "domain": "interfaces",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:55.463985924-07:00"
+      },
+      {
+        "id": "pkg-kanban",
+        "title": "pkg/kanban",
+        "filePath": "svgs/pkg-kanban.svg",
+        "category": "pkg",
+        "domain": "kanban",
+        "sizeBytes": 593376,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:57.690427906-07:00"
+      },
+      {
+        "id": "pkg-kanban-mocks",
+        "title": "pkg/kanban/mocks",
+        "filePath": "svgs/pkg-kanban-mocks.svg",
+        "category": "pkg",
+        "domain": "kanban",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:58.048373772-07:00"
+      },
+      {
+        "id": "pkg-logging",
+        "title": "pkg/logging",
+        "filePath": "svgs/pkg-logging.svg",
+        "category": "pkg",
+        "domain": "logging",
+        "sizeBytes": 191650,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:58.842158791-07:00"
+      },
+      {
+        "id": "pkg-logging-hooks",
+        "title": "pkg/logging/hooks",
+        "filePath": "svgs/pkg-logging-hooks.svg",
+        "category": "pkg",
+        "domain": "logging",
+        "sizeBytes": 17595,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:59.272505307-07:00"
+      },
+      {
+        "id": "pkg-logging-writers",
+        "title": "pkg/logging/writers",
+        "filePath": "svgs/pkg-logging-writers.svg",
+        "category": "pkg",
+        "domain": "logging",
+        "sizeBytes": 30909,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:59.699222312-07:00"
+      },
+      {
+        "id": "pkg-lsp",
+        "title": "pkg/lsp",
+        "filePath": "svgs/pkg-lsp.svg",
+        "category": "pkg",
+        "domain": "lsp",
+        "sizeBytes": 239230,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:01.560822411-07:00"
+      },
+      {
+        "id": "pkg-lsp-mocks",
+        "title": "pkg/lsp/mocks",
+        "filePath": "svgs/pkg-lsp-mocks.svg",
+        "category": "pkg",
+        "domain": "lsp",
+        "sizeBytes": 6121,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:03.30539695-07:00"
+      },
+      {
+        "id": "pkg-lsp-tools",
+        "title": "pkg/lsp/tools",
+        "filePath": "svgs/pkg-lsp-tools.svg",
+        "category": "pkg",
+        "domain": "lsp",
+        "sizeBytes": 46151,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:05.090583472-07:00"
+      },
+      {
+        "id": "pkg-mcp",
+        "title": "pkg/mcp",
+        "filePath": "svgs/pkg-mcp.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:05.152764845-07:00"
+      },
+      {
+        "id": "pkg-mcp-client",
+        "title": "pkg/mcp/client",
+        "filePath": "svgs/pkg-mcp-client.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 93205,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:06.058791371-07:00"
+      },
+      {
+        "id": "pkg-mcp-config",
+        "title": "pkg/mcp/config",
+        "filePath": "svgs/pkg-mcp-config.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:06.623207116-07:00"
+      },
+      {
+        "id": "pkg-mcp-cost",
+        "title": "pkg/mcp/cost",
+        "filePath": "svgs/pkg-mcp-cost.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 12694,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:07.035464416-07:00"
+      },
+      {
+        "id": "pkg-mcp-grpc",
+        "title": "pkg/mcp/grpc",
+        "filePath": "svgs/pkg-mcp-grpc.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 31419,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:09.028899281-07:00"
+      },
+      {
+        "id": "pkg-mcp-integration",
+        "title": "pkg/mcp/integration",
+        "filePath": "svgs/pkg-mcp-integration.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 170487,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:10.942391518-07:00"
+      },
+      {
+        "id": "pkg-mcp-prompt",
+        "title": "pkg/mcp/prompt",
+        "filePath": "svgs/pkg-mcp-prompt.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 62602,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:11.399013852-07:00"
+      },
+      {
+        "id": "pkg-mcp-protocol",
+        "title": "pkg/mcp/protocol",
+        "filePath": "svgs/pkg-mcp-protocol.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 25509,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:11.820828762-07:00"
+      },
+      {
+        "id": "pkg-mcp-server",
+        "title": "pkg/mcp/server",
+        "filePath": "svgs/pkg-mcp-server.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 137941,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:13.791358566-07:00"
+      },
+      {
+        "id": "pkg-mcp-tools",
+        "title": "pkg/mcp/tools",
+        "filePath": "svgs/pkg-mcp-tools.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 34523,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:14.222325417-07:00"
+      },
+      {
+        "id": "pkg-mcp-transport",
+        "title": "pkg/mcp/transport",
+        "filePath": "svgs/pkg-mcp-transport.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 81260,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:14.950296637-07:00"
+      },
+      {
+        "id": "pkg-memory",
+        "title": "pkg/memory",
+        "filePath": "svgs/pkg-memory.svg",
+        "category": "pkg",
+        "domain": "memory",
+        "sizeBytes": 50730,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:15.389521467-07:00"
+      },
+      {
+        "id": "pkg-memory-mocks",
+        "title": "pkg/memory/mocks",
+        "filePath": "svgs/pkg-memory-mocks.svg",
+        "category": "pkg",
+        "domain": "memory",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:15.92960844-07:00"
+      },
+      {
+        "id": "pkg-memory-rag",
+        "title": "pkg/memory/rag",
+        "filePath": "svgs/pkg-memory-rag.svg",
+        "category": "pkg",
+        "domain": "memory",
+        "sizeBytes": 141959,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:17.821565744-07:00"
+      },
+      {
+        "id": "pkg-memory-vector",
+        "title": "pkg/memory/vector",
+        "filePath": "svgs/pkg-memory-vector.svg",
+        "category": "pkg",
+        "domain": "memory",
+        "sizeBytes": 199400,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:18.756167346-07:00"
+      },
+      {
+        "id": "pkg-monitoring",
+        "title": "pkg/monitoring",
+        "filePath": "svgs/pkg-monitoring.svg",
+        "category": "pkg",
+        "domain": "monitoring",
+        "sizeBytes": 261502,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:19.196142762-07:00"
+      },
+      {
+        "id": "pkg-observability",
+        "title": "pkg/observability",
+        "filePath": "svgs/pkg-observability.svg",
+        "category": "pkg",
+        "domain": "observability",
+        "sizeBytes": 175069,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:20.061685722-07:00"
+      },
+      {
+        "id": "pkg-orchestrator",
+        "title": "pkg/orchestrator",
+        "filePath": "svgs/pkg-orchestrator.svg",
+        "category": "pkg",
+        "domain": "orchestrator",
+        "sizeBytes": 591712,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:22.119572133-07:00"
+      },
+      {
+        "id": "pkg-orchestrator-interfaces",
+        "title": "pkg/orchestrator/interfaces",
+        "filePath": "svgs/pkg-orchestrator-interfaces.svg",
+        "category": "pkg",
+        "domain": "orchestrator",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:22.410540069-07:00"
+      },
+      {
+        "id": "pkg-orchestrator-mocks",
+        "title": "pkg/orchestrator/mocks",
+        "filePath": "svgs/pkg-orchestrator-mocks.svg",
+        "category": "pkg",
+        "domain": "orchestrator",
+        "sizeBytes": 9558,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:24.289794132-07:00"
+      },
+      {
+        "id": "pkg-orchestrator-scheduler",
+        "title": "pkg/orchestrator/scheduler",
+        "filePath": "svgs/pkg-orchestrator-scheduler.svg",
+        "category": "pkg",
+        "domain": "orchestrator",
+        "sizeBytes": 499641,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:26.144882631-07:00"
+      },
+      {
+        "id": "pkg-paths",
+        "title": "pkg/paths",
+        "filePath": "svgs/pkg-paths.svg",
+        "category": "pkg",
+        "domain": "paths",
+        "sizeBytes": 31091,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:26.603062344-07:00"
+      },
+      {
+        "id": "pkg-performance",
+        "title": "pkg/performance",
+        "filePath": "svgs/pkg-performance.svg",
+        "category": "pkg",
+        "domain": "performance",
+        "sizeBytes": 387207,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:27.352431621-07:00"
+      },
+      {
+        "id": "pkg-performance-cpu",
+        "title": "pkg/performance/cpu",
+        "filePath": "svgs/pkg-performance-cpu.svg",
+        "category": "pkg",
+        "domain": "performance",
+        "sizeBytes": 68607,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:27.780947299-07:00"
+      },
+      {
+        "id": "pkg-performance-memory",
+        "title": "pkg/performance/memory",
+        "filePath": "svgs/pkg-performance-memory.svg",
+        "category": "pkg",
+        "domain": "performance",
+        "sizeBytes": 67420,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:28.197202652-07:00"
+      },
+      {
+        "id": "pkg-preferences",
+        "title": "pkg/preferences",
+        "filePath": "svgs/pkg-preferences.svg",
+        "category": "pkg",
+        "domain": "preferences",
+        "sizeBytes": 67599,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:29.947483206-07:00"
+      },
+      {
+        "id": "pkg-project",
+        "title": "pkg/project",
+        "filePath": "svgs/pkg-project.svg",
+        "category": "pkg",
+        "domain": "project",
+        "sizeBytes": 193102,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:31.733373104-07:00"
+      },
+      {
+        "id": "pkg-project-global",
+        "title": "pkg/project/global",
+        "filePath": "svgs/pkg-project-global.svg",
+        "category": "pkg",
+        "domain": "project",
+        "sizeBytes": 33265,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:32.169419052-07:00"
+      },
+      {
+        "id": "pkg-project-local",
+        "title": "pkg/project/local",
+        "filePath": "svgs/pkg-project-local.svg",
+        "category": "pkg",
+        "domain": "project",
+        "sizeBytes": 34675,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:32.589496831-07:00"
+      },
+      {
+        "id": "pkg-prompts",
+        "title": "pkg/prompts",
+        "filePath": "svgs/pkg-prompts.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 91802,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:33.045789165-07:00"
+      },
+      {
+        "id": "pkg-prompts-adapters",
+        "title": "pkg/prompts/adapters",
+        "filePath": "svgs/pkg-prompts-adapters.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 11446,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:33.496604776-07:00"
+      },
+      {
+        "id": "pkg-prompts-layered",
+        "title": "pkg/prompts/layered",
+        "filePath": "svgs/pkg-prompts-layered.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 246678,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:33.953518278-07:00"
+      },
+      {
+        "id": "pkg-prompts-layered-commission",
+        "title": "pkg/prompts/layered/commission",
+        "filePath": "svgs/pkg-prompts-layered-commission.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:33.997448312-07:00"
+      },
+      {
+        "id": "pkg-prompts-layered-context",
+        "title": "pkg/prompts/layered/context",
+        "filePath": "svgs/pkg-prompts-layered-context.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 15910,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:34.424826985-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard",
+        "title": "pkg/prompts/standard",
+        "filePath": "svgs/pkg-prompts-standard.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 63137,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:34.869057037-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard-evaluation",
+        "title": "pkg/prompts/standard/evaluation",
+        "filePath": "svgs/pkg-prompts-standard-evaluation.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 65322,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:35.331785138-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard-templates-agent-execution",
+        "title": "pkg/prompts/standard/templates/agent/execution",
+        "filePath": "svgs/pkg-prompts-standard-templates-agent-execution.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 60807,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:35.798311708-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard-templates-agent-extraction",
+        "title": "pkg/prompts/standard/templates/agent/extraction",
+        "filePath": "svgs/pkg-prompts-standard-templates-agent-extraction.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 15246,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:36.260381557-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard-templates-commission",
+        "title": "pkg/prompts/standard/templates/commission",
+        "filePath": "svgs/pkg-prompts-standard-templates-commission.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 11103,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:36.789233042-07:00"
+      },
+      {
+        "id": "pkg-providers",
+        "title": "pkg/providers",
+        "filePath": "svgs/pkg-providers.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 165112,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:37.877121341-07:00"
+      },
+      {
+        "id": "pkg-providers-anthropic",
+        "title": "pkg/providers/anthropic",
+        "filePath": "svgs/pkg-providers-anthropic.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 53088,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:38.785640748-07:00"
+      },
+      {
+        "id": "pkg-providers-base",
+        "title": "pkg/providers/base",
+        "filePath": "svgs/pkg-providers-base.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 25942,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:39.437434516-07:00"
+      },
+      {
+        "id": "pkg-providers-claudecode",
+        "title": "pkg/providers/claudecode",
+        "filePath": "svgs/pkg-providers-claudecode.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 59539,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:39.901755163-07:00"
+      },
+      {
+        "id": "pkg-providers-deepinfra",
+        "title": "pkg/providers/deepinfra",
+        "filePath": "svgs/pkg-providers-deepinfra.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 6907,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:40.552857971-07:00"
+      },
+      {
+        "id": "pkg-providers-deepseek",
+        "title": "pkg/providers/deepseek",
+        "filePath": "svgs/pkg-providers-deepseek.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 6893,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:41.208769085-07:00"
+      },
+      {
+        "id": "pkg-providers-interfaces",
+        "title": "pkg/providers/interfaces",
+        "filePath": "svgs/pkg-providers-interfaces.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:41.512728223-07:00"
+      },
+      {
+        "id": "pkg-providers-mock",
+        "title": "pkg/providers/mock",
+        "filePath": "svgs/pkg-providers-mock.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 41572,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:41.991052241-07:00"
+      },
+      {
+        "id": "pkg-providers-mocks",
+        "title": "pkg/providers/mocks",
+        "filePath": "svgs/pkg-providers-mocks.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:42.293401375-07:00"
+      },
+      {
+        "id": "pkg-providers-ollama",
+        "title": "pkg/providers/ollama",
+        "filePath": "svgs/pkg-providers-ollama.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 39177,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:43.023783561-07:00"
+      },
+      {
+        "id": "pkg-providers-openai",
+        "title": "pkg/providers/openai",
+        "filePath": "svgs/pkg-providers-openai.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 6874,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:43.695547007-07:00"
+      },
+      {
+        "id": "pkg-providers-ora",
+        "title": "pkg/providers/ora",
+        "filePath": "svgs/pkg-providers-ora.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 25154,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:44.347211358-07:00"
+      },
+      {
+        "id": "pkg-providers-testing",
+        "title": "pkg/providers/testing",
+        "filePath": "svgs/pkg-providers-testing.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:44.876767887-07:00"
+      },
+      {
+        "id": "pkg-reasoning",
+        "title": "pkg/reasoning",
+        "filePath": "svgs/pkg-reasoning.svg",
+        "category": "pkg",
+        "domain": "reasoning",
+        "sizeBytes": 333736,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:45.856271148-07:00"
+      },
+      {
+        "id": "pkg-registry",
+        "title": "pkg/registry",
+        "filePath": "svgs/pkg-registry.svg",
+        "category": "pkg",
+        "domain": "registry",
+        "sizeBytes": 708468,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:48.196377557-07:00"
+      },
+      {
+        "id": "pkg-search",
+        "title": "pkg/search",
+        "filePath": "svgs/pkg-search.svg",
+        "category": "pkg",
+        "domain": "search",
+        "sizeBytes": 28929,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:48.708420664-07:00"
+      },
+      {
+        "id": "pkg-security-access",
+        "title": "pkg/security/access",
+        "filePath": "svgs/pkg-security-access.svg",
+        "category": "pkg",
+        "domain": "security",
+        "sizeBytes": 86142,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:49.712246865-07:00"
+      },
+      {
+        "id": "pkg-security-audit",
+        "title": "pkg/security/audit",
+        "filePath": "svgs/pkg-security-audit.svg",
+        "category": "pkg",
+        "domain": "security",
+        "sizeBytes": 129020,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:50.726961428-07:00"
+      },
+      {
+        "id": "pkg-security-permissions",
+        "title": "pkg/security/permissions",
+        "filePath": "svgs/pkg-security-permissions.svg",
+        "category": "pkg",
+        "domain": "security",
+        "sizeBytes": 126628,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:51.67785174-07:00"
+      },
+      {
+        "id": "pkg-security-sandbox",
+        "title": "pkg/security/sandbox",
+        "filePath": "svgs/pkg-security-sandbox.svg",
+        "category": "pkg",
+        "domain": "security",
+        "sizeBytes": 334547,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:52.63050393-07:00"
+      },
+      {
+        "id": "pkg-session",
+        "title": "pkg/session",
+        "filePath": "svgs/pkg-session.svg",
+        "category": "pkg",
+        "domain": "session",
+        "sizeBytes": 449522,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:54.717896419-07:00"
+      },
+      {
+        "id": "pkg-storage",
+        "title": "pkg/storage",
+        "filePath": "svgs/pkg-storage.svg",
+        "category": "pkg",
+        "domain": "storage",
+        "sizeBytes": 883416,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:56.721236477-07:00"
+      },
+      {
+        "id": "pkg-storage-db",
+        "title": "pkg/storage/db",
+        "filePath": "svgs/pkg-storage-db.svg",
+        "category": "pkg",
+        "domain": "storage",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:57.042765579-07:00"
+      },
+      {
+        "id": "pkg-storage-optimization",
+        "title": "pkg/storage/optimization",
+        "filePath": "svgs/pkg-storage-optimization.svg",
+        "category": "pkg",
+        "domain": "storage",
+        "sizeBytes": 310604,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:57.997708693-07:00"
+      },
+      {
+        "id": "pkg-storage-promptchain",
+        "title": "pkg/storage/promptchain",
+        "filePath": "svgs/pkg-storage-promptchain.svg",
+        "category": "pkg",
+        "domain": "storage",
+        "sizeBytes": 29179,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:59.805609399-07:00"
+      },
+      {
+        "id": "pkg-suggestions",
+        "title": "pkg/suggestions",
+        "filePath": "svgs/pkg-suggestions.svg",
+        "category": "pkg",
+        "domain": "suggestions",
+        "sizeBytes": 138722,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:01.608171467-07:00"
+      },
+      {
+        "id": "pkg-telemetry",
+        "title": "pkg/telemetry",
+        "filePath": "svgs/pkg-telemetry.svg",
+        "category": "pkg",
+        "domain": "telemetry",
+        "sizeBytes": 38468,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:02.517977252-07:00"
+      },
+      {
+        "id": "pkg-telemetry-collectors",
+        "title": "pkg/telemetry/collectors",
+        "filePath": "svgs/pkg-telemetry-collectors.svg",
+        "category": "pkg",
+        "domain": "telemetry",
+        "sizeBytes": 23405,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:02.965768064-07:00"
+      },
+      {
+        "id": "pkg-templates",
+        "title": "pkg/templates",
+        "filePath": "svgs/pkg-templates.svg",
+        "category": "pkg",
+        "domain": "templates",
+        "sizeBytes": 200160,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:03.447149714-07:00"
+      },
+      {
+        "id": "pkg-terminal",
+        "title": "pkg/terminal",
+        "filePath": "svgs/pkg-terminal.svg",
+        "category": "pkg",
+        "domain": "terminal",
+        "sizeBytes": 172765,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:03.899902747-07:00"
+      },
+      {
+        "id": "pkg-terminal-features",
+        "title": "pkg/terminal/features",
+        "filePath": "svgs/pkg-terminal-features.svg",
+        "category": "pkg",
+        "domain": "terminal",
+        "sizeBytes": 107150,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:04.337901699-07:00"
+      },
+      {
+        "id": "pkg-terminal-profiles",
+        "title": "pkg/terminal/profiles",
+        "filePath": "svgs/pkg-terminal-profiles.svg",
+        "category": "pkg",
+        "domain": "terminal",
+        "sizeBytes": 151876,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:04.778904368-07:00"
+      },
+      {
+        "id": "pkg-tools",
+        "title": "pkg/tools",
+        "filePath": "svgs/pkg-tools.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 62028,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:05.653305726-07:00"
+      },
+      {
+        "id": "pkg-tools-executor",
+        "title": "pkg/tools/executor",
+        "filePath": "svgs/pkg-tools-executor.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 35933,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:06.746727457-07:00"
+      },
+      {
+        "id": "pkg-tools-parser",
+        "title": "pkg/tools/parser",
+        "filePath": "svgs/pkg-tools-parser.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 169891,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:07.696009597-07:00"
+      },
+      {
+        "id": "pkg-tools-parser-json",
+        "title": "pkg/tools/parser/json",
+        "filePath": "svgs/pkg-tools-parser-json.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 102712,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:08.589720631-07:00"
+      },
+      {
+        "id": "pkg-tools-parser-types",
+        "title": "pkg/tools/parser/types",
+        "filePath": "svgs/pkg-tools-parser-types.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:08.941935148-07:00"
+      },
+      {
+        "id": "pkg-tools-parser-xml",
+        "title": "pkg/tools/parser/xml",
+        "filePath": "svgs/pkg-tools-parser-xml.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 47131,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:09.839150275-07:00"
+      }
+    ]
+  },
+  "domains": {
+    "agents": [
+      {
+        "id": "pkg-agents",
+        "title": "pkg/agents",
+        "filePath": "svgs/pkg-agents.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 137849,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:00.648491646-07:00"
+      },
+      {
+        "id": "pkg-agents-backstory",
+        "title": "pkg/agents/backstory",
+        "filePath": "svgs/pkg-agents-backstory.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 172582,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:01.55761268-07:00"
+      },
+      {
+        "id": "pkg-agents-backstory-templates",
+        "title": "pkg/agents/backstory/templates",
+        "filePath": "svgs/pkg-agents-backstory-templates.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:02.318615696-07:00"
+      },
+      {
+        "id": "pkg-agents-core",
+        "title": "pkg/agents/core",
+        "filePath": "svgs/pkg-agents-core.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 1551863,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:04.468597309-07:00"
+      },
+      {
+        "id": "pkg-agents-core-elena",
+        "title": "pkg/agents/core/elena",
+        "filePath": "svgs/pkg-agents-core-elena.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 39593,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:04.918753544-07:00"
+      },
+      {
+        "id": "pkg-agents-core-executor",
+        "title": "pkg/agents/core/executor",
+        "filePath": "svgs/pkg-agents-core-executor.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 207787,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:07.066791027-07:00"
+      },
+      {
+        "id": "pkg-agents-core-manager",
+        "title": "pkg/agents/core/manager",
+        "filePath": "svgs/pkg-agents-core-manager.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 967640,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:09.155111477-07:00"
+      },
+      {
+        "id": "pkg-agents-core-mocks",
+        "title": "pkg/agents/core/mocks",
+        "filePath": "svgs/pkg-agents-core-mocks.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 36606,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:11.166630765-07:00"
+      },
+      {
+        "id": "pkg-agents-creation",
+        "title": "pkg/agents/creation",
+        "filePath": "svgs/pkg-agents-creation.svg",
+        "category": "pkg",
+        "domain": "agents",
+        "sizeBytes": 138360,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:12.065521438-07:00"
+      }
+    ],
+    "buildutil": [
+      {
+        "id": "internal-buildutil",
+        "title": "internal/buildutil",
+        "filePath": "svgs/internal-buildutil.svg",
+        "category": "internal",
+        "domain": "buildutil",
+        "sizeBytes": 41846,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:38.25622386-07:00"
+      },
+      {
+        "id": "internal-buildutil-tasks",
+        "title": "internal/buildutil/tasks",
+        "filePath": "svgs/internal-buildutil-tasks.svg",
+        "category": "internal",
+        "domain": "buildutil",
+        "sizeBytes": 89483,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:38.669882497-07:00"
+      },
+      {
+        "id": "internal-buildutil-ui",
+        "title": "internal/buildutil/ui",
+        "filePath": "svgs/internal-buildutil-ui.svg",
+        "category": "internal",
+        "domain": "buildutil",
+        "sizeBytes": 38739,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:39.077464535-07:00"
+      }
+    ],
+    "cache": [
+      {
+        "id": "pkg-cache",
+        "title": "pkg/cache",
+        "filePath": "svgs/pkg-cache.svg",
+        "category": "pkg",
+        "domain": "cache",
+        "sizeBytes": 233461,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:12.520538477-07:00"
+      }
+    ],
+    "campaign": [
+      {
+        "id": "pkg-campaign",
+        "title": "pkg/campaign",
+        "filePath": "svgs/pkg-campaign.svg",
+        "category": "pkg",
+        "domain": "campaign",
+        "sizeBytes": 308902,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:14.766359511-07:00"
+      }
+    ],
+    "client": [
+      {
+        "id": "pkg-client",
+        "title": "pkg/client",
+        "filePath": "svgs/pkg-client.svg",
+        "category": "pkg",
+        "domain": "client",
+        "sizeBytes": 38339,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:15.497361156-07:00"
+      }
+    ],
+    "commission": [
+      {
+        "id": "pkg-commission",
+        "title": "pkg/commission",
+        "filePath": "svgs/pkg-commission.svg",
+        "category": "pkg",
+        "domain": "commission",
+        "sizeBytes": 568985,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:17.411504477-07:00"
+      },
+      {
+        "id": "pkg-commission-agentobj",
+        "title": "pkg/commission/agentobj",
+        "filePath": "svgs/pkg-commission-agentobj.svg",
+        "category": "pkg",
+        "domain": "commission",
+        "sizeBytes": 6629,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:19.351571701-07:00"
+      },
+      {
+        "id": "pkg-commission-guildobj",
+        "title": "pkg/commission/guildobj",
+        "filePath": "svgs/pkg-commission-guildobj.svg",
+        "category": "pkg",
+        "domain": "commission",
+        "sizeBytes": 6628,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:21.356757555-07:00"
+      },
+      {
+        "id": "pkg-commission-mocks",
+        "title": "pkg/commission/mocks",
+        "filePath": "svgs/pkg-commission-mocks.svg",
+        "category": "pkg",
+        "domain": "commission",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:23.141195867-07:00"
+      }
+    ],
+    "comms": [
+      {
+        "id": "pkg-comms",
+        "title": "pkg/comms",
+        "filePath": "svgs/pkg-comms.svg",
+        "category": "pkg",
+        "domain": "comms",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:23.410024995-07:00"
+      },
+      {
+        "id": "pkg-comms-channel",
+        "title": "pkg/comms/channel",
+        "filePath": "svgs/pkg-comms-channel.svg",
+        "category": "pkg",
+        "domain": "comms",
+        "sizeBytes": 44914,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:23.862910029-07:00"
+      },
+      {
+        "id": "pkg-comms-transport",
+        "title": "pkg/comms/transport",
+        "filePath": "svgs/pkg-comms-transport.svg",
+        "category": "pkg",
+        "domain": "comms",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:24.114519613-07:00"
+      }
+    ],
+    "config": [
+      {
+        "id": "pkg-config",
+        "title": "pkg/config",
+        "filePath": "svgs/pkg-config.svg",
+        "category": "pkg",
+        "domain": "config",
+        "sizeBytes": 390692,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:25.142398003-07:00"
+      }
+    ],
+    "context": [
+      {
+        "id": "pkg-context",
+        "title": "pkg/context",
+        "filePath": "svgs/pkg-context.svg",
+        "category": "pkg",
+        "domain": "context",
+        "sizeBytes": 313913,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:25.683077893-07:00"
+      }
+    ],
+    "corpus": [
+      {
+        "id": "pkg-corpus",
+        "title": "pkg/corpus",
+        "filePath": "svgs/pkg-corpus.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 451492,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:27.675144255-07:00"
+      },
+      {
+        "id": "pkg-corpus-agent",
+        "title": "pkg/corpus/agent",
+        "filePath": "svgs/pkg-corpus-agent.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 36380,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:29.658343759-07:00"
+      },
+      {
+        "id": "pkg-corpus-extraction",
+        "title": "pkg/corpus/extraction",
+        "filePath": "svgs/pkg-corpus-extraction.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 386338,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:30.164018016-07:00"
+      },
+      {
+        "id": "pkg-corpus-graph",
+        "title": "pkg/corpus/graph",
+        "filePath": "svgs/pkg-corpus-graph.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 142627,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:30.619442347-07:00"
+      },
+      {
+        "id": "pkg-corpus-injection",
+        "title": "pkg/corpus/injection",
+        "filePath": "svgs/pkg-corpus-injection.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 57305,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:31.644774272-07:00"
+      },
+      {
+        "id": "pkg-corpus-retrieval",
+        "title": "pkg/corpus/retrieval",
+        "filePath": "svgs/pkg-corpus-retrieval.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 80147,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:32.523738934-07:00"
+      },
+      {
+        "id": "pkg-corpus-scoring",
+        "title": "pkg/corpus/scoring",
+        "filePath": "svgs/pkg-corpus-scoring.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 33069,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:33.403008514-07:00"
+      },
+      {
+        "id": "pkg-corpus-validation",
+        "title": "pkg/corpus/validation",
+        "filePath": "svgs/pkg-corpus-validation.svg",
+        "category": "pkg",
+        "domain": "corpus",
+        "sizeBytes": 110755,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:33.888544634-07:00"
+      }
+    ],
+    "cost": [
+      {
+        "id": "pkg-cost",
+        "title": "pkg/cost",
+        "filePath": "svgs/pkg-cost.svg",
+        "category": "pkg",
+        "domain": "cost",
+        "sizeBytes": 368812,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:35.870750469-07:00"
+      },
+      {
+        "id": "pkg-cost-dashboard",
+        "title": "pkg/cost/dashboard",
+        "filePath": "svgs/pkg-cost-dashboard.svg",
+        "category": "pkg",
+        "domain": "cost",
+        "sizeBytes": 147959,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:37.743739598-07:00"
+      }
+    ],
+    "daemon": [
+      {
+        "id": "internal-daemon",
+        "title": "internal/daemon",
+        "filePath": "svgs/internal-daemon.svg",
+        "category": "internal",
+        "domain": "daemon",
+        "sizeBytes": 230183,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:39.620658099-07:00"
+      },
+      {
+        "id": "pkg-daemon",
+        "title": "pkg/daemon",
+        "filePath": "svgs/pkg-daemon.svg",
+        "category": "pkg",
+        "domain": "daemon",
+        "sizeBytes": 67144,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:38.224011455-07:00"
+      }
+    ],
+    "daemonconn": [
+      {
+        "id": "internal-daemonconn",
+        "title": "internal/daemonconn",
+        "filePath": "svgs/internal-daemonconn.svg",
+        "category": "internal",
+        "domain": "daemonconn",
+        "sizeBytes": 44421,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:40.401045375-07:00"
+      }
+    ],
+    "eventbus": [
+      {
+        "id": "pkg-eventbus",
+        "title": "pkg/eventbus",
+        "filePath": "svgs/pkg-eventbus.svg",
+        "category": "pkg",
+        "domain": "eventbus",
+        "sizeBytes": 199146,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:38.671392223-07:00"
+      },
+      {
+        "id": "pkg-eventbus-testing",
+        "title": "pkg/eventbus/testing",
+        "filePath": "svgs/pkg-eventbus-testing.svg",
+        "category": "pkg",
+        "domain": "eventbus",
+        "sizeBytes": 30797,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:39.121395124-07:00"
+      }
+    ],
+    "events": [
+      {
+        "id": "pkg-events",
+        "title": "pkg/events",
+        "filePath": "svgs/pkg-events.svg",
+        "category": "pkg",
+        "domain": "events",
+        "sizeBytes": 125760,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:39.554405437-07:00"
+      },
+      {
+        "id": "pkg-events-debug",
+        "title": "pkg/events/debug",
+        "filePath": "svgs/pkg-events-debug.svg",
+        "category": "pkg",
+        "domain": "events",
+        "sizeBytes": 87229,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:39.979593481-07:00"
+      },
+      {
+        "id": "pkg-events-routing",
+        "title": "pkg/events/routing",
+        "filePath": "svgs/pkg-events-routing.svg",
+        "category": "pkg",
+        "domain": "events",
+        "sizeBytes": 82865,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:40.42994684-07:00"
+      },
+      {
+        "id": "pkg-events-types",
+        "title": "pkg/events/types",
+        "filePath": "svgs/pkg-events-types.svg",
+        "category": "pkg",
+        "domain": "events",
+        "sizeBytes": 215351,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:40.888784515-07:00"
+      }
+    ],
+    "export": [
+      {
+        "id": "pkg-export",
+        "title": "pkg/export",
+        "filePath": "svgs/pkg-export.svg",
+        "category": "pkg",
+        "domain": "export",
+        "sizeBytes": 122928,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:41.328658638-07:00"
+      }
+    ],
+    "generator": [
+      {
+        "id": "pkg-generator",
+        "title": "pkg/generator",
+        "filePath": "svgs/pkg-generator.svg",
+        "category": "pkg",
+        "domain": "generator",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:43.051232245-07:00"
+      },
+      {
+        "id": "pkg-generator-commission",
+        "title": "pkg/generator/commission",
+        "filePath": "svgs/pkg-generator-commission.svg",
+        "category": "pkg",
+        "domain": "generator",
+        "sizeBytes": 40383,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:44.84163478-07:00"
+      }
+    ],
+    "gerror": [
+      {
+        "id": "pkg-gerror",
+        "title": "pkg/gerror",
+        "filePath": "svgs/pkg-gerror.svg",
+        "category": "pkg",
+        "domain": "gerror",
+        "sizeBytes": 19068,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:45.272498172-07:00"
+      }
+    ],
+    "git": [
+      {
+        "id": "pkg-git-worktree",
+        "title": "pkg/git/worktree",
+        "filePath": "svgs/pkg-git-worktree.svg",
+        "category": "pkg",
+        "domain": "git",
+        "sizeBytes": 424990,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:46.113813859-07:00"
+      }
+    ],
+    "grpc": [
+      {
+        "id": "pkg-grpc",
+        "title": "pkg/grpc",
+        "filePath": "svgs/pkg-grpc.svg",
+        "category": "pkg",
+        "domain": "grpc",
+        "sizeBytes": 528778,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:48.191286155-07:00"
+      },
+      {
+        "id": "pkg-grpc-pb-guild-v1",
+        "title": "pkg/grpc/pb/guild/v1",
+        "filePath": "svgs/pkg-grpc-pb-guild-v1.svg",
+        "category": "pkg",
+        "domain": "grpc",
+        "sizeBytes": 249098,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:48.977467238-07:00"
+      },
+      {
+        "id": "pkg-grpc-pb-mcp-v1",
+        "title": "pkg/grpc/pb/mcp/v1",
+        "filePath": "svgs/pkg-grpc-pb-mcp-v1.svg",
+        "category": "pkg",
+        "domain": "grpc",
+        "sizeBytes": 51190,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:49.748438364-07:00"
+      },
+      {
+        "id": "pkg-grpc-pb-prompts-v1",
+        "title": "pkg/grpc/pb/prompts/v1",
+        "filePath": "svgs/pkg-grpc-pb-prompts-v1.svg",
+        "category": "pkg",
+        "domain": "grpc",
+        "sizeBytes": 57499,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:50.59015326-07:00"
+      }
+    ],
+    "integration": [
+      {
+        "id": "internal-integration-bootstrap",
+        "title": "internal/integration/bootstrap",
+        "filePath": "svgs/internal-integration-bootstrap.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 134029,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:42.65731427-07:00"
+      },
+      {
+        "id": "internal-integration-bridges",
+        "title": "internal/integration/bridges",
+        "filePath": "svgs/internal-integration-bridges.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 272363,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:44.70555903-07:00"
+      },
+      {
+        "id": "internal-integration-config",
+        "title": "internal/integration/config",
+        "filePath": "svgs/internal-integration-config.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 40806,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:46.768547413-07:00"
+      },
+      {
+        "id": "internal-integration-events",
+        "title": "internal/integration/events",
+        "filePath": "svgs/internal-integration-events.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 18995,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:47.208611246-07:00"
+      },
+      {
+        "id": "internal-integration-example",
+        "title": "internal/integration/example",
+        "filePath": "svgs/internal-integration-example.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 35623,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:49.30330792-07:00"
+      },
+      {
+        "id": "internal-integration-services",
+        "title": "internal/integration/services",
+        "filePath": "svgs/internal-integration-services.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 538982,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:51.471877041-07:00"
+      },
+      {
+        "id": "internal-integration-tests",
+        "title": "internal/integration/tests",
+        "filePath": "svgs/internal-integration-tests.svg",
+        "category": "internal",
+        "domain": "integration",
+        "sizeBytes": 33504,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:52.375884978-07:00"
+      },
+      {
+        "id": "pkg-integration",
+        "title": "pkg/integration",
+        "filePath": "svgs/pkg-integration.svg",
+        "category": "pkg",
+        "domain": "integration",
+        "sizeBytes": 41658,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:52.907599609-07:00"
+      },
+      {
+        "id": "pkg-integration-commission_kanban",
+        "title": "pkg/integration/commission_kanban",
+        "filePath": "svgs/pkg-integration-commission_kanban.svg",
+        "category": "pkg",
+        "domain": "integration",
+        "sizeBytes": 96822,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:55.150114134-07:00"
+      }
+    ],
+    "interfaces": [
+      {
+        "id": "pkg-interfaces",
+        "title": "pkg/interfaces",
+        "filePath": "svgs/pkg-interfaces.svg",
+        "category": "pkg",
+        "domain": "interfaces",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:55.463985924-07:00"
+      }
+    ],
+    "kanban": [
+      {
+        "id": "pkg-kanban",
+        "title": "pkg/kanban",
+        "filePath": "svgs/pkg-kanban.svg",
+        "category": "pkg",
+        "domain": "kanban",
+        "sizeBytes": 593376,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:57.690427906-07:00"
+      },
+      {
+        "id": "pkg-kanban-mocks",
+        "title": "pkg/kanban/mocks",
+        "filePath": "svgs/pkg-kanban-mocks.svg",
+        "category": "pkg",
+        "domain": "kanban",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:58.048373772-07:00"
+      }
+    ],
+    "logging": [
+      {
+        "id": "pkg-logging",
+        "title": "pkg/logging",
+        "filePath": "svgs/pkg-logging.svg",
+        "category": "pkg",
+        "domain": "logging",
+        "sizeBytes": 191650,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:58.842158791-07:00"
+      },
+      {
+        "id": "pkg-logging-hooks",
+        "title": "pkg/logging/hooks",
+        "filePath": "svgs/pkg-logging-hooks.svg",
+        "category": "pkg",
+        "domain": "logging",
+        "sizeBytes": 17595,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:59.272505307-07:00"
+      },
+      {
+        "id": "pkg-logging-writers",
+        "title": "pkg/logging/writers",
+        "filePath": "svgs/pkg-logging-writers.svg",
+        "category": "pkg",
+        "domain": "logging",
+        "sizeBytes": 30909,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:09:59.699222312-07:00"
+      }
+    ],
+    "lsp": [
+      {
+        "id": "pkg-lsp",
+        "title": "pkg/lsp",
+        "filePath": "svgs/pkg-lsp.svg",
+        "category": "pkg",
+        "domain": "lsp",
+        "sizeBytes": 239230,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:01.560822411-07:00"
+      },
+      {
+        "id": "pkg-lsp-mocks",
+        "title": "pkg/lsp/mocks",
+        "filePath": "svgs/pkg-lsp-mocks.svg",
+        "category": "pkg",
+        "domain": "lsp",
+        "sizeBytes": 6121,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:03.30539695-07:00"
+      },
+      {
+        "id": "pkg-lsp-tools",
+        "title": "pkg/lsp/tools",
+        "filePath": "svgs/pkg-lsp-tools.svg",
+        "category": "pkg",
+        "domain": "lsp",
+        "sizeBytes": 46151,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:05.090583472-07:00"
+      }
+    ],
+    "mcp": [
+      {
+        "id": "pkg-mcp",
+        "title": "pkg/mcp",
+        "filePath": "svgs/pkg-mcp.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:05.152764845-07:00"
+      },
+      {
+        "id": "pkg-mcp-client",
+        "title": "pkg/mcp/client",
+        "filePath": "svgs/pkg-mcp-client.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 93205,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:06.058791371-07:00"
+      },
+      {
+        "id": "pkg-mcp-config",
+        "title": "pkg/mcp/config",
+        "filePath": "svgs/pkg-mcp-config.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:06.623207116-07:00"
+      },
+      {
+        "id": "pkg-mcp-cost",
+        "title": "pkg/mcp/cost",
+        "filePath": "svgs/pkg-mcp-cost.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 12694,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:07.035464416-07:00"
+      },
+      {
+        "id": "pkg-mcp-grpc",
+        "title": "pkg/mcp/grpc",
+        "filePath": "svgs/pkg-mcp-grpc.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 31419,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:09.028899281-07:00"
+      },
+      {
+        "id": "pkg-mcp-integration",
+        "title": "pkg/mcp/integration",
+        "filePath": "svgs/pkg-mcp-integration.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 170487,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:10.942391518-07:00"
+      },
+      {
+        "id": "pkg-mcp-prompt",
+        "title": "pkg/mcp/prompt",
+        "filePath": "svgs/pkg-mcp-prompt.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 62602,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:11.399013852-07:00"
+      },
+      {
+        "id": "pkg-mcp-protocol",
+        "title": "pkg/mcp/protocol",
+        "filePath": "svgs/pkg-mcp-protocol.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 25509,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:11.820828762-07:00"
+      },
+      {
+        "id": "pkg-mcp-server",
+        "title": "pkg/mcp/server",
+        "filePath": "svgs/pkg-mcp-server.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 137941,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:13.791358566-07:00"
+      },
+      {
+        "id": "pkg-mcp-tools",
+        "title": "pkg/mcp/tools",
+        "filePath": "svgs/pkg-mcp-tools.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 34523,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:14.222325417-07:00"
+      },
+      {
+        "id": "pkg-mcp-transport",
+        "title": "pkg/mcp/transport",
+        "filePath": "svgs/pkg-mcp-transport.svg",
+        "category": "pkg",
+        "domain": "mcp",
+        "sizeBytes": 81260,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:14.950296637-07:00"
+      }
+    ],
+    "memory": [
+      {
+        "id": "pkg-memory",
+        "title": "pkg/memory",
+        "filePath": "svgs/pkg-memory.svg",
+        "category": "pkg",
+        "domain": "memory",
+        "sizeBytes": 50730,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:15.389521467-07:00"
+      },
+      {
+        "id": "pkg-memory-mocks",
+        "title": "pkg/memory/mocks",
+        "filePath": "svgs/pkg-memory-mocks.svg",
+        "category": "pkg",
+        "domain": "memory",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:15.92960844-07:00"
+      },
+      {
+        "id": "pkg-memory-rag",
+        "title": "pkg/memory/rag",
+        "filePath": "svgs/pkg-memory-rag.svg",
+        "category": "pkg",
+        "domain": "memory",
+        "sizeBytes": 141959,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:17.821565744-07:00"
+      },
+      {
+        "id": "pkg-memory-vector",
+        "title": "pkg/memory/vector",
+        "filePath": "svgs/pkg-memory-vector.svg",
+        "category": "pkg",
+        "domain": "memory",
+        "sizeBytes": 199400,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:18.756167346-07:00"
+      }
+    ],
+    "monitoring": [
+      {
+        "id": "pkg-monitoring",
+        "title": "pkg/monitoring",
+        "filePath": "svgs/pkg-monitoring.svg",
+        "category": "pkg",
+        "domain": "monitoring",
+        "sizeBytes": 261502,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:19.196142762-07:00"
+      }
+    ],
+    "observability": [
+      {
+        "id": "pkg-observability",
+        "title": "pkg/observability",
+        "filePath": "svgs/pkg-observability.svg",
+        "category": "pkg",
+        "domain": "observability",
+        "sizeBytes": 175069,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:20.061685722-07:00"
+      }
+    ],
+    "orchestrator": [
+      {
+        "id": "pkg-orchestrator",
+        "title": "pkg/orchestrator",
+        "filePath": "svgs/pkg-orchestrator.svg",
+        "category": "pkg",
+        "domain": "orchestrator",
+        "sizeBytes": 591712,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:22.119572133-07:00"
+      },
+      {
+        "id": "pkg-orchestrator-interfaces",
+        "title": "pkg/orchestrator/interfaces",
+        "filePath": "svgs/pkg-orchestrator-interfaces.svg",
+        "category": "pkg",
+        "domain": "orchestrator",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:22.410540069-07:00"
+      },
+      {
+        "id": "pkg-orchestrator-mocks",
+        "title": "pkg/orchestrator/mocks",
+        "filePath": "svgs/pkg-orchestrator-mocks.svg",
+        "category": "pkg",
+        "domain": "orchestrator",
+        "sizeBytes": 9558,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:24.289794132-07:00"
+      },
+      {
+        "id": "pkg-orchestrator-scheduler",
+        "title": "pkg/orchestrator/scheduler",
+        "filePath": "svgs/pkg-orchestrator-scheduler.svg",
+        "category": "pkg",
+        "domain": "orchestrator",
+        "sizeBytes": 499641,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:26.144882631-07:00"
+      }
+    ],
+    "other": [
+      {
+        "id": "daemon-lifecycle",
+        "title": "daemon-lifecycle",
+        "filePath": "svgs/daemon-lifecycle.svg",
+        "category": "other",
+        "domain": "other",
+        "sizeBytes": 237018,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-06T12:22:14.475058553-07:00"
+      }
+    ],
+    "paths": [
+      {
+        "id": "pkg-paths",
+        "title": "pkg/paths",
+        "filePath": "svgs/pkg-paths.svg",
+        "category": "pkg",
+        "domain": "paths",
+        "sizeBytes": 31091,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:26.603062344-07:00"
+      }
+    ],
+    "performance": [
+      {
+        "id": "pkg-performance",
+        "title": "pkg/performance",
+        "filePath": "svgs/pkg-performance.svg",
+        "category": "pkg",
+        "domain": "performance",
+        "sizeBytes": 387207,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:27.352431621-07:00"
+      },
+      {
+        "id": "pkg-performance-cpu",
+        "title": "pkg/performance/cpu",
+        "filePath": "svgs/pkg-performance-cpu.svg",
+        "category": "pkg",
+        "domain": "performance",
+        "sizeBytes": 68607,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:27.780947299-07:00"
+      },
+      {
+        "id": "pkg-performance-memory",
+        "title": "pkg/performance/memory",
+        "filePath": "svgs/pkg-performance-memory.svg",
+        "category": "pkg",
+        "domain": "performance",
+        "sizeBytes": 67420,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:28.197202652-07:00"
+      }
+    ],
+    "preferences": [
+      {
+        "id": "pkg-preferences",
+        "title": "pkg/preferences",
+        "filePath": "svgs/pkg-preferences.svg",
+        "category": "pkg",
+        "domain": "preferences",
+        "sizeBytes": 67599,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:29.947483206-07:00"
+      }
+    ],
+    "project": [
+      {
+        "id": "pkg-project",
+        "title": "pkg/project",
+        "filePath": "svgs/pkg-project.svg",
+        "category": "pkg",
+        "domain": "project",
+        "sizeBytes": 193102,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:31.733373104-07:00"
+      },
+      {
+        "id": "pkg-project-global",
+        "title": "pkg/project/global",
+        "filePath": "svgs/pkg-project-global.svg",
+        "category": "pkg",
+        "domain": "project",
+        "sizeBytes": 33265,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:32.169419052-07:00"
+      },
+      {
+        "id": "pkg-project-local",
+        "title": "pkg/project/local",
+        "filePath": "svgs/pkg-project-local.svg",
+        "category": "pkg",
+        "domain": "project",
+        "sizeBytes": 34675,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:32.589496831-07:00"
+      }
+    ],
+    "prompts": [
+      {
+        "id": "pkg-prompts",
+        "title": "pkg/prompts",
+        "filePath": "svgs/pkg-prompts.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 91802,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:33.045789165-07:00"
+      },
+      {
+        "id": "pkg-prompts-adapters",
+        "title": "pkg/prompts/adapters",
+        "filePath": "svgs/pkg-prompts-adapters.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 11446,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:33.496604776-07:00"
+      },
+      {
+        "id": "pkg-prompts-layered",
+        "title": "pkg/prompts/layered",
+        "filePath": "svgs/pkg-prompts-layered.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 246678,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:33.953518278-07:00"
+      },
+      {
+        "id": "pkg-prompts-layered-commission",
+        "title": "pkg/prompts/layered/commission",
+        "filePath": "svgs/pkg-prompts-layered-commission.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:33.997448312-07:00"
+      },
+      {
+        "id": "pkg-prompts-layered-context",
+        "title": "pkg/prompts/layered/context",
+        "filePath": "svgs/pkg-prompts-layered-context.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 15910,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:34.424826985-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard",
+        "title": "pkg/prompts/standard",
+        "filePath": "svgs/pkg-prompts-standard.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 63137,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:34.869057037-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard-evaluation",
+        "title": "pkg/prompts/standard/evaluation",
+        "filePath": "svgs/pkg-prompts-standard-evaluation.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 65322,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:35.331785138-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard-templates-agent-execution",
+        "title": "pkg/prompts/standard/templates/agent/execution",
+        "filePath": "svgs/pkg-prompts-standard-templates-agent-execution.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 60807,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:35.798311708-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard-templates-agent-extraction",
+        "title": "pkg/prompts/standard/templates/agent/extraction",
+        "filePath": "svgs/pkg-prompts-standard-templates-agent-extraction.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 15246,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:36.260381557-07:00"
+      },
+      {
+        "id": "pkg-prompts-standard-templates-commission",
+        "title": "pkg/prompts/standard/templates/commission",
+        "filePath": "svgs/pkg-prompts-standard-templates-commission.svg",
+        "category": "pkg",
+        "domain": "prompts",
+        "sizeBytes": 11103,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:36.789233042-07:00"
+      }
+    ],
+    "providers": [
+      {
+        "id": "pkg-providers",
+        "title": "pkg/providers",
+        "filePath": "svgs/pkg-providers.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 165112,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:37.877121341-07:00"
+      },
+      {
+        "id": "pkg-providers-anthropic",
+        "title": "pkg/providers/anthropic",
+        "filePath": "svgs/pkg-providers-anthropic.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 53088,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:38.785640748-07:00"
+      },
+      {
+        "id": "pkg-providers-base",
+        "title": "pkg/providers/base",
+        "filePath": "svgs/pkg-providers-base.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 25942,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:39.437434516-07:00"
+      },
+      {
+        "id": "pkg-providers-claudecode",
+        "title": "pkg/providers/claudecode",
+        "filePath": "svgs/pkg-providers-claudecode.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 59539,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:39.901755163-07:00"
+      },
+      {
+        "id": "pkg-providers-deepinfra",
+        "title": "pkg/providers/deepinfra",
+        "filePath": "svgs/pkg-providers-deepinfra.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 6907,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:40.552857971-07:00"
+      },
+      {
+        "id": "pkg-providers-deepseek",
+        "title": "pkg/providers/deepseek",
+        "filePath": "svgs/pkg-providers-deepseek.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 6893,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:41.208769085-07:00"
+      },
+      {
+        "id": "pkg-providers-interfaces",
+        "title": "pkg/providers/interfaces",
+        "filePath": "svgs/pkg-providers-interfaces.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:41.512728223-07:00"
+      },
+      {
+        "id": "pkg-providers-mock",
+        "title": "pkg/providers/mock",
+        "filePath": "svgs/pkg-providers-mock.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 41572,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:41.991052241-07:00"
+      },
+      {
+        "id": "pkg-providers-mocks",
+        "title": "pkg/providers/mocks",
+        "filePath": "svgs/pkg-providers-mocks.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:42.293401375-07:00"
+      },
+      {
+        "id": "pkg-providers-ollama",
+        "title": "pkg/providers/ollama",
+        "filePath": "svgs/pkg-providers-ollama.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 39177,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:43.023783561-07:00"
+      },
+      {
+        "id": "pkg-providers-openai",
+        "title": "pkg/providers/openai",
+        "filePath": "svgs/pkg-providers-openai.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 6874,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:43.695547007-07:00"
+      },
+      {
+        "id": "pkg-providers-ora",
+        "title": "pkg/providers/ora",
+        "filePath": "svgs/pkg-providers-ora.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 25154,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:44.347211358-07:00"
+      },
+      {
+        "id": "pkg-providers-testing",
+        "title": "pkg/providers/testing",
+        "filePath": "svgs/pkg-providers-testing.svg",
+        "category": "pkg",
+        "domain": "providers",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:44.876767887-07:00"
+      }
+    ],
+    "qa": [
+      {
+        "id": "internal-qa",
+        "title": "internal/qa",
+        "filePath": "svgs/internal-qa.svg",
+        "category": "internal",
+        "domain": "qa",
+        "sizeBytes": 59765,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:53.393186673-07:00"
+      }
+    ],
+    "reasoning": [
+      {
+        "id": "pkg-reasoning",
+        "title": "pkg/reasoning",
+        "filePath": "svgs/pkg-reasoning.svg",
+        "category": "pkg",
+        "domain": "reasoning",
+        "sizeBytes": 333736,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:45.856271148-07:00"
+      }
+    ],
+    "registry": [
+      {
+        "id": "pkg-registry",
+        "title": "pkg/registry",
+        "filePath": "svgs/pkg-registry.svg",
+        "category": "pkg",
+        "domain": "registry",
+        "sizeBytes": 708468,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:48.196377557-07:00"
+      }
+    ],
+    "scaffoldlite": [
+      {
+        "id": "internal-scaffoldlite",
+        "title": "internal/scaffoldlite",
+        "filePath": "svgs/internal-scaffoldlite.svg",
+        "category": "internal",
+        "domain": "scaffoldlite",
+        "sizeBytes": 215296,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:53.871797858-07:00"
+      },
+      {
+        "id": "internal-scaffoldlite-cli",
+        "title": "internal/scaffoldlite/cli",
+        "filePath": "svgs/internal-scaffoldlite-cli.svg",
+        "category": "internal",
+        "domain": "scaffoldlite",
+        "sizeBytes": 10581,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:54.328302151-07:00"
+      },
+      {
+        "id": "internal-scaffoldlite-templates",
+        "title": "internal/scaffoldlite/templates",
+        "filePath": "svgs/internal-scaffoldlite-templates.svg",
+        "category": "internal",
+        "domain": "scaffoldlite",
+        "sizeBytes": 3909,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:54.750005518-07:00"
+      }
+    ],
+    "search": [
+      {
+        "id": "pkg-search",
+        "title": "pkg/search",
+        "filePath": "svgs/pkg-search.svg",
+        "category": "pkg",
+        "domain": "search",
+        "sizeBytes": 28929,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:48.708420664-07:00"
+      }
+    ],
+    "security": [
+      {
+        "id": "pkg-security-access",
+        "title": "pkg/security/access",
+        "filePath": "svgs/pkg-security-access.svg",
+        "category": "pkg",
+        "domain": "security",
+        "sizeBytes": 86142,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:49.712246865-07:00"
+      },
+      {
+        "id": "pkg-security-audit",
+        "title": "pkg/security/audit",
+        "filePath": "svgs/pkg-security-audit.svg",
+        "category": "pkg",
+        "domain": "security",
+        "sizeBytes": 129020,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:50.726961428-07:00"
+      },
+      {
+        "id": "pkg-security-permissions",
+        "title": "pkg/security/permissions",
+        "filePath": "svgs/pkg-security-permissions.svg",
+        "category": "pkg",
+        "domain": "security",
+        "sizeBytes": 126628,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:51.67785174-07:00"
+      },
+      {
+        "id": "pkg-security-sandbox",
+        "title": "pkg/security/sandbox",
+        "filePath": "svgs/pkg-security-sandbox.svg",
+        "category": "pkg",
+        "domain": "security",
+        "sizeBytes": 334547,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:52.63050393-07:00"
+      }
+    ],
+    "session": [
+      {
+        "id": "pkg-session",
+        "title": "pkg/session",
+        "filePath": "svgs/pkg-session.svg",
+        "category": "pkg",
+        "domain": "session",
+        "sizeBytes": 449522,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:54.717896419-07:00"
+      }
+    ],
+    "setup": [
+      {
+        "id": "internal-setup",
+        "title": "internal/setup",
+        "filePath": "svgs/internal-setup.svg",
+        "category": "internal",
+        "domain": "setup",
+        "sizeBytes": 580762,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:56.800493951-07:00"
+      }
+    ],
+    "storage": [
+      {
+        "id": "pkg-storage",
+        "title": "pkg/storage",
+        "filePath": "svgs/pkg-storage.svg",
+        "category": "pkg",
+        "domain": "storage",
+        "sizeBytes": 883416,
+        "sizeCategory": "large",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:56.721236477-07:00"
+      },
+      {
+        "id": "pkg-storage-db",
+        "title": "pkg/storage/db",
+        "filePath": "svgs/pkg-storage-db.svg",
+        "category": "pkg",
+        "domain": "storage",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:57.042765579-07:00"
+      },
+      {
+        "id": "pkg-storage-optimization",
+        "title": "pkg/storage/optimization",
+        "filePath": "svgs/pkg-storage-optimization.svg",
+        "category": "pkg",
+        "domain": "storage",
+        "sizeBytes": 310604,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:57.997708693-07:00"
+      },
+      {
+        "id": "pkg-storage-promptchain",
+        "title": "pkg/storage/promptchain",
+        "filePath": "svgs/pkg-storage-promptchain.svg",
+        "category": "pkg",
+        "domain": "storage",
+        "sizeBytes": 29179,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:10:59.805609399-07:00"
+      }
+    ],
+    "suggestions": [
+      {
+        "id": "pkg-suggestions",
+        "title": "pkg/suggestions",
+        "filePath": "svgs/pkg-suggestions.svg",
+        "category": "pkg",
+        "domain": "suggestions",
+        "sizeBytes": 138722,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:01.608171467-07:00"
+      }
+    ],
+    "teatest": [
+      {
+        "id": "internal-teatest",
+        "title": "internal/teatest",
+        "filePath": "svgs/internal-teatest.svg",
+        "category": "internal",
+        "domain": "teatest",
+        "sizeBytes": 19631,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:57.319892577-07:00"
+      }
+    ],
+    "telemetry": [
+      {
+        "id": "pkg-telemetry",
+        "title": "pkg/telemetry",
+        "filePath": "svgs/pkg-telemetry.svg",
+        "category": "pkg",
+        "domain": "telemetry",
+        "sizeBytes": 38468,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:02.517977252-07:00"
+      },
+      {
+        "id": "pkg-telemetry-collectors",
+        "title": "pkg/telemetry/collectors",
+        "filePath": "svgs/pkg-telemetry-collectors.svg",
+        "category": "pkg",
+        "domain": "telemetry",
+        "sizeBytes": 23405,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:02.965768064-07:00"
+      }
+    ],
+    "templates": [
+      {
+        "id": "pkg-templates",
+        "title": "pkg/templates",
+        "filePath": "svgs/pkg-templates.svg",
+        "category": "pkg",
+        "domain": "templates",
+        "sizeBytes": 200160,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:03.447149714-07:00"
+      }
+    ],
+    "terminal": [
+      {
+        "id": "pkg-terminal",
+        "title": "pkg/terminal",
+        "filePath": "svgs/pkg-terminal.svg",
+        "category": "pkg",
+        "domain": "terminal",
+        "sizeBytes": 172765,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:03.899902747-07:00"
+      },
+      {
+        "id": "pkg-terminal-features",
+        "title": "pkg/terminal/features",
+        "filePath": "svgs/pkg-terminal-features.svg",
+        "category": "pkg",
+        "domain": "terminal",
+        "sizeBytes": 107150,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:04.337901699-07:00"
+      },
+      {
+        "id": "pkg-terminal-profiles",
+        "title": "pkg/terminal/profiles",
+        "filePath": "svgs/pkg-terminal-profiles.svg",
+        "category": "pkg",
+        "domain": "terminal",
+        "sizeBytes": 151876,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:04.778904368-07:00"
+      }
+    ],
+    "testing": [
+      {
+        "id": "internal-testing",
+        "title": "internal/testing",
+        "filePath": "svgs/internal-testing.svg",
+        "category": "internal",
+        "domain": "testing",
+        "sizeBytes": 53069,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:57.833950314-07:00"
+      }
+    ],
+    "testutil": [
+      {
+        "id": "internal-testutil",
+        "title": "internal/testutil",
+        "filePath": "svgs/internal-testutil.svg",
+        "category": "internal",
+        "domain": "testutil",
+        "sizeBytes": 91491,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:08:59.740523449-07:00"
+      }
+    ],
+    "tools": [
+      {
+        "id": "pkg-tools",
+        "title": "pkg/tools",
+        "filePath": "svgs/pkg-tools.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 62028,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:05.653305726-07:00"
+      },
+      {
+        "id": "pkg-tools-executor",
+        "title": "pkg/tools/executor",
+        "filePath": "svgs/pkg-tools-executor.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 35933,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:06.746727457-07:00"
+      },
+      {
+        "id": "pkg-tools-parser",
+        "title": "pkg/tools/parser",
+        "filePath": "svgs/pkg-tools-parser.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 169891,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:07.696009597-07:00"
+      },
+      {
+        "id": "pkg-tools-parser-json",
+        "title": "pkg/tools/parser/json",
+        "filePath": "svgs/pkg-tools-parser-json.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 102712,
+        "sizeCategory": "medium",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:08.589720631-07:00"
+      },
+      {
+        "id": "pkg-tools-parser-types",
+        "title": "pkg/tools/parser/types",
+        "filePath": "svgs/pkg-tools-parser-types.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 579,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:08.941935148-07:00"
+      },
+      {
+        "id": "pkg-tools-parser-xml",
+        "title": "pkg/tools/parser/xml",
+        "filePath": "svgs/pkg-tools-parser-xml.svg",
+        "category": "pkg",
+        "domain": "tools",
+        "sizeBytes": 47131,
+        "sizeCategory": "small",
+        "functions": 0,
+        "lastModified": "2026-01-08T22:11:09.839150275-07:00"
+      }
+    ]
+  },
+  "generatedAt": "2026-01-09T01:13:39.467597-07:00"
+}

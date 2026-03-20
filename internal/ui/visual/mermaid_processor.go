@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // MermaidProcessor handles Mermaid diagram detection and rendering
@@ -291,7 +291,7 @@ func (mp *MermaidProcessor) generateMermaidImage(diagram MermaidDiagram) (string
 	outputFile := filepath.Join(mp.outputDir, fmt.Sprintf("mermaid-%s.png", timestamp))
 
 	// Write Mermaid content to file
-	if err := os.WriteFile(tempFile, []byte(diagram.Content), 0644); err != nil {
+	if err := os.WriteFile(tempFile, []byte(diagram.Content), 0o644); err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeInternal, "failed to write Mermaid file")
 	}
 	defer os.Remove(tempFile)

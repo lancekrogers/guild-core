@@ -46,7 +46,7 @@ func TestJumpToolExecute(t *testing.T) {
 	}
 
 	for _, dir := range testDirs {
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			t.Fatal(err)
 		}
 	}

@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/agents/status"
-	"github.com/lancekrogers/guild/internal/ui/formatting"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/agents/status"
+	"github.com/lancekrogers/guild-core/internal/ui/formatting"
 )
 
 func BenchmarkStatusPanelUpdate(b *testing.B) {

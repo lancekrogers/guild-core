@@ -81,7 +81,6 @@ This feature is needed because...
 		t.Run(tc.name, func(t *testing.T) {
 			parser := NewMarkdownParser(DefaultParseOptions())
 			objective, err := parser.Parse(tc.content, "test.md")
-
 			if err != nil {
 				t.Fatalf("Parse failed: %v", err)
 			}
@@ -109,7 +108,6 @@ This feature is needed because...
 func TestMarkdownParser_ParseFile(t *testing.T) {
 	parser := NewMarkdownParser(DefaultParseOptions())
 	objective, err := parser.ParseFile("testdata/sample_commission.md")
-
 	if err != nil {
 		t.Fatalf("ParseFile failed: %v", err)
 	}

@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // KanbanProfiler provides performance profiling for the kanban TUI

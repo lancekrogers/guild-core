@@ -42,7 +42,7 @@ func TestCommissionCommandValidation(t *testing.T) {
 
 	// Create a basic guild.yaml
 	guildDir := filepath.Join(tempDir, ".campaign")
-	err = os.MkdirAll(guildDir, 0755)
+	err = os.MkdirAll(guildDir, 0o755)
 	require.NoError(t, err)
 
 	guildYAML := `name: Test Guild
@@ -55,7 +55,7 @@ agents:
     model: test-model
     capabilities: [planning, coordination]
 `
-	err = os.WriteFile(filepath.Join(guildDir, "guild.yaml"), []byte(guildYAML), 0644)
+	err = os.WriteFile(filepath.Join(guildDir, "guild.yaml"), []byte(guildYAML), 0o644)
 	require.NoError(t, err)
 
 	// Change to test directory

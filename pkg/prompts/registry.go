@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ManagerFactory is a function that creates a prompt manager

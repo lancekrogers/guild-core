@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	guildconfig "github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/project"
+	guildconfig "github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 func TestNewWizard(t *testing.T) {

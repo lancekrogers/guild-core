@@ -9,9 +9,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/session"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/storage/db"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/session"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/storage/db"
 )
 
 // SQLiteTaskRepository implements TaskRepository using SQLite
@@ -59,7 +59,6 @@ func (r *SQLiteTaskRepository) CreateTask(ctx context.Context, task *Task) error
 		StoryPoints:  &storyPoints,
 		Metadata:     metadataJSON,
 	})
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create task").
 			WithComponent("SQLiteTaskRepository").
@@ -117,7 +116,6 @@ func (r *SQLiteTaskRepository) UpdateTask(ctx context.Context, task *Task) error
 		Metadata:    metadataJSON,
 		ID:          task.ID,
 	})
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task").
 			WithComponent("SQLiteTaskRepository").

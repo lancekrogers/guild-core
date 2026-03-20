@@ -7,9 +7,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
 )
 
 // CompletionEngineEnhanced provides a more robust integration with the suggestion system

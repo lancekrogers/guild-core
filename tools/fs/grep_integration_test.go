@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/tools"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -99,9 +99,9 @@ TODO: Document authentication`,
 	// Create all files
 	for path, content := range projectFiles {
 		fullPath := filepath.Join(testDir, path)
-		err := os.MkdirAll(filepath.Dir(fullPath), 0755)
+		err := os.MkdirAll(filepath.Dir(fullPath), 0o755)
 		require.NoError(t, err)
-		err = os.WriteFile(fullPath, []byte(content), 0644)
+		err = os.WriteFile(fullPath, []byte(content), 0o644)
 		require.NoError(t, err)
 	}
 
@@ -193,7 +193,7 @@ TODO: Document authentication`,
 	t.Run("Binary files are excluded", func(t *testing.T) {
 		// Create a binary file
 		binaryPath := filepath.Join(testDir, "program.exe")
-		err := os.WriteFile(binaryPath, []byte{0x4D, 0x5A, 0x90, 0x00, 0xFF, 0xFE}, 0755)
+		err := os.WriteFile(binaryPath, []byte{0x4D, 0x5A, 0x90, 0x00, 0xFF, 0xFE}, 0o755)
 		require.NoError(t, err)
 
 		// Search for a pattern that would match if we searched binary

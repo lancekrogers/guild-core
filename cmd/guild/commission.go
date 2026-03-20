@@ -18,20 +18,20 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/orchestrator"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/storage"
-	"github.com/lancekrogers/guild/pkg/storage/promptchain"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/storage/promptchain"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 )
 
 var (
@@ -60,18 +60,26 @@ Examples:
   guild commission "Build a REST API for user management"
   guild commission "Research and implement caching strategy" --assign
   guild commission "Review security practices" --campaign security-audit`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			// Show help when no arguments provided
 			cmd.Help()
-			return
+			return nil
 		}
 
-		description := strings.Join(args, " ")
+		description := strings.TrimSpace(strings.Join(args, " "))
+		if description == "" {
+			// Show help when empty description provided
+			cmd.Printf("Error: Commission description cannot be empty\n\n")
+			cmd.Help()
+			return gerror.New(gerror.ErrCodeInvalidInput, "empty commission description", nil)
+		}
+
 		if err := executeCommission(cmd.Context(), description); err != nil {
 			cmd.Printf("Commission failed: %v\n", err)
-			return
+			return err
 		}
+		return nil
 	},
 }
 
@@ -507,8 +515,8 @@ func setupGuildComponents(ctx context.Context) (*guildComponents, error) {
 	}
 
 	// Setup data directory
-	dataDir := filepath.Join(projCtx.GetRootPath(), ".guild")
-	if err := os.MkdirAll(dataDir, 0755); err != nil {
+	dataDir := filepath.Join(projCtx.GetRootPath(), ".campaign")
+	if err := os.MkdirAll(dataDir, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create data directory").
 			WithComponent("cli").
 			WithOperation("commission.setupGuildComponents").

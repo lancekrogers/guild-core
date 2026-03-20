@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ExampleCostBasedSelection demonstrates how to use the cost-based registry system

@@ -16,7 +16,7 @@ The telemetry package provides comprehensive observability for Guild using OpenT
 ```go
 import (
     "context"
-    "github.com/lancekrogers/guild/pkg/telemetry"
+    "github.com/guild-framework/guild-core/pkg/telemetry"
 )
 
 func main() {
@@ -236,6 +236,7 @@ Configure Prometheus alerts:
 ```
 
 Key alerts include:
+
 - High error rate (> 5%)
 - High latency (P99 > 1s)
 - Memory leaks
@@ -326,6 +327,7 @@ Overhead: 0.76%
 ## Examples
 
 See complete examples in:
+
 - `examples/basic/` - Basic telemetry setup
 - `examples/distributed/` - Distributed tracing
 - `examples/collectors/` - Using domain collectors

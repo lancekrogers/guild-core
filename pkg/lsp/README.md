@@ -15,6 +15,7 @@ The LSP package is **framework infrastructure**, not a tool. It provides:
 ## Framework vs Tools
 
 ### This Package (Infrastructure)
+
 ```go
 // Long-running service with state
 type Manager struct {
@@ -25,6 +26,7 @@ type Manager struct {
 ```
 
 ### Tools (User Actions)
+
 ```go
 // Stateless wrappers that use the infrastructure
 type CompletionTool struct {
@@ -37,6 +39,7 @@ type CompletionTool struct {
 The LSP package is designed to be used by external projects to build their own tools:
 
 ### Basic Usage
+
 ```go
 import "github.com/guild-ventures/guild-core/pkg/lsp"
 

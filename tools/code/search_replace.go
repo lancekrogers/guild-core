@@ -12,8 +12,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // SearchReplaceTool provides semantic code search and replace functionality
@@ -533,7 +533,7 @@ func (t *SearchReplaceTool) replaceInFile(filename string, pattern *regexp.Regex
 	newContent := pattern.ReplaceAllString(string(content), replacement)
 
 	// Write back to file
-	return os.WriteFile(filename, []byte(newContent), 0644)
+	return os.WriteFile(filename, []byte(newContent), 0o644)
 }
 
 // formatResult formats the search and replace result for output

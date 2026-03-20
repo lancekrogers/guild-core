@@ -15,9 +15,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools"
-	"github.com/lancekrogers/guild/tools/code"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools"
+	"github.com/lancekrogers/guild-core/tools/code"
 )
 
 // MultiFileRefactorTool provides coordinated refactoring across multiple files
@@ -486,6 +486,10 @@ func (t *MultiFileRefactorTool) findFilesInScope(params RefactorParams) ([]strin
 
 		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
+				// Skip directories with permission errors instead of failing the entire operation
+				if os.IsPermission(err) {
+					return filepath.SkipDir
+				}
 				return err
 			}
 			if !info.IsDir() && code.DetectLanguage(path) == language {
@@ -503,6 +507,10 @@ func (t *MultiFileRefactorTool) findFilesInScope(params RefactorParams) ([]strin
 
 		err := filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
 			if err != nil {
+				// Skip directories with permission errors instead of failing the entire operation
+				if os.IsPermission(err) {
+					return filepath.SkipDir
+				}
 				return err
 			}
 			if !info.IsDir() && code.DetectLanguage(path) == language {
@@ -686,7 +694,7 @@ func (t *MultiFileRefactorTool) applyFileChanges(fileChange *FileChange, createB
 	// Create backup if requested
 	if createBackup {
 		backupFile := fileChange.File + ".bak"
-		err = os.WriteFile(backupFile, content, 0644)
+		err = os.WriteFile(backupFile, content, 0o644)
 		if err != nil {
 			return err
 		}
@@ -722,7 +730,7 @@ func (t *MultiFileRefactorTool) applyFileChanges(fileChange *FileChange, createB
 	newContent := strings.Join(lines, "\n")
 	fileChange.NewContent = newContent
 
-	return os.WriteFile(fileChange.File, []byte(newContent), 0644)
+	return os.WriteFile(fileChange.File, []byte(newContent), 0o644)
 }
 
 // analyzeExtractedCode analyzes extracted code to determine parameters and return values

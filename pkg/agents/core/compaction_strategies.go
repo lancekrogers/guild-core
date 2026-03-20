@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // SummarizationStrategy uses LLM to summarize conversation segments

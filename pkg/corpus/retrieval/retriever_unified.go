@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // UnifiedRetriever wraps RetrieverImpl to use the unified event system

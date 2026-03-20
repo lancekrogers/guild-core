@@ -93,6 +93,7 @@ err = service.ImportPreferences(ctx, "campaign", &campaignID, data)
 ## Preference Categories
 
 ### UI Preferences
+
 - `ui.theme`: Theme selection (light/dark/auto)
 - `ui.language`: UI language (ISO 639-1 code)
 - `ui.fontSize`: Font size (8-32)
@@ -102,6 +103,7 @@ err = service.ImportPreferences(ctx, "campaign", &campaignID, data)
 - `ui.autoSaveInterval`: Auto-save interval in seconds
 
 ### Agent Preferences
+
 - `agent.maxConcurrent`: Maximum concurrent agents
 - `agent.timeout`: Agent timeout in seconds
 - `agent.retryAttempts`: Number of retry attempts
@@ -110,12 +112,14 @@ err = service.ImportPreferences(ctx, "campaign", &campaignID, data)
 - `agent.autoAssign`: Auto-assign tasks to agents
 
 ### Guild Preferences
+
 - `guild.maxAgents`: Maximum agents per guild
 - `guild.coordinationMode`: Coordination mode (collaborative/hierarchical/autonomous)
 - `guild.loadBalancing`: Load balancing strategy (round-robin/least-loaded/random/weighted)
 - `guild.healthCheckInterval`: Health check interval in seconds
 
 ### Memory Preferences
+
 - `memory.maxWorkingSize`: Maximum working memory items
 - `memory.promotionThreshold`: Importance threshold for promotion (0-1)
 - `memory.retentionDays`: Days to retain memories
@@ -123,6 +127,7 @@ err = service.ImportPreferences(ctx, "campaign", &campaignID, data)
 - `memory.vectorDimensions`: Vector embedding dimensions
 
 ### Session Preferences
+
 - `session.autoRestore`: Auto-restore sessions on restart
 - `session.checkpointInterval`: Checkpoint interval in seconds
 - `session.maxHistory`: Maximum message history
@@ -130,6 +135,7 @@ err = service.ImportPreferences(ctx, "campaign", &campaignID, data)
 - `session.encryptionEnabled`: Enable session encryption
 
 ### Provider Preferences
+
 - `provider.default`: Default LLM provider
 - `provider.maxRetries`: Maximum retry attempts
 - `provider.timeout`: Provider timeout in seconds
@@ -137,6 +143,7 @@ err = service.ImportPreferences(ctx, "campaign", &campaignID, data)
 - `provider.maxTokens`: Maximum tokens per request
 
 ### Development Preferences
+
 - `dev.debug`: Enable debug mode
 - `dev.logLevel`: Log level (debug/info/warn/error)
 - `dev.profiling`: Enable profiling
@@ -186,6 +193,7 @@ The preference service includes an efficient in-memory cache:
 Preferences are stored in two tables:
 
 ### preferences
+
 - `id`: Unique identifier
 - `scope`: Preference scope (system/user/campaign/guild/agent)
 - `scope_id`: ID of the scoped entity (NULL for system)
@@ -197,6 +205,7 @@ Preferences are stored in two tables:
 - `updated_at`: Update timestamp
 
 ### preference_inheritance
+
 - `id`: Unique identifier
 - `child_scope`: Child scope type
 - `child_scope_id`: Child scope ID
@@ -240,6 +249,7 @@ autoRestore, _ := prefService.GetSystemPreference(ctx, "session.autoRestore")
 ## Testing
 
 The package includes comprehensive tests covering:
+
 - CRUD operations for all scope levels
 - Preference inheritance resolution
 - Validation rules
@@ -249,6 +259,7 @@ The package includes comprehensive tests covering:
 - Concurrent access
 
 Run tests with:
+
 ```bash
 go test ./pkg/preferences/...
 ```

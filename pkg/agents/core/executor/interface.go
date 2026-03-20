@@ -7,7 +7,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // TaskExecutor defines the interface for agent task execution

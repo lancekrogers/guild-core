@@ -9,9 +9,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/events"
-	guildgrpc "github.com/lancekrogers/guild/pkg/grpc"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	guildgrpc "github.com/lancekrogers/guild-core/pkg/grpc"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // mockEventBus implements a simple EventBus for testing

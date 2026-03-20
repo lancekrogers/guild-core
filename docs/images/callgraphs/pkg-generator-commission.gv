@@ -1,0 +1,104 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        bgcolor="#e6ecfa";
+label="objective";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+        
+        "github.com/guild-framework/guild-core/pkg/generator/commission.newGenerator" [ fillcolor="lightblue" label="newGenerator" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/generator/commission.newGenerator | defined in generator.go:25\nat generator.go:27: calling [github.com/guild-framework/guild-core/pkg/prompts.NewPromptManager]\nat generator.go:29: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:31: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:30: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+        "github.com/guild-framework/guild-core/pkg/generator/commission.DefaultGeneratorFactory" [ fillcolor="lightblue" label="DefaultGeneratorFactory" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/generator/commission.DefaultGeneratorFactory | defined in generator.go:41\nat generator.go:42: calling [github.com/guild-framework/guild-core/pkg/generator/commission.newGenerator]" ]
+        "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission" [ fillcolor="lightblue" label="(*Generator).GenerateCommission" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission | defined in generator.go:46\nat generator.go:57: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:66: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:75: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:92: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:53: calling [(*github.com/guild-framework/guild-core/pkg/prompts.PromptManager).RenderPrompt]\nat generator.go:56: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:65: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:74: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:91: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:58: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:67: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:76: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:77: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:93: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:94: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:55: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:64: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:73: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:90: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:79: calling [(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission$1]\nat generator.go:88: calling [github.com/guild-framework/guild-core/pkg/commission.ParseFile]" ]
+        "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission$1" [ fillcolor="lightblue" label="(*Generator).GenerateCommission$1" style="dotted,filled" tooltip="(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission$1 | defined in generator.go:79\nat generator.go:82: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:81: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:83: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+        "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateAIDocs" [ fillcolor="lightblue" label="(*Generator).GenerateAIDocs" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateAIDocs | defined in generator.go:101\nat generator.go:112: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:121: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:109: calling [(*github.com/guild-framework/guild-core/pkg/prompts.PromptManager).RenderPrompt]\nat generator.go:111: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:120: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:114: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:123: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:127: calling [github.com/guild-framework/guild-core/pkg/generator/commission.parseMultipleMarkdownDocs]\nat generator.go:104: calling [(*github.com/guild-framework/guild-core/pkg/commission.Commission).Format]\nat generator.go:113: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:122: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+        "github.com/guild-framework/guild-core/pkg/generator/commission.parseMultipleMarkdownDocs" [ fillcolor="lightblue" label="parseMultipleMarkdownDocs" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/generator/commission.parseMultipleMarkdownDocs | defined in generator.go:148" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/commission" {
+        tooltip="package: github.com/guild-framework/guild-core/pkg/commission";
+fontsize="16";
+fillcolor="lightyellow";
+rank="sink";
+label="commission";
+URL="/?f=github.com/guild-framework/guild-core/pkg/commission";
+penwidth="0.8";
+style="filled";
+fontname="Tahoma bold";
+        
+        "github.com/guild-framework/guild-core/pkg/commission.ParseFile" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/commission.ParseFile | defined in parser.go:139" fillcolor="moccasin" label="ParseFile" ]
+        "(*github.com/guild-framework/guild-core/pkg/commission.Commission).Format" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/commission.Commission).Format | defined in models.go:62" fillcolor="moccasin" label="(*Commission).Format" ]
+        
+    }
+
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        style="filled";
+fillcolor="lightyellow";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
+fontsize="16";
+fontname="Tahoma bold";
+rank="sink";
+label="gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" ]
+        
+    }
+
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/prompts" {
+        penwidth="0.8";
+style="filled";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+tooltip="package: github.com/guild-framework/guild-core/pkg/prompts";
+fontsize="16";
+rank="sink";
+label="prompts";
+URL="/?f=github.com/guild-framework/guild-core/pkg/prompts";
+        
+        "github.com/guild-framework/guild-core/pkg/prompts.NewPromptManager" [ label="NewPromptManager" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/prompts.NewPromptManager | defined in manager.go:22" fillcolor="moccasin" ]
+        "(*github.com/guild-framework/guild-core/pkg/prompts.PromptManager).RenderPrompt" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/prompts.PromptManager).RenderPrompt | defined in manager.go:47" fillcolor="moccasin" label="(*PromptManager).RenderPrompt" ]
+        
+    }
+
+    }
+
+    "github.com/guild-framework/guild-core/pkg/generator/commission.newGenerator" -> "github.com/guild-framework/guild-core/pkg/prompts.NewPromptManager" [ color="saddlebrown" tooltip="at generator.go:27: calling [github.com/guild-framework/guild-core/pkg/prompts.NewPromptManager]" ]
+    "github.com/guild-framework/guild-core/pkg/generator/commission.newGenerator" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at generator.go:29: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at generator.go:57: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:66: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:75: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:92: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission$1" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at generator.go:82: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateAIDocs" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at generator.go:112: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:121: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "github.com/guild-framework/guild-core/pkg/generator/commission.newGenerator" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at generator.go:31: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "github.com/guild-framework/guild-core/pkg/generator/commission.DefaultGeneratorFactory" -> "github.com/guild-framework/guild-core/pkg/generator/commission.newGenerator" [ tooltip="at generator.go:42: calling [github.com/guild-framework/guild-core/pkg/generator/commission.newGenerator]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission" -> "(*github.com/guild-framework/guild-core/pkg/prompts.PromptManager).RenderPrompt" [ color="saddlebrown" tooltip="at generator.go:53: calling [(*github.com/guild-framework/guild-core/pkg/prompts.PromptManager).RenderPrompt]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at generator.go:56: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:65: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:74: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat generator.go:91: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at generator.go:58: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:67: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:76: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:77: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:93: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:94: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission$1" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at generator.go:81: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission$1" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at generator.go:83: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ tooltip="at generator.go:55: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:64: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:73: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:90: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission" -> "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission$1" [ tooltip="at generator.go:79: calling [(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission$1]" arrowhead="normalnoneodiamond" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateAIDocs" -> "(*github.com/guild-framework/guild-core/pkg/prompts.PromptManager).RenderPrompt" [ color="saddlebrown" tooltip="at generator.go:109: calling [(*github.com/guild-framework/guild-core/pkg/prompts.PromptManager).RenderPrompt]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateAIDocs" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ tooltip="at generator.go:111: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]\nat generator.go:120: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateAIDocs" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ tooltip="at generator.go:114: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat generator.go:123: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateAIDocs" -> "github.com/guild-framework/guild-core/pkg/generator/commission.parseMultipleMarkdownDocs" [ tooltip="at generator.go:127: calling [github.com/guild-framework/guild-core/pkg/generator/commission.parseMultipleMarkdownDocs]" ]
+    "github.com/guild-framework/guild-core/pkg/generator/commission.newGenerator" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at generator.go:30: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateCommission" -> "github.com/guild-framework/guild-core/pkg/commission.ParseFile" [ color="saddlebrown" tooltip="at generator.go:88: calling [github.com/guild-framework/guild-core/pkg/commission.ParseFile]" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateAIDocs" -> "(*github.com/guild-framework/guild-core/pkg/commission.Commission).Format" [ tooltip="at generator.go:104: calling [(*github.com/guild-framework/guild-core/pkg/commission.Commission).Format]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/generator/commission.Generator).GenerateAIDocs" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at generator.go:113: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat generator.go:122: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+}

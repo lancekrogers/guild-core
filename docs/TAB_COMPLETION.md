@@ -5,6 +5,7 @@ The Guild CLI supports intelligent tab completion for commands, subcommands, fla
 ## Quick Start
 
 ### Install Completion (Automatic)
+
 ```bash
 make install  # Installs Guild and auto-detects your shell for completion
 ```
@@ -12,6 +13,7 @@ make install  # Installs Guild and auto-detects your shell for completion
 ### Install Completion (Manual)
 
 #### Bash
+
 ```bash
 # One-time setup
 guild completion bash > /etc/bash_completion.d/guild
@@ -24,6 +26,7 @@ source <(guild completion bash)
 ```
 
 #### Zsh
+
 ```bash
 # Enable completion if not already done:
 echo "autoload -U compinit; compinit" >> ~/.zshrc
@@ -35,6 +38,7 @@ guild completion zsh > "${fpath[1]}/_guild"
 ```
 
 #### Fish
+
 ```bash
 guild completion fish > ~/.config/fish/completions/guild.fish
 
@@ -43,6 +47,7 @@ guild completion fish | source
 ```
 
 #### PowerShell
+
 ```powershell
 # For current session:
 guild completion powershell | Out-String | Invoke-Expression
@@ -55,7 +60,9 @@ guild completion powershell > guild.ps1
 ## Features
 
 ### Command Completion
+
 Press `<TAB>` to see available commands:
+
 ```bash
 $ guild <TAB>
 agent       campaign    chat        commission  completion  corpus
@@ -63,6 +70,7 @@ init        kanban      migrate     prompt      serve       version
 ```
 
 ### Subcommand Completion
+
 ```bash
 $ guild campaign <TAB>
 create    list      start     status    watch
@@ -72,6 +80,7 @@ start
 ```
 
 ### Flag Completion
+
 ```bash
 $ guild chat --<TAB>
 --campaign    --session     --help
@@ -83,7 +92,9 @@ $ guild campaign create --<TAB>
 ### Dynamic Value Completion
 
 #### Campaign IDs
+
 When using `--id` flags with campaign commands:
+
 ```bash
 $ guild campaign start --id <TAB>
 campaign-1734567890    e-commerce campaign
@@ -91,7 +102,9 @@ campaign-1734567900    performance optimization
 ```
 
 #### Agent IDs
+
 For agent selection:
+
 ```bash
 $ guild agent start <TAB>
 manager     Project management, task decomposition, coordination...
@@ -104,7 +117,9 @@ devops      Infrastructure, deployment, CI/CD...
 ```
 
 #### Commission Files
+
 For commission file paths:
+
 ```bash
 $ guild campaign create --commission <TAB>
 .guild/objectives/api-design.md           api design
@@ -112,7 +127,9 @@ $ guild campaign create --commission <TAB>
 ```
 
 #### Campaign Names
+
 For campaign selection in chat:
+
 ```bash
 $ guild chat --campaign <TAB>
 e-commerce          Status: active
@@ -126,6 +143,7 @@ frontend-redesign   Status: completed
 
 1. **Start a new shell session** after installation
 2. **Verify installation location:**
+
    ```bash
    # Bash
    ls /etc/bash_completion.d/guild
@@ -138,6 +156,7 @@ frontend-redesign   Status: completed
    ```
 
 3. **Check if completion is loaded:**
+
    ```bash
    # Bash
    complete | grep guild
@@ -149,17 +168,20 @@ frontend-redesign   Status: completed
 ### Dynamic Completions Show Errors
 
 1. **Ensure Guild is initialized:**
+
    ```bash
    guild init
    ```
 
 2. **Check project context:**
+
    ```bash
    # Must be in a Guild project directory
    ls .guild/
    ```
 
 3. **Verify database access:**
+
    ```bash
    # SQLite database should exist
    ls .guild/memory.db
@@ -168,11 +190,13 @@ frontend-redesign   Status: completed
 ### Permission Denied
 
 For system-wide installation, use sudo:
+
 ```bash
 sudo guild completion bash > /etc/bash_completion.d/guild
 ```
 
 Or install for current user only:
+
 ```bash
 # Bash
 mkdir -p ~/.local/share/bash-completion/completions
@@ -189,6 +213,7 @@ guild completion zsh > ~/.zsh/completions/_guild
 ### Debugging Completions
 
 Enable debug output:
+
 ```bash
 # Bash
 export BASH_COMP_DEBUG_FILE=/tmp/guild-completion.log
@@ -206,6 +231,7 @@ The completion system is extensible. To add custom completions for new commands:
 3. Rebuild and reinstall completions
 
 Example:
+
 ```go
 // In your command's init() function
 myCmd.RegisterFlagCompletionFunc("my-flag", completeMyCustomValues)
@@ -221,17 +247,21 @@ myCmd.RegisterFlagCompletionFunc("my-flag", completeMyCustomValues)
 ## Shell-Specific Notes
 
 ### Bash
+
 - Requires bash-completion package
 - On macOS, install via: `brew install bash-completion`
 
 ### Zsh
+
 - Built-in completion support
 - More advanced completion features than bash
 
 ### Fish
+
 - Automatic completion loading from `~/.config/fish/completions/`
 - Rich descriptions shown by default
 
 ### PowerShell
+
 - Works on Windows, macOS, and Linux
 - Requires PowerShell 5.0 or later

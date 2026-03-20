@@ -12,16 +12,17 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/providers/mock"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/providers/mock"
 )
 
 func TestNewCorpusAgent(t *testing.T) {
 	// Create mock dependencies
 	mockProvider, err := mock.NewProvider()
 	require.NoError(t, err)
+	mockProvider.Enable()
 	vectorConfig := &vector.StoreConfig{
 		Type:              vector.StoreTypeChromem,
 		EmbeddingProvider: mockProvider,
@@ -381,6 +382,7 @@ func TestCorpusAgent_ErrorHandling(t *testing.T) {
 			// Create mock provider
 			mockProvider, err := mock.NewProvider()
 			require.NoError(t, err)
+			mockProvider.Enable()
 			if tt.setupMock != nil {
 				tt.setupMock(mockProvider)
 			}

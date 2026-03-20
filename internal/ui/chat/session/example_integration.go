@@ -9,14 +9,14 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 // ExampleChatIntegration demonstrates how to integrate the session store
 // into a chat interface. This would typically be used in cmd/guild/chat.go
 func ExampleChatIntegration() {
 	// Open database connection
-	db, err := sql.Open("sqlite3", ".guild/memory.db")
+	db, err := sql.Open("sqlite", ".guild/memory.db")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -100,7 +100,7 @@ func ExampleChatIntegration() {
 
 // ExampleSessionCommands shows how to implement chat commands for session management
 func ExampleSessionCommands() {
-	db, _ := sql.Open("sqlite3", ".guild/memory.db")
+	db, _ := sql.Open("sqlite", ".guild/memory.db")
 	defer db.Close()
 
 	store := NewSQLiteStore(db)

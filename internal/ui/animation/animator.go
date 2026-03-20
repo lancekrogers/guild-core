@@ -43,7 +43,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"go.uber.org/zap"
 )
 
@@ -186,9 +186,11 @@ const (
 )
 
 // Callbacks for animation events
-type UpdateCallback func(progress float64, values map[string]interface{}) error
-type CompletionCallback func(animation *Animation) error
-type TimelineCompletionCallback func(timeline *Timeline) error
+type (
+	UpdateCallback             func(progress float64, values map[string]interface{}) error
+	CompletionCallback         func(animation *Animation) error
+	TimelineCompletionCallback func(timeline *Timeline) error
+)
 
 // AnimationRegistry manages animation presets and plugins
 type AnimationRegistry interface {

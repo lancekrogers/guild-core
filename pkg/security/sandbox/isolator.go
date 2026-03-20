@@ -11,8 +11,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // FilesystemIsolator implements filesystem-based isolation

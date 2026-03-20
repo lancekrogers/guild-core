@@ -15,21 +15,27 @@ A frecency-based directory jumping tool for AI agents in the Guild framework. Si
 The jump tool is registered automatically with the Guild framework and can be used by agents through the standard Tool interface.
 
 ### Jump to a directory
+
 ```json
 {"query": "docs"}
 ```
+
 Returns: `"/absolute/path/to/documents"`
 
 ### Track a directory visit
+
 ```json
 {"query": "/path/to/project", "track": true}
 ```
+
 Returns: `"ok"`
 
 ### Get recent directories
+
 ```json
 {"recent": 5}
 ```
+
 Returns: `["/dir1", "/dir2", "/dir3", "/dir4", "/dir5"]`
 
 ## How it works
@@ -60,6 +66,7 @@ CREATE TABLE visits (
 ## Performance
 
 The tool is designed for high performance:
+
 - Tracking: ≥1,000 tracks/second
 - Finding: ≥5,000 finds/second
 - Database uses WAL mode for concurrent access
@@ -68,6 +75,7 @@ The tool is designed for high performance:
 ## Examples
 
 ### Agent workflow
+
 ```go
 // Jump to frequently used project
 result, _ := tools.Execute(ctx, "jump", `{"query":"guild-framework"}`)
@@ -79,6 +87,7 @@ tools.Execute(ctx, "jump", fmt.Sprintf(`{"query":%q,"track":true}`, cwd))
 ```
 
 ### Common queries
+
 - `{"query": "proj"}` - Matches directories like "projects", "my-project"
 - `{"query": "doc"}` - Matches "documents", "docs", "documentation"
 - `{"query": "down"}` - Matches "downloads", "downloaded-files"
@@ -86,6 +95,7 @@ tools.Execute(ctx, "jump", fmt.Sprintf(`{"query":%q,"track":true}`, cwd))
 ## Testing
 
 The tool includes comprehensive tests covering:
+
 - Basic tracking and finding
 - Frecency calculations
 - Recent directory listing
@@ -94,6 +104,7 @@ The tool includes comprehensive tests covering:
 - Tool interface integration
 
 Run tests with:
+
 ```bash
 go test ./tools/jump/...
 ```

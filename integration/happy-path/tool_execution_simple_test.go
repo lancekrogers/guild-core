@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package happypath
 
 import (
@@ -8,10 +11,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/tools"
-	"github.com/lancekrogers/guild/pkg/tools/executor"
-	"github.com/lancekrogers/guild/pkg/tools/parser"
-	"github.com/lancekrogers/guild/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/tools/executor"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

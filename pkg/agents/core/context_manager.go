@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // ContextManager handles context window management for agents
@@ -139,7 +139,6 @@ func (cm *ContextManager) AddMessage(ctx context.Context, role, content string, 
 
 // manageContextOverflow handles context window overflow
 func (cm *ContextManager) manageContextOverflow(ctx context.Context, newMessageTokens int) error {
-
 	switch cm.resetStrategy {
 	case "truncate":
 		return cm.truncateContext(ctx, newMessageTokens)

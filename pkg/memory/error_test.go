@@ -6,7 +6,7 @@ package memory_test
 import (
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/memory"
 )
 
 // TestStoreError tests the StoreError implementation

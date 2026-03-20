@@ -8,13 +8,13 @@ import (
 	"fmt"
 	"path/filepath"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/internal/setup"
-	uisetup "github.com/lancekrogers/guild/internal/ui/setup"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild-core/internal/setup"
+	uisetup "github.com/lancekrogers/guild-core/internal/ui/setup"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 var setupCmd = &cobra.Command{
@@ -126,7 +126,7 @@ func runSetup(cmd *cobra.Command, args []string) error {
 	} else {
 		// Run interactive TUI
 		model := uisetup.NewWizardTUIModel(ctx, wizard)
-		program := tea.NewProgram(model, tea.WithAltScreen())
+		program := tea.NewProgram(model)
 
 		if _, err := program.Run(); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeInternal, "setup wizard failed").

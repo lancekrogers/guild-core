@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 
-	commissionpkg "github.com/lancekrogers/guild/pkg/commission"
+	commissionpkg "github.com/lancekrogers/guild-core/pkg/commission"
 )
 
 // StatusColors defines the colors for each commission status

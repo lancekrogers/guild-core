@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 	"gopkg.in/yaml.v3"
 )
 
@@ -148,7 +148,7 @@ func LoadConfig(path string) (*Config, error) {
 func SaveConfig(config *Config, path string) error {
 	// Ensure directory exists
 	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to create config directory").
 			WithComponent("lsp").
 			WithOperation("save_config").
@@ -162,7 +162,7 @@ func SaveConfig(config *Config, path string) error {
 			WithOperation("save_config")
 	}
 
-	if err := os.WriteFile(path, data, 0644); err != nil {
+	if err := os.WriteFile(path, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeIO, "failed to write LSP config file").
 			WithComponent("lsp").
 			WithOperation("save_config").

@@ -10,8 +10,8 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // EventBusAdapter adapts the pkg/events.EventBus to the simple grpc.EventBus interface

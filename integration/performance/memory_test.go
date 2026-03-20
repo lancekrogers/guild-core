@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
 //go:build integration
+// +build integration
 
 package performance
 
@@ -17,9 +18,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/internal/testutil"
-	"github.com/lancekrogers/guild/pkg/agents/core/mocks"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/internal/testutil"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/mocks"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // TestSustainedLoadMemoryProfile tests memory behavior under sustained load
@@ -87,7 +88,7 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 					agent := mocks.NewMockAgent(fmt.Sprintf("agent-%d", taskNum), fmt.Sprintf("Agent %d", taskNum))
 
 					// Execute task - Agent.Execute takes (context, string)
-					_, _ = core.Execute(ctx, fmt.Sprintf("Simulate work for task-%d", taskNum))
+					_, _ = agent.Execute(ctx, fmt.Sprintf("Simulate work for task-%d", taskNum))
 
 					// Simulate cleanup delay
 					time.Sleep(2 * time.Second)
@@ -256,9 +257,9 @@ func TestSustainedLoadMemoryProfile(t *testing.T) {
 			agent := mocks.NewMockAgent(fmt.Sprintf("leak-test-%d", i), fmt.Sprintf("Leak Test Agent %d", i))
 
 			// Execute async task
-			go func() {
-				_, _ = core.Execute(ctx, fmt.Sprintf("Test async-task-%d", i))
-			}()
+			go func(a *mocks.MockAgent, taskID int) {
+				_, _ = a.Execute(ctx, fmt.Sprintf("Test async-task-%d", taskID))
+			}(agent, i)
 		}
 
 		// Wait for goroutines to finish

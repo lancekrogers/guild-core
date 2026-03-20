@@ -7,8 +7,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Manager manages the three-pane layout for the Guild Chat interface
@@ -172,7 +172,9 @@ func (m *Manager) UpdateStatusHeight(contentLines int) error {
 
 // HideStatusPane hides the status pane by setting height to 0
 func (m *Manager) HideStatusPane() error {
-	constraints := StatusPaneConstraints() // This returns 0 height constraints
+	constraints := StatusPaneConstraints()
+	constraints.MinHeight = 0
+	constraints.PreferredHeight = 0
 	return m.SetPaneConstraints("status", constraints)
 }
 
@@ -187,20 +189,10 @@ func (m *Manager) Render(paneViews map[string]string) string {
 		return "Layout not initialized"
 	}
 
-	// Create a canvas to compose the layout
-	canvas := make([][]rune, m.config.ContainerHeight)
-	for i := range canvas {
-		canvas[i] = make([]rune, m.config.ContainerWidth)
-		// Fill with spaces
-		for j := range canvas[i] {
-			canvas[i][j] = ' '
-		}
-	}
+	orderedPanes := []string{"output", "input", "status"}
+	views := make([]string, 0, len(orderedPanes))
 
-	// Render each pane into the canvas
-	paneOrder := []string{"output", "input", "status"} // Output first, then input, status last for overlay effect
-
-	for _, paneID := range paneOrder {
+	for _, paneID := range orderedPanes {
 		rect, exists := m.currentLayout[paneID]
 		if !exists {
 			continue
@@ -221,41 +213,58 @@ func (m *Manager) Render(paneViews map[string]string) string {
 			continue
 		}
 
-		m.renderPaneToCanvas(canvas, rect, view)
+		views = append(views, strings.TrimRight(view, "\n"))
 	}
 
-	// Convert canvas to string
-	return m.canvasToString(canvas)
+	switch m.config.Direction {
+	case DirectionRow:
+		return m.joinHorizontal(views, m.config.MainAxisGap)
+	default:
+		return m.joinVertical(views, m.config.MainAxisGap)
+	}
 }
 
-// renderPaneToCanvas renders a pane view into the canvas at the specified rectangle
-func (m *Manager) renderPaneToCanvas(canvas [][]rune, rect Rectangle, view string) {
-	lines := strings.Split(view, "\n")
+func (m *Manager) joinVertical(views []string, gap int) string {
+	if len(views) == 0 {
+		return ""
+	}
 
-	for lineIdx, line := range lines {
-		y := rect.Y + lineIdx
-		if y >= len(canvas) || y < 0 {
-			continue
-		}
+	if gap <= 0 {
+		return lipgloss.JoinVertical(lipgloss.Left, views...)
+	}
 
-		runes := []rune(line)
-		for runeIdx, r := range runes {
-			x := rect.X + runeIdx
-			if x >= len(canvas[y]) || x < 0 {
-				continue
+	interleaved := make([]string, 0, len(views)+(len(views)-1)*gap)
+	for i, view := range views {
+		if i > 0 {
+			for j := 0; j < gap; j++ {
+				interleaved = append(interleaved, "")
 			}
-			canvas[y][x] = r
 		}
+		interleaved = append(interleaved, view)
 	}
+
+	return lipgloss.JoinVertical(lipgloss.Left, interleaved...)
 }
 
-// canvasToString converts the canvas to a string
-func (m *Manager) canvasToString(canvas [][]rune) string {
-	var lines []string
-	for _, row := range canvas {
-		lines = append(lines, string(row))
+func (m *Manager) joinHorizontal(views []string, gap int) string {
+	if len(views) == 0 {
+		return ""
 	}
-	return strings.Join(lines, "\n")
+
+	if gap <= 0 {
+		return lipgloss.JoinHorizontal(lipgloss.Top, views...)
+	}
+
+	spacer := strings.Repeat(" ", gap)
+	interleaved := make([]string, 0, len(views)*2-1)
+	for i, view := range views {
+		if i > 0 {
+			interleaved = append(interleaved, spacer)
+		}
+		interleaved = append(interleaved, view)
+	}
+
+	return lipgloss.JoinHorizontal(lipgloss.Top, interleaved...)
 }
 
 // GetLayout returns the current layout rectangles

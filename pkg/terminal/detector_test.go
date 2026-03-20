@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -141,13 +142,13 @@ func TestDetector_detectColors(t *testing.T) {
 		},
 		{
 			name:          "256 color terminal",
-			setupEnv:      map[string]string{"TERM": "xterm-256color"},
+			setupEnv:      map[string]string{"TERM": "xterm-256color", "FORCE_COLOR": "1"},
 			want:          Extended256,
 			wantTrueColor: false,
 		},
 		{
 			name:          "true color terminal",
-			setupEnv:      map[string]string{"COLORTERM": "truecolor"},
+			setupEnv:      map[string]string{"COLORTERM": "truecolor", "FORCE_COLOR": "1"},
 			want:          TrueColor24Bit,
 			wantTrueColor: true,
 		},
@@ -162,11 +163,31 @@ func TestDetector_detectColors(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Save and restore environment
+			// Also save common env vars that might affect detection
+			envVarsToSave := []string{
+				"TERM", "COLORTERM", "FORCE_COLOR", "NO_COLOR",
+				"GUILD_FORCE_COLOR", "GUILD_FORCE_TRUE_COLOR",
+			}
 			oldEnv := make(map[string]string)
-			for k := range tt.setupEnv {
+
+			// Save all relevant env vars
+			for _, k := range envVarsToSave {
 				oldEnv[k] = os.Getenv(k)
 			}
+			// Also save any vars we're explicitly setting
+			for k := range tt.setupEnv {
+				if _, exists := oldEnv[k]; !exists {
+					oldEnv[k] = os.Getenv(k)
+				}
+			}
+
+			// Clean environment before test
+			for k := range oldEnv {
+				os.Unsetenv(k)
+			}
+
 			defer func() {
+				// Restore all env vars
 				for k, v := range oldEnv {
 					if v == "" {
 						os.Unsetenv(k)
@@ -182,10 +203,30 @@ func TestDetector_detectColors(t *testing.T) {
 			}
 
 			detector := NewDetector()
-			colorSupport := detector.detectColorSupport()
 
-			assert.Equal(t, tt.want, colorSupport)
-			assert.Equal(t, tt.wantTrueColor, colorSupport == TrueColor24Bit)
+			// Check if any of the setup environment variables are GUILD_FORCE_*
+			hasGuildForce := false
+			for k := range tt.setupEnv {
+				if strings.HasPrefix(k, "GUILD_FORCE_") {
+					hasGuildForce = true
+					break
+				}
+			}
+
+			// For GUILD_FORCE_* variables, we need to use the full Detect method
+			// which applies environment overrides
+			if hasGuildForce {
+				ctx := context.Background()
+				caps, err := detector.Detect(ctx)
+				require.NoError(t, err)
+				assert.Equal(t, tt.want, caps.Colors)
+				assert.Equal(t, tt.wantTrueColor, caps.TrueColor)
+			} else {
+				// For other environment variables, test detectColorSupport directly
+				colorSupport := detector.detectColorSupport()
+				assert.Equal(t, tt.want, colorSupport)
+				assert.Equal(t, tt.wantTrueColor, colorSupport == TrueColor24Bit)
+			}
 		})
 	}
 }
@@ -236,15 +277,33 @@ func TestDetector_isCI(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Save and restore environment
+			// Clear ALL CI environment variables first
+			ciVars := []string{
+				"CI", "CONTINUOUS_INTEGRATION", "BUILD_NUMBER",
+				"JENKINS_URL", "TRAVIS", "CIRCLECI", "GITHUB_ACTIONS",
+				"GITLAB_CI", "BUILDKITE", "DRONE", "TEAMCITY_VERSION",
+			}
+
 			oldEnv := make(map[string]string)
-			for k := range tt.envVars {
+			// Save all CI vars
+			for _, k := range ciVars {
 				oldEnv[k] = os.Getenv(k)
 				os.Unsetenv(k)
 			}
+			// Also save any vars we're explicitly setting
+			for k := range tt.envVars {
+				if _, exists := oldEnv[k]; !exists {
+					oldEnv[k] = os.Getenv(k)
+				}
+			}
+
 			defer func() {
+				// Restore all env vars
 				for k, v := range oldEnv {
 					if v != "" {
 						os.Setenv(k, v)
+					} else {
+						os.Unsetenv(k)
 					}
 				}
 			}()

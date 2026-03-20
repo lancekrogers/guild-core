@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/tools"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/tools"
 )
 
 // MultiEditTool performs atomic multi-edit operations on a single file
@@ -272,7 +272,7 @@ func (t *MultiEditTool) performMultiEdit(ctx context.Context, params MultiEditPa
 	// Phase 3: Create backup if requested and not dry run
 	if params.Backup && !params.DryRun && result.AppliedEdits > 0 {
 		backupPath := params.FilePath + ".bak." + fmt.Sprintf("%d", time.Now().Unix())
-		if err := os.WriteFile(backupPath, originalContent, 0644); err != nil {
+		if err := os.WriteFile(backupPath, originalContent, 0o644); err != nil {
 			result.Warnings = append(result.Warnings, fmt.Sprintf("Failed to create backup: %v", err))
 		} else {
 			result.BackupFile = backupPath

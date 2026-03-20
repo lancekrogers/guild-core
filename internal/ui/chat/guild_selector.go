@@ -6,7 +6,7 @@ package chat
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/internal/ui/chat/selector"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/selector"
 )
 
 // RunGuildSelector runs the guild selector UI and returns the selected guild name

@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 // TestManagerInterface ensures the interface is properly defined

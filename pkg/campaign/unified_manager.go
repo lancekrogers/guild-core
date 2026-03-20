@@ -10,11 +10,11 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/events"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/orchestrator"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/events"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/orchestrator"
 )
 
 // unifiedManager implements the Manager interface using the unified event system
@@ -412,7 +412,6 @@ func (m *unifiedManager) Subscribe(eventType string, handler EventHandler) error
 		}
 		return nil
 	})
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to subscribe to unified event bus").
 			WithComponent("unifiedManager").

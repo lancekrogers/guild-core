@@ -8,10 +8,10 @@ import (
 	"math"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 	"github.com/muesli/reflow/truncate"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
 )
 
 // GraphView handles rendering the document relationship graph

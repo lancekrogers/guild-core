@@ -1,0 +1,89 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        label="channel";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+bgcolor="#e6ecfa";
+        
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).PublishMessage" [ label="(*Publisher).PublishMessage" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).PublishMessage | defined in channel.go:195\nat channel.go:199: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Publish]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Publish" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Publish | defined in channel.go:170" fillcolor="lightblue" label="(*Publisher).Publish" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Unsubscribe" [ fillcolor="lightblue" label="(*subscriber).Unsubscribe" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Unsubscribe | defined in channel.go:275\nat channel.go:301: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat channel.go:302: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat channel.go:303: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat channel.go:300: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Unsubscribe" [ fillcolor="lightblue" label="(*PubSub).Unsubscribe" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Unsubscribe | defined in channel.go:377\nat channel.go:378: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Unsubscribe]" ]
+        "github.com/guild-framework/guild-core/pkg/comms/channel.newTopicRegistry" [ label="newTopicRegistry" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/comms/channel.newTopicRegistry | defined in channel.go:90\nat channel.go:99: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.topicRegistry).run]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.topicRegistry).run" [ tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.topicRegistry).run | defined in channel.go:103" fillcolor="lightblue" label="(*topicRegistry).run" penwidth="0.5" ]
+        "github.com/guild-framework/guild-core/pkg/comms/channel.NewTransport" [ fillcolor="lightblue" label="NewTransport" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/comms/channel.NewTransport | defined in channel.go:23\nat channel.go:25: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newTopicRegistry]" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Publish" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Publish | defined in channel.go:362\nat channel.go:363: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Publish]" fillcolor="lightblue" label="(*PubSub).Publish" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Close" [ label="(*PubSub).Close" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Close | defined in channel.go:387\nat channel.go:389: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Close]\nat channel.go:388: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Close]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Close" [ label="(*Publisher).Close" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Close | defined in channel.go:203" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Close" [ fillcolor="lightblue" label="(*subscriber).Close" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Close | defined in channel.go:334" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Receive" [ fillcolor="lightblue" label="(*PubSub).Receive" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Receive | defined in channel.go:382\nat channel.go:383: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Receive]" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Receive" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Receive | defined in channel.go:317" fillcolor="lightblue" label="(*subscriber).Receive" ]
+        "github.com/guild-framework/guild-core/pkg/comms/channel.newPubSub" [ fillcolor="lightblue" label="newPubSub" penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/comms/channel.newPubSub | defined in channel.go:354\nat channel.go:356: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newPublisher]\nat channel.go:357: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newSubscriber]" ]
+        "github.com/guild-framework/guild-core/pkg/comms/channel.newPublisher" [ penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/comms/channel.newPublisher | defined in channel.go:163" fillcolor="lightblue" label="newPublisher" ]
+        "github.com/guild-framework/guild-core/pkg/comms/channel.newSubscriber" [ penwidth="0.5" tooltip="github.com/guild-framework/guild-core/pkg/comms/channel.newSubscriber | defined in channel.go:224" fillcolor="lightblue" label="newSubscriber" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Subscribe" [ fillcolor="lightblue" label="(*subscriber).Subscribe" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Subscribe | defined in channel.go:233\nat channel.go:259: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat channel.go:260: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat channel.go:261: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]\nat channel.go:258: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Subscribe" [ fillcolor="lightblue" label="(*PubSub).Subscribe" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Subscribe | defined in channel.go:372\nat channel.go:373: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Subscribe]" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).PublishMessage" [ tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).PublishMessage | defined in channel.go:367\nat channel.go:368: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).PublishMessage]" fillcolor="lightblue" label="(*PubSub).PublishMessage" penwidth="1.5" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.Transport).NewSubscriber" [ fillcolor="lightblue" label="(*Transport).NewSubscriber" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.Transport).NewSubscriber | defined in channel.go:40\nat channel.go:46: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newSubscriber]" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.Transport).NewPubSub" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.Transport).NewPubSub | defined in channel.go:50\nat channel.go:56: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newPubSub]" fillcolor="lightblue" label="(*Transport).NewPubSub" ]
+        "(*github.com/guild-framework/guild-core/pkg/comms/channel.Transport).NewPublisher" [ fillcolor="lightblue" label="(*Transport).NewPublisher" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/comms/channel.Transport).NewPublisher | defined in channel.go:30\nat channel.go:36: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newPublisher]" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        fontsize="16";
+style="filled";
+fontname="Tahoma bold";
+rank="sink";
+penwidth="0.8";
+fillcolor="lightyellow";
+label="gerror";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ fillcolor="moccasin" label="Wrap" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.Wrap | defined in errors.go:223" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" fillcolor="moccasin" label="(*GuildError).WithOperation" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Unsubscribe" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at channel.go:301: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Receive" -> "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Receive" [ tooltip="at channel.go:383: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Receive]" ]
+    "github.com/guild-framework/guild-core/pkg/comms/channel.newPubSub" -> "github.com/guild-framework/guild-core/pkg/comms/channel.newPublisher" [ tooltip="at channel.go:356: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newPublisher]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Subscribe" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at channel.go:259: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.Transport).NewPubSub" -> "github.com/guild-framework/guild-core/pkg/comms/channel.newPubSub" [ tooltip="at channel.go:56: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newPubSub]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Unsubscribe" -> "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Unsubscribe" [ tooltip="at channel.go:378: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Unsubscribe]" ]
+    "github.com/guild-framework/guild-core/pkg/comms/channel.newTopicRegistry" -> "(*github.com/guild-framework/guild-core/pkg/comms/channel.topicRegistry).run" [ arrowhead="normalnoneodot" tooltip="at channel.go:99: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.topicRegistry).run]" ]
+    "github.com/guild-framework/guild-core/pkg/comms/channel.newPubSub" -> "github.com/guild-framework/guild-core/pkg/comms/channel.newSubscriber" [ tooltip="at channel.go:357: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newSubscriber]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Subscribe" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at channel.go:260: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Subscribe" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at channel.go:261: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.Transport).NewPublisher" -> "github.com/guild-framework/guild-core/pkg/comms/channel.newPublisher" [ tooltip="at channel.go:36: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newPublisher]" ]
+    "github.com/guild-framework/guild-core/pkg/comms/channel.NewTransport" -> "github.com/guild-framework/guild-core/pkg/comms/channel.newTopicRegistry" [ tooltip="at channel.go:25: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newTopicRegistry]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Publish" -> "(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Publish" [ tooltip="at channel.go:363: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Publish]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Close" -> "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Close" [ tooltip="at channel.go:389: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Close]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Subscribe" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at channel.go:258: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Subscribe" -> "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Subscribe" [ tooltip="at channel.go:373: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Subscribe]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.Transport).NewSubscriber" -> "github.com/guild-framework/guild-core/pkg/comms/channel.newSubscriber" [ tooltip="at channel.go:46: calling [github.com/guild-framework/guild-core/pkg/comms/channel.newSubscriber]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Unsubscribe" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at channel.go:302: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Unsubscribe" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at channel.go:303: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).Close" -> "(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Close" [ tooltip="at channel.go:388: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Close]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.PubSub).PublishMessage" -> "(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).PublishMessage" [ tooltip="at channel.go:368: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).PublishMessage]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).PublishMessage" -> "(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Publish" [ tooltip="at channel.go:199: calling [(*github.com/guild-framework/guild-core/pkg/comms/channel.Publisher).Publish]" ]
+    "(*github.com/guild-framework/guild-core/pkg/comms/channel.subscriber).Unsubscribe" -> "github.com/guild-framework/guild-core/pkg/gerror.Wrap" [ color="saddlebrown" tooltip="at channel.go:300: calling [github.com/guild-framework/guild-core/pkg/gerror.Wrap]" ]
+}

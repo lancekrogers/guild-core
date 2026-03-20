@@ -6,9 +6,9 @@ package layout
 import (
 	"context"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // PaneInterface defines the common interface for all panes
@@ -156,9 +156,9 @@ func (bp *BasePane) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return bp, nil
 }
 
-func (bp *BasePane) View() string {
+func (bp *BasePane) View() tea.View {
 	if !bp.visible {
-		return ""
+		return tea.NewView("")
 	}
 
 	// Apply styling based on focus state
@@ -168,7 +168,7 @@ func (bp *BasePane) View() string {
 	style = style.Width(bp.rect.Width).Height(bp.rect.Height)
 
 	// Render content
-	return style.Render(bp.content)
+	return tea.NewView(style.Render(bp.content))
 }
 
 // Additional utility methods

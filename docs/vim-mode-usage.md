@@ -17,6 +17,7 @@ When vim mode is enabled, you'll see a status indicator showing the current mode
 ## Vim Modes
 
 ### Normal Mode
+
 - Default mode when vim is enabled
 - Navigate and perform commands
 - Press `i` to enter Insert mode
@@ -24,14 +25,17 @@ When vim mode is enabled, you'll see a status indicator showing the current mode
 - Press `:` to enter Command mode
 
 ### Insert Mode
+
 - Type text normally
 - Press `ESC` to return to Normal mode
 
 ### Visual Mode
+
 - Select text (limited functionality in current implementation)
 - Press `ESC` to return to Normal mode
 
 ### Command Mode
+
 - Enter vim commands
 - Press `ESC` to cancel
 - Press `Enter` to execute command
@@ -39,6 +43,7 @@ When vim mode is enabled, you'll see a status indicator showing the current mode
 ## Key Bindings
 
 ### Normal Mode Navigation
+
 - `h` - Move cursor left (moves to start of line)
 - `l` - Move cursor right (moves to end of line)
 - `j` - Navigate down in history
@@ -49,16 +54,19 @@ When vim mode is enabled, you'll see a status indicator showing the current mode
 - `$` - Move to end of line
 
 ### Mode Switching
+
 - `i` - Enter Insert mode
 - `v` - Enter Visual mode
 - `:` - Enter Command mode
 - `ESC` - Return to Normal mode
 
 ### Editing Commands
+
 - `x` - Delete character (simplified implementation)
 - `o` - Insert new line and enter Insert mode (if multiline enabled)
 
 ### Command Mode Commands
+
 - `:w` or `:write` - Save chat (not applicable for input)
 - `:q` or `:quit` - Quit application
 - `:wq` - Save and quit
@@ -78,6 +86,7 @@ The vim mode integration with the chat input pane has some limitations:
 ## Development Status
 
 This is an initial implementation of vim mode. Future enhancements may include:
+
 - Better cursor positioning
 - Full visual mode support
 - More vim commands

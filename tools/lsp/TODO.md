@@ -9,26 +9,31 @@ The LSP tools have been created with placeholder implementations. To make them f
 The `pkg/lsp/Manager` type needs to be extended with the following methods:
 
 ### 1. Document Symbols
+
 ```go
 func (m *Manager) GetDocumentSymbols(ctx context.Context, filePath string) ([]DocumentSymbol, error)
 ```
 
 ### 2. Workspace Symbols  
+
 ```go
 func (m *Manager) GetWorkspaceSymbols(ctx context.Context, query string) ([]SymbolInformation, error)
 ```
 
 ### 3. Code Actions
+
 ```go
 func (m *Manager) GetCodeActions(ctx context.Context, filePath string, range Range) ([]CodeAction, error)
 ```
 
 ### 4. Rename Symbol
+
 ```go
 func (m *Manager) RenameSymbol(ctx context.Context, filePath string, line, character int, newName string) (*WorkspaceEdit, error)
 ```
 
 ### 5. Format Document
+
 ```go
 func (m *Manager) FormatDocument(ctx context.Context, filePath string, options FormattingOptions) ([]TextEdit, error)
 ```
@@ -52,6 +57,7 @@ func (m *Manager) FormatDocument(ctx context.Context, filePath string, options F
 ## Current Workaround
 
 The tools are currently created with placeholder implementations that:
+
 1. Validate inputs
 2. Return example data showing the expected structure
 3. Include metadata indicating they need LSP manager extensions

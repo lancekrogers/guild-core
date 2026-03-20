@@ -11,14 +11,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/mcp/cost"
-	"github.com/lancekrogers/guild/pkg/mcp/prompt"
-	"github.com/lancekrogers/guild/pkg/mcp/protocol"
-	"github.com/lancekrogers/guild/pkg/mcp/tools"
-	"github.com/lancekrogers/guild/pkg/mcp/transport"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/mcp/cost"
+	"github.com/lancekrogers/guild-core/pkg/mcp/prompt"
+	"github.com/lancekrogers/guild-core/pkg/mcp/protocol"
+	"github.com/lancekrogers/guild-core/pkg/mcp/tools"
+	"github.com/lancekrogers/guild-core/pkg/mcp/transport"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // Server represents the MCP server

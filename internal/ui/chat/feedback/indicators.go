@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // TypingIndicator provides animated typing indicators for agents

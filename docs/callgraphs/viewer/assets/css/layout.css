@@ -1,0 +1,147 @@
+/* Main layout structure */
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.header {
+    border-bottom: 1px solid var(--guild-border);
+    padding: var(--spacing-md);
+    flex-shrink: 0;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.header-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--guild-green);
+}
+
+.header-meta {
+    display: flex;
+    gap: var(--spacing-lg);
+    font-size: 0.875rem;
+    color: var(--guild-text-dim);
+}
+
+.header-search {
+    margin-top: var(--spacing-sm);
+}
+
+#search {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--guild-gray);
+    border: 1px solid var(--guild-border);
+    color: var(--guild-text);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+}
+
+#search:focus {
+    border-color: var(--guild-green);
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    flex: 1;
+    overflow: hidden;
+}
+
+.sidebar {
+    border-right: 1px solid var(--guild-border);
+    overflow-y: auto;
+    padding: var(--spacing-md);
+}
+
+.viewer {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navigation tree styling */
+.category {
+    margin-bottom: var(--spacing-md);
+}
+
+.category-title {
+    font-weight: 600;
+    color: var(--guild-green);
+    padding: var(--spacing-sm) 0;
+    font-size: 0.9rem;
+}
+
+.domain {
+    margin-left: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.domain-title {
+    color: var(--guild-text);
+    padding: var(--spacing-xs) 0;
+    font-size: 0.85rem;
+}
+
+.graph-list {
+    margin-left: var(--spacing-md);
+}
+
+.graph-list li {
+    margin-bottom: var(--spacing-xs);
+}
+
+.graph-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.graph-link:hover {
+    background: var(--guild-gray);
+}
+
+.graph-link.active {
+    background: var(--guild-gray);
+    border-left: 2px solid var(--guild-green);
+}
+
+.size-indicator {
+    font-size: 1rem;
+    margin-left: var(--spacing-sm);
+}
+
+.size-small { color: var(--guild-green); }
+.size-medium { color: #ffaa00; }
+.size-large { color: #ff4444; }
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--guild-black);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--guild-gray);
+    border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--guild-border);
+}

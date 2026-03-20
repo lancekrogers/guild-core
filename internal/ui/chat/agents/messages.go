@@ -5,7 +5,7 @@ package agents
 import (
 	"time"
 
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 // Message types for agent communication

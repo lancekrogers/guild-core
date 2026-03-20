@@ -50,21 +50,27 @@ Guild uses a medieval guild metaphor to make multi-agent systems intuitive:
 ### Artisan Roles
 
 #### Elena - The Foreman
+
 Elena is your project manager and coordinator. She:
+
 - Plans and breaks down projects
 - Assigns tasks to other artisans
 - Monitors progress and resolves blockers
 - Communicates status updates
 
 #### Marcus - The Codesmith
+
 Marcus is your senior developer. He:
+
 - Implements features and fixes bugs
 - Writes clean, maintainable code
 - Reviews and refactors existing code
 - Handles complex technical challenges
 
 #### Vera - The Inspector
+
 Vera is your QA engineer. She:
+
 - Writes and runs tests
 - Validates code quality
 - Identifies edge cases
@@ -97,6 +103,7 @@ guild chat
 ### Detailed Installation
 
 #### macOS
+
 ```bash
 # Using Homebrew
 brew tap guild-framework/guild
@@ -108,6 +115,7 @@ sudo mv guild /usr/local/bin/
 ```
 
 #### Linux
+
 ```bash
 # Download and install
 curl -L https://github.com/guild-framework/releases/latest/download/guild-linux-amd64.tar.gz | tar xz
@@ -222,6 +230,7 @@ guild kanban
 ### Artisan Communication
 
 #### Direct Messages
+
 Use @ mentions to talk to specific artisans:
 
 ```
@@ -235,18 +244,21 @@ Use @ mentions to talk to specific artisans:
 Each artisan has specialized tools:
 
 **Elena's Tools**:
+
 - Project planning
 - Task breakdown
 - Progress tracking
 - Documentation
 
 **Marcus's Tools**:
+
 - Code generation
 - File manipulation
 - Git operations
 - Database queries
 
 **Vera's Tools**:
+
 - Test execution
 - Code analysis
 - Coverage reports
@@ -255,16 +267,19 @@ Each artisan has specialized tools:
 ### Managing Artisan Work
 
 #### Viewing Active Tasks
+
 ```
 /task list
 ```
 
 #### Checking Artisan Status
+
 ```
 /artisan status
 ```
 
 #### Pausing/Resuming Work
+
 ```
 /task pause TASK-001
 /task resume TASK-001
@@ -277,12 +292,14 @@ Each artisan has specialized tools:
 Guild's corpus system helps artisans learn from your documentation:
 
 #### Adding Knowledge
+
 ```
 /corpus add pattern "Always use dependency injection for testability"
 /corpus add example ./examples/di-pattern.go
 ```
 
 #### Searching Knowledge
+
 ```
 /search authentication patterns
 /corpus stats
@@ -323,16 +340,19 @@ This will reduce completion time from 6 hours to 2 hours.
 ### Session Management
 
 #### Saving Sessions
+
 ```
 /session save my-important-project
 ```
 
 #### Loading Sessions
+
 ```
 guild chat --session my-important-project
 ```
 
 #### Exporting Conversations
+
 ```
 /export markdown > project-history.md
 /export json > project-data.json
@@ -343,6 +363,7 @@ guild chat --session my-important-project
 ### 1. Clear Commissions
 
 **Good**:
+
 ```
 Build a REST API for todo management with:
 - User registration and JWT auth
@@ -353,6 +374,7 @@ Build a REST API for todo management with:
 ```
 
 **Too Vague**:
+
 ```
 Make a todo app
 ```
@@ -406,12 +428,14 @@ guild config set budget.daily_limit 10.00
 ### Common Issues
 
 #### "No API key found"
+
 ```bash
 export OPENAI_API_KEY="your-key-here"
 # Or add to .guild/guild.yaml
 ```
 
 #### "Artisan not responding"
+
 ```bash
 # Check artisan status
 guild artisan status
@@ -421,6 +445,7 @@ guild artisan restart marcus
 ```
 
 #### "Git conflicts in worktree"
+
 ```bash
 # Guild handles most conflicts automatically
 # For manual resolution:

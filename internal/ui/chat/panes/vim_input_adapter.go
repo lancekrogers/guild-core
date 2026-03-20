@@ -4,11 +4,12 @@
 package panes
 
 import (
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/lancekrogers/guild/internal/ui/chat/common/layout"
-	"github.com/lancekrogers/guild/internal/ui/chat/completion"
-	"github.com/lancekrogers/guild/internal/ui/vim"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/common/layout"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/completion"
+	viewutil "github.com/lancekrogers/guild-core/internal/ui/view"
+	"github.com/lancekrogers/guild-core/internal/ui/vim"
 )
 
 // VimInputAdapter wraps InputPane to make it VimCapable
@@ -58,7 +59,7 @@ func (v *VimInputAdapter) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// In insert mode, pass most keys to the input pane first
 		if currentMode == vim.ModeInsert {
 			// Only let vim handle the escape key in insert mode
-			if keyMsg.Type == tea.KeyEscape {
+			if keyMsg.Key().Code == tea.KeyEscape {
 				_, cmd := v.vimModeManager.HandleVimKey(keyMsg, v)
 				return v, cmd
 			}
@@ -83,17 +84,17 @@ func (v *VimInputAdapter) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View delegates to the input pane's view with vim mode indicator
-func (v *VimInputAdapter) View() string {
-	baseView := v.inputPane.View()
+func (v *VimInputAdapter) View() tea.View {
+	baseView := viewutil.String(v.inputPane.View())
 
 	// If vim mode is enabled and we're not in insert mode, add a mode indicator
 	if v.enabled && v.vimModeManager.GetState().Mode != vim.ModeInsert {
 		modeIndicator := v.vimModeManager.GetModeIndicator()
 		// Prepend the mode indicator to the view
-		return modeIndicator + "\n" + baseView
+		return tea.NewView(modeIndicator + "\n" + baseView)
 	}
 
-	return baseView
+	return tea.NewView(baseView)
 }
 
 // Init delegates to the input pane's init

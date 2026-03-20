@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	"github.com/lancekrogers/guild/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
 )
 
 // MockVectorStore is a mock implementation of the VectorStore interface.

@@ -6,8 +6,8 @@ package core
 import (
 	"context"
 
-	guildcontext "github.com/lancekrogers/guild/pkg/context"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	guildcontext "github.com/lancekrogers/guild-core/pkg/context"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // ContextAgentFactory creates agents with context-aware capabilities

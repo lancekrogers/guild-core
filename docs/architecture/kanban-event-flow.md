@@ -5,12 +5,14 @@ This document describes the event-driven architecture that enables real-time upd
 ## Overview
 
 Guild's kanban system is built on an event-driven architecture that ensures real-time synchronization between:
+
 - Multiple kanban UI instances
 - Agent actions and task state changes
 - Background processes and external integrations
 - Human review workflows
 
 The architecture achieves the performance targets demonstrated in our benchmarks:
+
 - **<200ms update latency** from action to UI display
 - **>5000 events/second** throughput
 - **30+ FPS** UI responsiveness with 200+ tasks
@@ -20,8 +22,9 @@ The architecture achieves the performance targets demonstrated in our benchmarks
 ### 1. Event Generation Layer
 
 #### Task Event Publishers (`pkg/kanban/task_event_publisher.go`)
+
 - **Purpose**: Generate events when task state changes occur
-- **Event Types**: 
+- **Event Types**:
   - `task.created` - New task added to board
   - `task.moved` - Task status/column changed
   - `task.updated` - Task properties modified
@@ -31,6 +34,7 @@ The architecture achieves the performance targets demonstrated in our benchmarks
   - `task.completed` - Task marked as done
 
 #### Board Event Managers (`pkg/kanban/event_manager.go`)
+
 - **Purpose**: Coordinate board-level events and state changes
 - **Responsibilities**:
   - Aggregate task events into board-level changes
@@ -40,6 +44,7 @@ The architecture achieves the performance targets demonstrated in our benchmarks
 ### 2. Event Distribution Layer
 
 #### gRPC Event Service (`pkg/grpc/pb/guild/v1/events.proto`)
+
 - **Purpose**: High-performance event streaming between components
 - **Protocol**: gRPC streaming for low-latency, reliable delivery
 - **Features**:
@@ -49,6 +54,7 @@ The architecture achieves the performance targets demonstrated in our benchmarks
   - Event buffering and replay capabilities
 
 #### Event Router
+
 - **Purpose**: Route events to appropriate consumers
 - **Routing Logic**:
   - Board-specific filtering (events only sent to relevant boards)
@@ -58,6 +64,7 @@ The architecture achieves the performance targets demonstrated in our benchmarks
 ### 3. Event Consumption Layer
 
 #### Kanban UI Event Handler (`internal/ui/kanban/model.go`)
+
 - **Purpose**: Convert events into UI state changes
 - **Process Flow**:
   1. Receive event via gRPC stream
@@ -67,6 +74,7 @@ The architecture achieves the performance targets demonstrated in our benchmarks
   5. Update visual indicators (status messages, animations)
 
 #### Agent Event Processors
+
 - **Purpose**: Enable agents to react to task state changes
 - **Use Cases**:
   - Automatically start work when tasks become unblocked
@@ -106,6 +114,7 @@ sequenceDiagram
 ### Event Processing Pipeline
 
 #### 1. Event Creation (0-5ms)
+
 ```go
 // Task state change triggers event
 event := &TaskEvent{
@@ -122,6 +131,7 @@ event := &TaskEvent{
 ```
 
 #### 2. Event Publishing (5-20ms)
+
 ```go
 // Publisher validates and broadcasts
 if err := publisher.PublishTaskEvent(ctx, event); err != nil {
@@ -132,6 +142,7 @@ if err := publisher.PublishTaskEvent(ctx, event); err != nil {
 ```
 
 #### 3. Event Distribution (20-50ms)
+
 ```go
 // gRPC streaming to all connected clients
 for _, client := range eventService.getConnectedClients() {
@@ -147,6 +158,7 @@ for _, client := range eventService.getConnectedClients() {
 ```
 
 #### 4. UI Processing (50-150ms)
+
 ```go
 // UI receives and processes event
 func (m *Model) handleTaskEvent(event taskEventMsg) {
@@ -161,6 +173,7 @@ func (m *Model) handleTaskEvent(event taskEventMsg) {
 ```
 
 #### 5. Visual Update (150-200ms)
+
 ```go
 // UI re-renders with new state
 func (m *Model) View() string {
@@ -477,21 +490,25 @@ guild kanban view --performance-monitor
 ## Future Enhancements
 
 ### 1. Event Persistence
+
 - Store events in SQLite for replay and audit trails
 - Enable event sourcing for complete task history
 - Support event replay for debugging and testing
 
 ### 2. Advanced Filtering
+
 - Complex event filtering with boolean logic
 - Geographic and temporal event filtering
 - User-specific event subscriptions
 
 ### 3. External Integration
+
 - Webhook support for external system integration
 - Event export to monitoring systems
 - Integration with CI/CD pipelines for build status
 
 ### 4. Performance Improvements
+
 - WebAssembly rendering for complex visualizations
 - GPU acceleration for large dataset visualization
 - Predictive caching based on user behavior
@@ -499,11 +516,13 @@ guild kanban view --performance-monitor
 ---
 
 **Related Documentation:**
+
 - [Kanban User Guide](../kanban-user-guide.md) - End-user interface guide
 - [gRPC API Reference](../daemon/PROTOBUF_API.md) - Event service API details
 - [Performance Testing](../development/performance-testing.md) - Testing methodology
 
 **Performance Targets:**
+
 - Event latency: <200ms end-to-end
 - UI responsiveness: 30+ FPS with 200+ cards
 - Event throughput: >5000 events/second

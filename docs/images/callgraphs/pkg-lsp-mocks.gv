@@ -1,0 +1,32 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        label="mocks";
+labelloc="t";
+labeljust="c";
+fontsize="18";
+bgcolor="#e6ecfa";
+        
+        "github.com/guild-framework/guild-core/pkg/lsp/mocks.NewMockProcessLauncher" [ label="NewMockProcessLauncher" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/lsp/mocks.NewMockProcessLauncher | defined in mock_process_launcher.go:28\nat mock_process_launcher.go:30: calling [github.com/guild-framework/guild-core/pkg/lsp/mocks.NewMockLSPClient]" fillcolor="lightblue" ]
+        "github.com/guild-framework/guild-core/pkg/lsp/mocks.NewMockLSPClient" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/lsp/mocks.NewMockLSPClient | defined in mock_lsp_client.go:32" fillcolor="lightblue" label="NewMockLSPClient" ]
+        "(*github.com/guild-framework/guild-core/pkg/lsp/mocks.MockProcessLauncher).LaunchServer" [ fillcolor="lightblue" label="(*MockProcessLauncher).LaunchServer" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/lsp/mocks.MockProcessLauncher).LaunchServer | defined in mock_process_launcher.go:35\nat mock_process_launcher.go:46: calling [(*github.com/guild-framework/guild-core/pkg/lsp/mocks.MockLSPClient).Start]" ]
+        "(*github.com/guild-framework/guild-core/pkg/lsp/mocks.MockLSPClient).Start" [ fillcolor="lightblue" label="(*MockLSPClient).Start" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/lsp/mocks.MockLSPClient).Start | defined in mock_lsp_client.go:82" ]
+        
+    }
+
+    "github.com/guild-framework/guild-core/pkg/lsp/mocks.NewMockProcessLauncher" -> "github.com/guild-framework/guild-core/pkg/lsp/mocks.NewMockLSPClient" [ tooltip="at mock_process_launcher.go:30: calling [github.com/guild-framework/guild-core/pkg/lsp/mocks.NewMockLSPClient]" ]
+    "(*github.com/guild-framework/guild-core/pkg/lsp/mocks.MockProcessLauncher).LaunchServer" -> "(*github.com/guild-framework/guild-core/pkg/lsp/mocks.MockLSPClient).Start" [ tooltip="at mock_process_launcher.go:46: calling [(*github.com/guild-framework/guild-core/pkg/lsp/mocks.MockLSPClient).Start]" ]
+}

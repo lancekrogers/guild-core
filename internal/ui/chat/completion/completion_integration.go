@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/suggestions"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/suggestions"
 )
 
 // CompletionIntegration provides seamless integration between traditional completions and the suggestion system

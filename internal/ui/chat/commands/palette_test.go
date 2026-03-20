@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/x/exp/teatest"
-	"github.com/lancekrogers/guild/internal/ui/chat/commands"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/teatest"
+	"github.com/lancekrogers/guild-core/internal/ui/chat/commands"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -95,11 +95,12 @@ func (m *testPaletteModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		default:
 			// Handle character input for search
-			if len(msg.Runes) == 1 {
-				char := string(msg.Runes[0])
-				if char >= " " && char <= "~" { // Printable ASCII
-					currentQuery := m.palette.GetSearchQuery()
-					m.palette.UpdateSearch(currentQuery + char)
+			if text := msg.Key().Text; text != "" {
+				for _, r := range text {
+					if r >= ' ' && r <= '~' { // Printable ASCII
+						currentQuery := m.palette.GetSearchQuery()
+						m.palette.UpdateSearch(currentQuery + string(r))
+					}
 				}
 			}
 			return m, nil
@@ -110,19 +111,19 @@ func (m *testPaletteModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View implements tea.Model
-func (m *testPaletteModel) View() string {
+func (m *testPaletteModel) View() tea.View {
 	if m.quitting {
 		if m.executed && m.selectedCmd != nil {
-			return "Command executed: " + m.selectedCmd.Name + "\n"
+			return tea.NewView("Command executed: " + m.selectedCmd.Name + "\n")
 		}
-		return "Goodbye!\n"
+		return tea.NewView("Goodbye!\n")
 	}
 
 	if !m.palette.IsOpen() {
-		return "Press Ctrl+P or : to open command palette\nPress Q to quit\n"
+		return tea.NewView("Press Ctrl+P or : to open command palette\nPress Q to quit\n")
 	}
 
-	return m.palette.View()
+	return tea.NewView(m.palette.View())
 }
 
 // GetSearchQuery returns the current search query (helper for palette access)
@@ -276,13 +277,13 @@ func TestCommandPalette_Integration_BasicOpen(t *testing.T) {
 	)
 
 	// Send escape to close palette first, then q to quit the model
-	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEscape})
 
 	// Wait a moment for the escape to be processed
 	time.Sleep(100 * time.Millisecond)
 
 	// Send 'q' to quit the application
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+	tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
 
@@ -315,10 +316,10 @@ func TestCommandPalette_Integration_SearchAndFilter(t *testing.T) {
 	)
 
 	// Type "help" to search
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("h")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("e")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("l")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("p")})
+	tm.Send(tea.KeyPressMsg{Text: "h", Code: 'h'})
+	tm.Send(tea.KeyPressMsg{Text: "e", Code: 'e'})
+	tm.Send(tea.KeyPressMsg{Text: "l", Code: 'l'})
+	tm.Send(tea.KeyPressMsg{Text: "p", Code: 'p'})
 
 	// Wait for search results
 	teatest.WaitFor(
@@ -332,9 +333,9 @@ func TestCommandPalette_Integration_SearchAndFilter(t *testing.T) {
 	)
 
 	// Exit - first escape to close palette, then 'q' to quit
-	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEscape})
 	time.Sleep(50 * time.Millisecond)
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+	tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
 
 	finalOutput := tm.FinalOutput(t)
@@ -365,14 +366,14 @@ func TestCommandPalette_Integration_NavigationAndSelection(t *testing.T) {
 	)
 
 	// Navigate down a few items
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
-	tm.Send(tea.KeyMsg{Type: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyDown})
 
 	// Wait a bit for navigation to process
 	time.Sleep(100 * time.Millisecond)
 
 	// Select current item
-	tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 
 	// The enter key should execute the command and quit automatically
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
@@ -406,10 +407,10 @@ func TestCommandPalette_Integration_BackspaceInSearch(t *testing.T) {
 	)
 
 	// Type some text
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("a")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("g")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("e")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("n")})
+	tm.Send(tea.KeyPressMsg{Text: "a", Code: 'a'})
+	tm.Send(tea.KeyPressMsg{Text: "g", Code: 'g'})
+	tm.Send(tea.KeyPressMsg{Text: "e", Code: 'e'})
+	tm.Send(tea.KeyPressMsg{Text: "n", Code: 'n'})
 
 	// Wait for search to show "agen"
 	teatest.WaitFor(
@@ -423,8 +424,8 @@ func TestCommandPalette_Integration_BackspaceInSearch(t *testing.T) {
 	)
 
 	// Use backspace to remove characters
-	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
-	tm.Send(tea.KeyMsg{Type: tea.KeyBackspace})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyBackspace})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyBackspace})
 
 	// Wait for search to show "ag"
 	teatest.WaitFor(
@@ -438,9 +439,9 @@ func TestCommandPalette_Integration_BackspaceInSearch(t *testing.T) {
 	)
 
 	// Exit - first escape to close palette, then 'q' to quit
-	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEscape})
 	time.Sleep(50 * time.Millisecond)
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+	tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
 }
 
@@ -465,11 +466,11 @@ func TestCommandPalette_Integration_EmptySearchResults(t *testing.T) {
 	)
 
 	// Type a search that won't match anything
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("x")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("y")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("z")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("w")})
+	tm.Send(tea.KeyPressMsg{Text: "x", Code: 'x'})
+	tm.Send(tea.KeyPressMsg{Text: "y", Code: 'y'})
+	tm.Send(tea.KeyPressMsg{Text: "z", Code: 'z'})
+	tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
+	tm.Send(tea.KeyPressMsg{Text: "w", Code: 'w'})
 
 	// Wait for "No commands found"
 	teatest.WaitFor(
@@ -483,9 +484,9 @@ func TestCommandPalette_Integration_EmptySearchResults(t *testing.T) {
 	)
 
 	// Exit - first escape to close palette, then 'q' to quit
-	tm.Send(tea.KeyMsg{Type: tea.KeyEsc})
+	tm.Send(tea.KeyPressMsg{Code: tea.KeyEscape})
 	time.Sleep(50 * time.Millisecond)
-	tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+	tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 	tm.WaitFinished(t, teatest.WithFinalTimeout(time.Second))
 }
 

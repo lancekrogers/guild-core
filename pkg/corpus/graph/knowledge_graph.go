@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/corpus/extraction"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/corpus/extraction"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // KnowledgeGraph provides a graph-based representation of extracted knowledge
@@ -187,8 +187,8 @@ func (kg *KnowledgeGraph) Query(ctx context.Context, query GraphQuery) ([]*Knowl
 
 // traverse performs depth-first traversal of the graph
 func (kg *KnowledgeGraph) traverse(ctx context.Context, node *KnowledgeNode, query GraphQuery,
-	visited map[string]bool, results *[]*KnowledgeNode) {
-
+	visited map[string]bool, results *[]*KnowledgeNode,
+) {
 	if ctx.Err() != nil || visited[node.ID] {
 		return
 	}

@@ -4,7 +4,7 @@
 package messages
 
 import (
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 // Bubble Tea messages for event-driven communication between components

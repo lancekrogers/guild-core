@@ -6,9 +6,9 @@ package vector
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/pkg/providers/ollama"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/providers/ollama"
 )
 
 // OllamaEmbedder implements the Embedder interface using local Ollama models.

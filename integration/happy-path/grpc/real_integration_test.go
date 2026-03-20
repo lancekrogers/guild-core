@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package grpc
 
 import (
@@ -21,7 +24,7 @@ func TestRealDaemonIntegration(t *testing.T) {
 	t.Run("RealDaemonStartup", func(t *testing.T) {
 		config := DaemonConfig{
 			Port:                framework.GetAvailablePort(),
-			HealthCheckInterval: 1 * time.Second,
+			HealthCheckInterval: 100 * time.Millisecond, // Reduced from 1 second
 			RestartPolicy:       RestartPolicy_Always,
 			MaxRestartAttempts:  3,
 			ResourceLimits: ResourceLimits{
@@ -31,7 +34,7 @@ func TestRealDaemonIntegration(t *testing.T) {
 			},
 			CircuitBreaker: CircuitBreakerConfig{
 				FailureThreshold: 5,
-				RecoveryTimeout:  30 * time.Second,
+				RecoveryTimeout:  5 * time.Second, // Reduced from 30 seconds
 				HalfOpenRequests: 3,
 			},
 		}
@@ -64,7 +67,7 @@ func TestRealDaemonIntegration(t *testing.T) {
 	t.Run("RealDaemonFailureRecovery", func(t *testing.T) {
 		config := DaemonConfig{
 			Port:                framework.GetAvailablePort(),
-			HealthCheckInterval: 500 * time.Millisecond,
+			HealthCheckInterval: 100 * time.Millisecond, // Reduced from 500ms
 			RestartPolicy:       RestartPolicy_Always,
 			MaxRestartAttempts:  3,
 			ResourceLimits: ResourceLimits{
@@ -93,7 +96,7 @@ func TestRealDaemonIntegration(t *testing.T) {
 
 		// Monitor recovery
 		recoveryConfig := RecoveryConfig{
-			MaxRecoveryTime:      10 * time.Second,
+			MaxRecoveryTime:      3 * time.Second, // Reduced from 10 seconds
 			HealthCheckInterval:  100 * time.Millisecond,
 			ExpectedAvailability: 0.8, // 80% availability during recovery
 		}
@@ -117,7 +120,7 @@ func TestRealDaemonIntegration(t *testing.T) {
 	t.Run("RealDaemonConcurrentClients", func(t *testing.T) {
 		config := DaemonConfig{
 			Port:                framework.GetAvailablePort(),
-			HealthCheckInterval: 1 * time.Second,
+			HealthCheckInterval: 100 * time.Millisecond, // Reduced from 1 second
 			RestartPolicy:       RestartPolicy_Always,
 			MaxRestartAttempts:  3,
 			ResourceLimits: ResourceLimits{
@@ -158,13 +161,13 @@ func TestRealDaemonIntegration(t *testing.T) {
 						metrics.Errors++
 					}
 
-					time.Sleep(50 * time.Millisecond)
+					time.Sleep(10 * time.Millisecond) // Reduced from 50ms
 				}
 			}(i)
 		}
 
 		// Wait for clients to complete
-		time.Sleep(2 * time.Second)
+		time.Sleep(300 * time.Millisecond) // Reduced from 2 seconds
 
 		// Validate client metrics
 		totalRequests := 0

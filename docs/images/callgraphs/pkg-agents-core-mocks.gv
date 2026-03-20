@@ -1,0 +1,104 @@
+digraph gocallvis {
+    label="";
+    labeljust="l";
+    fontname="Arial";
+    fontsize="14";
+    rankdir="LR";
+    bgcolor="lightgray";
+    style="solid";
+    penwidth="0.5";
+    pad="0.0";
+    nodesep="0.35";
+
+    node [shape="box" style="filled,rounded" fillcolor="honeydew" fontname="Verdana" penwidth="1.0" margin="0.16,0.0"];
+    edge [minlen="2"]
+
+    subgraph "cluster_focus" {
+        labeljust="c";
+fontsize="18";
+bgcolor="#e6ecfa";
+label="mocks";
+labelloc="t";
+        
+        "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCommissionManager).LoadCommissionFromFile" [ label="(*MockCommissionManager).LoadCommissionFromFile" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCommissionManager).LoadCommissionFromFile | defined in mock_commission_manager.go:119\nat mock_commission_manager.go:125: calling [github.com/guild-framework/guild-core/pkg/commission.NewCommission]" fillcolor="lightblue" ]
+        "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteTool" [ fillcolor="lightblue" label="(*MockToolRegistry).ExecuteTool" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteTool | defined in mock_tool_registry.go:91\nat mock_tool_registry.go:111: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat mock_tool_registry.go:113: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat mock_tool_registry.go:112: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat mock_tool_registry.go:114: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+        "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).CanAfford" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).CanAfford | defined in mock_cost_manager.go:131\nat mock_cost_manager.go:132: calling [(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).ExceedsBudget]" fillcolor="lightblue" label="(*MockCostManager).CanAfford" ]
+        "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).ExceedsBudget" [ penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).ExceedsBudget | defined in mock_cost_manager.go:111" fillcolor="lightblue" label="(*MockCostManager).ExceedsBudget" ]
+        "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteToolWithParams" [ fillcolor="lightblue" label="(*MockToolRegistry).ExecuteToolWithParams" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteToolWithParams | defined in mock_tool_registry.go:122\nat mock_tool_registry.go:144: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat mock_tool_registry.go:143: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]\nat mock_tool_registry.go:142: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat mock_tool_registry.go:145: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+        "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).RegisterTool" [ fillcolor="lightblue" label="(*MockToolRegistry).RegisterTool" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).RegisterTool | defined in mock_tool_registry.go:54\nat mock_tool_registry.go:61: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]\nat mock_tool_registry.go:59: calling [github.com/guild-framework/guild-core/pkg/gerror.New]\nat mock_tool_registry.go:60: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+        "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).RecordLLMCost" [ fillcolor="lightblue" label="(*MockCostManager).RecordLLMCost" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).RecordLLMCost | defined in mock_cost_manager.go:136\nat mock_cost_manager.go:143: calling [(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).TrackCost]" ]
+        "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).TrackCost" [ fillcolor="lightblue" label="(*MockCostManager).TrackCost" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).TrackCost | defined in mock_cost_manager.go:38" ]
+        "github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockGuildArtisan" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockGuildArtisan | defined in mock_agent.go:62\nat mock_agent.go:64: calling [github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockAgent]\nat mock_agent.go:65: calling [(*github.com/guild-framework/guild-core/pkg/registry.DefaultToolRegistry).GetUnderlyingRegistry]\nat mock_agent.go:65: calling [github.com/guild-framework/guild-core/pkg/registry.NewToolRegistry]\nat mock_agent.go:67: calling [github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockLLMClient]" fillcolor="lightblue" label="NewMockGuildArtisan" ]
+        "github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockAgent" [ tooltip="github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockAgent | defined in mock_agent.go:25" fillcolor="lightblue" label="NewMockAgent" penwidth="1.5" ]
+        "github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockLLMClient" [ tooltip="github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockLLMClient | defined in mock_llm_client.go:22" fillcolor="lightblue" label="NewMockLLMClient" penwidth="1.5" ]
+        
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/commission" {
+        rank="sink";
+URL="/?f=github.com/guild-framework/guild-core/pkg/commission";
+tooltip="package: github.com/guild-framework/guild-core/pkg/commission";
+penwidth="0.8";
+label="commission";
+fontsize="16";
+style="filled";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+        
+        "github.com/guild-framework/guild-core/pkg/commission.NewCommission" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/commission.NewCommission | defined in models.go:185" fillcolor="moccasin" label="NewCommission" ]
+        
+    }
+
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/gerror" {
+        style="filled";
+fillcolor="lightyellow";
+label="gerror";
+URL="/?f=github.com/guild-framework/guild-core/pkg/gerror";
+tooltip="package: github.com/guild-framework/guild-core/pkg/gerror";
+penwidth="0.8";
+fontsize="16";
+fontname="Tahoma bold";
+rank="sink";
+        
+        "github.com/guild-framework/guild-core/pkg/gerror.New" [ fillcolor="moccasin" label="New" penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/gerror.New | defined in errors.go:190" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ fillcolor="moccasin" label="(*GuildError).WithComponent" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent | defined in errors.go:156" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ fillcolor="moccasin" label="(*GuildError).WithOperation" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation | defined in errors.go:162" ]
+        "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ fillcolor="moccasin" label="(*GuildError).WithDetails" penwidth="1.5" tooltip="(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails | defined in errors.go:147" ]
+        
+    }
+
+        subgraph "cluster_github.com/guild-framework/guild-core/pkg/registry" {
+        tooltip="package: github.com/guild-framework/guild-core/pkg/registry";
+penwidth="0.8";
+style="filled";
+label="registry";
+fontsize="16";
+fillcolor="lightyellow";
+fontname="Tahoma bold";
+rank="sink";
+URL="/?f=github.com/guild-framework/guild-core/pkg/registry";
+        
+        "github.com/guild-framework/guild-core/pkg/registry.NewToolRegistry" [ penwidth="1.5" tooltip="github.com/guild-framework/guild-core/pkg/registry.NewToolRegistry | defined in tool_registry.go:23" fillcolor="moccasin" label="NewToolRegistry" ]
+        "(*github.com/guild-framework/guild-core/pkg/registry.DefaultToolRegistry).GetUnderlyingRegistry" [ tooltip="(*github.com/guild-framework/guild-core/pkg/registry.DefaultToolRegistry).GetUnderlyingRegistry | defined in tool_registry.go:106" fillcolor="moccasin" label="(*DefaultToolRegistry).GetUnderlyingRegistry" penwidth="1.5" ]
+        
+    }
+
+    }
+
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).RegisterTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at mock_tool_registry.go:61: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).RecordLLMCost" -> "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).TrackCost" [ tooltip="at mock_cost_manager.go:143: calling [(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).TrackCost]" ]
+    "github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockGuildArtisan" -> "github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockAgent" [ tooltip="at mock_agent.go:64: calling [github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockAgent]" ]
+    "github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockGuildArtisan" -> "(*github.com/guild-framework/guild-core/pkg/registry.DefaultToolRegistry).GetUnderlyingRegistry" [ color="saddlebrown" tooltip="at mock_agent.go:65: calling [(*github.com/guild-framework/guild-core/pkg/registry.DefaultToolRegistry).GetUnderlyingRegistry]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteTool" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ tooltip="at mock_tool_registry.go:111: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ tooltip="at mock_tool_registry.go:113: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).CanAfford" -> "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).ExceedsBudget" [ tooltip="at mock_cost_manager.go:132: calling [(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCostManager).ExceedsBudget]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteToolWithParams" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation" [ color="saddlebrown" tooltip="at mock_tool_registry.go:144: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithOperation]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).RegisterTool" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ tooltip="at mock_tool_registry.go:59: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" color="saddlebrown" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockCommissionManager).LoadCommissionFromFile" -> "github.com/guild-framework/guild-core/pkg/commission.NewCommission" [ color="saddlebrown" tooltip="at mock_commission_manager.go:125: calling [github.com/guild-framework/guild-core/pkg/commission.NewCommission]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at mock_tool_registry.go:112: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at mock_tool_registry.go:114: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteToolWithParams" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at mock_tool_registry.go:143: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockGuildArtisan" -> "github.com/guild-framework/guild-core/pkg/registry.NewToolRegistry" [ color="saddlebrown" tooltip="at mock_agent.go:65: calling [github.com/guild-framework/guild-core/pkg/registry.NewToolRegistry]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteToolWithParams" -> "github.com/guild-framework/guild-core/pkg/gerror.New" [ color="saddlebrown" tooltip="at mock_tool_registry.go:142: calling [github.com/guild-framework/guild-core/pkg/gerror.New]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).ExecuteToolWithParams" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails" [ color="saddlebrown" tooltip="at mock_tool_registry.go:145: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithDetails]" ]
+    "(*github.com/guild-framework/guild-core/pkg/agents/core/mocks.MockToolRegistry).RegisterTool" -> "(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent" [ color="saddlebrown" tooltip="at mock_tool_registry.go:60: calling [(*github.com/guild-framework/guild-core/pkg/gerror.GuildError).WithComponent]" ]
+    "github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockGuildArtisan" -> "github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockLLMClient" [ tooltip="at mock_agent.go:67: calling [github.com/guild-framework/guild-core/pkg/agents/core/mocks.NewMockLLMClient]" ]
+}

@@ -9,13 +9,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/interfaces"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 )
 
 // Agent is an alias to the shared interface to avoid circular dependencies
@@ -62,8 +62,8 @@ func newWorkerAgent(id, name string, llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry tools.Registry,
 	commissionManager commission.CommissionManager,
-	costManager CostManagerInterface) *WorkerAgent {
-
+	costManager CostManagerInterface,
+) *WorkerAgent {
 	return &WorkerAgent{
 		ID:                id,
 		Name:              name,
@@ -484,8 +484,8 @@ func newManagerAgent(id, name string, llmClient providers.LLMClient,
 	memoryManager memory.ChainManager,
 	toolRegistry tools.Registry,
 	commissionManager commission.CommissionManager,
-	costManager CostManagerInterface) *ManagerAgent {
-
+	costManager CostManagerInterface,
+) *ManagerAgent {
 	worker := newWorkerAgent(id, name, llmClient, memoryManager, toolRegistry, commissionManager, costManager)
 
 	return &ManagerAgent{

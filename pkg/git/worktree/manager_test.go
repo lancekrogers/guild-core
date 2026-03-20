@@ -24,13 +24,13 @@ func TestCraftWorktreeManager(t *testing.T) {
 	basePath := filepath.Join(tempDir, "worktrees")
 
 	// Create a minimal git repo for testing
-	err := os.MkdirAll(repoPath, 0755)
+	err := os.MkdirAll(repoPath, 0o755)
 	require.NoError(t, err)
 
 	// Initialize git repo (this would fail in real usage without git)
 	// For testing, we'll create the directory structure
 	gitDir := filepath.Join(repoPath, ".git")
-	err = os.MkdirAll(gitDir, 0755)
+	err = os.MkdirAll(gitDir, 0o755)
 	require.NoError(t, err)
 
 	// This test would fail with actual git operations, but tests the constructor

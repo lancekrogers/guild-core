@@ -1,22 +1,26 @@
 # Database Cleanup Migration (000005)
 
 ## Purpose
+
 This migration removes development artifacts and test data from the production database to ensure a clean, professional deployment.
 
 ## What Gets Cleaned
 
 ### 1. Test Data Patterns
+
 The migration removes entries with these prefixes/patterns:
-- `test-`, `test ` 
-- `demo-`, `demo `
-- `example-`, `example `
-- `sample-`, `sample `
-- `temp-`, `temp `, `tmp-`, `tmp `
-- `mock-`, `mock `, `fake-`, `fake `
-- `debug-`, `debug `
-- `dev-`, `dev `, `development-`, `development `
+
+- `test-`, `test`
+- `demo-`, `demo`
+- `example-`, `example`
+- `sample-`, `sample`
+- `temp-`, `temp`, `tmp-`, `tmp`
+- `mock-`, `mock`, `fake-`, `fake`
+- `debug-`, `debug`
+- `dev-`, `dev`, `development-`, `development`
 
 ### 2. Specific Entities Cleaned
+
 - **Campaigns**: Test/demo campaigns by name
 - **Commissions**: Test/demo commissions by title
 - **Agents**: Test/demo agents by name or ID, including specific demo agents from `cost_demo`:
@@ -30,7 +34,9 @@ The migration removes entries with these prefixes/patterns:
 - **Prompt Chains**: Test/demo prompt chains by name
 
 ### 3. Orphaned Data Cleanup
+
 The migration also removes orphaned records:
+
 - Commissions without campaigns
 - Boards without commissions
 - Tasks without valid commission or board
@@ -48,6 +54,7 @@ The migration also removes orphaned records:
 ## Testing the Migration
 
 Before running in production:
+
 1. Test on a copy of your production database
 2. Verify no legitimate data matches the cleanup patterns
 3. Check the count of records that will be affected:

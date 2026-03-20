@@ -12,12 +12,12 @@ import (
 
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/internal/setup"
-	"github.com/lancekrogers/guild/pkg/campaign"
-	"github.com/lancekrogers/guild/pkg/daemon"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/paths"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild-core/internal/setup"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	"github.com/lancekrogers/guild-core/pkg/daemon"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/project"
 )
 
 // DefaultConfigManager implements ConfigurationManager
@@ -38,7 +38,7 @@ func (d *DefaultConfigManager) EstablishGuildFoundation(ctx context.Context, pro
 
 	// Step 0: Ensure campaign directory exists
 	campaignDir := filepath.Join(projectPath, paths.DefaultCampaignDir)
-	if err := os.MkdirAll(campaignDir, 0755); err != nil {
+	if err := os.MkdirAll(campaignDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign directory").
 			WithComponent("DefaultConfigManager").
 			WithOperation("EstablishGuildFoundation").
@@ -87,7 +87,7 @@ func (d *DefaultConfigManager) EstablishGuildFoundation(ctx context.Context, pro
 	}
 
 	campaignPath := filepath.Join(projectPath, paths.DefaultCampaignDir, "campaign.yaml")
-	if err := os.WriteFile(campaignPath, campaignData, 0644); err != nil {
+	if err := os.WriteFile(campaignPath, campaignData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to save campaign configuration").
 			WithComponent("DefaultConfigManager").
 			WithOperation("EstablishGuildFoundation").
@@ -102,7 +102,7 @@ func (d *DefaultConfigManager) EstablishGuildFoundation(ctx context.Context, pro
 
 	// Step 2: Create guilds directory and Elena-focused guild config
 	guildsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "guilds")
-	if err := os.MkdirAll(guildsDir, 0755); err != nil {
+	if err := os.MkdirAll(guildsDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create guilds directory").
 			WithComponent("DefaultConfigManager").
 			WithOperation("EstablishGuildFoundation").
@@ -142,7 +142,7 @@ func (d *DefaultConfigManager) EstablishGuildFoundation(ctx context.Context, pro
 	}
 
 	guildPath := filepath.Join(guildsDir, "elena_guild.yaml")
-	if err := os.WriteFile(guildPath, guildData, 0644); err != nil {
+	if err := os.WriteFile(guildPath, guildData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write guild config").
 			WithComponent("DefaultConfigManager").
 			WithOperation("EstablishGuildFoundation").
@@ -152,7 +152,7 @@ func (d *DefaultConfigManager) EstablishGuildFoundation(ctx context.Context, pro
 	// Step 3: Create agents directory
 	// Note: Agent configs will be created by createEnhancedAgents in init.go
 	agentsDir := filepath.Join(projectPath, paths.DefaultCampaignDir, "agents")
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("DefaultConfigManager").
 			WithOperation("EstablishGuildFoundation").
@@ -176,7 +176,7 @@ func (d *DefaultConfigManager) EstablishGuildFoundation(ctx context.Context, pro
 
 	for _, dir := range directories {
 		dirPath := filepath.Join(projectPath, paths.DefaultCampaignDir, dir)
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
+		if err := os.MkdirAll(dirPath, 0o755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create directory").
 				WithComponent("DefaultConfigManager").
 				WithOperation("EstablishGuildFoundation").
@@ -217,7 +217,7 @@ func (d *DefaultConfigManager) registerCampaignGlobally(ctx context.Context, cam
 
 	// Create campaign registry directory
 	campaignRegistryDir := filepath.Join(configDir, "campaigns", hash)
-	if err := os.MkdirAll(campaignRegistryDir, 0755); err != nil {
+	if err := os.MkdirAll(campaignRegistryDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create campaign registry directory").
 			WithComponent("DefaultConfigManager").
 			WithOperation("registerCampaignGlobally").
@@ -239,7 +239,7 @@ func (d *DefaultConfigManager) registerCampaignGlobally(ctx context.Context, cam
 	}
 
 	registryPath := filepath.Join(campaignRegistryDir, "campaign.yaml")
-	if err := os.WriteFile(registryPath, registryYaml, 0644); err != nil {
+	if err := os.WriteFile(registryPath, registryYaml, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write campaign registry").
 			WithComponent("DefaultConfigManager").
 			WithOperation("registerCampaignGlobally").

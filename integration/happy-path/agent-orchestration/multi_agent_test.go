@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package agent_orchestration
 
 import (
@@ -181,8 +184,8 @@ func (f *HappyPathTestFramework) executeParallelCoordination(agents []*RealAgent
 	expectedCompletionTime time.Duration
 	coordinationComplexity ComplexityLevel
 	expectedSuccessRate    float64
-}) ([]CoordinationResult, error) {
-
+},
+) ([]CoordinationResult, error) {
 	var wg sync.WaitGroup
 	results := make([]CoordinationResult, len(agents))
 
@@ -242,8 +245,8 @@ func (f *HappyPathTestFramework) executeSequentialCoordination(agents []*RealAge
 	expectedCompletionTime time.Duration
 	coordinationComplexity ComplexityLevel
 	expectedSuccessRate    float64
-}) ([]CoordinationResult, error) {
-
+},
+) ([]CoordinationResult, error) {
 	results := make([]CoordinationResult, len(agents))
 	previousOutput := "Analyze the main.go file structure"
 
@@ -300,8 +303,8 @@ func (f *HappyPathTestFramework) executeCollaborativeCoordination(agents []*Real
 	expectedCompletionTime time.Duration
 	coordinationComplexity ComplexityLevel
 	expectedSuccessRate    float64
-}) ([]CoordinationResult, error) {
-
+},
+) ([]CoordinationResult, error) {
 	results := make([]CoordinationResult, len(agents))
 
 	// Collaborative task: code review with different perspectives
@@ -532,3 +535,180 @@ func TestAgentResourceIsolation(t *testing.T) {
 
 	t.Logf("✅ Resource isolation test completed: %d/%d agents succeeded", successCount, agentCount)
 }
+
+// Sprint 7 Additional Multi-Agent Tests
+
+// TestMultiAgentCollaboration validates advanced multi-agent collaboration scenarios
+// TODO: Implement CreateAgent and ExecuteCommission methods in HappyPathTestFramework
+/*
+func TestMultiAgentCollaboration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration test in short mode")
+	}
+
+	framework := NewHappyPathFramework(t)
+	defer framework.Cleanup()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	defer cancel()
+
+	t.Run("agent_specialization", func(t *testing.T) {
+		// Create agents with different specializations
+		agents := []struct {
+			name         string
+			capabilities []string
+		}{
+			{"backend-specialist", []string{"api", "database", "security"}},
+			{"frontend-specialist", []string{"ui", "ux", "react"}},
+			{"devops-specialist", []string{"deployment", "monitoring", "ci/cd"}},
+		}
+
+		for _, agent := range agents {
+			err := framework.CreateAgent(ctx, agent.name, agent.capabilities)
+			require.NoError(t, err)
+		}
+
+		// Create a commission requiring multiple specializations
+		commission := &commission.Commission{
+			Title:       "Full-Stack Application",
+			Description: "Build a complete web application with frontend, backend, and deployment",
+		}
+
+		// Test that agents collaborate based on their specializations
+		result, err := framework.ExecuteCommission(ctx, commission)
+		require.NoError(t, err)
+		assert.True(t, result.Success)
+
+		// Verify each specialist contributed
+		for _, agent := range agents {
+			assert.Contains(t, result.Logs, agent.name,
+				"Agent %s should have contributed", agent.name)
+		}
+	})
+
+	t.Run("task_distribution", func(t *testing.T) {
+		// Create multiple identical agents
+		numAgents := 5
+		for i := 0; i < numAgents; i++ {
+			err := framework.CreateAgent(ctx,
+				fmt.Sprintf("worker-%d", i),
+				[]string{"general"})
+			require.NoError(t, err)
+		}
+
+		// Create commission with parallelizable tasks
+		commission := &commission.Commission{
+			Title: "Parallel Processing Task",
+			Tasks: []*commission.CommissionTask{
+				{Title: "Process Dataset A"},
+				{Title: "Process Dataset B"},
+				{Title: "Process Dataset C"},
+				{Title: "Process Dataset D"},
+				{Title: "Process Dataset E"},
+			},
+		}
+
+		start := time.Now()
+		result, err := framework.ExecuteCommission(ctx, commission)
+		duration := time.Since(start)
+
+		require.NoError(t, err)
+		assert.True(t, result.Success)
+
+		// Should complete faster with parallel processing
+		assert.LessOrEqual(t, duration, 30*time.Second,
+			"Parallel processing should be efficient")
+	})
+
+	t.Run("agent_handoff", func(t *testing.T) {
+		// Create pipeline of specialized agents
+		pipeline := []string{"analyzer", "designer", "implementer", "tester"}
+
+		for _, role := range pipeline {
+			err := framework.CreateAgent(ctx, role, []string{role})
+			require.NoError(t, err)
+		}
+
+		// Create commission requiring sequential processing
+		commission := &commission.Commission{
+			Title:       "Sequential Processing Pipeline",
+			Description: "Task that requires analysis → design → implementation → testing",
+		}
+
+		result, err := framework.ExecuteCommission(ctx, commission)
+		require.NoError(t, err)
+		assert.True(t, result.Success)
+
+		// Verify handoff sequence
+		var lastTimestamp time.Time
+		for _, role := range pipeline {
+			// Find when this agent started
+			agentStart := framework.GetAgentStartTime(role)
+			assert.False(t, agentStart.IsZero(),
+				"Agent %s should have a start time", role)
+
+			// Verify sequential execution
+			if !lastTimestamp.IsZero() {
+				assert.True(t, agentStart.After(lastTimestamp),
+					"Agent %s should start after previous agent", role)
+			}
+			lastTimestamp = agentStart
+		}
+	})
+
+	t.Run("concurrent_execution_limits", func(t *testing.T) {
+		// Test system behavior under high concurrency
+		numAgents := 20
+		numCommissions := 50
+
+		// Create many agents
+		for i := 0; i < numAgents; i++ {
+			err := framework.CreateAgent(ctx,
+				fmt.Sprintf("concurrent-agent-%d", i),
+				[]string{"concurrent"})
+			require.NoError(t, err)
+		}
+
+		// Submit many commissions concurrently
+		var wg sync.WaitGroup
+		results := make(chan bool, numCommissions)
+
+		for i := 0; i < numCommissions; i++ {
+			wg.Add(1)
+			go func(id int) {
+				defer wg.Done()
+
+				commission := &commission.Commission{
+					Title: fmt.Sprintf("Concurrent Task %d", id),
+				}
+
+				result, err := framework.ExecuteCommission(ctx, commission)
+				if err == nil && result.Success {
+					results <- true
+				} else {
+					results <- false
+				}
+			}(i)
+		}
+
+		wg.Wait()
+		close(results)
+
+		// Count successes
+		successCount := 0
+		for success := range results {
+			if success {
+				successCount++
+			}
+		}
+
+		// Should handle high concurrency gracefully
+		successRate := float64(successCount) / float64(numCommissions)
+		assert.GreaterOrEqual(t, successRate, 0.9,
+			"System should handle concurrent load with >90%% success rate")
+
+		t.Logf("Concurrent execution: %d/%d succeeded (%.1f%%)",
+			successCount, numCommissions, successRate*100)
+	})
+}
+*/

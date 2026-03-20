@@ -9,7 +9,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Layer represents a prompt layer type

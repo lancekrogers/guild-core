@@ -7,8 +7,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // kanbanBoardRepoAdapter adapts storage.BoardRepository to kanban.BoardRepository

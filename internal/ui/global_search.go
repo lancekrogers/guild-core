@@ -11,12 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/tools/search"
+	"github.com/lancekrogers/guild-core/tools/search"
 )
 
 // GlobalSearchKeyMap defines key bindings for the global search
@@ -119,7 +119,7 @@ func NewGlobalSearchModel(workingDir string, opts ...GlobalSearchOption) *Global
 	input.Placeholder = "Enter search pattern (regex supported)..."
 	input.Focus()
 	input.CharLimit = 256
-	input.Width = 50
+	input.SetWidth(50)
 
 	agTool := search.NewAgTool(workingDir)
 
@@ -179,7 +179,7 @@ func (m *GlobalSearchModel) Init() tea.Cmd {
 }
 
 // Update handles messages and updates the model
-func (m *GlobalSearchModel) Update(msg tea.Msg) (*GlobalSearchModel, tea.Cmd) {
+func (m *GlobalSearchModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 
 	switch msg := msg.(type) {
@@ -263,9 +263,9 @@ func (m *GlobalSearchModel) Update(msg tea.Msg) (*GlobalSearchModel, tea.Cmd) {
 }
 
 // View renders the global search interface
-func (m *GlobalSearchModel) View() string {
+func (m *GlobalSearchModel) View() tea.View {
 	if m.width == 0 || m.height == 0 {
-		return "Initializing..."
+		return tea.NewView("Initializing...")
 	}
 
 	var sections []string
@@ -296,7 +296,7 @@ func (m *GlobalSearchModel) View() string {
 	footer := m.renderFooter()
 	sections = append(sections, footer)
 
-	return lipgloss.JoinVertical(lipgloss.Left, sections...)
+	return tea.NewView(lipgloss.JoinVertical(lipgloss.Left, sections...))
 }
 
 // renderSplitView renders the results list and preview side by side
@@ -487,7 +487,7 @@ func (m *GlobalSearchModel) updateLayout() {
 	if inputWidth < 20 {
 		inputWidth = 20
 	}
-	m.input.Width = inputWidth
+	m.input.SetWidth(inputWidth)
 }
 
 // Message types
@@ -496,8 +496,10 @@ type globalSearchResultsMsg struct {
 	err     error
 }
 
-type globalSearchPreviewMsg string
-type globalSearchErrorMsg error
+type (
+	globalSearchPreviewMsg string
+	globalSearchErrorMsg   error
+)
 
 // Commands
 

@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 	"github.com/lancekrogers/claude-code-go/pkg/claude"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
 )
 
 func TestNewClient(t *testing.T) {

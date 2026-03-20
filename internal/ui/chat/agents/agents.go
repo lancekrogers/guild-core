@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	pb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	pb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
 )
 
 // AgentTarget represents a parsed agent mention with routing information
@@ -141,6 +141,7 @@ func (ar *AgentRouter) BroadcastToAll(message string) tea.Cmd {
 		// Send message to each agent (simplified for now - in a full implementation
 		// this would be done concurrently and collected)
 		var responses []*pb.AgentMessageResponse
+		var firstErr error
 		for _, agent := range listResp.Agents {
 			req := &pb.AgentMessageRequest{
 				AgentId: agent.Id,
@@ -148,8 +149,27 @@ func (ar *AgentRouter) BroadcastToAll(message string) tea.Cmd {
 			}
 
 			resp, err := ar.guildClient.SendMessageToAgent(ar.ctx, req)
-			if err == nil {
+			if err == nil && resp != nil {
 				responses = append(responses, resp)
+			} else if err != nil && firstErr == nil {
+				firstErr = err
+			}
+		}
+
+		if len(responses) == 0 {
+			if firstErr != nil {
+				return AgentErrorMsg{
+					AgentID: "all",
+					Error: gerror.Wrap(firstErr, gerror.ErrCodeConnection, "broadcast failed for all agents").
+						WithComponent("chat.core.agents").
+						WithOperation("BroadcastToAll"),
+				}
+			}
+			return AgentErrorMsg{
+				AgentID: "all",
+				Error: gerror.New(gerror.ErrCodeInternal, "broadcast produced no responses", nil).
+					WithComponent("chat.core.agents").
+					WithOperation("BroadcastToAll"),
 			}
 		}
 

@@ -9,10 +9,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/cache"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/memory"
-	"github.com/lancekrogers/guild/pkg/monitoring"
+	"github.com/lancekrogers/guild-core/pkg/cache"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/monitoring"
 )
 
 // PerformanceManager orchestrates all performance optimization components

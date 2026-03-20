@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
 )
 
 func TestCorpusTool(t *testing.T) {
@@ -30,7 +30,7 @@ func TestCorpusTool(t *testing.T) {
 	}
 
 	// Create activities directory
-	err = os.MkdirAll(cfg.ActivitiesPath, 0755)
+	err = os.MkdirAll(cfg.ActivitiesPath, 0o755)
 	if err != nil {
 		t.Fatalf("Failed to create activities directory: %v", err)
 	}

@@ -7,8 +7,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // TestKanbanSQLiteIntegration tests the end-to-end kanban SQLite integration

@@ -5,31 +5,41 @@ This directory contains Language Server Protocol (LSP) tools that provide advanc
 ## Available Tools
 
 ### Document Symbols Tool
+
 Lists all symbols (functions, classes, variables) in a document.
+
 - **Use case**: Understanding code structure, navigation
 - **Input**: File path
 - **Output**: Hierarchical symbol tree
 
 ### Workspace Symbols Tool
+
 Search for symbols across the entire workspace.
+
 - **Use case**: Finding definitions across multiple files
 - **Input**: Symbol query
 - **Output**: List of matching symbols with locations
 
 ### Code Actions Tool
+
 Get available code refactorings and fixes at a position.
+
 - **Use case**: Automated refactoring, fixing issues
 - **Input**: File path, line, column
 - **Output**: Available actions (extract method, add imports, etc.)
 
 ### Rename Symbol Tool
+
 Rename a symbol across all its usages.
+
 - **Use case**: Safe refactoring
 - **Input**: File path, line, column, new name
 - **Output**: List of files and changes
 
 ### Format Document Tool
+
 Format code according to language standards.
+
 - **Use case**: Code cleanup, standardization
 - **Input**: File path
 - **Output**: Formatted content or edits

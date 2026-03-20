@@ -9,6 +9,12 @@
 //   - Built-in MCP (Model Context Protocol) support
 //   - Local session management and conversation history
 //
+// Authentication:
+// Unlike other providers, ClaudeCode doesn't use API keys. Instead, it uses the Claude Code CLI
+// which handles authentication separately through the /login command. When configuring this provider:
+//   - Use "binary_path" or "api_key" in config to specify the path to claude CLI (defaults to "claude" in PATH)
+//   - No actual API key is needed - the CLI manages its own authentication
+//
 // To get started with Claude Max:
 //  1. Sign up for Claude Max using this affiliate link: https://t.co/54ylwq0OPh
 //  2. After signing up, configure your Max plan via the Claude console
@@ -29,8 +35,8 @@ import (
 
 	"github.com/lancekrogers/claude-code-go/pkg/claude"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // Claude 4 model constants (Released May 2025)
@@ -104,7 +110,9 @@ type Client struct {
 //   - Persistent conversation history
 //
 // Parameters:
-//   - binPath: Path to claude binary (defaults to "claude" in PATH)
+//   - binPath: Path to claude binary (defaults to "claude" in PATH if empty string provided).
+//     Note: When called from Factory.CreateClient, the apiKey parameter is passed here
+//     as binPath due to interface constraints - no actual API key is needed.
 //   - model: Model to use (e.g., "claude-opus-4", "claude-sonnet-4")
 func NewClient(binPath, model string) *Client {
 	// Use default path if none specified

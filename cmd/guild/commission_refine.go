@@ -12,16 +12,16 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/pkg/agents/core/manager"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/paths"
-	"github.com/lancekrogers/guild/pkg/project"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
-	promptcontext "github.com/lancekrogers/guild/pkg/prompts/layered/context"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/agents/core/manager"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/paths"
+	"github.com/lancekrogers/guild-core/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
+	promptcontext "github.com/lancekrogers/guild-core/pkg/prompts/layered/context"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 var (
@@ -189,7 +189,7 @@ func executeRefinement(ctx context.Context, commissionContent string) error {
 	}
 
 	// Create output directory
-	if err := os.MkdirAll(outputDir, 0755); err != nil {
+	if err := os.MkdirAll(outputDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create output directory").
 			WithComponent("cli").
 			WithOperation("commission.refine").
@@ -256,7 +256,7 @@ func executeRefinement(ctx context.Context, commissionContent string) error {
 
 		// Create directory if needed
 		dir := filepath.Dir(filePath)
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create directory").
 				WithComponent("cli").
 				WithOperation("commission.refine").
@@ -264,7 +264,7 @@ func executeRefinement(ctx context.Context, commissionContent string) error {
 		}
 
 		// Write file
-		if err := os.WriteFile(filePath, []byte(file.Content), 0644); err != nil {
+		if err := os.WriteFile(filePath, []byte(file.Content), 0o644); err != nil {
 			return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write file").
 				WithComponent("cli").
 				WithOperation("commission.refine").
@@ -287,7 +287,7 @@ func executeRefinement(ctx context.Context, commissionContent string) error {
 func setupRefiner(ctx context.Context, projCtx *project.Context, guildConfig *config.GuildConfig) (*manager.GuildMasterRefiner, error) {
 	// Setup data directory
 	dataDir := filepath.Join(projCtx.GetRootPath(), paths.DefaultCampaignDir)
-	if err := os.MkdirAll(dataDir, 0755); err != nil {
+	if err := os.MkdirAll(dataDir, 0o755); err != nil {
 		return nil, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create data directory").
 			WithComponent("cli").
 			WithOperation("commission.refine.setupRefiner").

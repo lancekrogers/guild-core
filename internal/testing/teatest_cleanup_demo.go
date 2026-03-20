@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/x/exp/teatest"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/teatest"
 )
 
 // TeaTestCleanup provides a pattern for proper teatest cleanup
@@ -182,7 +182,7 @@ func ExampleSafeTeaTest(t *testing.T) {
 	)
 
 	// Send quit command
-	tm.Send(tea.KeyMsg{Type: tea.KeyCtrlC})
+	tm.Send(tea.KeyPressMsg{Code: 'c', Mod: tea.ModCtrl})
 
 	// SafeTeaTest will handle cleanup automatically
 }
@@ -205,9 +205,9 @@ func (m *simpleModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m *simpleModel) View() string {
+func (m *simpleModel) View() tea.View {
 	if m.quitting {
-		return "Goodbye!\n"
+		return tea.NewView("Goodbye!\n")
 	}
-	return "Press any key to quit\n"
+	return tea.NewView("Press any key to quit\n")
 }

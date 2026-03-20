@@ -7,8 +7,8 @@ import (
 	"context"
 	"os"
 
-	"github.com/lancekrogers/guild/pkg/providers/base"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/providers/base"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // xAI Grok models

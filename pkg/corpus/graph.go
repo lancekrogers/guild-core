@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Graph represents document connections
@@ -119,7 +119,7 @@ func SaveGraph(ctx context.Context, graph *Graph, cfg Config) error {
 
 	// Ensure the graph directory exists
 	graphDir := filepath.Join(cfg.CorpusPath, GraphDirName)
-	if err := os.MkdirAll(graphDir, 0755); err != nil {
+	if err := os.MkdirAll(graphDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_graph").WithOperation("failed to create graph directory")
 	}
 
@@ -131,7 +131,7 @@ func SaveGraph(ctx context.Context, graph *Graph, cfg Config) error {
 	}
 
 	// Write to file
-	if err := os.WriteFile(graphPath, data, 0644); err != nil {
+	if err := os.WriteFile(graphPath, data, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_graph").WithOperation("failed to save graph")
 	}
 
@@ -245,12 +245,12 @@ func ExportGraphDOT(ctx context.Context, graph *Graph, cfg Config) error {
 
 	// Write to file
 	graphDir := filepath.Join(cfg.CorpusPath, GraphDirName)
-	if err := os.MkdirAll(graphDir, 0755); err != nil {
+	if err := os.MkdirAll(graphDir, 0o755); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("save_graph").WithOperation("failed to create graph directory")
 	}
 
 	dotPath := filepath.Join(graphDir, "corpus.dot")
-	if err := os.WriteFile(dotPath, []byte(sb.String()), 0644); err != nil {
+	if err := os.WriteFile(dotPath, []byte(sb.String()), 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "corpus").WithComponent("export_to_dot").WithOperation("failed to save DOT file")
 	}
 

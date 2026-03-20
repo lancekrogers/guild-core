@@ -11,9 +11,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/grpc"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/grpc"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/registry"
 )
 
 // RealDaemon wraps the actual gRPC server for integration testing

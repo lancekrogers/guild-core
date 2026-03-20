@@ -9,9 +9,10 @@ Guild's chat interface provides rich visual enhancements that create a professio
 ### Core Visual Components
 
 #### 1. Markdown Renderer (`markdown_renderer.go`)
+
 - **Purpose**: Renders markdown content with syntax highlighting
-- **Dependencies**: 
-  - `github.com/charmbracelet/glamour` - Markdown rendering
+- **Dependencies**:
+  - `github.com/charmbracelet/glamour/v2` - Markdown rendering
   - `github.com/alecthomas/chroma/v2` - Syntax highlighting
 - **Features**:
   - Medieval-themed styling with gold headers
@@ -21,6 +22,7 @@ Guild's chat interface provides rich visual enhancements that create a professio
   - Graceful degradation on errors
 
 #### 2. Content Formatter (`content_formatter.go`)
+
 - **Purpose**: High-level content formatting for different message types
 - **Features**:
   - Agent response formatting with markdown support
@@ -32,6 +34,7 @@ Guild's chat interface provides rich visual enhancements that create a professio
   - Collapsible sections for long outputs
 
 #### 3. Agent Status Display (`agent_status.go`, `status_display.go`)
+
 - **Purpose**: Real-time agent activity monitoring
 - **Components**:
   - `AgentStatusTracker` - Monitors agent states and activities
@@ -44,6 +47,7 @@ Guild's chat interface provides rich visual enhancements that create a professio
   - Activity feed with timestamps
 
 #### 4. Agent Indicators (`agent_indicators.go`)
+
 - **Purpose**: Visual indicators for agent states
 - **Features**:
   - Animated status indicators (⚪ Idle, 🤔 Thinking, ⚙️ Working, ✅ Done)
@@ -52,6 +56,7 @@ Guild's chat interface provides rich visual enhancements that create a professio
   - Time estimates
 
 #### 5. Command Completion (`chat_completion.go`)
+
 - **Purpose**: Intelligent auto-completion for commands and agents
 - **Features**:
   - Tab completion for commands (/help, /status, etc.)
@@ -61,6 +66,7 @@ Guild's chat interface provides rich visual enhancements that create a professio
   - Context-aware suggestions
 
 #### 6. Command History (`history.go`)
+
 - **Purpose**: Persistent command history across sessions
 - **Features**:
   - Arrow key navigation (↑/↓)
@@ -73,16 +79,19 @@ Guild's chat interface provides rich visual enhancements that create a professio
 ### View Rendering Pipeline
 
 1. **Message Reception**
+
    ```
    gRPC Stream → Message Handler → View Update
    ```
 
 2. **Content Processing**
+
    ```
    Raw Content → Content Formatter → Markdown Renderer → Terminal Display
    ```
 
 3. **Visual Enhancement Flow**
+
    ```go
    // In updateMessagesView() method
    if m.contentFormatter != nil {
@@ -114,6 +123,7 @@ agentIndicators := NewAgentIndicators()
 ## Medieval Theme Standards
 
 ### Color Palette
+
 ```go
 const (
     Background = "#1a1a1a"  // Castle stone
@@ -128,11 +138,12 @@ const (
 ```
 
 ### Visual Elements
+
 - Headers: `═══ Header ═══`
 - Borders: `╭─╮│╰─╯`
-- Lists: `• ` (bullet points)
+- Lists: `•` (bullet points)
 - Tasks: `[✓]` (completed), `[ ]` (pending)
-- Quotes: `│ ` (indent token)
+- Quotes: `│` (indent token)
 
 ## Performance Considerations
 
@@ -144,10 +155,12 @@ const (
 ## Testing
 
 Visual components are tested in `internal/chat_test/`:
+
 - `markdown_renderer_test.go` - Markdown rendering tests
 - `content_formatter_test.go` - Content formatting tests
 
 Run tests with:
+
 ```bash
 go test ./internal/chat_test/ -v
 ```
@@ -163,6 +176,7 @@ go test ./internal/chat_test/ -v
 ## Integration Points
 
 Visual components integrate with:
+
 - **gRPC Services**: Receive formatted messages
 - **Kanban Board**: Display task status
 - **Tool System**: Show tool execution progress

@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/mock"
 
-	"github.com/lancekrogers/guild/pkg/memory"
+	"github.com/lancekrogers/guild-core/pkg/memory"
 )
 
 // MockMemoryManager is a mock implementation of the memory.ChainManager interface.

@@ -22,10 +22,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/project/global"
-	"github.com/lancekrogers/guild/pkg/project/local"
-	"github.com/lancekrogers/guild/pkg/storage"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/project/global"
+	"github.com/lancekrogers/guild-core/pkg/project/local"
+	"github.com/lancekrogers/guild-core/pkg/storage"
 )
 
 // InitializeProject creates both global and campaign structures
@@ -40,6 +40,14 @@ func InitializeProject(projectPath string) error {
 	// Initialize campaign project structure (formerly called "local")
 	if err := local.InitializeLocal(projectPath); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize campaign project").
+			WithComponent("project").
+			WithOperation("initialize_project")
+	}
+
+	// Initialize and migrate the database
+	dbPath := local.LocalDatabasePath(projectPath)
+	if err := initializeDatabaseRefactored(dbPath); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to initialize database").
 			WithComponent("project").
 			WithOperation("initialize_project")
 	}

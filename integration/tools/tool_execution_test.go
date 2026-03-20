@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package tools_test
 
 import (
@@ -12,12 +15,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/providers/anthropic"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
-	"github.com/lancekrogers/guild/pkg/tools"
-	"github.com/lancekrogers/guild/pkg/tools/executor"
-	"github.com/lancekrogers/guild/pkg/tools/parser"
-	"github.com/lancekrogers/guild/pkg/tools/parser/types"
+	"github.com/lancekrogers/guild-core/pkg/providers/anthropic"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/tools"
+	"github.com/lancekrogers/guild-core/pkg/tools/executor"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser"
+	"github.com/lancekrogers/guild-core/pkg/tools/parser/types"
 )
 
 // MockTool implements a simple test tool
@@ -177,7 +180,7 @@ func TestResponseParserIntegration(t *testing.T) {
 			require.NoError(t, err)
 
 			if tc.wantCalls == 0 {
-				assert.Nil(t, calls)
+				assert.Len(t, calls, 0)
 			} else {
 				require.Len(t, calls, tc.wantCalls)
 				assert.Equal(t, "test_tool", calls[0].Function.Name)

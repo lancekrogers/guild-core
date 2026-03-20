@@ -181,7 +181,6 @@ func TestAgToolExecuteWithoutAg(t *testing.T) {
 	// Test with ag not available (assuming it's not in PATH during test)
 	input := `{"pattern": "test"}`
 	result, err := tool.Execute(ctx, input)
-
 	// Should return a result with error metadata, not an error
 	if err != nil {
 		t.Errorf("Expected no error when ag is not installed, got: %v", err)
@@ -364,7 +363,7 @@ func TestAgToolInputParameterHandling(t *testing.T) {
 
 	for filename, content := range testFiles {
 		filePath := filepath.Join(tempDir, filename)
-		if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+		if err := os.WriteFile(filePath, []byte(content), 0o644); err != nil {
 			t.Fatalf("Failed to create test file %s: %v", filename, err)
 		}
 	}
@@ -585,7 +584,7 @@ func BenchmarkAgToolExecution(b *testing.B) {
 	for i := 0; i < 10; i++ {
 		content := fmt.Sprintf("package test%d\nfunc Test%d() {\n\tfmt.Println(\"test %d\")\n}", i, i, i)
 		filePath := filepath.Join(tempDir, fmt.Sprintf("test%d.go", i))
-		if err := os.WriteFile(filePath, []byte(content), 0644); err != nil {
+		if err := os.WriteFile(filePath, []byte(content), 0o644); err != nil {
 			b.Fatalf("Failed to create test file: %v", err)
 		}
 	}

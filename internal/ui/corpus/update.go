@@ -8,13 +8,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/list"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/list"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // Update handles UI events and state transitions
@@ -228,11 +228,12 @@ func (m CorpusModel) handleWindowResize(width, height int) (tea.Model, tea.Cmd) 
 	var cmds []tea.Cmd
 
 	// Update viewport dimensions
-	m.viewPort.Width = width
-	m.viewPort.Height = height - headerHeight - footerHeight - 1
-	if m.viewPort.Height < 0 {
-		m.viewPort.Height = 0
+	viewHeight := height - headerHeight - footerHeight - 1
+	if viewHeight < 0 {
+		viewHeight = 0
 	}
+	m.viewPort.SetWidth(width)
+	m.viewPort.SetHeight(viewHeight)
 
 	// Update list dimensions
 	docListHeight := height - headerHeight - footerHeight
@@ -243,10 +244,10 @@ func (m CorpusModel) handleWindowResize(width, height int) (tea.Model, tea.Cmd) 
 	m.tagList.SetSize(width, docListHeight)
 
 	// Update search input width
-	m.searchInput.Width = width - 2
+	m.searchInput.SetWidth(width - 2)
 
 	// Update command input width
-	m.commandInput.Width = width - 2
+	m.commandInput.SetWidth(width - 2)
 
 	return m, tea.Batch(cmds...)
 }
@@ -517,7 +518,7 @@ func (m CorpusModel) getCurrentLine() string {
 	lines := strings.Split(content, "\n")
 
 	// Find the line at cursor position (approximation)
-	cursorY := m.viewPort.YOffset + m.viewPort.YPosition
+	cursorY := m.viewPort.YOffset() + m.viewPort.YPosition
 	if cursorY < 0 || cursorY >= len(lines) {
 		return ""
 	}

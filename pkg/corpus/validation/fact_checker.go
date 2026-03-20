@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/corpus/extraction"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/corpus/extraction"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // FactChecker provides fact-checking capabilities for knowledge validation

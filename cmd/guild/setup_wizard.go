@@ -10,17 +10,17 @@ import (
 	"path/filepath"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/spf13/cobra"
 	yaml "gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/internal/daemon"
-	uiinit "github.com/lancekrogers/guild/internal/ui/init"
-	"github.com/lancekrogers/guild/pkg/agents/creation"
-	"github.com/lancekrogers/guild/pkg/campaign"
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/providers"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	uiinit "github.com/lancekrogers/guild-core/internal/ui/init"
+	"github.com/lancekrogers/guild-core/pkg/agents/creation"
+	"github.com/lancekrogers/guild-core/pkg/campaign"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/providers"
 )
 
 var (
@@ -108,9 +108,11 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 
 	// Check TTY availability before creating model
 	ttyAvailable := false
-	if ttyFile, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
-		ttyFile.Close() // Just testing availability
+	var ttyFile *os.File
+	if file, err := os.OpenFile("/dev/tty", os.O_RDWR, 0); err == nil {
+		ttyFile = file
 		ttyAvailable = true
+		defer ttyFile.Close()
 	}
 
 	// Create the improved TUI model with TTY awareness
@@ -129,12 +131,7 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 
 	// Configure program based on TTY availability
 	if ttyAvailable {
-		opts = append(opts, tea.WithInputTTY())
-		// Use alt screen for interactive mode
-		if !initQuickMode {
-			opts = append(opts, tea.WithAltScreen())
-			opts = append(opts, tea.WithMouseCellMotion()) // Enable mouse support
-		}
+		opts = append(opts, tea.WithInput(ttyFile))
 	} else {
 		// If no TTY available, use no-renderer mode for simple output
 		opts = append(opts, tea.WithoutRenderer())
@@ -170,22 +167,19 @@ func runUnifiedInit(cmd *cobra.Command, args []string) error {
 		}
 		// In quick mode, ensure files were created
 		if initQuickMode {
-			// Check if .guild or .campaign directory exists
-			guildPath := filepath.Join(config.ProjectPath, ".guild")
+			// Check if .campaign directory exists
 			campaignPath := filepath.Join(config.ProjectPath, ".campaign")
 
-			if _, err := os.Stat(guildPath); os.IsNotExist(err) {
-				if _, err := os.Stat(campaignPath); os.IsNotExist(err) {
-					// Neither directory exists, initialization failed silently
-					fmt.Println("⚠️  Warning: Initialization completed but no directories were created")
-					fmt.Println("Running direct initialization as fallback...")
+			if _, err := os.Stat(campaignPath); os.IsNotExist(err) {
+				// Campaign directory doesn't exist, initialization failed silently
+				fmt.Println("⚠️  Warning: Initialization completed but no directories were created")
+				fmt.Println("Running direct initialization as fallback...")
 
-					// Run direct initialization
-					if err := runDirectInitialization(ctx, config, deps); err != nil {
-						return gerror.Wrap(err, gerror.ErrCodeInternal, "fallback initialization failed").
-							WithComponent("cli").
-							WithOperation("runUnifiedInit")
-					}
+				// Run direct initialization
+				if err := runDirectInitialization(ctx, config, deps); err != nil {
+					return gerror.Wrap(err, gerror.ErrCodeInternal, "fallback initialization failed").
+						WithComponent("cli").
+						WithOperation("runUnifiedInit")
 				}
 			}
 		}
@@ -343,7 +337,7 @@ func createDirectEnhancedAgents(ctx context.Context, projectPath string, provide
 
 	// Ensure agents directory exists
 	agentsDir := filepath.Join(projectPath, ".campaign", "agents")
-	if err := os.MkdirAll(agentsDir, 0755); err != nil {
+	if err := os.MkdirAll(agentsDir, 0o755); err != nil {
 		return 0, gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create agents directory").
 			WithComponent("directInit").
 			WithOperation("createDirectEnhancedAgents")
@@ -479,7 +473,7 @@ func saveDirectAgentConfig(ctx context.Context, agentsDir string, agentConfig *c
 	filename := fmt.Sprintf("%s.yaml", agentConfig.ID)
 	filepath := filepath.Join(agentsDir, filename)
 
-	if err := os.WriteFile(filepath, yamlData, 0644); err != nil {
+	if err := os.WriteFile(filepath, yamlData, 0o644); err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to write agent config file").
 			WithComponent("directInit").
 			WithOperation("saveDirectAgentConfig")

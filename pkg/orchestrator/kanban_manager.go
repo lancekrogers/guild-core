@@ -6,8 +6,8 @@ package orchestrator
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // defaultKanbanManager implements KanbanManager using the kanban.Board

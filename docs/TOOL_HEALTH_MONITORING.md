@@ -54,6 +54,7 @@ func (t *MyTool) HealthCheck() error {
 ### 2. Health Check Best Practices
 
 #### Quick Checks
+
 Health checks should complete quickly (< 5 seconds):
 
 ```go
@@ -67,6 +68,7 @@ func (t *DatabaseTool) HealthCheck() error {
 ```
 
 #### Meaningful Verification
+
 Check actual functionality, not just existence:
 
 ```go
@@ -90,6 +92,7 @@ func (t *FileTool) HealthCheck() error {
 ```
 
 #### Graceful Degradation
+
 Consider partial functionality:
 
 ```go

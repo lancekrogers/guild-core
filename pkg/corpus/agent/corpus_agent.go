@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // CorpusAgent is a specialized agent that provides an intelligent interface
@@ -286,8 +286,10 @@ func (a *CorpusAgent) extractTags(query, response string) []string {
 	tags := []string{"generated", "corpus-agent"}
 
 	// Add some basic keyword extraction
-	keywords := []string{"api", "function", "method", "class", "interface", "implementation",
-		"design", "architecture", "pattern", "system", "component", "module"}
+	keywords := []string{
+		"api", "function", "method", "class", "interface", "implementation",
+		"design", "architecture", "pattern", "system", "component", "module",
+	}
 
 	lowerQuery := strings.ToLower(query)
 	lowerResponse := strings.ToLower(response)

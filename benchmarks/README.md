@@ -13,16 +13,19 @@ This directory contains comprehensive performance benchmarks for the Guild Frame
 ## Quick Start
 
 ### Run All Benchmarks
+
 ```bash
 make benchmark
 ```
 
 ### Run Suggestion-Specific Benchmarks
+
 ```bash
 make benchmark-suggestions
 ```
 
 ### Run Individual Benchmark Suites
+
 ```bash
 # Basic suggestion latency
 go test -bench=BenchmarkSuggestionLatency -benchmem ./benchmarks
@@ -44,6 +47,7 @@ go test -bench=BenchmarkLoadTest -benchmem -timeout=10m ./benchmarks
 ```
 
 ### Run Demo Benchmarks (Quick Validation)
+
 ```bash
 go test -bench=BenchmarkSimple -benchmem ./benchmarks
 go test -bench=BenchmarkCacheDemo -benchmem ./benchmarks
@@ -53,7 +57,9 @@ go test -bench=BenchmarkTokenOptimizationDemo -benchmem ./benchmarks
 ## Benchmark Suites
 
 ### 1. Suggestion Latency (`BenchmarkSuggestionLatency`)
+
 Tests response time for different query types:
+
 - Simple queries
 - Complex multi-part queries  
 - Follow-up queries with context
@@ -61,7 +67,9 @@ Tests response time for different query types:
 **Target**: <100ms average latency
 
 ### 2. Token Optimization (`BenchmarkTokenOptimization`)  
+
 Validates context compression effectiveness:
+
 - Various context sizes (1KB to 20KB)
 - Token reduction percentage measurement
 - Optimization algorithm performance
@@ -69,7 +77,9 @@ Validates context compression effectiveness:
 **Target**: 15-25% token reduction
 
 ### 3. Concurrent Access (`BenchmarkConcurrentAccess`)
+
 Tests performance under concurrent load:
+
 - 1, 5, 10, 20, 50 concurrent users
 - Request latency under load
 - Error rate measurement
@@ -78,7 +88,9 @@ Tests performance under concurrent load:
 **Target**: Maintain <100ms P95 latency with 50 users
 
 ### 4. Cache Effectiveness (`BenchmarkCacheEffectiveness`)
+
 Evaluates caching system performance:
+
 - Cache hit rate measurement
 - Cached vs uncached response times
 - Cache speedup factor calculation
@@ -87,7 +99,9 @@ Evaluates caching system performance:
 **Target**: ≥80% cache hit rate, 5x+ speedup
 
 ### 5. Memory Usage (`BenchmarkMemoryUsage`)
+
 Monitors memory consumption:
+
 - Service instance footprint
 - Cache memory growth
 - Memory leak detection
@@ -96,19 +110,25 @@ Monitors memory consumption:
 **Target**: <1MB per service instance
 
 ### 6. Provider Chain (`BenchmarkProviderChain`)
+
 Tests suggestion provider efficiency:
+
 - Single vs multiple provider performance
 - Provider coordination overhead
 - Parallel query execution
 
 ### 7. Integration Flow (`BenchmarkIntegrationFlow`)
+
 Full suggestion system workflow:
+
 - Complete chat conversation simulation
 - End-to-end latency measurement
 - Real-world usage patterns
 
 ### 8. Load Testing (`BenchmarkLoadTest`)
+
 Comprehensive load testing:
+
 - Sustained load over time (30s-5min)
 - Ramp-up scenarios
 - Stress testing to failure point
@@ -119,13 +139,16 @@ Comprehensive load testing:
 The benchmark suite generates comprehensive performance reports:
 
 ### JSON Report
+
 ```bash
 go run benchmarks/run_benchmarks.go
 # Generates: benchmarks/reports/performance_report_YYYY-MM-DD_HH-MM-SS.json
 ```
 
 ### Markdown Report
+
 Human-readable performance summary with:
+
 - Overall pass/fail status
 - Detailed benchmark results
 - Identified bottlenecks
@@ -134,6 +157,7 @@ Human-readable performance summary with:
 ## Understanding Results
 
 ### Benchmark Output Metrics
+
 - `ns/op`: Nanoseconds per operation
 - `avg_ms`: Average latency in milliseconds  
 - `p95_ms`: 95th percentile latency
@@ -143,11 +167,14 @@ Human-readable performance summary with:
 - `KB/service`: Memory usage per service
 
 ### Pass/Fail Criteria
+
 Benchmarks automatically validate against production enhancement targets:
+
 - ✅ **PASS**: Meets all performance targets
 - ❌ **FAIL**: One or more targets not met
 
 ### Example Output
+
 ```
 BenchmarkSuggestionLatency/SimpleQuery-8         1000    98523 ns/op    avg_ms:98.52    p95_ms:125.1
 BenchmarkTokenOptimization/ContextSize_5000-8     500   245892 ns/op   reduction_%:18.5
@@ -159,6 +186,7 @@ BenchmarkCacheEffectiveness/CacheHitRate-8       2000    15234 ns/op   cache_hit
 The benchmark suite automatically identifies performance bottlenecks:
 
 ### Common Issues
+
 1. **High Latency**: Suggestion retrieval >100ms
 2. **Poor Token Reduction**: <15% context optimization
 3. **Low Cache Hit Rate**: <80% cache effectiveness
@@ -166,6 +194,7 @@ The benchmark suite automatically identifies performance bottlenecks:
 5. **Concurrency Issues**: Performance degradation under load
 
 ### Optimization Recommendations
+
 - Request batching and parallel queries
 - Semantic compression for contexts
 - LRU cache eviction policies
@@ -175,7 +204,9 @@ The benchmark suite automatically identifies performance bottlenecks:
 ## Performance Monitoring
 
 ### Continuous Integration
+
 Add to CI/CD pipeline:
+
 ```yaml
 - name: Performance Benchmarks
   run: make benchmark
@@ -184,7 +215,9 @@ Add to CI/CD pipeline:
 ```
 
 ### Regular Monitoring
+
 Run benchmarks regularly to detect performance regressions:
+
 ```bash
 # Daily performance check
 make benchmark-suggestions >> daily_perf.log
@@ -194,7 +227,9 @@ make benchmark >> weekly_perf.log
 ```
 
 ### Performance Alerts
+
 Set up alerts for:
+
 - Average latency >100ms
 - Cache hit rate <80%
 - Error rate >1%
@@ -205,6 +240,7 @@ Set up alerts for:
 ### Common Issues
 
 #### Benchmark Failures
+
 ```bash
 # Check system resources
 htop
@@ -218,6 +254,7 @@ go test -bench=BenchmarkSuggestionLatency/SimpleQuery -benchmem -v ./benchmarks
 ```
 
 #### Memory Issues
+
 ```bash
 # Run with memory profiling
 go test -bench=BenchmarkMemoryUsage -benchmem -memprofile=mem.prof ./benchmarks
@@ -225,6 +262,7 @@ go tool pprof mem.prof
 ```
 
 #### Performance Regression
+
 ```bash
 # Compare with baseline
 go test -bench=. -benchmem -count=10 ./benchmarks > new.txt
@@ -232,6 +270,7 @@ benchcmp old.txt new.txt
 ```
 
 ### Environment Requirements
+
 - Go 1.21+
 - Minimum 4GB RAM
 - SSD storage recommended
@@ -240,6 +279,7 @@ benchcmp old.txt new.txt
 ## Advanced Usage
 
 ### Custom Benchmark Configuration
+
 ```go
 config := LoadTestConfig{
     Duration:      60 * time.Second,
@@ -250,6 +290,7 @@ config := LoadTestConfig{
 ```
 
 ### Benchmark Profiling
+
 ```bash
 # CPU profiling
 go test -bench=BenchmarkSuggestionLatency -cpuprofile=cpu.prof ./benchmarks
@@ -262,7 +303,9 @@ go test -bench=BenchmarkConcurrentAccess -blockprofile=block.prof ./benchmarks
 ```
 
 ### Custom Metrics
+
 Add custom metrics to benchmarks:
+
 ```go
 b.ReportMetric(customValue, "custom_metric")
 ```
@@ -270,6 +313,7 @@ b.ReportMetric(customValue, "custom_metric")
 ## Contributing
 
 When adding new benchmarks:
+
 1. Follow existing naming conventions
 2. Include Sprint target validation
 3. Add appropriate documentation
@@ -277,6 +321,7 @@ When adding new benchmarks:
 5. Update this README
 
 ### Benchmark Naming Convention
+
 - `BenchmarkSuggestion*`: Core suggestion system tests
 - `BenchmarkLoadTest*`: Load and stress tests  
 - `BenchmarkMemory*`: Memory-related tests

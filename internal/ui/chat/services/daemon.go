@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/lancekrogers/guild/internal/daemon"
-	pkgDaemon "github.com/lancekrogers/guild/pkg/daemon"
-	"github.com/lancekrogers/guild/pkg/gerror"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/daemon"
+	pkgDaemon "github.com/lancekrogers/guild-core/pkg/daemon"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // DaemonService monitors and manages the Guild daemon

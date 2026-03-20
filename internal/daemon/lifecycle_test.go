@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 func TestLifecycleManager_New(t *testing.T) {
@@ -216,7 +216,7 @@ func TestLifecycleManager_CrashRecovery(t *testing.T) {
 	pidFile := filepath.Join(tmpDir, "test.pid")
 
 	// Write invalid PID
-	err := os.WriteFile(pidFile, []byte("99999"), 0644)
+	err := os.WriteFile(pidFile, []byte("99999"), 0o644)
 	require.NoError(t, err)
 
 	config := &DaemonConfig{

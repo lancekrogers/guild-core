@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/lancekrogers/guild/pkg/commission"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
-	"github.com/lancekrogers/guild/pkg/observability"
-	"github.com/lancekrogers/guild/pkg/storage/db"
+	"github.com/lancekrogers/guild-core/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/storage/db"
 )
 
 // Integrator provides integration between commission refinement and kanban tasks
@@ -144,7 +144,6 @@ func (i *Integrator) ensureBoardExists(ctx context.Context, comm *commission.Com
 		Description:  &description,
 		Status:       "active",
 	})
-
 	if err != nil {
 		return "", gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create board").
 			WithComponent("commission_kanban.integrator").
@@ -201,7 +200,6 @@ func (i *Integrator) createTask(ctx context.Context, refinedTask *commission.Ref
 		StoryPoints:  &storyPoints,
 		Metadata:     string(metadataJSON),
 	})
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to create task in database").
 			WithComponent("commission_kanban.integrator").
@@ -216,7 +214,6 @@ func (i *Integrator) createTask(ctx context.Context, refinedTask *commission.Ref
 			AssignedAgentID: &refinedTask.AssignedAgent,
 			ID:              refinedTask.ID,
 		})
-
 		if err != nil {
 			// Log warning but don't fail the task creation
 			logger := observability.GetLogger(ctx)
@@ -302,7 +299,6 @@ func (i *Integrator) recordTaskDependencies(ctx context.Context, tasks []*commis
 				NewValue:  stringPtr(string(dependencyJSON)),
 				Reason:    stringPtr("Initial task dependencies from commission refinement"),
 			})
-
 			if err != nil {
 				logger.WarnContext(ctx, "Failed to record dependency event",
 					"task_id", task.ID,
@@ -509,7 +505,6 @@ func (i *Integrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask *kanba
 		Metadata:    string(metadataJSON),
 		ID:          kanbanTask.ID,
 	})
-
 	if err != nil {
 		return gerror.Wrap(err, gerror.ErrCodeStorage, "failed to update task in database").
 			WithComponent("commission_kanban.integrator").
@@ -523,7 +518,6 @@ func (i *Integrator) UpdateTaskFromKanban(ctx context.Context, kanbanTask *kanba
 			AssignedAgentID: &kanbanTask.AssignedTo,
 			ID:              kanbanTask.ID,
 		})
-
 		if err != nil {
 			logger.WarnContext(ctx, "Failed to update task assignment",
 				"task_id", kanbanTask.ID,

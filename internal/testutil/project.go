@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/lancekrogers/guild/pkg/config"
-	"github.com/lancekrogers/guild/pkg/project"
+	"github.com/lancekrogers/guild-core/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/project"
 	"github.com/stretchr/testify/require"
 	yaml "gopkg.in/yaml.v3"
 )
@@ -52,6 +52,18 @@ func SetupTestProject(t *testing.T, opts ...TestProjectOptions) (*project.Contex
 
 	// Initialize project and get project context
 	ctx := context.Background()
+
+	// Clean up any existing database files to avoid dirty migration state
+	possibleDbPaths := []string{
+		filepath.Join(tempDir, ".campaign", "memory.db"),
+		filepath.Join(tempDir, ".campaign", "memory.db-shm"),
+		filepath.Join(tempDir, ".campaign", "memory.db-wal"),
+	}
+
+	for _, dbPath := range possibleDbPaths {
+		_ = os.Remove(dbPath) // Ignore error if file doesn't exist
+	}
+
 	projCtx, err := project.Initialize(ctx, tempDir, project.InitOptions{})
 	require.NoError(t, err, "failed to initialize project")
 
@@ -60,7 +72,7 @@ func SetupTestProject(t *testing.T, opts ...TestProjectOptions) (*project.Contex
 		guildPath := filepath.Join(projCtx.GetGuildPath(), "guild.yaml")
 		data, err := yaml.Marshal(options.CustomConfig)
 		require.NoError(t, err, "failed to marshal custom config")
-		err = os.WriteFile(guildPath, data, 0644)
+		err = os.WriteFile(guildPath, data, 0o644)
 		require.NoError(t, err, "failed to write custom config")
 	}
 
@@ -187,7 +199,7 @@ This is a test system with modular architecture.
 - SQLite
 - gRPC`
 
-	err := os.WriteFile(filepath.Join(docsPath, "architecture.md"), []byte(archDoc), 0644)
+	err := os.WriteFile(filepath.Join(docsPath, "architecture.md"), []byte(archDoc), 0o644)
 	require.NoError(t, err)
 
 	// API documentation
@@ -204,7 +216,7 @@ Creates a new user
 ### GET /api/v1/users/:id
 Returns user by ID`
 
-	err = os.WriteFile(filepath.Join(docsPath, "api.md"), []byte(apiDoc), 0644)
+	err = os.WriteFile(filepath.Join(docsPath, "api.md"), []byte(apiDoc), 0o644)
 	require.NoError(t, err)
 
 	// README
@@ -217,7 +229,7 @@ This is a test project for Guild Framework integration testing.
 - Authentication
 - API Gateway`
 
-	err = os.WriteFile(filepath.Join(docsPath, "README.md"), []byte(readmeDoc), 0644)
+	err = os.WriteFile(filepath.Join(docsPath, "README.md"), []byte(readmeDoc), 0o644)
 	require.NoError(t, err)
 }
 
@@ -250,7 +262,7 @@ Implement a complete user authentication system with JWT tokens.
 - Documentation is complete
 - Security best practices followed`
 
-	err := os.WriteFile(filepath.Join(commissionsPath, "auth-system.md"), []byte(objective), 0644)
+	err := os.WriteFile(filepath.Join(commissionsPath, "auth-system.md"), []byte(objective), 0o644)
 	require.NoError(t, err)
 
 	// Another objective
@@ -270,7 +282,7 @@ Create RESTful API for user management
 - Use proper HTTP status codes
 - Include OpenAPI documentation`
 
-	err = os.WriteFile(filepath.Join(commissionsPath, "rest-api.md"), []byte(apiObjective), 0644)
+	err = os.WriteFile(filepath.Join(commissionsPath, "rest-api.md"), []byte(apiObjective), 0o644)
 	require.NoError(t, err)
 }
 

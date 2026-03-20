@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/x/exp/teatest"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/teatest"
 )
 
 // TeaTestHelper provides safe teatest execution with proper cleanup

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
 )
 
 // GraphIndex provides efficient searching and indexing for the knowledge graph

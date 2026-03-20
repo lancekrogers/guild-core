@@ -78,16 +78,16 @@ func TestProjectDetector_DetectProjectType(t *testing.T) {
 				filePath := filepath.Join(tmpDir, filename)
 				dir := filepath.Dir(filePath)
 				if dir != tmpDir {
-					err := os.MkdirAll(dir, 0755)
+					err := os.MkdirAll(dir, 0o755)
 					require.NoError(t, err)
 				}
-				err := os.WriteFile(filePath, []byte(content), 0644)
+				err := os.WriteFile(filePath, []byte(content), 0o644)
 				require.NoError(t, err)
 			}
 
 			// Create test directories
 			for _, dirName := range tt.dirs {
-				err := os.MkdirAll(filepath.Join(tmpDir, dirName), 0755)
+				err := os.MkdirAll(filepath.Join(tmpDir, dirName), 0o755)
 				require.NoError(t, err)
 			}
 
@@ -188,10 +188,10 @@ func TestProjectDetector_SeedCorpusFromProject(t *testing.T) {
 		filePath := filepath.Join(tmpDir, filename)
 		dir := filepath.Dir(filePath)
 		if dir != tmpDir {
-			err := os.MkdirAll(dir, 0755)
+			err := os.MkdirAll(dir, 0o755)
 			require.NoError(t, err)
 		}
-		err := os.WriteFile(filePath, []byte(content), 0644)
+		err := os.WriteFile(filePath, []byte(content), 0o644)
 		require.NoError(t, err)
 	}
 

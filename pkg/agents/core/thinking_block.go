@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/observability"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/observability"
 )
 
 // ThinkingType represents different types of thinking patterns
@@ -155,11 +155,15 @@ type ThinkingBlockParser struct {
 	patterns           map[ThinkingType]*regexp.Regexp
 	typeDetector       *ThinkingTypeDetector
 	structureExtractor *StructureExtractor
-	// metrics       *observability.Metrics // TODO: Update to use MetricsRegistry
+	metrics            *MetricsAdapter
 }
 
 // NewThinkingBlockParser creates a new parser with sophisticated pattern matching
-func NewThinkingBlockParser() *ThinkingBlockParser {
+func NewThinkingBlockParser(metricsRegistry *observability.MetricsRegistry) *ThinkingBlockParser {
+	var metrics *MetricsAdapter
+	if metricsRegistry != nil {
+		metrics = NewMetricsAdapter(metricsRegistry)
+	}
 	return &ThinkingBlockParser{
 		patterns: map[ThinkingType]*regexp.Regexp{
 			ThinkingTypeAnalysis:       regexp.MustCompile(`(?s)<thinking[^>]*>.*?(?:analyz|examin|investigat|assess).*?</thinking>`),
@@ -173,16 +177,17 @@ func NewThinkingBlockParser() *ThinkingBlockParser {
 		},
 		typeDetector:       NewThinkingTypeDetector(),
 		structureExtractor: NewStructureExtractor(),
-		// metrics:           metrics, // TODO: Update to use MetricsRegistry
+		metrics:            metrics,
 	}
 }
 
 // ParseThinkingBlocks extracts all thinking blocks from a response
 func (p *ThinkingBlockParser) ParseThinkingBlocks(ctx context.Context, response string) ([]*ThinkingBlock, error) {
-	// startTime := time.Now()
+	startTime := time.Now()
 	defer func() {
-		// TODO: Update to use MetricsRegistry
-		// p.metrics.RecordDuration("thinking_block_parsing", time.Since(startTime))
+		if p.metrics != nil {
+			p.metrics.RecordHistogram("thinking_block_parsing_seconds", time.Since(startTime).Seconds())
+		}
 	}()
 
 	// Find all thinking blocks
@@ -218,8 +223,9 @@ func (p *ThinkingBlockParser) ParseThinkingBlocks(ctx context.Context, response 
 	// Extract decision points across blocks
 	p.extractDecisionPoints(blocks)
 
-	// TODO: Update to use MetricsRegistry
-	// p.metrics.RecordGauge("thinking_blocks_parsed", float64(len(blocks)))
+	if p.metrics != nil {
+		p.metrics.RecordGauge("thinking_blocks_parsed", float64(len(blocks)))
+	}
 
 	return blocks, nil
 }
@@ -291,21 +297,32 @@ func (p *ThinkingBlockParser) extractConfidence(content string) float64 {
 		regexp.MustCompile(`(\d+)%\s*(?:confident|sure|certain)`),
 	}
 
+	var lastConfidence float64 = -1
+	foundAny := false
+
 	for _, pattern := range patterns {
-		if matches := pattern.FindStringSubmatch(content); len(matches) > 1 {
-			var conf float64
-			fmt.Sscanf(matches[1], "%f", &conf)
+		allMatches := pattern.FindAllStringSubmatch(content, -1)
+		for _, matches := range allMatches {
+			if len(matches) > 1 {
+				var conf float64
+				fmt.Sscanf(matches[1], "%f", &conf)
 
-			// Handle percentage
-			if strings.Contains(content, "%") && conf > 1 {
-				conf = conf / 100
-			}
+				// Handle percentage
+				if strings.Contains(matches[0], "%") && conf > 1 {
+					conf = conf / 100
+				}
 
-			// Ensure valid range
-			if conf >= 0 && conf <= 1 {
-				return conf
+				// Ensure valid range
+				if conf >= 0 && conf <= 1 {
+					lastConfidence = conf
+					foundAny = true
+				}
 			}
 		}
+	}
+
+	if foundAny {
+		return lastConfidence
 	}
 
 	// Default based on certain keywords

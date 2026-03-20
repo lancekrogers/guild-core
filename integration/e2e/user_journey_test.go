@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package e2e
 
 import (
@@ -36,12 +39,12 @@ func TestFirstTimeUserJourney(t *testing.T) {
 		result.AssertNotContains(t, "failed")
 		result.AssertFasterThan(t, 10*time.Second)
 
-		// Verify .guild directory created
-		assert.True(t, env.FileExists(".guild"), ".guild directory should exist")
-		assert.True(t, env.FileExists(".guild/guild.yaml"), "guild.yaml should exist")
+		// Verify .campaign directory created
+		assert.True(t, env.FileExists(".campaign"), ".campaign directory should exist")
+		assert.True(t, env.FileExists(".campaign/campaign.yaml"), "campaign.yaml should exist")
 
 		// Verify config content
-		config, err := env.ReadFile(".guild/guild.yaml")
+		config, err := env.ReadFile(".campaign/campaign.yaml")
 		assert.NoError(t, err)
 		assert.Contains(t, config, "name:")
 	})
@@ -114,7 +117,7 @@ func TestDeveloperWorkflow(t *testing.T) {
 		result.AssertFasterThan(t, 15*time.Second)
 
 		// Verify commission file was created
-		assert.True(t, env.FileExists(".guild/commissions/rest-api-development.md"),
+		assert.True(t, env.FileExists("commissions/rest-api-development.md"),
 			"Commission file should be created")
 	})
 
@@ -126,8 +129,8 @@ func TestDeveloperWorkflow(t *testing.T) {
 		result.AssertFasterThan(t, 20*time.Second)
 
 		// Check for refined commission output
-		assert.True(t, env.FileExists(".guild/objectives/refined"),
-			"Refined objectives directory should exist")
+		assert.True(t, env.FileExists("commissions/refined"),
+			"Refined commissions directory should exist")
 	})
 
 	t.Run("View Kanban Board", func(t *testing.T) {

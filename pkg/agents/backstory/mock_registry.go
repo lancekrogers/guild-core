@@ -4,7 +4,7 @@
 package backstory
 
 import (
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 // MockLayeredRegistry for testing and demonstrations

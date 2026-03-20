@@ -10,11 +10,11 @@ import (
 	"sync"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/kanban"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/kanban"
 )
 
 // RenderCache provides efficient caching of rendered card strings
@@ -91,6 +91,47 @@ type RenderMetrics struct {
 	AverageRenderTime time.Duration
 	LastRenderTime    time.Time
 }
+
+// VirtualNode represents a virtual DOM node for kanban rendering
+type VirtualNode struct {
+	ID          string                 `json:"id"`
+	Type        string                 `json:"type"` // "board", "column", "card", "text"
+	Content     string                 `json:"content,omitempty"`
+	Props       map[string]interface{} `json:"props,omitempty"`
+	Children    []*VirtualNode         `json:"children,omitempty"`
+	Position    CardPosition           `json:"position"`
+	Checksum    uint64                 `json:"checksum"`
+	LastUpdated time.Time              `json:"last_updated"`
+}
+
+// VirtualDOM manages the virtual representation of the kanban board
+type VirtualDOM struct {
+	mu          sync.RWMutex
+	root        *VirtualNode
+	prevRoot    *VirtualNode
+	diffPatches []DiffPatch
+	nodePool    *sync.Pool
+}
+
+// DiffPatch represents a change operation in the virtual DOM
+type DiffPatch struct {
+	Type     DiffType      `json:"type"`
+	Path     []int         `json:"path"`
+	Node     *VirtualNode  `json:"node,omitempty"`
+	OldNode  *VirtualNode  `json:"old_node,omitempty"`
+	Position *CardPosition `json:"position,omitempty"`
+}
+
+// DiffType defines the type of diff operation
+type DiffType int
+
+const (
+	DiffReplace DiffType = iota
+	DiffUpdate
+	DiffInsert
+	DiffRemove
+	DiffMove
+)
 
 // NewRenderCache creates a new render cache
 func NewRenderCache(maxSize int, maxAge time.Duration) *RenderCache {
@@ -561,4 +602,350 @@ func (ocr *OptimizedCardRenderer) Cleanup(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+// NewVirtualDOM creates a new virtual DOM for kanban rendering
+func NewVirtualDOM() *VirtualDOM {
+	return &VirtualDOM{
+		nodePool: &sync.Pool{
+			New: func() interface{} {
+				return &VirtualNode{
+					Props:    make(map[string]interface{}),
+					Children: make([]*VirtualNode, 0),
+				}
+			},
+		},
+		diffPatches: make([]DiffPatch, 0),
+	}
+}
+
+// BuildTree constructs a virtual DOM tree from kanban board state
+func (vdom *VirtualDOM) BuildTree(ctx context.Context, columns []Column, selectedCard string) (*VirtualNode, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("kanban.render").
+			WithOperation("BuildTree")
+	}
+
+	vdom.mu.Lock()
+	defer vdom.mu.Unlock()
+
+	// Create root node for board
+	root := vdom.getNodeFromPool()
+	root.ID = "kanban-board"
+	root.Type = "board"
+	root.LastUpdated = time.Now()
+
+	// Build column nodes
+	for colIdx, column := range columns {
+		colNode := vdom.getNodeFromPool()
+		colNode.ID = fmt.Sprintf("column-%d", colIdx)
+		colNode.Type = "column"
+		colNode.Props["title"] = column.Title
+		colNode.Props["status"] = column.Status
+		colNode.Position = CardPosition{ColumnIdx: colIdx}
+
+		// Build card nodes
+		for cardIdx, card := range column.Tasks {
+			cardNode := vdom.getNodeFromPool()
+			cardNode.ID = card.ID
+			cardNode.Type = "card"
+			cardNode.Content = card.Title
+			cardNode.Props["status"] = card.Status
+			cardNode.Props["priority"] = card.Priority
+			cardNode.Props["selected"] = card.ID == selectedCard
+			cardNode.Position = CardPosition{
+				ColumnIdx: colIdx,
+				CardIdx:   cardIdx,
+			}
+			cardNode.Checksum = vdom.calculateChecksum(card)
+			cardNode.LastUpdated = time.Now()
+
+			colNode.Children = append(colNode.Children, cardNode)
+		}
+
+		root.Children = append(root.Children, colNode)
+	}
+
+	root.Checksum = vdom.calculateTreeChecksum(root)
+	return root, nil
+}
+
+// Diff calculates differences between previous and current virtual DOM trees
+func (vdom *VirtualDOM) Diff(ctx context.Context, newRoot *VirtualNode) ([]DiffPatch, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("kanban.render").
+			WithOperation("Diff")
+	}
+
+	vdom.mu.Lock()
+	defer vdom.mu.Unlock()
+
+	// Clear previous patches
+	vdom.diffPatches = vdom.diffPatches[:0]
+
+	if vdom.prevRoot == nil {
+		// First render - everything is new
+		vdom.diffPatches = append(vdom.diffPatches, DiffPatch{
+			Type: DiffInsert,
+			Node: newRoot,
+			Path: []int{},
+		})
+	} else {
+		// Calculate differences
+		vdom.diffNodes(vdom.prevRoot, newRoot, []int{})
+	}
+
+	// Update references
+	vdom.prevRoot = vdom.root
+	vdom.root = newRoot
+
+	return vdom.diffPatches, nil
+}
+
+// diffNodes recursively calculates differences between nodes
+func (vdom *VirtualDOM) diffNodes(oldNode, newNode *VirtualNode, path []int) {
+	// Both nil - no change
+	if oldNode == nil && newNode == nil {
+		return
+	}
+
+	// Node removed
+	if oldNode != nil && newNode == nil {
+		vdom.diffPatches = append(vdom.diffPatches, DiffPatch{
+			Type:    DiffRemove,
+			OldNode: oldNode,
+			Path:    append([]int{}, path...),
+		})
+		return
+	}
+
+	// Node added
+	if oldNode == nil && newNode != nil {
+		vdom.diffPatches = append(vdom.diffPatches, DiffPatch{
+			Type: DiffInsert,
+			Node: newNode,
+			Path: append([]int{}, path...),
+		})
+		return
+	}
+
+	// Type changed - replace entire subtree
+	if oldNode.Type != newNode.Type {
+		vdom.diffPatches = append(vdom.diffPatches, DiffPatch{
+			Type:    DiffReplace,
+			OldNode: oldNode,
+			Node:    newNode,
+			Path:    append([]int{}, path...),
+		})
+		return
+	}
+
+	// Check for content/property changes
+	if oldNode.Checksum != newNode.Checksum {
+		vdom.diffPatches = append(vdom.diffPatches, DiffPatch{
+			Type:    DiffUpdate,
+			OldNode: oldNode,
+			Node:    newNode,
+			Path:    append([]int{}, path...),
+		})
+	}
+
+	// Check for position changes (card moved)
+	if oldNode.Position != newNode.Position {
+		vdom.diffPatches = append(vdom.diffPatches, DiffPatch{
+			Type:     DiffMove,
+			OldNode:  oldNode,
+			Node:     newNode,
+			Path:     append([]int{}, path...),
+			Position: &newNode.Position,
+		})
+	}
+
+	// Diff children
+	vdom.diffChildren(oldNode.Children, newNode.Children, path)
+}
+
+// diffChildren handles child node diffing with optimization
+func (vdom *VirtualDOM) diffChildren(oldChildren, newChildren []*VirtualNode, parentPath []int) {
+	// Build ID maps for efficient lookup
+	oldMap := make(map[string]int)
+	for i, child := range oldChildren {
+		if child != nil {
+			oldMap[child.ID] = i
+		}
+	}
+
+	newMap := make(map[string]int)
+	for i, child := range newChildren {
+		if child != nil {
+			newMap[child.ID] = i
+		}
+	}
+
+	// Process new children
+	for newIdx, newChild := range newChildren {
+		if newChild == nil {
+			continue
+		}
+
+		childPath := append(parentPath, newIdx)
+
+		if oldIdx, exists := oldMap[newChild.ID]; exists {
+			// Child exists in both - check for updates
+			vdom.diffNodes(oldChildren[oldIdx], newChild, childPath)
+		} else {
+			// New child
+			vdom.diffNodes(nil, newChild, childPath)
+		}
+	}
+
+	// Find removed children
+	for oldIdx, oldChild := range oldChildren {
+		if oldChild == nil {
+			continue
+		}
+
+		if _, exists := newMap[oldChild.ID]; !exists {
+			childPath := append(parentPath, oldIdx)
+			vdom.diffNodes(oldChild, nil, childPath)
+		}
+	}
+}
+
+// Helper methods
+
+func (vdom *VirtualDOM) getNodeFromPool() *VirtualNode {
+	node := vdom.nodePool.Get().(*VirtualNode)
+	// Reset node state
+	node.ID = ""
+	node.Type = ""
+	node.Content = ""
+	node.Children = node.Children[:0]
+	node.Checksum = 0
+	for k := range node.Props {
+		delete(node.Props, k)
+	}
+	return node
+}
+
+func (vdom *VirtualDOM) returnNodeToPool(node *VirtualNode) {
+	if node != nil {
+		// Return children first
+		for _, child := range node.Children {
+			vdom.returnNodeToPool(child)
+		}
+		vdom.nodePool.Put(node)
+	}
+}
+
+func (vdom *VirtualDOM) calculateChecksum(card *kanban.Task) uint64 {
+	// Simple checksum based on card content
+	var sum uint64
+	for _, r := range card.Title {
+		sum = sum*31 + uint64(r)
+	}
+	// Use string hash for status
+	for _, r := range string(card.Status) {
+		sum = sum*17 + uint64(r)
+	}
+	// Use string hash for priority
+	for _, r := range string(card.Priority) {
+		sum = sum*13 + uint64(r)
+	}
+	return sum
+}
+
+func (vdom *VirtualDOM) calculateTreeChecksum(node *VirtualNode) uint64 {
+	if node == nil {
+		return 0
+	}
+
+	sum := node.Checksum
+	for _, child := range node.Children {
+		sum = sum*31 + vdom.calculateTreeChecksum(child)
+	}
+	return sum
+}
+
+// ApplyPatches applies diff patches to optimize rendering
+func (vdom *VirtualDOM) ApplyPatches(ctx context.Context, patches []DiffPatch, renderer func(patch DiffPatch) error) error {
+	if err := ctx.Err(); err != nil {
+		return gerror.Wrap(err, gerror.ErrCodeCancelled, "context cancelled").
+			WithComponent("kanban.render").
+			WithOperation("ApplyPatches")
+	}
+
+	// Group patches by type for optimized application
+	grouped := make(map[DiffType][]DiffPatch)
+	for _, patch := range patches {
+		grouped[patch.Type] = append(grouped[patch.Type], patch)
+	}
+
+	// Apply in optimal order: removes first, then moves, updates, and inserts
+	order := []DiffType{DiffRemove, DiffMove, DiffUpdate, DiffReplace, DiffInsert}
+
+	for _, patchType := range order {
+		if patches, exists := grouped[patchType]; exists {
+			for _, patch := range patches {
+				if err := renderer(patch); err != nil {
+					return gerror.Wrap(err, gerror.ErrCodeInternal, "failed to apply patch").
+						WithComponent("kanban.render").
+						WithOperation("ApplyPatches")
+				}
+			}
+		}
+	}
+
+	return nil
+}
+
+// GetStats returns virtual DOM statistics
+func (vdom *VirtualDOM) GetStats() map[string]interface{} {
+	vdom.mu.RLock()
+	defer vdom.mu.RUnlock()
+
+	stats := map[string]interface{}{
+		"patches_count": len(vdom.diffPatches),
+		"has_root":      vdom.root != nil,
+		"has_prev_root": vdom.prevRoot != nil,
+	}
+
+	if vdom.root != nil {
+		stats["total_nodes"] = vdom.countNodes(vdom.root)
+	}
+
+	return stats
+}
+
+// countNodes recursively counts nodes in the tree
+func (vdom *VirtualDOM) countNodes(node *VirtualNode) int {
+	if node == nil {
+		return 0
+	}
+
+	count := 1
+	for _, child := range node.Children {
+		count += vdom.countNodes(child)
+	}
+	return count
+}
+
+// Cleanup releases resources and returns nodes to pool
+func (vdom *VirtualDOM) Cleanup() {
+	vdom.mu.Lock()
+	defer vdom.mu.Unlock()
+
+	if vdom.prevRoot != nil {
+		vdom.returnNodeToPool(vdom.prevRoot)
+		vdom.prevRoot = nil
+	}
+
+	if vdom.root != nil {
+		vdom.returnNodeToPool(vdom.root)
+		vdom.root = nil
+	}
+
+	vdom.diffPatches = vdom.diffPatches[:0]
 }

@@ -1,6 +1,9 @@
 // Copyright (C) 2025 SWS Industries LLC (DBA Blockhead Consulting)
 // SPDX-License-Identifier: LicenseRef-ANGRY-GOAT-0.2
 
+//go:build integration
+// +build integration
+
 package grpc
 
 import (
@@ -9,13 +12,13 @@ import (
 	"testing"
 	"time"
 
-	guildgrpc "github.com/lancekrogers/guild/pkg/grpc"
-	guildpb "github.com/lancekrogers/guild/pkg/grpc/pb/guild/v1"
+	guildgrpc "github.com/lancekrogers/guild-core/pkg/grpc"
+	guildpb "github.com/lancekrogers/guild-core/pkg/grpc/pb/guild/v1"
 
-	// promptspb "github.com/lancekrogers/guild/pkg/grpc/pb/prompts/v1"
-	"github.com/lancekrogers/guild/pkg/providers/mock"
-	"github.com/lancekrogers/guild/pkg/registry"
-	"github.com/lancekrogers/guild/pkg/tools"
+	// promptspb "github.com/lancekrogers/guild-core/pkg/grpc/pb/prompts/v1"
+	"github.com/lancekrogers/guild-core/pkg/providers/mock"
+	"github.com/lancekrogers/guild-core/pkg/registry"
+	"github.com/lancekrogers/guild-core/pkg/tools"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc"
@@ -38,6 +41,7 @@ func (m *MockTool) Schema() map[string]interface{} {
 		},
 	}
 }
+
 func (m *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult, error) {
 	m.execLog = append(m.execLog, fmt.Sprintf("Executed with input: %s", input))
 	return &tools.ToolResult{
@@ -48,15 +52,19 @@ func (m *MockTool) Execute(ctx context.Context, input string) (*tools.ToolResult
 		},
 	}, nil
 }
+
 func (m *MockTool) Examples() []string {
 	return []string{"example input"}
 }
+
 func (m *MockTool) Category() string {
 	return "test"
 }
+
 func (m *MockTool) RequiresAuth() bool {
 	return false
 }
+
 func (m *MockTool) HealthCheck() error {
 	return nil
 }

@@ -6,8 +6,8 @@ package orchestrator
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/agents/core"
-	"github.com/lancekrogers/guild/pkg/commission"
+	"github.com/lancekrogers/guild-core/pkg/agents/core"
+	"github.com/lancekrogers/guild-core/pkg/commission"
 )
 
 // Status represents the status of the orchestrator
@@ -130,4 +130,7 @@ const (
 
 	// EventOrchestratorError is emitted when the orchestrator encounters an error
 	EventOrchestratorError = "orchestrator.error"
+
+	// EventCommissionProcessed is emitted when a commission has been processed to tasks
+	EventCommissionProcessed = "commission.processed"
 )

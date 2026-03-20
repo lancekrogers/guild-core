@@ -19,6 +19,7 @@ The enhanced agent system brings together:
 Elena is the flagship agent of this system - a wise and empathetic project coordinator who brings grace and expertise to team leadership.
 
 **Key Characteristics:**
+
 - 18 years of experience leading digital artisan teams
 - Rich backstory including previous roles and achievements
 - Sophisticated personality with high empathy (10/10) and wisdom (9/10)
@@ -26,6 +27,7 @@ Elena is the flagship agent of this system - a wise and empathetic project coord
 - Optimized for Claude Code provider for best management responses
 
 **Usage:**
+
 ```go
 creator := agents.NewDefaultAgentCreator()
 elena, err := creator.CreateElenaGuildMaster(ctx)
@@ -157,11 +159,13 @@ See `example_usage.go` for complete examples including:
 ## Testing
 
 Run tests with:
+
 ```bash
 go test -v ./pkg/agents/...
 ```
 
 The test suite covers:
+
 - Agent creation and validation
 - Backstory and personality verification
 - Provider mapping logic

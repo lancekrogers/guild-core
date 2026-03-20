@@ -13,12 +13,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/memory/rag"
-	"github.com/lancekrogers/guild/pkg/memory/vector"
-	"github.com/lancekrogers/guild/pkg/providers"
-	"github.com/lancekrogers/guild/pkg/providers/interfaces"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/memory/rag"
+	"github.com/lancekrogers/guild-core/pkg/memory/vector"
+	"github.com/lancekrogers/guild-core/pkg/providers"
+	"github.com/lancekrogers/guild-core/pkg/providers/interfaces"
 )
 
 // corpusScanCmd represents the corpus scan command
@@ -335,7 +335,7 @@ func updateEmbeddingMetadata(cfg corpus.Config, filePath string, indexTime time.
 	metadataPath := filepath.Join(cfg.CorpusPath, "..", "embeddings", ".metadata.json")
 
 	// Ensure directory exists
-	if err := os.MkdirAll(filepath.Dir(metadataPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(metadataPath), 0o755); err != nil {
 		return err
 	}
 
@@ -352,7 +352,7 @@ func updateEmbeddingMetadata(cfg corpus.Config, filePath string, indexTime time.
 		lines = append(lines, fmt.Sprintf("%s\t%s", path, t.Format(time.RFC3339)))
 	}
 
-	return os.WriteFile(metadataPath, []byte(strings.Join(lines, "\n")), 0644)
+	return os.WriteFile(metadataPath, []byte(strings.Join(lines, "\n")), 0o644)
 }
 
 func displayScanResults(result ScanResult, dryRun bool) {

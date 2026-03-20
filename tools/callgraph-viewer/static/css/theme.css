@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+:root {
+    /* Guild color scheme */
+    --guild-black: #0a0a0a;
+    --guild-green: #00ff7f;
+    --guild-green-dim: #00cc66;
+    --guild-gray: #2a2a2a;
+    --guild-border: #404040;
+    --guild-text: #e0e0e0;
+    --guild-text-dim: #888888;
+
+    /* Font */
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+}
+
+body {
+    background: var(--guild-black);
+    color: var(--guild-text);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+a {
+    color: var(--guild-green);
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--guild-green-dim);
+}
+
+button {
+    color: var(--guild-green);
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    color: var(--guild-green-dim);
+}
+
+details summary {
+    cursor: pointer;
+    user-select: none;
+}
+
+details summary::-webkit-details-marker {
+    color: var(--guild-green);
+}

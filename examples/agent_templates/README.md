@@ -31,22 +31,27 @@ err := generator.GenerateAgentFile(projectPath, custom)
 The system includes pre-configured templates for common providers:
 
 ### Claude Code Templates
+
 - `claude-code-manager` - Strategic manager for coordinating tasks
 - `claude-code-developer` - Full-stack developer
 - `claude-code-architect` - System architect for complex designs
 
 ### Ollama Templates (Local Models)
+
 - `ollama-coder` - Local coding assistant (privacy-sensitive)
 - `ollama-analyst` - Local data analyst
 
 ### OpenAI Templates
+
 - `openai-developer` - Versatile GPT-4 developer
 - `openai-creative` - Creative specialist
 
 ### Anthropic Templates
+
 - `anthropic-researcher` - Deep research specialist
 
 ### Generic Templates
+
 - `generic-manager` - Basic manager (requires provider/model)
 - `generic-worker` - Basic worker (requires provider/model)
 
@@ -67,6 +72,7 @@ err := generator.QuickSetup(
 ```
 
 This creates:
+
 - `.guild/agents/manager.yml` - A basic manager agent
 - `.guild/agents/worker-1.yml` - A basic worker agent
 

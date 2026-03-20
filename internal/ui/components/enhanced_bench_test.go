@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lancekrogers/guild/internal/ui/animation"
-	"github.com/lancekrogers/guild/internal/ui/theme"
+	"github.com/lancekrogers/guild-core/internal/ui/animation"
+	"github.com/lancekrogers/guild-core/internal/ui/theme"
 )
 
 // BenchmarkComponentLibrary_RenderButton benchmarks button rendering performance

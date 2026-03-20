@@ -1,0 +1,57 @@
+# Dockerfile.user - Simulates actual user experience with Guild
+FROM golang:1.23-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache git make gcc g++ musl-dev sqlite-dev
+
+WORKDIR /build
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+# Build directly to avoid make complexities
+RUN go mod tidy && go build -o bin/guild ./cmd/guild
+
+# User experience stage - simulates a real user's environment
+FROM alpine:3.18
+
+# Install runtime dependencies that a user would have
+RUN apk add --no-cache \
+    bash \
+    git \
+    sqlite \
+    curl \
+    vim \
+    tmux \
+    openssh-client \
+    libstdc++ \
+    libgcc
+
+# Create a regular user (like a real dev environment)
+RUN adduser -D -s /bin/bash -h /home/developer developer
+
+# Install Guild binary system-wide (like 'make install' would)
+COPY --from=builder /build/bin/guild /usr/local/bin/guild
+RUN chmod +x /usr/local/bin/guild
+
+# Switch to user
+USER developer
+WORKDIR /home/developer
+
+# Create some sample projects to test with
+RUN mkdir -p projects/web-app \
+    projects/api-service \
+    projects/cli-tool
+
+# Set up git (Guild might need it)
+RUN git config --global user.email "developer@guild.test" && \
+    git config --global user.name "Guild Developer"
+
+# Create a bashrc with helpful aliases
+RUN echo 'alias ll="ls -la"' >> ~/.bashrc && \
+    echo 'alias gs="guild status"' >> ~/.bashrc && \
+    echo 'alias gc="guild chat"' >> ~/.bashrc && \
+    echo 'export PS1="\[\033[32m\]guild-test\[\033[0m\]:\[\033[34m\]\w\[\033[0m\]$ "' >> ~/.bashrc
+
+# Default to bash for interactive testing
+CMD ["/bin/bash"]

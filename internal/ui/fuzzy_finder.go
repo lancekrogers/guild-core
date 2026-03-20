@@ -11,12 +11,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/textinput"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/pkg/search"
+	"github.com/lancekrogers/guild-core/pkg/search"
 )
 
 // FuzzyFinderKeyMap defines key bindings for the fuzzy finder
@@ -117,7 +117,7 @@ func NewFuzzyFinderModel(workingDir string, opts ...FuzzyFinderOption) *FuzzyFin
 	input.Placeholder = "Type to search files..."
 	input.Focus()
 	input.CharLimit = 256
-	input.Width = 50
+	input.SetWidth(50)
 
 	fuzzyFinder := search.NewFuzzyFinder(search.FuzzyFinderConfig{
 		WorkingDir:      workingDir,
@@ -180,7 +180,7 @@ func (m *FuzzyFinderModel) Init() tea.Cmd {
 }
 
 // Update handles messages and updates the model
-func (m *FuzzyFinderModel) Update(msg tea.Msg) (*FuzzyFinderModel, tea.Cmd) {
+func (m *FuzzyFinderModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 
 	switch msg := msg.(type) {
@@ -263,9 +263,9 @@ func (m *FuzzyFinderModel) Update(msg tea.Msg) (*FuzzyFinderModel, tea.Cmd) {
 }
 
 // View renders the fuzzy finder interface
-func (m *FuzzyFinderModel) View() string {
+func (m *FuzzyFinderModel) View() tea.View {
 	if m.width == 0 || m.height == 0 {
-		return "Initializing..."
+		return tea.NewView("Initializing...")
 	}
 
 	var sections []string
@@ -296,7 +296,7 @@ func (m *FuzzyFinderModel) View() string {
 	footer := m.renderFooter()
 	sections = append(sections, footer)
 
-	return lipgloss.JoinVertical(lipgloss.Left, sections...)
+	return tea.NewView(lipgloss.JoinVertical(lipgloss.Left, sections...))
 }
 
 // renderSplitView renders the file list and preview side by side
@@ -488,7 +488,7 @@ func (m *FuzzyFinderModel) updateLayout() {
 	if inputWidth < 20 {
 		inputWidth = 20
 	}
-	m.input.Width = inputWidth
+	m.input.SetWidth(inputWidth)
 }
 
 // Message types
@@ -497,9 +497,11 @@ type searchResultsMsg struct {
 	err     error
 }
 
-type previewContentMsg string
-type indexRefreshedMsg struct{}
-type errorMsg error
+type (
+	previewContentMsg string
+	indexRefreshedMsg struct{}
+	errorMsg          error
+)
 
 // Commands
 

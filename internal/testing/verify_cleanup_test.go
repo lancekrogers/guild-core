@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/x/exp/teatest"
-	testingpkg "github.com/lancekrogers/guild/internal/testing"
+	tea "charm.land/bubbletea/v2"
+	"github.com/lancekrogers/guild-core/internal/teatest"
+	testingpkg "github.com/lancekrogers/guild-core/internal/testing"
 )
 
 // TestTerminalCleanup verifies that terminal cleanup works correctly
@@ -21,7 +21,7 @@ func TestTerminalCleanup(t *testing.T) {
 
 		helper.RunTeaTest(model, func(tm *teatest.TestModel) {
 			// Send any key to trigger quit
-			tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+			tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 			// Helper will handle cleanup
 		})
 
@@ -35,7 +35,7 @@ func TestTerminalCleanup(t *testing.T) {
 
 		helper.RunTeaTest(model, func(tm *teatest.TestModel) {
 			// Send keys that model ignores
-			tm.Send(tea.KeyMsg{Type: tea.KeyEnter})
+			tm.Send(tea.KeyPressMsg{Code: tea.KeyEnter})
 			time.Sleep(50 * time.Millisecond)
 			// Helper will force cleanup after timeout
 		})
@@ -66,10 +66,10 @@ func (m *testModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m *testModel) View() string {
-	return fmt.Sprintf("Test Model (counter: %d)\nPress Enter to %s\n",
+func (m *testModel) View() tea.View {
+	return tea.NewView(fmt.Sprintf("Test Model (counter: %d)\nPress Enter to %s\n",
 		m.counter,
-		map[bool]string{true: "quit", false: "increment counter"}[m.shouldQuit])
+		map[bool]string{true: "quit", false: "increment counter"}[m.shouldQuit]))
 }
 
 // TestInterruptHandling simulates Ctrl-C during test
@@ -86,7 +86,7 @@ func TestInterruptHandling(t *testing.T) {
 		time.Sleep(5 * time.Second)
 
 		// If we get here without interrupt, quit normally
-		tm.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
+		tm.Send(tea.KeyPressMsg{Text: "q", Code: 'q'})
 	})
 
 	t.Log("Test completed - terminal should be clean even if interrupted")
@@ -118,9 +118,9 @@ func (m *slowModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m *slowModel) View() string {
+func (m *slowModel) View() tea.View {
 	if !m.ready {
-		return "Loading... (this will take 2 seconds)\n"
+		return tea.NewView("Loading... (this will take 2 seconds)\n")
 	}
-	return "Ready! Press 'q' to quit\n"
+	return tea.NewView("Ready! Press 'q' to quit\n")
 }

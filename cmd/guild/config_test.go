@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	"github.com/lancekrogers/guild/pkg/config"
+	"github.com/lancekrogers/guild-core/pkg/config"
 )
 
 func TestConfigShowCommand(t *testing.T) {
@@ -34,7 +34,7 @@ func TestConfigShowCommand(t *testing.T) {
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				globalDir := filepath.Join(tmpDir, ".guild")
-				require.NoError(t, os.MkdirAll(globalDir, 0755))
+				require.NoError(t, os.MkdirAll(globalDir, 0o755))
 
 				cfg := &config.GuildConfig{
 					Name:        "Test Guild",
@@ -50,7 +50,7 @@ func TestConfigShowCommand(t *testing.T) {
 
 				data, err := yaml.Marshal(cfg)
 				require.NoError(t, err)
-				require.NoError(t, os.WriteFile(filepath.Join(globalDir, "config.yaml"), data, 0644))
+				require.NoError(t, os.WriteFile(filepath.Join(globalDir, "config.yaml"), data, 0o644))
 
 				// Mock home directory
 				oldHome := os.Getenv("HOME")
@@ -70,7 +70,7 @@ func TestConfigShowCommand(t *testing.T) {
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
-				require.NoError(t, os.MkdirAll(guildDir, 0755))
+				require.NoError(t, os.MkdirAll(guildDir, 0o755))
 
 				cfg := &config.GuildConfig{
 					Name: "Local Project",
@@ -85,7 +85,7 @@ func TestConfigShowCommand(t *testing.T) {
 
 				data, err := yaml.Marshal(cfg)
 				require.NoError(t, err)
-				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0644))
+				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0o644))
 
 				// Change to temp dir so it finds local config
 				oldWd, _ := os.Getwd()
@@ -106,7 +106,7 @@ func TestConfigShowCommand(t *testing.T) {
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
-				require.NoError(t, os.MkdirAll(guildDir, 0755))
+				require.NoError(t, os.MkdirAll(guildDir, 0o755))
 
 				cfg := &config.GuildConfig{
 					Name: "Raw Test",
@@ -114,7 +114,7 @@ func TestConfigShowCommand(t *testing.T) {
 
 				data, err := yaml.Marshal(cfg)
 				require.NoError(t, err)
-				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0644))
+				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0o644))
 
 				oldWd, _ := os.Getwd()
 				os.Chdir(tmpDir)
@@ -235,7 +235,7 @@ func TestConfigValidateCommand(t *testing.T) {
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
-				require.NoError(t, os.MkdirAll(guildDir, 0755))
+				require.NoError(t, os.MkdirAll(guildDir, 0o755))
 
 				cfg := &config.GuildConfig{
 					Name:        "Valid Project",
@@ -252,7 +252,7 @@ func TestConfigValidateCommand(t *testing.T) {
 
 				data, err := yaml.Marshal(cfg)
 				require.NoError(t, err)
-				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0644))
+				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0o644))
 
 				oldWd, _ := os.Getwd()
 				os.Chdir(tmpDir)
@@ -271,7 +271,7 @@ func TestConfigValidateCommand(t *testing.T) {
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
-				require.NoError(t, os.MkdirAll(guildDir, 0755))
+				require.NoError(t, os.MkdirAll(guildDir, 0o755))
 
 				// Write invalid YAML
 				invalidYAML := `name: "Invalid
@@ -280,7 +280,7 @@ agents:
     name: Agent One
   type: worker`
 
-				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), []byte(invalidYAML), 0644))
+				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), []byte(invalidYAML), 0o644))
 
 				oldWd, _ := os.Getwd()
 				os.Chdir(tmpDir)
@@ -299,7 +299,7 @@ agents:
 			setupFunc: func(t *testing.T) string {
 				tmpDir := t.TempDir()
 				guildDir := filepath.Join(tmpDir, ".campaign")
-				require.NoError(t, os.MkdirAll(guildDir, 0755))
+				require.NoError(t, os.MkdirAll(guildDir, 0o755))
 
 				cfg := &config.GuildConfig{
 					Name: "Incomplete Project",
@@ -317,7 +317,7 @@ agents:
 
 				data, err := yaml.Marshal(cfg)
 				require.NoError(t, err)
-				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0644))
+				require.NoError(t, os.WriteFile(filepath.Join(guildDir, "guild.yaml"), data, 0o644))
 
 				oldWd, _ := os.Getwd()
 				os.Chdir(tmpDir)

@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/charmbracelet/lipgloss"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 
-	"github.com/lancekrogers/guild/pkg/corpus"
+	"github.com/lancekrogers/guild-core/pkg/corpus"
 )
 
 var (
@@ -65,10 +66,10 @@ var (
 )
 
 // View renders the current UI state
-func (m CorpusModel) View() string {
+func (m CorpusModel) View() tea.View {
 	// If we're still initializing, show a loading message
 	if !m.ready {
-		return "Loading Corpus..."
+		return tea.NewView("Loading Corpus...")
 	}
 
 	var s string
@@ -115,7 +116,7 @@ func (m CorpusModel) View() string {
 	}
 
 	// Apply overall styles and return
-	return appStyle.Render(s)
+	return tea.NewView(appStyle.Render(s))
 }
 
 // renderList displays the document list

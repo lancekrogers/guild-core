@@ -5,6 +5,7 @@ This guide helps you migrate from the old regex-based parser to the new robust p
 ## Overview of Changes
 
 The new parser provides:
+
 - Proper JSON/XML parsing instead of regex matching
 - Format detection with confidence scoring
 - Better error handling and recovery
@@ -69,10 +70,10 @@ If you were importing subpackages directly:
 
 ```go
 // Old
-import "github.com/lancekrogers/guild/pkg/tools/parser/openai"
+import "github.com/guild-framework/guild-core/pkg/tools/parser/openai"
 
 // New
-import "github.com/lancekrogers/guild/pkg/tools/parser"
+import "github.com/guild-framework/guild-core/pkg/tools/parser"
 // All functionality is in the main package
 ```
 
@@ -113,7 +114,7 @@ type ToolCall struct {
 Replace any subpackage imports with the main parser package:
 
 ```go
-import "github.com/lancekrogers/guild/pkg/tools/parser"
+import "github.com/guild-framework/guild-core/pkg/tools/parser"
 ```
 
 ### 2. Update Error Handling
@@ -214,6 +215,7 @@ The new parser returns empty slices instead of errors when no tool calls are fou
 ### Format not detected
 
 If format detection fails:
+
 1. Check that the input contains valid tool call syntax
 2. Ensure the tool calls aren't corrupted or truncated
 3. Try with `WithEnableFuzzyMatch(true)` for mixed content
@@ -221,6 +223,7 @@ If format detection fails:
 ### Performance issues
 
 If experiencing performance problems:
+
 1. Set appropriate timeouts with `WithTimeout()`
 2. Limit input size with `WithMaxInputSize()`
 3. Use the monitoring dashboard to identify bottlenecks

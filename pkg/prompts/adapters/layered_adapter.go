@@ -6,9 +6,9 @@ package adapters
 import (
 	"context"
 
-	"github.com/lancekrogers/guild/pkg/gerror"
-	"github.com/lancekrogers/guild/pkg/prompts"
-	"github.com/lancekrogers/guild/pkg/prompts/layered"
+	"github.com/lancekrogers/guild-core/pkg/gerror"
+	"github.com/lancekrogers/guild-core/pkg/prompts"
+	"github.com/lancekrogers/guild-core/pkg/prompts/layered"
 )
 
 // LayeredAdapter adapts a layered.LayeredManager to implement prompts.Manager
